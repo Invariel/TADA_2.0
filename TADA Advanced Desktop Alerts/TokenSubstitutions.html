@@ -1,0 +1,133 @@
+﻿<!doctype HTML>
+<meta charset="UTF-8">
+<html>
+    <head>
+        <title>Text Substitution Cheat Sheet</title>
+        <style>
+            body {
+                color: orange;
+                background-color: #111111;
+            }
+
+            h3 {
+                width: auto;
+                text-align: center;
+                display: block;
+            }
+
+            .container {
+                width: 75%;
+                margin: 5px auto 0px;
+                border: 2px ridge white;
+                display: grid;
+                grid-template-columns: repeat(100px, auto);
+                grid-gap: 5px;
+                grid-auto-rows: auto;
+            }
+
+            .token {
+                text-align: left;
+                font-weight: bold;
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .definition {
+                text-align: right;
+                font-weight: normal;
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .example {
+                grid-column: 1 / 3;
+                text-align: center;
+                border-top: 1px solid blue;
+            }
+
+            .tokenName {
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>Simple Substitutions</h3>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">name</span>}</div>
+            <div class="definition">The name of the person who: dropped bits, followed the channel, gifted a subscription, hosted the channel, subscribed to the channel, or talked in chat.</div>
+            <div class="example">Thank you, {<span class="tokenName">name</span>}, for that subscription!</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for that subscription!</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">amount</span>}</div>
+            <div class="definition">The amount of bits dropped, users who came along with the host, or months subscribed for.</div>
+            <div class="example">Thank you for that very generous {<span class="tokenName">amount</span>} bit drop!</div>
+            <div class="example">Thank you for that very generous <span class="tokenName">573</span> bit drop!</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">giftee</span>}</div>
+            <div class="definition">The name of the person receiving a gift subscription.</div>
+            <div class="example">Welcome {<span class="tokenName">giftee</span>} to the club, thanks to a gifted subscription!</div>
+            <div class="example">Welcome <span class="tokenName">LeiRavni</span> to the club, thanks to a gifted subscription!</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">s</span>}</div>
+            <div class="definition">If {<span class="tokenName">amount</span>} is not 1, then print <span class="tokenName">s</span>.</div>
+            <div class="example">Thank you for subscribing for {<span class="tokenName">amount</span>} month{<span class="tokenName">s</span>}.</div>
+            <div class="example">Thank you for subscribing for <span class="tokenName">1</span> month.</div>
+            <div class="example">Thank you for subscribing for <span class="tokenName">3</span> month<span class="tokenName">s</span>.</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">es</span>}</div>
+            <div class="definition">If {<span class="tokenName">amount</span>} is not 1, then print <span class="tokenName">es</span>.</div>
+            <div class="example">A donation of {<span class="tokenName">amount</span>} bit{<span class="tokenName">s</span>}?  That's like {<span class="tokenName">amount</span>} whole splash{<span class="tokenName">es</span>}!  Making waves!</div>
+            <div class="example">A donation of <span class="tokenName">1</span> bit?  That's like <span class="tokenName">1</span> whole splash!  Making waves!</div>
+            <div class="example">A donation of <span class="tokenName">573</span> bit<span class="tokenName">s</span>?  That's like <span class="tokenName">573</span> whole splash<span class="tokenName">es</span>!  Making waves!</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">tier</span>}</div>
+            <div class="definition">The tier that the user subscribed at: <span class="tokenName">Twitch Prime</span>, <span class="tokenName">Tier One</span>, <span class="tokenName">Tier Two</span>, or <span class="tokenName">Tier Three</span>.</div>
+            <div class="example">Thank you, {<span class="tokenName">name</span>}, for that {<span class="tokenName">tier</span>} subscription.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for that <span class="tokenName">Twitch Prime</span> subscription.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for that <span class="tokenName">Tier One</span> subscription.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for that <span class="tokenName">Tier Two</span> subscription.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for that <span class="tokenName">Tier Three</span> subscription.</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="tokenName">tiername</span>}</div>
+            <div class="definition">The customized name for the tier that was subscribed at.</div>
+            <div class="example">Thank you, {<span class="tokenName">name</span>}, for your support as a {<span class="tokenName">tiername</span>}.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for your support as a <span class="tokenName">Level 1 White Mage</span>.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for your support as a <span class="tokenName">Level 1 Black Mage</span>.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span>, for your support as a <span class="tokenName">Level 1 Red Mage</span>.</div>
+        </div>
+
+        <h3>More Complex Substitutions</h3>
+
+        <div class="container">
+            <div class="token">[<span class="tokenName">a</span>|<span class="tokenName">b</span>]</div>
+            <div class="definition">If {<span class="tokenName">amount</span>} is 1, then print <span class="tokenName">a</span>.  Otherwise, print <span class="tokenName">b</span>.</div>
+            <div class="example">Your {<span class="tokenName">amount</span>} month{<span class="tokenName">s</span>} of support [<span class="tokenName">is</span>|<span class="tokenName">are</span>] appreciated.</div>
+            <div class="example">Your <span class="tokenName">1</span> month of support <span class="tokenName">is</span> appreciated.</div>
+            <div class="example">Your <span class="tokenName">5</span> month<span class="tokenName">s</span> of support <span class="tokenName">are</span> appreciated.</div>
+        </div>
+
+        <div class="container">
+            <div class="token">&lt;<span class="tokenName">a</span>|<span class="tokenName">b</span>|<span class="tokenName">c</span>|<span class="tokenName">d</span>|<span class="tokenName">e</span>&gt;</div>
+            <div class="definition">If the user is not subscribed, <span class="tokenName">a</span>.  If the user is subscribed, then use <span class="tokenName">b</span> for a Twitch Prime subscriber, <span class="tokenName">c</span> for a Tier One subscriber, <span class="tokenName">d</span> for a Tier Two subscriber, or <span class="tokenName">e</span> for a Tier Three subscriber.</div>
+            <div class="example">I am &lt;<span class="tokenName">appreciative of</span>|<span class="tokenName">thankful for</span>|<span class="tokenName">grateful for</span>|<span class="tokenName">very grateful for</span>|<span class="tokenName">humbled by</span>&gt; your continued support.</div>
+            <div class="example">I am <span class="tokenName">appreciative of</span> your continued support.</div>
+            <div class="example">I am <span class="tokenName">thankful for</span> your continued support.</div>
+            <div class="example">I am <span class="tokenName">grateful for</span>your continued support.</div>
+            <div class="example">I am <span class="tokenName">very grateful for</span> your continued support.</div>
+            <div class="example">I am <span class="tokenName">humbled by</span> your continued support.</div>
+        </div>
+    </body>
+</html>

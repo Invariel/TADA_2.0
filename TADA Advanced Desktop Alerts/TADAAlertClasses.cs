@@ -1,0 +1,636 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+
+namespace TADA_Advanced_Desktop_Alerts
+{
+    public class TADAAlert : INotifyPropertyChanged, IXmlSerializable
+    {
+        private String alertName;
+        private String alertType;
+
+        private List<TADAAlertImage> images = new List<TADAAlertImage>();
+        private List<TADAAlertAudio> audios = new List<TADAAlertAudio>();
+        private List<TADAAlertText> streamerTexts = new List<TADAAlertText>();
+        private List<TADAAlertText> viewerTexts = new List<TADAAlertText>();
+        private List<TADAAlertCondition> conditions = new List<TADAAlertCondition>();
+
+        public List<TADAAlertImage> Images
+        {
+            get { return this.images; }
+            set
+            {
+                this.images = value;
+                NotifyPropertyChanged("ImageCount");
+            }
+        }
+
+        public List<TADAAlertAudio> Audios
+
+        {
+            get { return this.audios; }
+            set
+            {
+                this.audios = value;
+                NotifyPropertyChanged("AudioCount");
+            }
+        }
+
+        public List<TADAAlertText> StreamerTexts
+        {
+            get { return this.streamerTexts; }
+            set
+            {
+                this.streamerTexts = value;
+                NotifyPropertyChanged("StreamerCount");
+            }
+        }
+
+        public List<TADAAlertText> ViewerTexts
+        {
+            get { return this.viewerTexts; }
+            set
+            {
+                this.viewerTexts = value;
+                NotifyPropertyChanged("ViewerCount");
+            }
+        }
+
+        [DisplayName("Alert Nickname")]
+        public String AlertName
+        {
+            get { return this.alertName; }
+            set
+            {
+                if (this.alertName != value)
+                {
+                    this.alertName = value;
+                    NotifyPropertyChanged("Name");
+                }
+            }
+        }
+
+        [DisplayName("Alert Type")]
+        public String AlertType
+        {
+            get { return this.alertType; }
+            set
+            {
+                if (this.alertType != value)
+                {
+                    this.alertType = value;
+                    NotifyPropertyChanged("AlertType");
+                }
+            }
+        }
+
+        [DisplayName("Images")]
+        public int ImageCount
+        {
+            get { return Images.Count; }
+        }
+
+        [DisplayName("Audio")]
+        public int AudioCount
+        {
+            get { return Audios.Count; }
+        }
+
+        [DisplayName("Your Text")]
+        public int StreamerCount
+        {
+            get { return StreamerTexts.Count; }
+        }
+
+        [DisplayName("Viewer Text")]
+        public int ViewerCount
+        {
+            get { return ViewerTexts.Count; }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Alert");
+            writer.WriteAttributeString("Name", alertName);
+            writer.WriteAttributeString("Type", alertType);
+
+            if (images.Count > 0)
+            {
+                writer.WriteStartElement("Images");
+                foreach (TADAAlertImage image in images) { image.WriteXml(writer); }
+                writer.WriteEndElement();
+            }
+
+            if (audios.Count > 0)
+            {
+                writer.WriteStartElement("Audios");
+                foreach (TADAAlertAudio audio in audios) { audio.WriteXml(writer); }
+                writer.WriteEndElement();
+            }
+
+            if (streamerTexts.Count > 0)
+            {
+                writer.WriteStartElement("StreamerTexts");
+                foreach (TADAAlertText text in streamerTexts) { text.WriteXml(writer); }
+                writer.WriteEndElement();
+            }
+
+            if (viewerTexts.Count > 0)
+            {
+                writer.WriteStartElement("ViewerTexts");
+                foreach (TADAAlertText text in viewerTexts) { text.WriteXml(writer); }
+                writer.WriteEndElement();
+            }
+
+            if (conditions.Count > 0)
+            {
+                writer.WriteStartElement("Conditions");
+                foreach (TADAAlertCondition condition in conditions) { condition.WriteXml(writer); }
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+        }
+    }
+
+    public class TADAAlertImage : INotifyPropertyChanged, IXmlSerializable
+    {
+        private String filename;
+        private Size dimensions;
+        private Boolean isVideo;
+
+        [DisplayName("Filename")]
+        public String Filename
+        {
+            get { return this.filename; }
+            set
+            {
+                if (this.filename != value)
+                {
+                    this.filename = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        [DisplayName("Size")]
+        public Size Dimensions
+        {
+            get { return this.dimensions; }
+            set
+            {
+                if (this.dimensions != value)
+                {
+                    this.dimensions = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        [DisplayName("Video ?")]
+        public bool IsVideo
+        {
+            get { return this.isVideo; }
+            set
+            {
+                if (this.isVideo != value)
+                {
+                    this.isVideo = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public WaypointContainer Waypoints { get; set; }
+
+        public int AnimationLoops { get; set; }
+
+        public double Volume { get; set; }
+        public double Balance { get; set; } = 0;
+
+        public TimeSpan Delay { get; set; }
+        public TimeSpan Duration { get; set; }
+        public TimeSpan EndingPosition { get; set; }
+        public TimeSpan StartingPosition { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public TADAAlertImage(string filename, bool isVideo, int animationLoops, Size dimensions, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, double volume, double balance, WaypointContainer waypointContainer)
+        {
+            this.Filename = filename;
+            this.IsVideo = isVideo;
+            this.AnimationLoops = animationLoops;
+            this.Dimensions = dimensions;
+            this.Delay = delay;
+            this.Duration = duration;
+            this.StartingPosition = startingPosition;
+            this.EndingPosition = endingPosition;
+            this.Volume = volume;
+            this.Balance = balance;
+            this.Waypoints = waypointContainer;
+        }
+
+        public TADAAlertImage() { }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Image");
+            writer.WriteAttributeString("Filename", filename);
+            writer.WriteAttributeString("IsVideo", isVideo.ToString());
+
+            if (isVideo)
+            {
+                writer.WriteAttributeString("Volume", Volume.ToString());
+                writer.WriteAttributeString("Balance", Balance.ToString());
+
+                XmlHelper.WriteTimeSpan(writer, Delay, "Delay");
+                XmlHelper.WriteTimeSpan(writer, Duration, "Duration");
+                XmlHelper.WriteTimeSpan(writer, StartingPosition, "StartAt");
+                XmlHelper.WriteTimeSpan(writer, EndingPosition, "LoopAt");
+            }
+            else
+            {
+                writer.WriteAttributeString("Loops", AnimationLoops.ToString());
+            }
+
+            XmlHelper.WriteSize(writer, dimensions, "Dimensions");
+
+            if (Waypoints.Waypoints.Count > 0)
+            {
+                writer.WriteStartElement("Waypoints");
+                foreach (Waypoint w in Waypoints.Waypoints)
+                {
+                    w.WriteXml(writer);
+                }
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+    }
+
+    public class TADAAlertAudio : INotifyPropertyChanged, IXmlSerializable
+    {
+        private String filename;
+        private double volume;
+        private double balance;
+
+        public String Filename
+        {
+            get { return this.filename; }
+            set
+            {
+                if (this.filename != value)
+                {
+                    this.filename = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public double Volume
+        {
+            get { return this.volume; }
+            set
+            {
+                if (this.volume != value)
+                {
+                    this.volume = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public double Balance
+        {
+            get { return this.balance; }
+            set
+            {
+                if (this.balance != value)
+                {
+                    this.balance = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan Delay { get; set; }
+        public TimeSpan Duration { get; set; }
+        public TimeSpan StartingPosition { get; set; }
+        public TimeSpan EndingPosition { get; set; }
+
+        public WaypointContainer Waypoints { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public TADAAlertAudio (String filename, double volume, double balance, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, WaypointContainer waypoints)
+        {
+            this.Filename = filename;
+            this.Volume = volume;
+            this.Balance = 0;
+            this.Delay = delay;
+            this.Duration = duration;
+            this.StartingPosition = startingPosition;
+            this.EndingPosition = endingPosition;
+            this.Waypoints = waypoints;
+        }
+
+        public TADAAlertAudio() { }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Audio");
+            writer.WriteAttributeString("Filename", filename);
+            writer.WriteAttributeString("Volume", volume.ToString());
+            writer.WriteAttributeString("Balance", balance.ToString());
+
+            XmlHelper.WriteTimeSpan(writer, Delay, "Delay");
+            XmlHelper.WriteTimeSpan(writer, Duration, "Duration");
+            XmlHelper.WriteTimeSpan(writer, StartingPosition, "StartAt");
+            XmlHelper.WriteTimeSpan(writer, EndingPosition, "LoopAt");
+
+            if (Waypoints.Waypoints.Count > 0)
+            {
+                writer.WriteStartElement("Waypoints");
+                foreach (Waypoint w in Waypoints.Waypoints)
+                {
+                    w.WriteXml(writer);
+                }
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+    }
+
+    public class TADAAlertText : INotifyPropertyChanged, IXmlSerializable
+    {
+        private String message;
+        private String readMessage;
+
+        [DisplayName("Displayed Message")]
+        public String Message
+        {
+            get { return this.message; }
+            set
+            {
+                if (this.message != value)
+                {
+                    this.message = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        [DisplayName("Narrated Message")]
+        public String ReadMessage
+        {
+            get { return this.readMessage; }
+            set
+            {
+                if (this.readMessage != value)
+                {
+                    this.readMessage = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public String TTSVoice { get; set; }
+
+        public int TTSVolume { get; set; }   // 0 - 100
+
+        public Font ChosenFont { get; set; }
+
+        public float OutlineWidth { get; set; }
+
+        public Color Foreground { get; set; }
+        public Color Background { get; set; }
+        public Color Outline { get; set; }
+        public Color Transparent { get; set; }
+
+        public Size Dimensions { get; set; }
+        public Size Padding { get; set; }
+
+        public WaypointContainer Waypoints { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public TADAAlertText(String message, String readMessage, String ttsVoice, int ttsVolume, Font font, float outlineWidth, Color foreground, Color background, Color outline, Color transparent, Size dimensions, Size padding, WaypointContainer waypoints)
+        {
+            this.Message = message;
+            this.ReadMessage = readMessage;
+            this.TTSVoice = ttsVoice;
+            this.TTSVolume = ttsVolume;
+
+            this.ChosenFont = font;
+            this.OutlineWidth = outlineWidth;
+
+            this.Foreground = foreground;
+            this.Background = background;
+            this.Outline = outline;
+            this.Transparent = transparent;
+
+            this.Dimensions = dimensions;
+            this.Padding = padding;
+
+            this.Waypoints = waypoints;
+        }
+
+        public TADAAlertText () { }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Text");
+            writer.WriteAttributeString("Message", message);
+            writer.WriteAttributeString("Read", readMessage);
+            writer.WriteAttributeString("Voice", TTSVoice);
+            writer.WriteAttributeString("Volume", TTSVolume.ToString());
+
+            writer.WriteStartElement("Font");
+            writer.WriteAttributeString("Name", ChosenFont.Name);
+            writer.WriteAttributeString("Size", ChosenFont.SizeInPoints.ToString());
+            writer.WriteAttributeString("Outline", Outline.ToString());
+            writer.WriteEndElement();
+
+            XmlHelper.WriteColor(writer, Foreground, "Foreground");
+            XmlHelper.WriteColor(writer, Background, "Background");
+            XmlHelper.WriteColor(writer, Outline, "Outline");
+            XmlHelper.WriteColor(writer, Transparent, "Transparent");
+
+            XmlHelper.WriteSize(writer, Dimensions, "Dimensions");
+            XmlHelper.WriteSize(writer, Padding, "Padding");
+
+            if (Waypoints.Waypoints.Count > 0)
+            {
+                writer.WriteStartElement("Waypoints");
+                foreach (Waypoint w in Waypoints.Waypoints)
+                {
+                    w.WriteXml(writer);
+                }
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+    }
+
+    public class TADAAlertCondition : IXmlSerializable
+    {
+        [DisplayName("No Tier")]
+        public bool NoTier { get; set; }
+
+        [DisplayName("Twitch Prime")]
+        public bool TwitchPrime { get; set; }
+
+        [DisplayName("Tier One")]
+        public bool TierOne { get; set; }
+
+        [DisplayName("Tier Two")]
+        public bool TierTwo { get; set; }
+
+        [DisplayName("Tier Three")]
+        public bool TierThree { get; set; }
+
+        [DisplayName("Usernames")]
+        public String Usernames { get; set; }
+
+        [DisplayName("Keywords")]
+        public String Keywords { get; set; }
+
+        [DisplayName("Minimum")]
+        public int Minimum { get; set; }
+        
+        [DisplayName("Maximum")]
+        public int Maximum { get; set; }
+
+        [DisplayName("Keypress")]
+        public String Keypress { get; set; }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            if (reader.Name == "Condition")
+            {
+                NoTier = (reader.GetAttribute("NoTier") == "true");
+                TwitchPrime = (reader.GetAttribute("TwitchPrime") == "true");
+                TierOne = (reader.GetAttribute("TierOne") == "true");
+                TierTwo = (reader.GetAttribute("TierTwo") == "true");
+                TierThree = (reader.GetAttribute("TierThree") == "true");
+                Usernames = (String.IsNullOrEmpty(reader.GetAttribute("Usernames")) ? "" : reader.GetAttribute("Usernames"));
+                Keywords = (String.IsNullOrEmpty(reader.GetAttribute("Keywords")) ? "" : reader.GetAttribute("Keywords"));
+                Keypress = (String.IsNullOrEmpty(reader.GetAttribute("Keypress")) ? "" : reader.GetAttribute("Keypress"));
+
+                int val;
+                Minimum = (Int32.TryParse(reader.GetAttribute("Minimum"), out val) ? val : 0);
+                Maximum = (Int32.TryParse(reader.GetAttribute("Maximum"), out val) ? val : 0);
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Condition");
+            if (NoTier) { writer.WriteAttributeString("NoTier", "true"); }
+            if (TwitchPrime) { writer.WriteAttributeString("TwitchPrime", "true"); }
+            if (TierOne) { writer.WriteAttributeString("TierOne", "true"); }
+            if (TierTwo) { writer.WriteAttributeString("TierTwo", "true"); }
+            if (TierThree) { writer.WriteAttributeString("TierThree", "true"); }
+            if (!String.IsNullOrEmpty(Usernames)) { writer.WriteAttributeString("Usernames", Usernames); }
+            if (!String.IsNullOrEmpty(Keywords)) { writer.WriteAttributeString("Keywords", Keywords); }
+            if (Minimum > 0) { writer.WriteAttributeString("Minimum", Minimum.ToString()); }
+            if (Maximum > 0) { writer.WriteAttributeString("Maximum", Maximum.ToString()); }
+            if (!String.IsNullOrEmpty(Keypress)) { writer.WriteAttributeString("Keypress", Keypress); }
+        }
+    }
+
+    public class SubstitutionObject
+    {
+        public String ViewerName { get; set; }
+        public String RecipientName { get; set; }
+        public int Amount { get; set; }
+        public String Tier { get; set; }
+        public String TierName { get; set; }
+    }
+}
