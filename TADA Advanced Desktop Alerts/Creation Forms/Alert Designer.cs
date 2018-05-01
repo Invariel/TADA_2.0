@@ -138,10 +138,19 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private void UpdateMaximum (object sender, EventArgs e)
         {
-            numud_TestAudio.Maximum = dg_Audio.Rows.Count;
-            numud_TestImage.Maximum = dg_Images.Rows.Count;
-            numud_TestStreamerMessage.Maximum = dg_StreamerMessages.Rows.Count;
-            numud_TestViewerMessage.Maximum = dg_ViewerMessages.Rows.Count;
+            Tuple<NumericUpDown, DataGridView>[] pairing = new Tuple<NumericUpDown, DataGridView>[]
+            {
+                new Tuple<NumericUpDown, DataGridView> (numud_TestAudio, dg_Audio),
+                new Tuple<NumericUpDown, DataGridView> (numud_TestImage, dg_Images),
+                new Tuple<NumericUpDown, DataGridView> (numud_TestStreamerMessage, dg_StreamerMessages),
+                new Tuple<NumericUpDown, DataGridView> (numud_TestViewerMessage, dg_ViewerMessages)
+            };
+
+            foreach (Tuple<NumericUpDown, DataGridView> tuple in pairing)
+            {
+                tuple.Item1.Maximum = tuple.Item2.Rows.Count - 1;
+                tuple.Item1.Minimum = 0;
+            }
         }
 
         private void CreateAudio(object sender, EventArgs e)
@@ -184,12 +193,14 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             TADAAlertText streamerText = null;
             TADAAlertText viewerText = null;
 
-            SubstitutionObject subObject = new SubstitutionObject();
-            subObject.ViewerName = txt_ViewerName.Text;
-            subObject.RecipientName = txt_RecipientName.Text;
-            subObject.Amount = Convert.ToInt32(numud_Amount.Value);
-            subObject.Tier = dom_SubTier.Text;
-            subObject.TierName = txt_SubTierName.Text;
+            SubstitutionObject subObject = new SubstitutionObject
+            {
+                ViewerName = txt_ViewerName.Text,
+                RecipientName = txt_RecipientName.Text,
+                Amount = Convert.ToInt32(numud_Amount.Value),
+                Tier = dom_SubTier.Text,
+                TierName = txt_SubTierName.Text
+            };
 
             if (whichAudio > 0)
             {
@@ -208,8 +219,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 String streamerMessage = streamerText.Message;
                 String streamerReadMessage = streamerText.ReadMessage;
 
-                General.PerformSubstitutions(ref streamerMessage, null);
-                General.PerformSubstitutions(ref streamerReadMessage, null);
+                General.PerformSubstitutions(ref streamerMessage, subObject);
+                General.PerformSubstitutions(ref streamerReadMessage, subObject);
 
                 streamerText.Message = streamerMessage;
                 streamerText.ReadMessage = streamerReadMessage;
@@ -252,6 +263,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             foreach (TADAAlertText text in (dg_ViewerMessages.DataSource as BindingSource))
             {
                 this.currentAlert.ViewerTexts.Add(text);
+            }
+
+            foreach (TADAAlertCondition condition in (dg_Conditions.DataSource as BindingSource))
+            {
+                this.currentAlert.Conditions.Add(condition);
             }
 
             this.currentAlert.AlertName = txt_AlertName.Text;

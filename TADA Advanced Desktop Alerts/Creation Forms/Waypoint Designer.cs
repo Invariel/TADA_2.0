@@ -13,6 +13,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
     public partial class MainWaypointForm : Form
     {
+        private double MIN_SAFE_RESOLUTION = 30.0;
+
         private bool disableUpdates;
 
         private Bitmap previewImage;
@@ -70,6 +72,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             chk_ChangeBalance.CheckedChanged += SaveVariableState;
             chk_ChangeVolume.CheckedChanged += SaveVariableState;
 
+            radio_AngleCenter.CheckedChanged += SaveVariableState;
+            radio_AngleUpperLeft.CheckedChanged += SaveVariableState;
+            radio_MagnifyCenter.CheckedChanged += SaveVariableState;
+            radio_MagnifyUpperLeft.CheckedChanged += SaveVariableState;
+
             numud_TargetAngle.ValueChanged += SaveVariableState;
             numud_FramesAngle.ValueChanged += SaveVariableState;
             numud_DurationAngle.ValueChanged += SaveVariableState;
@@ -105,7 +112,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             General.ConfigureToolTip(grp_AdvancedWaypoint, "Advanced controls for the selected Waypoint.");
             General.ConfigureToolTip(grp_Coordinates, "This section lets you choose whether to have your item move in a line or along a curve, and where the control points for that curve are.");
             General.ConfigureToolTip(grp_Macro, "This section lets you define the window you want to send keypresses to once this Waypoint has completed.");
-            General.ConfigureToolTip(grp_Options, "This lets you specify options that affect how the item is displayed, and whether to read the attached text-to-speech message.");
             General.ConfigureToolTip(grp_Preview, "This gives you a preview of how your item will move across the screen.  If you last used the Advanced Waypoints window, it will give you a preview of just that Waypoint.");
 
             General.ConfigureToolTip(tab_Angle, "This tab lets you rotate the item to the desired angle in the desired time with the chosen resolution.  This will not work for movie files.");
@@ -113,6 +119,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             General.ConfigureToolTip(tab_Opacity, "This tab lets you choose how transparent or opaque your item should become.  This will not work for movie files.");
             General.ConfigureToolTip(tab_Balance, "This tab lets you shift the audio to the left (-1), right (1), or back to center (0) while this item plays.");
             General.ConfigureToolTip(tab_Volume, "This tab lets you change the volume dynamically during this waypoint.");
+            General.ConfigureToolTip(tab_Options, "This tab lets you set additional options: whether to display behind the image, to leave the screen completely when moving to the edge, or to read text messages after this Waypoint.");
 
             General.ConfigureToolTip(lbl_ControlPoint1, "The coordinates for the first control point that defines the curve this item will follow.");
             General.ConfigureToolTip(lbl_ControlPoint2, "The coordinates for the second control point that defines the curve this item will follow.");
@@ -131,11 +138,15 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             General.ConfigureToolTip(numud_TargetAngle, "The desired angle for the item to reach starting from its current angle.  After reaching the target, the item's angle will be redefined to 0 <= angle < 360.");
             General.ConfigureToolTip(numud_FramesAngle, "The number of animation frames rotating this item will take.");
             General.ConfigureToolTip(numud_DurationAngle, "The amount of time to take for this rotation to complete.");
-
+            General.ConfigureToolTip(radio_AngleCenter, "If checked, this rotation is around the center of your item.");
+            General.ConfigureToolTip(radio_AngleUpperLeft, "If checked, this rotation is around the item's upper-left corner.  This is the default behaviour.");
+            
             General.ConfigureToolTip(chk_ChangeMagnification, "If checked, this Waypoint also defines a change in magnification.");
             General.ConfigureToolTip(numud_TargetMagnification, "The desired magnification for the item to reach, starting from its current state, but relative to its original size.");
             General.ConfigureToolTip(numud_FramesMagnification, "The number of animation frames changing this item's size will take.");
             General.ConfigureToolTip(numud_DurationMagnification, "The amount of time for this change in magnification to complete.");
+            General.ConfigureToolTip(radio_MagnifyCenter, "When this feature is enabled, your item will expand and shrink from the center out.");
+            General.ConfigureToolTip(radio_MagnifyUpperLeft, "When this feature is enabled, your item will expand and shrink down and right.  This is the default behaviour.");
 
             General.ConfigureToolTip(chk_ChangeOpacity, "If checked, this Waypoint also defines a change in opacity.");
             General.ConfigureToolTip(numud_TargetOpacity, "The desired level of opacity for the item to reach, starting from its current state.");
@@ -190,11 +201,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 w.Angle.duration = Convert.ToDouble(numud_DurationAngle.Value);
                 w.Angle.frames = Convert.ToInt32(numud_FramesAngle.Value);
                 w.Angle.target = Convert.ToDouble(numud_TargetAngle.Value);
+                w.Angle.aroundCenter = radio_AngleCenter.Checked;
 
                 w.Magnification.change = chk_ChangeMagnification.Checked;
                 w.Magnification.duration = Convert.ToDouble(numud_DurationMagnification.Value);
                 w.Magnification.frames = Convert.ToInt32(numud_FramesMagnification.Value);
                 w.Magnification.target = Convert.ToDouble(numud_TargetMagnification.Value);
+                w.Magnification.aroundCenter = radio_MagnifyCenter.Checked;
 
                 w.Opacity.change = chk_ChangeOpacity.Checked;
                 w.Opacity.duration = Convert.ToDouble(numud_DurationOpacity.Value);
@@ -216,6 +229,31 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                 UpdatePreview();
                 CheckChecked();
+
+                Tuple<Effect, String>[] tuples = new Tuple<Effect, String>[]
+                {
+                    new Tuple<Effect, String> (w.Angle, "angle"),
+                    new Tuple<Effect, String> (w.Magnification, "magnification"),
+                    new Tuple<Effect, String> (w.Opacity, "opacity"),
+                    new Tuple<Effect, String> (w.Balance, "balance"),
+                    new Tuple<Effect, String> (w.Volume, "volume")
+                };
+
+                foreach (Tuple<Effect, String> tuple in tuples)
+                {
+                    double time = tuple.Item1.duration * 1000 / tuple.Item1.frames;
+                    if (time < MIN_SAFE_RESOLUTION)
+                    {
+                        MessageBox.Show(null,
+                                        String.Format("Your {0} effect may take longer than desired because {1} is lower than the safe {2} ms resolution.",
+                                                     tuple.Item2,
+                                                     time,
+                                                     MIN_SAFE_RESOLUTION),
+                                        "May Take Longer Than Desired",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Warning);
+                    }
+                }
             }
         }
 
@@ -516,11 +554,17 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             itemSize = size;
         }
 
-        protected void SetAnimationWindowSize (float width = 0, float height = 0)
+        protected void SetAnimationWindow (TADAAnimationWindow animationWindow)
+        {
+            this.animationWindow = animationWindow;
+            animationWindow.Listen(this);
+        }
+
+        public void SetAnimationWindowSize (float width = 0, float height = 0)
         {
             if (width == 0 && height == 0)
             {
-                animationWindowSize.Width = 1200;
+                animationWindowSize.Width = 1280;
                 animationWindowSize.Height = 1024;
             }
             else
@@ -621,11 +665,15 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_TargetAngle.Value = Convert.ToDecimal(w.Angle.target);
             numud_FramesAngle.Value = Convert.ToInt32(w.Angle.frames);
             numud_DurationAngle.Value = Convert.ToDecimal(w.Angle.duration);
+            radio_AngleCenter.Checked = w.Angle.aroundCenter;
+            radio_AngleUpperLeft.Checked = !w.Angle.aroundCenter;
 
             chk_ChangeMagnification.Checked = w.Magnification.change;
             numud_TargetMagnification.Value = Convert.ToDecimal(w.Magnification.target);
             numud_FramesMagnification.Value = Convert.ToDecimal(w.Magnification.frames);
             numud_DurationMagnification.Value = Convert.ToDecimal(w.Magnification.duration);
+            radio_MagnifyCenter.Checked = w.Magnification.aroundCenter;
+            radio_MagnifyUpperLeft.Checked = !w.Magnification.aroundCenter;
 
             chk_ChangeOpacity.Checked = w.Opacity.change;
             numud_TargetOpacity.Value = Convert.ToDecimal(w.Opacity.target);
@@ -813,8 +861,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     float bezierY = Bezier.CalculateBezierCoordinate(P0.Y, C0.Y, C1.Y, P1.Y, (float)t);
 
                     Matrix m = new Matrix();
+                    m.RotateAt(drawAngle, w.Angle.aroundCenter ? new PointF(itemSize.Width * widthRatio / 2.0f, itemSize.Height * heightRatio / 2.0f) : new PointF(0, 0));
                     m.Scale(drawMagnification, drawMagnification);
-                    m.Rotate(drawAngle);
                     m.TransformPoints(rectanglePoints);
                     m.Reset();
 

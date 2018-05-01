@@ -18,6 +18,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public int frames = 1;
         public double target = 0;
         public double duration = 0;
+        public bool aroundCenter = false;
 
         public void Copy(Effect e)
         {
@@ -25,6 +26,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.frames = e.frames;
             this.target = e.target;
             this.duration = e.duration;
+            this.aroundCenter = e.aroundCenter;
         }
 
         public XmlSchema GetSchema()
@@ -40,6 +42,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.frames = Convert.ToInt32(reader.GetAttribute("Frames"));
                 this.target = Convert.ToDouble(reader.GetAttribute("Target"));
                 this.duration = Convert.ToDouble(reader.GetAttribute("Duration"));
+                this.aroundCenter = Convert.ToBoolean(reader.GetAttribute("AroundCenter"));
             }
         }
 
@@ -61,6 +64,7 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteAttributeString("Frames", this.frames.ToString());
             writer.WriteAttributeString("Target", this.target.ToString());
             writer.WriteAttributeString("Duration", this.duration.ToString());
+            writer.WriteAttributeString("AroundCenter", this.aroundCenter.ToString());
             writer.WriteEndElement();
         }
     }
@@ -227,10 +231,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public XmlSchema GetSchema()
@@ -242,7 +243,81 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             // Read point.  Assign to point based on Name
             // Read Transition Time, Persist Time (Stay) as attributes.
-            throw new NotImplementedException();
+
+            if (reader.IsStartElement("Waypoint"))
+            {
+                this.transitionTime = Double.Parse(reader.GetAttribute("TransitionTime"));
+                this.persistTime = Double.Parse(reader.GetAttribute("StickAround"));
+                this.leaveScreen = Boolean.Parse(reader.GetAttribute("LeaveScreen"));
+                this.behindImage = Boolean.Parse(reader.GetAttribute("BehindImage"));
+                this.readMessage = Boolean.Parse(reader.GetAttribute("ReadMessage"));
+            }
+            else
+            {
+                throw new XmlException("Reader is not seated on a <Waypoint> element.");
+            }
+
+            while (reader.Read())
+            {
+                if (reader.IsStartElement("Point"))
+                {
+                    XmlHelper.ReadPoint(reader, out PointF point, out string name);
+                    if (name == "P1")
+                    {
+                        this.P1 = point;
+                    }
+                    else if (name == "C0")
+                    {
+                        this.C0 = point;
+                    }
+                    else if (name == "C1")
+                    {
+                        this.C1 = point;
+                    }
+                }
+                else if (reader.IsStartElement("Effect"))
+                {
+                    Effect e;
+                    switch (reader.GetAttribute("Name"))
+                    {
+                        case "Angle":
+                            e = Angle;
+                            break;
+                        case "Magnification":
+                            e = Magnification;
+                            break;
+                        case "Opacity":
+                            e = Opacity;
+                            break;
+                        case "Volume":
+                            e = Volume;
+                            break;
+                        case "Balance":
+                            e = Balance;
+                            break;
+                        default:
+                            e = new Effect();
+                            System.Windows.Forms.MessageBox.Show("Found an Effect with no Name attribute.", "Error in Parsing XML", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                            break;
+                    }
+                    e.ReadXml(reader);
+                }
+                else if (reader.IsStartElement("Macro"))
+                {
+                    this.WindowTarget = reader.GetAttribute("Window");
+                    this.Keypresses = reader.GetAttribute("Keys");
+                }
+                else if (!reader.IsStartElement() && reader.Name == "Waypoint")
+                {
+                    break;
+                }
+            }
+
+            // If, at this point, C0 and C1 are null, let the system know that this isn't a curve.
+            if (c0 == null && c1 == null)
+            {
+                this.isCurve = false;
+            }
         }
 
         public void WriteXml(XmlWriter writer)
@@ -273,29 +348,6 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             writer.WriteEndElement();
-        }
-
-        private void ReadPoint(XmlReader reader)
-        {
-            if (reader.Name == "Point")
-            {
-                float.TryParse(reader.GetAttribute("X"), out float x);
-                float.TryParse(reader.GetAttribute("Y"), out float y);
-
-                PointF point = new PointF(x, y);
-                switch (reader.GetAttribute("Name"))
-                {
-                    case "P1":
-                        this.p1 = point;
-                        break;
-                    case "C0":
-                        this.c0 = point;
-                        break;
-                    case "C1":
-                        this.c1 = point;
-                        break;
-                }
-            }
         }
 
         public Waypoint()

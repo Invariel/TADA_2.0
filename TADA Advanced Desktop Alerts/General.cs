@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace TADA_Advanced_Desktop_Alerts
@@ -248,6 +247,110 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 message = regex.Replace(message, match.Groups[tierNumber].ToString(), 1);
             }
+        }
+    }
+
+    // From https://stackoverflow.com/questions/15071359/how-to-set-timer-resolution-from-c-sharp-to-1-ms - 1ms resolution timers instead of 15ms to improve animations.
+    internal sealed class TimePeriod : IDisposable
+    {
+        private const string WINMM = "winmm.dll";
+
+        private static TIMECAPS timeCapabilities;
+
+        private static int inTimePeriod;
+
+        private readonly int period;
+
+        private int disposed;
+
+        [DllImport(WINMM, ExactSpelling = true)]
+        private static extern int timeGetDevCaps(ref TIMECAPS ptc, int cbtc);
+
+        [DllImport(WINMM, ExactSpelling = true)]
+        private static extern int timeBeginPeriod(int uPeriod);
+
+        [DllImport(WINMM, ExactSpelling = true)]
+        private static extern int timeEndPeriod(int uPeriod);
+
+        static TimePeriod()
+        {
+            int result = timeGetDevCaps(ref timeCapabilities, Marshal.SizeOf(typeof(TIMECAPS)));
+            if (result != 0)
+            {
+                throw new InvalidOperationException("The request to get time capabilities was not completed because an unexpected error with code " + result + " occured.");
+            }
+        }
+
+        internal TimePeriod(int period)
+        {
+            if (Interlocked.Increment(ref inTimePeriod) != 1)
+            {
+                Interlocked.Decrement(ref inTimePeriod);
+                throw new NotSupportedException("The process is already within a time period. Nested time periods are not supported.");
+            }
+
+            if (period < timeCapabilities.wPeriodMin || period > timeCapabilities.wPeriodMax)
+            {
+                throw new ArgumentOutOfRangeException("period", "The request to begin a time period was not completed because the resolution specified is out of range.");
+            }
+
+            int result = timeBeginPeriod(period);
+            if (result != 0)
+            {
+                throw new InvalidOperationException("The request to begin a time period was not completed because an unexpected error with code " + result + " occured.");
+            }
+
+            this.period = period;
+        }
+
+        internal static int MinimumPeriod
+        {
+            get
+            {
+                return timeCapabilities.wPeriodMin;
+            }
+        }
+
+        internal static int MaximumPeriod
+        {
+            get
+            {
+                return timeCapabilities.wPeriodMax;
+            }
+        }
+
+        internal int Period
+        {
+            get
+            {
+                if (this.disposed > 0)
+                {
+                    throw new ObjectDisposedException("The time period instance has been disposed.");
+                }
+
+                return this.period;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (Interlocked.Increment(ref this.disposed) == 1)
+            {
+                timeEndPeriod(this.period);
+                Interlocked.Decrement(ref inTimePeriod);
+            }
+            else
+            {
+                Interlocked.Decrement(ref this.disposed);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct TIMECAPS
+        {
+            internal int wPeriodMin;
+
+            internal int wPeriodMax;
         }
     }
 }

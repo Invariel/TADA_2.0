@@ -75,24 +75,22 @@
             this.btn_CopyWaypoints = new System.Windows.Forms.Button();
             this.dg_Waypoints = new System.Windows.Forms.DataGridView();
             this.Presets = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.transitionTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.persistTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.chk_ChangeMagnification = new System.Windows.Forms.CheckBox();
             this.chk_ReadMessage = new System.Windows.Forms.CheckBox();
             this.chk_LeaveScreen = new System.Windows.Forms.CheckBox();
             this.chk_BehindImage = new System.Windows.Forms.CheckBox();
-            this.grp_Options = new System.Windows.Forms.GroupBox();
             this.lbl_WindowTarget = new System.Windows.Forms.Label();
             this.chk_ChangeOpacity = new System.Windows.Forms.CheckBox();
             this.grp_CreateItem = new System.Windows.Forms.GroupBox();
             this.grp_AdvancedWaypoint = new System.Windows.Forms.GroupBox();
             this.tab_Effects = new System.Windows.Forms.TabControl();
             this.tab_Angle = new System.Windows.Forms.TabPage();
+            this.radio_AngleCenter = new System.Windows.Forms.RadioButton();
+            this.radio_AngleUpperLeft = new System.Windows.Forms.RadioButton();
             this.label25 = new System.Windows.Forms.Label();
             this.tab_Magnification = new System.Windows.Forms.TabPage();
+            this.radio_MagnifyCenter = new System.Windows.Forms.RadioButton();
+            this.radio_MagnifyUpperLeft = new System.Windows.Forms.RadioButton();
             this.numud_DurationMagnification = new System.Windows.Forms.NumericUpDown();
             this.numud_TargetMagnification = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
@@ -126,11 +124,17 @@
             this.label20 = new System.Windows.Forms.Label();
             this.numud_TargetVolume = new System.Windows.Forms.NumericUpDown();
             this.numud_FramesVolume = new System.Windows.Forms.NumericUpDown();
+            this.tab_Options = new System.Windows.Forms.TabPage();
             this.grp_Macro = new System.Windows.Forms.GroupBox();
             this.link_Keypress = new System.Windows.Forms.LinkLabel();
             this.txt_Keypresses = new System.Windows.Forms.TextBox();
             this.txt_WindowTarget = new System.Windows.Forms.TextBox();
             this.lbl_Keypresses = new System.Windows.Forms.Label();
+            this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.transitionTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.persistTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numud_TargetAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DurationAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_FramesAngle)).BeginInit();
@@ -151,8 +155,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Waypoints)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).BeginInit();
-            this.grp_Options.SuspendLayout();
             this.grp_AdvancedWaypoint.SuspendLayout();
             this.tab_Effects.SuspendLayout();
             this.tab_Angle.SuspendLayout();
@@ -172,7 +174,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_DurationVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_TargetVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_FramesVolume)).BeginInit();
+            this.tab_Options.SuspendLayout();
             this.grp_Macro.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // numud_TargetAngle
@@ -583,7 +587,7 @@
             // 
             // btn_TestItem
             // 
-            this.btn_TestItem.Location = new System.Drawing.Point(655, 671);
+            this.btn_TestItem.Location = new System.Drawing.Point(655, 653);
             this.btn_TestItem.Name = "btn_TestItem";
             this.btn_TestItem.Size = new System.Drawing.Size(109, 38);
             this.btn_TestItem.TabIndex = 84;
@@ -592,7 +596,7 @@
             // 
             // btn_Complete
             // 
-            this.btn_Complete.Location = new System.Drawing.Point(1160, 671);
+            this.btn_Complete.Location = new System.Drawing.Point(1160, 653);
             this.btn_Complete.Name = "btn_Complete";
             this.btn_Complete.Size = new System.Drawing.Size(109, 38);
             this.btn_Complete.TabIndex = 85;
@@ -690,13 +694,13 @@
             this.panel1.Location = new System.Drawing.Point(7, 355);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(760, 313);
+            this.panel1.Size = new System.Drawing.Size(760, 295);
             this.panel1.TabIndex = 88;
             // 
             // lbl_TotalWaypointTime
             // 
             this.lbl_TotalWaypointTime.AutoSize = true;
-            this.lbl_TotalWaypointTime.Location = new System.Drawing.Point(211, 282);
+            this.lbl_TotalWaypointTime.Location = new System.Drawing.Point(319, 261);
             this.lbl_TotalWaypointTime.Name = "lbl_TotalWaypointTime";
             this.lbl_TotalWaypointTime.Size = new System.Drawing.Size(122, 13);
             this.lbl_TotalWaypointTime.TabIndex = 65;
@@ -705,7 +709,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(559, 282);
+            this.label18.Location = new System.Drawing.Point(560, 268);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(12, 13);
             this.label18.TabIndex = 5;
@@ -714,7 +718,7 @@
             // numud_ShiftY
             // 
             this.numud_ShiftY.DecimalPlaces = 2;
-            this.numud_ShiftY.Location = new System.Drawing.Point(574, 278);
+            this.numud_ShiftY.Location = new System.Drawing.Point(575, 264);
             this.numud_ShiftY.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -732,7 +736,7 @@
             // numud_ShiftX
             // 
             this.numud_ShiftX.DecimalPlaces = 2;
-            this.numud_ShiftX.Location = new System.Drawing.Point(492, 278);
+            this.numud_ShiftX.Location = new System.Drawing.Point(493, 264);
             this.numud_ShiftX.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -750,7 +754,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(384, 282);
+            this.label17.Location = new System.Drawing.Point(507, 246);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(107, 13);
             this.label17.TabIndex = 3;
@@ -758,7 +762,7 @@
             // 
             // btn_ShiftWaypoints
             // 
-            this.btn_ShiftWaypoints.Location = new System.Drawing.Point(648, 269);
+            this.btn_ShiftWaypoints.Location = new System.Drawing.Point(648, 254);
             this.btn_ShiftWaypoints.Name = "btn_ShiftWaypoints";
             this.btn_ShiftWaypoints.Size = new System.Drawing.Size(109, 38);
             this.btn_ShiftWaypoints.TabIndex = 64;
@@ -767,7 +771,7 @@
             // 
             // btn_CopyWaypoints
             // 
-            this.btn_CopyWaypoints.Location = new System.Drawing.Point(0, 269);
+            this.btn_CopyWaypoints.Location = new System.Drawing.Point(3, 254);
             this.btn_CopyWaypoints.Name = "btn_CopyWaypoints";
             this.btn_CopyWaypoints.Size = new System.Drawing.Size(109, 38);
             this.btn_CopyWaypoints.TabIndex = 61;
@@ -787,7 +791,7 @@
             this.dg_Waypoints.DataSource = this.waypointBindingSource;
             this.dg_Waypoints.Location = new System.Drawing.Point(3, 3);
             this.dg_Waypoints.Name = "dg_Waypoints";
-            this.dg_Waypoints.Size = new System.Drawing.Size(754, 252);
+            this.dg_Waypoints.Size = new System.Drawing.Size(754, 233);
             this.dg_Waypoints.TabIndex = 0;
             // 
             // Presets
@@ -811,48 +815,6 @@
             this.Presets.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.Presets.ToolTipText = "Choose from one of these helpful presets to position your item.";
             // 
-            // xDataGridViewTextBoxColumn
-            // 
-            this.xDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.xDataGridViewTextBoxColumn.DataPropertyName = "X";
-            this.xDataGridViewTextBoxColumn.HeaderText = "X";
-            this.xDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
-            this.xDataGridViewTextBoxColumn.ToolTipText = "The X coordinate of the upper-left pixel of your item.";
-            // 
-            // yDataGridViewTextBoxColumn
-            // 
-            this.yDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.yDataGridViewTextBoxColumn.DataPropertyName = "Y";
-            this.yDataGridViewTextBoxColumn.HeaderText = "Y";
-            this.yDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
-            this.yDataGridViewTextBoxColumn.ToolTipText = "The Y coordinate of the upper-left pixel of your item.";
-            // 
-            // transitionTimeDataGridViewTextBoxColumn
-            // 
-            this.transitionTimeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.transitionTimeDataGridViewTextBoxColumn.DataPropertyName = "TransitionTime";
-            this.transitionTimeDataGridViewTextBoxColumn.HeaderText = "Transition Time (s)";
-            this.transitionTimeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.transitionTimeDataGridViewTextBoxColumn.Name = "transitionTimeDataGridViewTextBoxColumn";
-            this.transitionTimeDataGridViewTextBoxColumn.ToolTipText = "How long it will take, in seconds, for your item to move from its location to thi" +
-    "s point.";
-            // 
-            // persistTimeDataGridViewTextBoxColumn
-            // 
-            this.persistTimeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.persistTimeDataGridViewTextBoxColumn.DataPropertyName = "PersistTime";
-            this.persistTimeDataGridViewTextBoxColumn.HeaderText = "Stick Around (s)";
-            this.persistTimeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.persistTimeDataGridViewTextBoxColumn.Name = "persistTimeDataGridViewTextBoxColumn";
-            this.persistTimeDataGridViewTextBoxColumn.ToolTipText = "How long your item will stay, in seconds, at this destination before starting the" +
-    " next Waypoint.";
-            // 
-            // waypointBindingSource
-            // 
-            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
-            // 
             // chk_ChangeMagnification
             // 
             this.chk_ChangeMagnification.AutoSize = true;
@@ -868,7 +830,7 @@
             // 
             this.chk_ReadMessage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.chk_ReadMessage.AutoSize = true;
-            this.chk_ReadMessage.Location = new System.Drawing.Point(359, 15);
+            this.chk_ReadMessage.Location = new System.Drawing.Point(343, 17);
             this.chk_ReadMessage.Name = "chk_ReadMessage";
             this.chk_ReadMessage.Size = new System.Drawing.Size(98, 17);
             this.chk_ReadMessage.TabIndex = 99;
@@ -879,7 +841,7 @@
             // 
             this.chk_LeaveScreen.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.chk_LeaveScreen.AutoSize = true;
-            this.chk_LeaveScreen.Location = new System.Drawing.Point(37, 15);
+            this.chk_LeaveScreen.Location = new System.Drawing.Point(21, 17);
             this.chk_LeaveScreen.Name = "chk_LeaveScreen";
             this.chk_LeaveScreen.Size = new System.Drawing.Size(93, 17);
             this.chk_LeaveScreen.TabIndex = 97;
@@ -890,24 +852,12 @@
             // 
             this.chk_BehindImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.chk_BehindImage.AutoSize = true;
-            this.chk_BehindImage.Location = new System.Drawing.Point(202, 15);
+            this.chk_BehindImage.Location = new System.Drawing.Point(186, 17);
             this.chk_BehindImage.Name = "chk_BehindImage";
             this.chk_BehindImage.Size = new System.Drawing.Size(91, 17);
             this.chk_BehindImage.TabIndex = 98;
             this.chk_BehindImage.Text = "Behind Image";
             this.chk_BehindImage.UseVisualStyleBackColor = true;
-            // 
-            // grp_Options
-            // 
-            this.grp_Options.Controls.Add(this.chk_ReadMessage);
-            this.grp_Options.Controls.Add(this.chk_LeaveScreen);
-            this.grp_Options.Controls.Add(this.chk_BehindImage);
-            this.grp_Options.Location = new System.Drawing.Point(7, 108);
-            this.grp_Options.Name = "grp_Options";
-            this.grp_Options.Size = new System.Drawing.Size(480, 40);
-            this.grp_Options.TabIndex = 96;
-            this.grp_Options.TabStop = false;
-            this.grp_Options.Text = "Options";
             // 
             // lbl_WindowTarget
             // 
@@ -944,12 +894,11 @@
             // 
             this.grp_AdvancedWaypoint.Controls.Add(this.tab_Effects);
             this.grp_AdvancedWaypoint.Controls.Add(this.grp_Macro);
-            this.grp_AdvancedWaypoint.Controls.Add(this.grp_Options);
             this.grp_AdvancedWaypoint.Controls.Add(this.grp_Coordinates);
             this.grp_AdvancedWaypoint.Enabled = false;
             this.grp_AdvancedWaypoint.Location = new System.Drawing.Point(773, 355);
             this.grp_AdvancedWaypoint.Name = "grp_AdvancedWaypoint";
-            this.grp_AdvancedWaypoint.Size = new System.Drawing.Size(496, 313);
+            this.grp_AdvancedWaypoint.Size = new System.Drawing.Size(496, 295);
             this.grp_AdvancedWaypoint.TabIndex = 86;
             this.grp_AdvancedWaypoint.TabStop = false;
             this.grp_AdvancedWaypoint.Text = "Advanced Waypoint Controls";
@@ -962,15 +911,18 @@
             this.tab_Effects.Controls.Add(this.tab_Opacity);
             this.tab_Effects.Controls.Add(this.tab_Balance);
             this.tab_Effects.Controls.Add(this.tab_Volume);
-            this.tab_Effects.Location = new System.Drawing.Point(7, 154);
+            this.tab_Effects.Controls.Add(this.tab_Options);
+            this.tab_Effects.Location = new System.Drawing.Point(7, 111);
             this.tab_Effects.Name = "tab_Effects";
             this.tab_Effects.SelectedIndex = 0;
-            this.tab_Effects.Size = new System.Drawing.Size(480, 60);
+            this.tab_Effects.Size = new System.Drawing.Size(480, 88);
             this.tab_Effects.TabIndex = 100;
             // 
             // tab_Angle
             // 
             this.tab_Angle.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Angle.Controls.Add(this.radio_AngleCenter);
+            this.tab_Angle.Controls.Add(this.radio_AngleUpperLeft);
             this.tab_Angle.Controls.Add(this.chk_ChangeAngle);
             this.tab_Angle.Controls.Add(this.numud_DurationAngle);
             this.tab_Angle.Controls.Add(this.label8);
@@ -982,9 +934,31 @@
             this.tab_Angle.Location = new System.Drawing.Point(4, 25);
             this.tab_Angle.Name = "tab_Angle";
             this.tab_Angle.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Angle.Size = new System.Drawing.Size(472, 31);
+            this.tab_Angle.Size = new System.Drawing.Size(472, 59);
             this.tab_Angle.TabIndex = 0;
             this.tab_Angle.Text = "Angle";
+            // 
+            // radio_AngleCenter
+            // 
+            this.radio_AngleCenter.AutoSize = true;
+            this.radio_AngleCenter.Location = new System.Drawing.Point(298, 34);
+            this.radio_AngleCenter.Name = "radio_AngleCenter";
+            this.radio_AngleCenter.Size = new System.Drawing.Size(117, 17);
+            this.radio_AngleCenter.TabIndex = 106;
+            this.radio_AngleCenter.Text = "Rotate From Center";
+            this.radio_AngleCenter.UseVisualStyleBackColor = true;
+            // 
+            // radio_AngleUpperLeft
+            // 
+            this.radio_AngleUpperLeft.AutoSize = true;
+            this.radio_AngleUpperLeft.Checked = true;
+            this.radio_AngleUpperLeft.Location = new System.Drawing.Point(130, 34);
+            this.radio_AngleUpperLeft.Name = "radio_AngleUpperLeft";
+            this.radio_AngleUpperLeft.Size = new System.Drawing.Size(136, 17);
+            this.radio_AngleUpperLeft.TabIndex = 106;
+            this.radio_AngleUpperLeft.TabStop = true;
+            this.radio_AngleUpperLeft.Text = "Rotate From Upper Left";
+            this.radio_AngleUpperLeft.UseVisualStyleBackColor = true;
             // 
             // label25
             // 
@@ -1000,6 +974,8 @@
             // tab_Magnification
             // 
             this.tab_Magnification.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Magnification.Controls.Add(this.radio_MagnifyCenter);
+            this.tab_Magnification.Controls.Add(this.radio_MagnifyUpperLeft);
             this.tab_Magnification.Controls.Add(this.numud_DurationMagnification);
             this.tab_Magnification.Controls.Add(this.numud_TargetMagnification);
             this.tab_Magnification.Controls.Add(this.label12);
@@ -1011,13 +987,36 @@
             this.tab_Magnification.Location = new System.Drawing.Point(4, 25);
             this.tab_Magnification.Name = "tab_Magnification";
             this.tab_Magnification.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Magnification.Size = new System.Drawing.Size(472, 31);
+            this.tab_Magnification.Size = new System.Drawing.Size(472, 59);
             this.tab_Magnification.TabIndex = 1;
             this.tab_Magnification.Text = "Magnification";
             // 
+            // radio_MagnifyCenter
+            // 
+            this.radio_MagnifyCenter.AutoSize = true;
+            this.radio_MagnifyCenter.Enabled = false;
+            this.radio_MagnifyCenter.Location = new System.Drawing.Point(298, 34);
+            this.radio_MagnifyCenter.Name = "radio_MagnifyCenter";
+            this.radio_MagnifyCenter.Size = new System.Drawing.Size(156, 17);
+            this.radio_MagnifyCenter.TabIndex = 126;
+            this.radio_MagnifyCenter.Text = "Expand/Shrink From Center";
+            this.radio_MagnifyCenter.UseVisualStyleBackColor = true;
+            // 
+            // radio_MagnifyUpperLeft
+            // 
+            this.radio_MagnifyUpperLeft.AutoSize = true;
+            this.radio_MagnifyUpperLeft.Checked = true;
+            this.radio_MagnifyUpperLeft.Enabled = false;
+            this.radio_MagnifyUpperLeft.Location = new System.Drawing.Point(130, 34);
+            this.radio_MagnifyUpperLeft.Name = "radio_MagnifyUpperLeft";
+            this.radio_MagnifyUpperLeft.Size = new System.Drawing.Size(157, 17);
+            this.radio_MagnifyUpperLeft.TabIndex = 127;
+            this.radio_MagnifyUpperLeft.TabStop = true;
+            this.radio_MagnifyUpperLeft.Text = "Expand/Shrink Down/Right";
+            this.radio_MagnifyUpperLeft.UseVisualStyleBackColor = true;
+            // 
             // numud_DurationMagnification
             // 
-            this.numud_DurationMagnification.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_DurationMagnification.DecimalPlaces = 2;
             this.numud_DurationMagnification.Increment = new decimal(new int[] {
             25,
@@ -1036,7 +1035,6 @@
             // 
             // numud_TargetMagnification
             // 
-            this.numud_TargetMagnification.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_TargetMagnification.DecimalPlaces = 2;
             this.numud_TargetMagnification.Increment = new decimal(new int[] {
             25,
@@ -1060,7 +1058,6 @@
             // 
             // label12
             // 
-            this.label12.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(256, 12);
             this.label12.Name = "label12";
@@ -1081,7 +1078,6 @@
             // 
             // label11
             // 
-            this.label11.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(143, 12);
             this.label11.Name = "label11";
@@ -1091,7 +1087,6 @@
             // 
             // numud_FramesMagnification
             // 
-            this.numud_FramesMagnification.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_FramesMagnification.Location = new System.Drawing.Point(298, 8);
             this.numud_FramesMagnification.Maximum = new decimal(new int[] {
             1000,
@@ -1114,7 +1109,6 @@
             // 
             // label13
             // 
-            this.label13.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(349, 12);
             this.label13.Name = "label13";
@@ -1136,13 +1130,12 @@
             this.tab_Opacity.Location = new System.Drawing.Point(4, 25);
             this.tab_Opacity.Name = "tab_Opacity";
             this.tab_Opacity.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Opacity.Size = new System.Drawing.Size(472, 31);
+            this.tab_Opacity.Size = new System.Drawing.Size(472, 59);
             this.tab_Opacity.TabIndex = 2;
             this.tab_Opacity.Text = "Opacity";
             // 
             // numud_DurationOpacity
             // 
-            this.numud_DurationOpacity.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_DurationOpacity.DecimalPlaces = 2;
             this.numud_DurationOpacity.Increment = new decimal(new int[] {
             25,
@@ -1161,7 +1154,6 @@
             // 
             // label15
             // 
-            this.label15.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(256, 12);
             this.label15.Name = "label15";
@@ -1182,7 +1174,6 @@
             // 
             // numud_FramesOpacity
             // 
-            this.numud_FramesOpacity.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_FramesOpacity.Location = new System.Drawing.Point(298, 8);
             this.numud_FramesOpacity.Maximum = new decimal(new int[] {
             1000,
@@ -1205,7 +1196,6 @@
             // 
             // numud_TargetOpacity
             // 
-            this.numud_TargetOpacity.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_TargetOpacity.DecimalPlaces = 2;
             this.numud_TargetOpacity.Increment = new decimal(new int[] {
             25,
@@ -1224,7 +1214,6 @@
             // 
             // label14
             // 
-            this.label14.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(143, 12);
             this.label14.Name = "label14";
@@ -1234,7 +1223,6 @@
             // 
             // label16
             // 
-            this.label16.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(349, 12);
             this.label16.Name = "label16";
@@ -1256,7 +1244,7 @@
             this.tab_Balance.Location = new System.Drawing.Point(4, 25);
             this.tab_Balance.Name = "tab_Balance";
             this.tab_Balance.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Balance.Size = new System.Drawing.Size(472, 31);
+            this.tab_Balance.Size = new System.Drawing.Size(472, 59);
             this.tab_Balance.TabIndex = 3;
             this.tab_Balance.Text = "Balance";
             // 
@@ -1273,7 +1261,6 @@
             // 
             // numud_DurationBalance
             // 
-            this.numud_DurationBalance.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_DurationBalance.DecimalPlaces = 2;
             this.numud_DurationBalance.Increment = new decimal(new int[] {
             25,
@@ -1292,7 +1279,6 @@
             // 
             // label22
             // 
-            this.label22.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(349, 12);
             this.label22.Name = "label22";
@@ -1302,7 +1288,6 @@
             // 
             // numud_TargetBalance
             // 
-            this.numud_TargetBalance.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_TargetBalance.DecimalPlaces = 2;
             this.numud_TargetBalance.Increment = new decimal(new int[] {
             1,
@@ -1326,7 +1311,6 @@
             // 
             // label23
             // 
-            this.label23.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(143, 12);
             this.label23.Name = "label23";
@@ -1336,7 +1320,6 @@
             // 
             // label24
             // 
-            this.label24.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(256, 12);
             this.label24.Name = "label24";
@@ -1346,7 +1329,6 @@
             // 
             // numud_FramesBalance
             // 
-            this.numud_FramesBalance.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_FramesBalance.Location = new System.Drawing.Point(298, 8);
             this.numud_FramesBalance.Maximum = new decimal(new int[] {
             1000,
@@ -1392,13 +1374,12 @@
             this.tab_Volume.Location = new System.Drawing.Point(4, 25);
             this.tab_Volume.Name = "tab_Volume";
             this.tab_Volume.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Volume.Size = new System.Drawing.Size(472, 31);
+            this.tab_Volume.Size = new System.Drawing.Size(472, 59);
             this.tab_Volume.TabIndex = 4;
             this.tab_Volume.Text = "Volume";
             // 
             // numud_DurationVolume
             // 
-            this.numud_DurationVolume.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_DurationVolume.DecimalPlaces = 2;
             this.numud_DurationVolume.Increment = new decimal(new int[] {
             25,
@@ -1439,7 +1420,6 @@
             // 
             // label21
             // 
-            this.label21.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(256, 12);
             this.label21.Name = "label21";
@@ -1449,7 +1429,6 @@
             // 
             // label19
             // 
-            this.label19.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(349, 12);
             this.label19.Name = "label19";
@@ -1459,7 +1438,6 @@
             // 
             // label20
             // 
-            this.label20.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(143, 12);
             this.label20.Name = "label20";
@@ -1469,7 +1447,6 @@
             // 
             // numud_TargetVolume
             // 
-            this.numud_TargetVolume.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_TargetVolume.DecimalPlaces = 2;
             this.numud_TargetVolume.Increment = new decimal(new int[] {
             25,
@@ -1488,7 +1465,6 @@
             // 
             // numud_FramesVolume
             // 
-            this.numud_FramesVolume.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numud_FramesVolume.Location = new System.Drawing.Point(298, 8);
             this.numud_FramesVolume.Maximum = new decimal(new int[] {
             1000,
@@ -1509,6 +1485,19 @@
             0,
             0});
             // 
+            // tab_Options
+            // 
+            this.tab_Options.Controls.Add(this.chk_ReadMessage);
+            this.tab_Options.Controls.Add(this.chk_LeaveScreen);
+            this.tab_Options.Controls.Add(this.chk_BehindImage);
+            this.tab_Options.Location = new System.Drawing.Point(4, 25);
+            this.tab_Options.Name = "tab_Options";
+            this.tab_Options.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Options.Size = new System.Drawing.Size(472, 59);
+            this.tab_Options.TabIndex = 5;
+            this.tab_Options.Text = "Options";
+            this.tab_Options.UseVisualStyleBackColor = true;
+            // 
             // grp_Macro
             // 
             this.grp_Macro.Controls.Add(this.link_Keypress);
@@ -1516,7 +1505,7 @@
             this.grp_Macro.Controls.Add(this.txt_WindowTarget);
             this.grp_Macro.Controls.Add(this.lbl_Keypresses);
             this.grp_Macro.Controls.Add(this.lbl_WindowTarget);
-            this.grp_Macro.Location = new System.Drawing.Point(7, 217);
+            this.grp_Macro.Location = new System.Drawing.Point(7, 198);
             this.grp_Macro.Name = "grp_Macro";
             this.grp_Macro.Size = new System.Drawing.Size(480, 90);
             this.grp_Macro.TabIndex = 121;
@@ -1560,12 +1549,54 @@
             this.lbl_Keypresses.TabIndex = 124;
             this.lbl_Keypresses.Text = "Keypresses";
             // 
+            // xDataGridViewTextBoxColumn
+            // 
+            this.xDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.xDataGridViewTextBoxColumn.DataPropertyName = "X";
+            this.xDataGridViewTextBoxColumn.HeaderText = "X";
+            this.xDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
+            this.xDataGridViewTextBoxColumn.ToolTipText = "The X coordinate of the upper-left pixel of your item.";
+            // 
+            // yDataGridViewTextBoxColumn
+            // 
+            this.yDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.yDataGridViewTextBoxColumn.DataPropertyName = "Y";
+            this.yDataGridViewTextBoxColumn.HeaderText = "Y";
+            this.yDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
+            this.yDataGridViewTextBoxColumn.ToolTipText = "The Y coordinate of the upper-left pixel of your item.";
+            // 
+            // transitionTimeDataGridViewTextBoxColumn
+            // 
+            this.transitionTimeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.transitionTimeDataGridViewTextBoxColumn.DataPropertyName = "TransitionTime";
+            this.transitionTimeDataGridViewTextBoxColumn.HeaderText = "Transition Time (s)";
+            this.transitionTimeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.transitionTimeDataGridViewTextBoxColumn.Name = "transitionTimeDataGridViewTextBoxColumn";
+            this.transitionTimeDataGridViewTextBoxColumn.ToolTipText = "How long it will take, in seconds, for your item to move from its location to thi" +
+    "s point.";
+            // 
+            // persistTimeDataGridViewTextBoxColumn
+            // 
+            this.persistTimeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.persistTimeDataGridViewTextBoxColumn.DataPropertyName = "PersistTime";
+            this.persistTimeDataGridViewTextBoxColumn.HeaderText = "Stick Around (s)";
+            this.persistTimeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.persistTimeDataGridViewTextBoxColumn.Name = "persistTimeDataGridViewTextBoxColumn";
+            this.persistTimeDataGridViewTextBoxColumn.ToolTipText = "How long your item will stay, in seconds, at this destination before starting the" +
+    " next Waypoint.";
+            // 
+            // waypointBindingSource
+            // 
+            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
+            // 
             // MainWaypointForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1279, 711);
+            this.ClientSize = new System.Drawing.Size(1279, 696);
             this.Controls.Add(this.btn_TestItem);
             this.Controls.Add(this.btn_Complete);
             this.Controls.Add(this.grp_Preview);
@@ -1597,9 +1628,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Waypoints)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).EndInit();
-            this.grp_Options.ResumeLayout(false);
-            this.grp_Options.PerformLayout();
             this.grp_AdvancedWaypoint.ResumeLayout(false);
             this.tab_Effects.ResumeLayout(false);
             this.tab_Angle.ResumeLayout(false);
@@ -1624,8 +1652,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_DurationVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_TargetVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_FramesVolume)).EndInit();
+            this.tab_Options.ResumeLayout(false);
+            this.tab_Options.PerformLayout();
             this.grp_Macro.ResumeLayout(false);
             this.grp_Macro.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1682,7 +1713,6 @@
         protected System.Windows.Forms.CheckBox chk_ReadMessage;
         protected System.Windows.Forms.CheckBox chk_LeaveScreen;
         protected System.Windows.Forms.CheckBox chk_BehindImage;
-        protected System.Windows.Forms.GroupBox grp_Options;
         private System.Windows.Forms.Label lbl_WindowTarget;
         protected System.Windows.Forms.CheckBox chk_ChangeOpacity;
         public System.Windows.Forms.GroupBox grp_CreateItem;
@@ -1733,5 +1763,10 @@
         protected System.Windows.Forms.TabPage tab_Balance;
         protected System.Windows.Forms.TabPage tab_Volume;
         protected System.Windows.Forms.DataGridView dg_Waypoints;
+        private System.Windows.Forms.TabPage tab_Options;
+        private System.Windows.Forms.RadioButton radio_AngleCenter;
+        private System.Windows.Forms.RadioButton radio_AngleUpperLeft;
+        private System.Windows.Forms.RadioButton radio_MagnifyCenter;
+        private System.Windows.Forms.RadioButton radio_MagnifyUpperLeft;
     }
 }

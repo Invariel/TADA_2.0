@@ -31,6 +31,22 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public static void ReadPoint(XmlReader reader, out Point point, out String name)
+        {
+            if (reader.Name == "Point")
+            {
+                name = reader.GetAttribute("Name");
+                int x = Int32.Parse(reader.GetAttribute("X"));
+                int y = Int32.Parse(reader.GetAttribute("Y"));
+
+                point = new Point(x, y);
+            }
+            else
+            {
+                throw new XmlException("Reader does not point at a Point tag.");
+            }
+        }
+
         public static void ReadPoint(XmlReader reader, out PointF point, out String name)
         {
             if (reader.Name == "Point")
@@ -63,7 +79,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public static void ReadTimeSpan(XmlReader reader, TimeSpan timeSpan, out String name)
+        public static void ReadTimeSpan(XmlReader reader, out TimeSpan timeSpan, out String name)
         {
             if (reader.Name == "Time")
             {
@@ -76,6 +92,23 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public static void ReadWaypoints(XmlReader reader, WaypointContainer waypoints)
+        {
+            while (reader.Read())
+            {
+                if (reader.IsStartElement("Waypoint"))
+                {
+                    Waypoint w = new Waypoint();
+                    w.ReadXml(reader);
+                    waypoints.AddWaypoint(w);
+                }
+                else if (!reader.IsStartElement() && reader.Name == "Waypoints")
+                {
+                    break;
+                }
+            }
+        }
+
         public static void WriteColor(XmlWriter writer, Color color, String colorName)
         {
             writer.WriteStartElement("Color");
@@ -84,6 +117,15 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteAttributeString("R", color.R.ToString());
             writer.WriteAttributeString("G", color.G.ToString());
             writer.WriteAttributeString("B", color.B.ToString());
+            writer.WriteEndElement();
+        }
+
+        public static void WritePoint(XmlWriter writer, Point point, String pointName)
+        {
+            writer.WriteStartElement("Point");
+            writer.WriteAttributeString("Name", pointName);
+            writer.WriteAttributeString("X", point.X.ToString());
+            writer.WriteAttributeString("Y", point.Y.ToString());
             writer.WriteEndElement();
         }
 

@@ -20,7 +20,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         {
             InitializeComponent();
 
-            this.animationWindow = animationWindow;
+            SetAnimationWindow(animationWindow);
             this.alertText = alertText;
 
             if (!isStreamer)
@@ -224,10 +224,10 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     {
                         if (hex.Text.Length == 9)
                         {
-                            red.Value = Convert.ToInt32(hex.Text.Substring(1, 1), 16);
-                            green.Value = Convert.ToInt32(hex.Text.Substring(3, 1), 16);
-                            blue.Value = Convert.ToInt32(hex.Text.Substring(5, 1), 16);
-                            alpha.Value = Convert.ToInt32(hex.Text.Substring(7, 1), 16);
+                            red.Value = Convert.ToInt32(hex.Text.Substring(1, 2), 16);
+                            green.Value = Convert.ToInt32(hex.Text.Substring(3, 2), 16);
+                            blue.Value = Convert.ToInt32(hex.Text.Substring(5, 2), 16);
+                            alpha.Value = Convert.ToInt32(hex.Text.Substring(7, 2), 16);
                         }
                     }
                     else

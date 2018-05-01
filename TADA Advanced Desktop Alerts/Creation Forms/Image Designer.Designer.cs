@@ -104,7 +104,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_P0Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_C0X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_P0X)).BeginInit();
-            this.grp_Options.SuspendLayout();
             this.grp_CreateItem.SuspendLayout();
             this.tab_Effects.SuspendLayout();
             this.tab_Angle.SuspendLayout();
@@ -931,8 +930,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_P0Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_C0X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_P0X)).EndInit();
-            this.grp_Options.ResumeLayout(false);
-            this.grp_Options.PerformLayout();
             this.grp_CreateItem.ResumeLayout(false);
             this.grp_CreateItem.PerformLayout();
             this.tab_Effects.ResumeLayout(false);

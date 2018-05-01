@@ -23,7 +23,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.alertAudio = alertAudio;
 
             grp_Coordinates.Enabled = false;
-            grp_Options.Enabled = false;
 
             tab_Effects.TabPages.Remove(tab_Angle);
             tab_Effects.TabPages.Remove(tab_Magnification);
@@ -272,9 +271,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
             this.animationWindow.Show();
 
-            PlayingAlert playingAlert = new PlayingAlert(this.animationWindow, this.animationWindow.myGraphics, null, this.alertAudio, null, null);
-            this.animationWindow.playingAlert = playingAlert;
-            playingAlert.Play();
+            if (ValidityChecks())
+            {
+                PlayingAlert playingAlert = new PlayingAlert(this.animationWindow, this.animationWindow.myGraphics, null, this.alertAudio, null, null);
+                this.animationWindow.playingAlert = playingAlert;
+                playingAlert.Play();
+            }
         }
 
         private void btn_Complete_Click(object sender, EventArgs e)

@@ -90,7 +90,26 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             foreach (PlayingObject o in this.playingObjects)
             {
-                o.DrawImage(g);
+                if (o is PlayingText && (o as PlayingText).BehindImage())
+                {
+                    o.DrawImage(g);
+                }
+            }
+
+            foreach (PlayingObject o in this.playingObjects)
+            {
+                if (!(o is PlayingText))
+                {
+                    o.DrawImage(g);
+                }
+            }
+
+            foreach (PlayingObject o in this.playingObjects)
+            {
+                if (o is PlayingText && !(o as PlayingText).BehindImage())
+                {
+                    o.DrawImage(g);
+                }
             }
         }
 
@@ -120,8 +139,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public virtual void Dispose()
         {
+            /*
             this.Dispose(true);
             GC.SuppressFinalize(this);
+            */
         }
 
         public virtual void Dispose(bool disposing)
@@ -163,6 +184,7 @@ namespace TADA_Advanced_Desktop_Alerts
         protected Bitmap modifiedImage;
 
         protected PointF position;
+        protected PointF modifiedPosition;
 
         protected Size initialSize;
 
@@ -277,6 +299,11 @@ namespace TADA_Advanced_Desktop_Alerts
             this.redrawMe = true;
             this.animationWindow.InvalidateMe();
 
+            if (effect.frames <= 0)
+            {
+                variable = effect.target;
+            }
+
             if (variable == effect.target)
             {
                 timer.Stop();
@@ -304,6 +331,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (this.redrawMe)
             {
+                this.modifiedPosition = this.position;
+
                 if (this.modifiedImage != null)
                 {
                     this.modifiedImage.Dispose();
@@ -312,6 +341,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 Size size = new Size(Convert.ToInt32(Math.Floor (this.initialSize.Width * this.magnification)),
                                      Convert.ToInt32(Math.Floor (this.initialSize.Height * this.magnification)));
                 this.modifiedImage = new Bitmap(this.mainImage, size);
+
+                // If magnifying from upper left, there's nothing to do here.
+                // If magnifying from center, the new position needs to be determined.
 
                 if (this.angle != 0)
                 {
@@ -337,13 +369,36 @@ namespace TADA_Advanced_Desktop_Alerts
                     int height = Convert.ToInt32(Math.Ceiling(Math.Abs(a2) + Math.Abs(b1)));
 
                     Bitmap r = new Bitmap(width, height);
+                    PointF newOrigin = new PointF((width - this.modifiedImage.Width) / 2.0f, (height - this.modifiedImage.Height) / 2.0f);
+
+                    float midwidth = r.Width / 2.0f;
+                    float midheight = r.Height / 2.0f;
                     using (Graphics gr = Graphics.FromImage(r))
                     {
-                        gr.TranslateTransform(r.Width / 2, r.Height / 2);
+                        gr.TranslateTransform(midwidth, midheight);
                         gr.RotateTransform((float)alpha);
-                        gr.TranslateTransform(-r.Width / 2, -r.Height / 2);
-                        gr.DrawImage(this.modifiedImage, new PointF((width - this.modifiedImage.Width) / 2, (height - this.modifiedImage.Height) / 2));
+                        gr.TranslateTransform(-midwidth, -midheight);
+                        gr.DrawImage(this.modifiedImage, newOrigin);
                     }
+
+                    PointF[] points = new PointF[] { newOrigin };
+                    System.Drawing.Drawing2D.Matrix m = new System.Drawing.Drawing2D.Matrix();
+                    m.RotateAt((float)alpha, new PointF(midwidth, midheight));
+                    m.TransformPoints(points);
+                    m.Reset();
+
+                    // modifiedPosition - newOrigin => rotate around center.
+                    if (this.angleEffect.aroundCenter)
+                    {
+                        this.modifiedPosition.X -= newOrigin.X;
+                        this.modifiedPosition.Y -= newOrigin.Y;
+                    }
+                    else
+                    {
+                        this.modifiedPosition.X -= points[0].X;
+                        this.modifiedPosition.Y -= points[0].Y;
+                    }
+
                     this.modifiedImage.Dispose();
                     this.modifiedImage = r;
                 }
@@ -353,7 +408,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (this.opacity == 1)
             {
-                g.DrawImage(this.modifiedImage, this.position);
+                g.DrawImage(this.modifiedImage, this.modifiedPosition);
             }
             else
             {
@@ -363,8 +418,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 imageAttributes.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
 
                 g.DrawImage(this.modifiedImage,
-                            new Rectangle(Convert.ToInt32(Math.Floor(position.X)),
-                                          Convert.ToInt32(Math.Floor(position.Y)),
+                            new Rectangle(Convert.ToInt32(Math.Floor(this.modifiedPosition.X)),
+                                          Convert.ToInt32(Math.Floor(this.modifiedPosition.Y)),
                                           this.modifiedImage.Width,
                                           this.modifiedImage.Height),
                              0,
@@ -381,6 +436,11 @@ namespace TADA_Advanced_Desktop_Alerts
         protected WaypointContainer waypoints;
         protected TADAAnimationWindow animationWindow;
         protected Graphics graphics;
+
+        public bool BehindImage()
+        {
+            return this.waypoints.CurrentWaypoint.BehindImage;
+        }
 
         public PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage, TADAAnimationWindow window, Graphics canvas)
         {
@@ -579,9 +639,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage, TADAAnimationWindow window, Graphics canvas) : base (containerAlert, alertImage, window, canvas)
         {
             Bitmap b = new Bitmap(alertImage.Filename);
-            int throwawayTime;
 
-            General.ExtractAllFrames(b, alertImage.Dimensions, out this.imageFrames, out this.imageDelays, out throwawayTime);
+            General.ExtractAllFrames(b, alertImage.Dimensions, out this.imageFrames, out this.imageDelays, out int throwawayTime);
             this.remainingAnimationLoops = alertImage.AnimationLoops;
 
             this.frameTimer.Elapsed += new ElapsedEventHandler((sender, e) =>
@@ -631,12 +690,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override void Dispose(bool disposing)
         {
+            /*
             this.mediaElement.Dispatcher.Invoke(() => { this.animationWindow.Controls.Remove(this.elementHost); });
 
             balanceTimer.Stop();
             volumeTimer.Stop();
 
             base.Dispose(disposing);
+            */
         }
 
         public PlayingElement(PlayingAlert containerAlert, TADAAlertImage alertImage, TADAAnimationWindow animationWindow) : base(containerAlert, null, animationWindow, null)
@@ -791,6 +852,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             this.elementHost.Location = new System.Drawing.Point(Convert.ToInt32(Math.Floor(this.position.X)), Convert.ToInt32(Math.Floor(this.position.Y)));
+            this.elementHost.PerformLayout();
         }
 
         private bool TestComplete()
@@ -809,10 +871,6 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.waypoints = alertText.Waypoints;
 
-            // Have to generate mainImage out of the information provided in alertText.
-            // Have to store the message and TTS voice.
-
-            // alertText already contains the message with tokens replaced.  Also, I should probably generate that class.
             this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.Transparent, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.Message);
 
             if (alertText.TTSVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.ReadMessage))

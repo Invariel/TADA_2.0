@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -64,6 +65,16 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public List<TADAAlertCondition> Conditions
+        {
+            get { return this.conditions; }
+            set
+            {
+                this.conditions = value;
+                NotifyPropertyChanged("ConditionCount");
+            }
+        }
+
         [DisplayName("Alert Nickname")]
         public String AlertName
         {
@@ -116,14 +127,17 @@ namespace TADA_Advanced_Desktop_Alerts
             get { return ViewerTexts.Count; }
         }
 
+        [DisplayName("Conditions")]
+        public int ConditionCount
+        {
+            get { return Conditions.Count; }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public XmlSchema GetSchema()
@@ -131,9 +145,66 @@ namespace TADA_Advanced_Desktop_Alerts
             return null;
         }
 
+        public void Read<T>(XmlReader reader, String start, String end, List<T> listT) where T: IXmlSerializable, new()
+        {
+            while (reader.Read())
+            {
+                if (reader.IsStartElement(start))
+                {
+                    T newItem = new T();
+                    newItem.ReadXml(reader);
+                    listT.Add(newItem);
+                }
+                else if (!reader.IsStartElement() && reader.Name == end)
+                {
+                    break;
+                }
+            }
+        }
+
         public void ReadXml(XmlReader reader)
         {
+            var error = false;
 
+            this.alertName = reader.GetAttribute("Name");
+            this.alertType = reader.GetAttribute("Type");
+
+            while (reader.Read())
+            {
+                if (reader.IsStartElement())
+                {
+                    switch (reader.Name)
+                    {
+                        case "Images":
+                            Read<TADAAlertImage>(reader, "Image", "Images", this.images);
+                            break;
+                        case "Audios":
+                            Read<TADAAlertAudio>(reader, "Audio", "Audios", this.audios);
+                            break;
+                        case "StreamerTexts":
+                            Read<TADAAlertText>(reader, "Text", "StreamerTexts", this.streamerTexts);
+                            break;
+                        case "ViewerTexts":
+                            Read<TADAAlertText>(reader, "Text", "ViewerTexts", this.viewerTexts);
+                            break;
+                        case "Conditions":
+                            Read<TADAAlertCondition>(reader, "Condition", "Conditions", this.conditions);
+                            break;
+                        default:
+                            // Unknown tag detected.  Ignore it and continue.
+                            if (!error)
+                            {
+                                MessageBox.Show(null, String.Format("Unknown tag '{0}' detected in <Alert> definition.  No more errors for this <Alert> will be shown.", reader.Name), "Error in Parsing XML", MessageBoxButtons.OK);
+                                error = true;
+                            }
+                            break;
+                    }
+                }
+                else if (!reader.IsStartElement() && reader.Name == "Alert")
+                {
+                    break;
+                }
+            }
         }
 
         public void WriteXml(XmlWriter writer)
@@ -257,14 +328,14 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = waypointContainer;
         }
 
-        public TADAAlertImage() { }
+        public TADAAlertImage()
+        {
+            this.Waypoints = new WaypointContainer();
+        }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public XmlSchema GetSchema()
@@ -274,6 +345,75 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void ReadXml(XmlReader reader)
         {
+            if (reader.IsStartElement("Image"))
+            {
+                // It had better be, since that's why this was called in the first place.
+                this.Filename = reader.GetAttribute("Filename");
+                this.IsVideo = Boolean.Parse(reader.GetAttribute("IsVideo"));
+
+                if (this.IsVideo)
+                {
+                    this.Volume = Double.Parse(reader.GetAttribute("Volume"));
+                    this.Balance = Double.Parse(reader.GetAttribute("Balance"));
+
+                    this.AnimationLoops = 0;
+                }
+                else
+                {
+                    this.AnimationLoops = Int32.Parse(reader.GetAttribute("Loops"));
+
+                    this.Volume = 0;
+                    this.Balance = 0;
+                    this.Delay = new TimeSpan(0);
+                    this.Duration = new TimeSpan(0);
+                    this.StartingPosition = new TimeSpan(0);
+                    this.EndingPosition = new TimeSpan(0);
+                }
+            }
+            else
+            {
+                throw new XmlException("Reader wasn't sitting on an <Image> tag when TADAAlertImage.ReadXml() was called.");
+            }
+
+            while (reader.Read())
+            {
+                if (reader.IsStartElement("Time"))
+                {
+                    XmlHelper.ReadTimeSpan(reader, out TimeSpan timeSpan, out string name);
+
+                    switch (name)
+                    {
+                        case "Delay":
+                            this.Delay = timeSpan;
+                            break;
+                        case "Duration":
+                            this.Duration = timeSpan;
+                            break;
+                        case "StartAt":
+                            this.StartingPosition = timeSpan;
+                            break;
+                        case "EndAt":
+                            this.EndingPosition = timeSpan;
+                            break;
+                    }
+                }
+                else if (reader.IsStartElement("Size"))
+                {
+                    XmlHelper.ReadSize(reader, out Size size, out string name);
+                    if (name == "Dimensions")
+                    {
+                        this.dimensions = size;
+                    }
+                }
+                else if (reader.IsStartElement("Waypoints"))
+                {
+                    XmlHelper.ReadWaypoints(reader, this.Waypoints);
+                }
+                else if (!reader.IsStartElement() && reader.Name == "Image")
+                {
+                    break;
+                }
+            }
         }
 
         public void WriteXml(XmlWriter writer)
@@ -286,7 +426,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 writer.WriteAttributeString("Volume", Volume.ToString());
                 writer.WriteAttributeString("Balance", Balance.ToString());
-
+                
                 XmlHelper.WriteTimeSpan(writer, Delay, "Delay");
                 XmlHelper.WriteTimeSpan(writer, Duration, "Duration");
                 XmlHelper.WriteTimeSpan(writer, StartingPosition, "StartAt");
@@ -379,14 +519,14 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = waypoints;
         }
 
-        public TADAAlertAudio() { }
+        public TADAAlertAudio()
+        {
+            this.Waypoints = new WaypointContainer();
+        }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public XmlSchema GetSchema()
@@ -396,6 +536,48 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void ReadXml(XmlReader reader)
         {
+            if (reader.IsStartElement("Audio"))
+            {
+                this.Filename = reader.GetAttribute("Filename");
+                this.Volume = Double.Parse(reader.GetAttribute("Volume"));
+                this.Balance = Double.Parse(reader.GetAttribute("Balance"));
+            }
+            else
+            {
+                throw new XmlException("Reader wasn't sitting on an <Audio> tag when TADAAlertAudio.ReadXml() was called.");
+            }
+
+            while (reader.Read())
+            {
+                if (reader.IsStartElement("Time"))
+                {
+                    XmlHelper.ReadTimeSpan(reader, out TimeSpan timeSpan, out string name);
+
+                    switch (name)
+                    {
+                        case "Delay":
+                            this.Delay = timeSpan;
+                            break;
+                        case "Duration":
+                            this.Duration = timeSpan;
+                            break;
+                        case "StartAt":
+                            this.StartingPosition = timeSpan;
+                            break;
+                        case "LoopAt":
+                            this.EndingPosition = timeSpan;
+                            break;
+                    }
+                }
+                else if (reader.IsStartElement("Waypoints"))
+                {
+                    XmlHelper.ReadWaypoints(reader, this.Waypoints);
+                }
+                else if (!reader.IsStartElement() && reader.Name == "Audio")
+                {
+                    break;
+                }
+            }
         }
 
         public void WriteXml(XmlWriter writer)
@@ -498,14 +680,14 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = waypoints;
         }
 
-        public TADAAlertText () { }
+        public TADAAlertText ()
+        {
+            this.Waypoints = new WaypointContainer();
+        }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public XmlSchema GetSchema()
@@ -515,6 +697,65 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void ReadXml(XmlReader reader)
         {
+            if (reader.IsStartElement("Text"))
+            {
+                this.Message = reader.GetAttribute("Message");
+                this.ReadMessage = reader.GetAttribute("Read");
+                this.TTSVoice = reader.GetAttribute("Voice");
+                this.TTSVolume = Int32.Parse(reader.GetAttribute("Volume"));
+            }
+            else
+            {
+                throw new XmlException("Reader wasn't sitting on an <Text> tag when TADAAlertText.ReadXml() was called.");
+            }
+
+            while (reader.Read())
+            {
+                if (reader.IsStartElement("Font"))
+                {
+                    String fontface = reader.GetAttribute("Name");
+                    int points = Int32.Parse(reader.GetAttribute("Size"));
+                    this.OutlineWidth = Int32.Parse(reader.GetAttribute("Outline"));
+                    this.ChosenFont = new Font(fontface, points);
+                }
+                else if (reader.IsStartElement("Color"))
+                {
+                    XmlHelper.ReadColor(reader, out Color color, out string name);
+
+                    switch (name)
+                    {
+                        case "Foreground":
+                            this.Foreground = color;
+                            break;
+                        case "Background":
+                            this.Background = color;
+                            break;
+                        case "Outline":
+                            this.Outline = color;
+                            break;
+                        case "Transparent":
+                            this.Transparent = color;
+                            break;
+                    }
+                }
+                else if (reader.IsStartElement("Size"))
+                {
+                    XmlHelper.ReadSize(reader, out Size size, out string name);
+
+                    if (name == "Dimensions")
+                    {
+                        this.Dimensions = size;
+                    }
+                    else if (name == "Padding")
+                    {
+                        this.Padding = size;
+                    }
+                }
+                else if (reader.IsStartElement("Waypoints"))
+                {
+                    XmlHelper.ReadWaypoints(reader, this.Waypoints);
+                }
+            }
         }
 
         public void WriteXml(XmlWriter writer)
@@ -528,7 +769,7 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteStartElement("Font");
             writer.WriteAttributeString("Name", ChosenFont.Name);
             writer.WriteAttributeString("Size", ChosenFont.SizeInPoints.ToString());
-            writer.WriteAttributeString("Outline", Outline.ToString());
+            writer.WriteAttributeString("Outline", OutlineWidth.ToString());
             writer.WriteEndElement();
 
             XmlHelper.WriteColor(writer, Foreground, "Foreground");
@@ -622,6 +863,7 @@ namespace TADA_Advanced_Desktop_Alerts
             if (Minimum > 0) { writer.WriteAttributeString("Minimum", Minimum.ToString()); }
             if (Maximum > 0) { writer.WriteAttributeString("Maximum", Maximum.ToString()); }
             if (!String.IsNullOrEmpty(Keypress)) { writer.WriteAttributeString("Keypress", Keypress); }
+            writer.WriteEndElement();
         }
     }
 

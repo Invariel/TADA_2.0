@@ -25,7 +25,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         {
             InitializeComponent();
 
-            this.animationWindow = animationWindow;
+            SetAnimationWindow(animationWindow);
             this.alertImage = alertImage;
 
             eh_1.Child = mediaElement;
@@ -285,8 +285,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                     if (ImageAnimator.CanAnimate(previewBitmap))   // Then it's an animated gif.
                     {
-                        int[] timing;
-                        General.GetImageDuration(previewBitmap, out timing, out duration);
+                        General.GetImageDuration(previewBitmap, out int[] timing, out duration);
                     }
                     else    // It's not an animated gif.
                     {
@@ -466,9 +465,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
             this.animationWindow.Show();
 
-            PlayingAlert playingAlert = new PlayingAlert(this.animationWindow, this.animationWindow.myGraphics, this.alertImage, null, null, null);
-            this.animationWindow.playingAlert = playingAlert;
-            playingAlert.Play();
+            if (ValidityChecks())
+            {
+                PlayingAlert playingAlert = new PlayingAlert(this.animationWindow, this.animationWindow.myGraphics, this.alertImage, null, null, null);
+                this.animationWindow.playingAlert = playingAlert;
+                playingAlert.Play();
+            }
         }
 
         private void btn_Complete_Click(object sender, EventArgs e)

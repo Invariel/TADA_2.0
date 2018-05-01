@@ -123,6 +123,9 @@
     <Compile Include="TADAAlertClasses.cs" />
     <Compile Include="Waypoint.cs" />
     <Compile Include="XmlHelper.cs" />
+    <EmbeddedResource Include="Animation Window.resx">
+      <DependentUpon>Animation Window.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Creation Forms\Alert Designer.resx">
       <DependentUpon>Alert Designer.cs</DependentUpon>
     </EmbeddedResource>
