@@ -16,6 +16,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private TADAAlertText alertText;
 
+        private PlayingAlert playingAlert;
+
         public TextCreationForm(TADAAnimationWindow animationWindow, TADAAlertText alertText, bool isStreamer) : base()
         {
             InitializeComponent();
@@ -436,14 +438,15 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private void btn_TestItem_Click(object sender, EventArgs e)
         {
             GenerateAlertText();
-            if (this.animationWindow == null)
-            {
-                this.animationWindow = new TADAAnimationWindow();
-            }
-            this.animationWindow.Show();
 
-            PlayingAlert playingAlert = new PlayingAlert(this.animationWindow, this.animationWindow.myGraphics, null, null, alertText, null);
-            this.animationWindow.playingAlert = playingAlert;
+            if (playingAlert != null)
+            {
+                playingAlert.Stop();
+                TADAAnimationWindow.AnimationWindow.RemovePlayingAlert(playingAlert);
+            }
+
+            playingAlert = new PlayingAlert(null, null, alertText, null);
+            this.animationWindow.AddPlayingAlert(playingAlert);
             playingAlert.Play();
         }
 

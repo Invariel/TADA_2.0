@@ -20,12 +20,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private TextCreationForm currentViewerForm;
         private TADAAlert currentAlert;
 
-        public AlertCreationForm(MainTADAForm parentWindow, TADAAnimationWindow animationWindow, TADAAlert tadaAlert)
+        public AlertCreationForm(MainTADAForm parentWindow, TADAAlert tadaAlert)
         {
             InitializeComponent();
 
             this.parentWindow = parentWindow;
-            this.animationWindow = animationWindow;
+            this.animationWindow = TADAAnimationWindow.AnimationWindow;
             this.currentAlert = tadaAlert;
 
             btn_CreateAudio.Click += CreateAudio;
@@ -232,8 +232,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 viewerText.Message = txt_ViewerMessage.Text;
             }
 
-            PlayingAlert playingAlert = new PlayingAlert(this.animationWindow, this.animationWindow.myGraphics, image, audio, streamerText, viewerText);
-            this.animationWindow.playingAlert = playingAlert;
+            PlayingAlert playingAlert = new PlayingAlert(image, audio, streamerText, viewerText);
+            this.animationWindow.AddPlayingAlert(playingAlert);
             playingAlert.Play();
             this.animationWindow.Show();
         }

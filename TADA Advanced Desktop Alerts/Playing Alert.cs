@@ -18,33 +18,30 @@ namespace TADA_Advanced_Desktop_Alerts
         TADAAlertText alertText;
         TADAAlertText alertResponse;
 
-        TADAAnimationWindow animationWindow;
+        TADAAnimationWindow animationWindow = TADAAnimationWindow.AnimationWindow;
+        Graphics graphics = TADAAnimationWindow.AnimationWindow.graphics;
 
-        Graphics animationWindowGraphics;
 
-        public PlayingAlert (TADAAnimationWindow animationWindow, Graphics animationWindowGraphics, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
+        public PlayingAlert (TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
         {
-            this.animationWindow = animationWindow;
-            this.animationWindowGraphics = animationWindowGraphics;
-
             if (alertImage != null)
             {
                 this.alertImage = alertImage;
                 // And configure it.
                 if (this.alertImage.IsVideo)
                 {
-                    this.playingObjects.Add(new PlayingElement(this, alertImage, this.animationWindow));
+                    this.playingObjects.Add(new PlayingElement(this, alertImage));
                 }
                 else
                 {
                     Bitmap tempMap = new Bitmap(alertImage.Filename);
                     if (ImageAnimator.CanAnimate (tempMap))
                     {
-                        this.playingObjects.Add(new PlayingAnimatedImage(this, alertImage, this.animationWindow, this.animationWindowGraphics));
+                        this.playingObjects.Add(new PlayingAnimatedImage(this, alertImage));
                     }
                     else
                     {
-                        this.playingObjects.Add(new PlayingObject(this, alertImage, this.animationWindow, this.animationWindowGraphics));
+                        this.playingObjects.Add(new PlayingObject(this, alertImage));
                     }
                     tempMap.Dispose();
                 }
@@ -53,19 +50,19 @@ namespace TADA_Advanced_Desktop_Alerts
             if (alertAudio != null)
             {
                 this.alertAudio = alertAudio;
-                this.playingObjects.Add(new PlayingElement(this, alertAudio, this.animationWindow));
+                this.playingObjects.Add(new PlayingElement(this, alertAudio));
             }
 
             if (alertText != null)
             {
                 this.alertText = alertText;
-                this.playingObjects.Add(new PlayingText(this, alertText, this.animationWindow, this.animationWindowGraphics));
+                this.playingObjects.Add(new PlayingText(this, alertText));
             }
 
             if (alertResponse != null)
             {
                 this.alertResponse = alertResponse;
-                this.playingObjects.Add(new PlayingText(this, alertResponse, this.animationWindow, this.animationWindowGraphics));
+                this.playingObjects.Add(new PlayingText(this, alertResponse));
             }
         }
 
@@ -139,10 +136,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public virtual void Dispose()
         {
-            /*
             this.Dispose(true);
             GC.SuppressFinalize(this);
-            */
         }
 
         public virtual void Dispose(bool disposing)
@@ -442,11 +437,11 @@ namespace TADA_Advanced_Desktop_Alerts
             return this.waypoints.CurrentWaypoint.BehindImage;
         }
 
-        public PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage, TADAAnimationWindow window, Graphics canvas)
+        public PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage)
         {
             this.containerAlert = containerAlert;
-            this.animationWindow = window;
-            this.graphics = canvas;
+            this.animationWindow = TADAAnimationWindow.AnimationWindow;
+            this.graphics = this.animationWindow.graphics;
 
             if (alertImage != null)
             {
@@ -636,7 +631,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.animationWindow.InvalidateMe();
         }
 
-        public PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage, TADAAnimationWindow window, Graphics canvas) : base (containerAlert, alertImage, window, canvas)
+        public PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage) : base (containerAlert, alertImage)
         {
             Bitmap b = new Bitmap(alertImage.Filename);
 
@@ -700,7 +695,7 @@ namespace TADA_Advanced_Desktop_Alerts
             */
         }
 
-        public PlayingElement(PlayingAlert containerAlert, TADAAlertImage alertImage, TADAAnimationWindow animationWindow) : base(containerAlert, null, animationWindow, null)
+        public PlayingElement(PlayingAlert containerAlert, TADAAlertImage alertImage) : base(containerAlert, null)
         {
             this.waypoints = alertImage.Waypoints;
 
@@ -719,7 +714,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.SharedSetup();
         }
 
-        public PlayingElement(PlayingAlert containerAlert, TADAAlertAudio alertAudio, TADAAnimationWindow animationWindow) : base(containerAlert, null, animationWindow, null)
+        public PlayingElement(PlayingAlert containerAlert, TADAAlertAudio alertAudio) : base(containerAlert, null)
         {
             this.waypoints = alertAudio.Waypoints;
 
@@ -867,7 +862,7 @@ namespace TADA_Advanced_Desktop_Alerts
         private System.Speech.Synthesis.SpeechSynthesizer talky;
         private System.Speech.Synthesis.PromptBuilder prompt;
 
-        public PlayingText(PlayingAlert containerAlert, TADAAlertText alertText, TADAAnimationWindow animationWindow, Graphics canvas) : base(containerAlert, null, animationWindow, canvas)
+        public PlayingText(PlayingAlert containerAlert, TADAAlertText alertText) : base(containerAlert, null)
         {
             this.waypoints = alertText.Waypoints;
 

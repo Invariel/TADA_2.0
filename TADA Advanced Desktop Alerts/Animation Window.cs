@@ -12,12 +12,33 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class TADAAnimationWindow : Form
     {
-        public PlayingAlert playingAlert = null;
+        private static TADAAnimationWindow animationWindowSingleton;
 
-        public Graphics myGraphics;
+        public List<PlayingAlert> playingAlerts = new List<PlayingAlert>();
+        public List<PlayingAlert> keyboardAlerts = new List<PlayingAlert>();
 
-        List<Creation_Forms.MainWaypointForm> listeningWaypointForms = new List<Creation_Forms.MainWaypointForm>();
-        MainTADAForm listeningMainForm;
+        private List<Creation_Forms.MainWaypointForm> listeningDesignWindows = new List<Creation_Forms.MainWaypointForm>();
+        private MainTADAForm listeningMainForm;
+
+        private Graphics myGraphics;
+
+        public static TADAAnimationWindow AnimationWindow
+        {
+            get
+            {
+                if (animationWindowSingleton == null)
+                {
+                    animationWindowSingleton = new TADAAnimationWindow();
+                }
+
+                return animationWindowSingleton;
+            }
+        }
+
+        public Graphics graphics
+        {
+            get { return this.myGraphics; }
+        }
 
         public TADAAnimationWindow()
         {
@@ -30,7 +51,8 @@ namespace TADA_Advanced_Desktop_Alerts
             
             myGraphics = this.CreateGraphics();
 
-            this.SizeChanged += TellObservers;
+            this.SizeChanged += OnSizeChanged;
+            this.ClientSizeChanged += OnSizeChanged;
         }
 
         // Testing Refresh instead of Invalidate to hopefully force a full form refresh.
@@ -49,41 +71,66 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public void Listen(Creation_Forms.MainWaypointForm form)
+        public Size Listen(Creation_Forms.MainWaypointForm form)
         {
-            listeningWaypointForms.Add(form);
+            if (!listeningDesignWindows.Contains(form))
+            {
+                listeningDesignWindows.Add(form);
+            }
+
+            return this.ClientSize;
         }
 
-        public void Listen(MainTADAForm form)
+        public Size Listen(MainTADAForm form)
         {
-            listeningMainForm = form;
+            if (listeningMainForm == null)
+            {
+                listeningMainForm = form;
+            }
+
+            return this.ClientSize;
         }
 
         public void Silence(Creation_Forms.MainWaypointForm form)
         {
-            listeningWaypointForms.Remove(form);
+            this.listeningDesignWindows.Remove(form);
         }
 
-        public void TellObservers(object sender, EventArgs e)
+        public void OnSizeChanged(object sender, EventArgs e)
         {
-            foreach (Creation_Forms.MainWaypointForm form in listeningWaypointForms)
+            foreach (Creation_Forms.MainWaypointForm form in listeningDesignWindows)
             {
-                form.SetAnimationWindowSize(this.ClientSize.Width, this.ClientSize.Height);
+                form.SetAnimationWindowSize(this.ClientSize);
             }
 
-            listeningMainForm.SetAnimationWindowSize(this.ClientSize.Width, this.ClientSize.Height);
+            if (listeningMainForm != null &&
+                (listeningMainForm != sender ||
+                (sender is NumericUpDown && (sender as NumericUpDown).ParentForm != listeningMainForm)))
+            {
+                // Then it probably wasn't the main form, so let's tell it our size changed too.
+                listeningMainForm.SetAnimationWindowSize(this.ClientSize);
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (this.playingAlert != null)
+            foreach (PlayingAlert alert in playingAlerts)
             {
-                this.playingAlert.DrawElements(e.Graphics);
+                alert.DrawElements(e.Graphics);
+            }
+        }
+
+        public void AddPlayingAlert (PlayingAlert playingAlert)
+        {
+            if (!this.playingAlerts.Contains(playingAlert))
+            {
+                this.playingAlerts.Add(playingAlert);
             }
         }
 
         public void RemovePlayingAlert(PlayingAlert playingAlert)
         {
+            this.playingAlerts.Remove(playingAlert);
         }
     }
 }

@@ -34,6 +34,14 @@ using System.Xml;
  * for advice and opinions
  */
 
+/*
+ * Testers
+ * 
+ * Trogdor
+ * ixirsii
+ * Troupster
+ */
+
  // Add a button that makes the window "disappear" --> get rendered over at position (-3000, -3000).  Test this with OBS to make sure things still render.
  // Figure out why window size is wrong.
 
@@ -43,7 +51,9 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         const String TADAVersion = "0.0.5";
 
-        TADAAnimationWindow mainAnimationWindow = new TADAAnimationWindow();
+        List<Creation_Forms.MainWaypointForm> animationWindowListeners = new List<Creation_Forms.MainWaypointForm>();
+
+        TADAAnimationWindow mainAnimationWindow;
 
         bool blockUpdates = false;
 
@@ -51,6 +61,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             InitializeComponent();
 
+            this.mainAnimationWindow = TADAAnimationWindow.AnimationWindow;
             this.mainAnimationWindow.Show();
 
             btn_SaveManifest.Click += btn_SaveManifest_Click;
@@ -193,6 +204,19 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public void SetAnimationWindowSize(Size size)
+        {
+            if (!blockUpdates)
+            {
+                blockUpdates = true;
+
+                numud_AnimationWindowSizeX.Value = size.Width;
+                numud_AnimationWindowSizeY.Value = size.Height;
+
+                blockUpdates = false;
+            }
+        }
+
         private void HideAnimationWindow(object sender, EventArgs e)
         {
             if (this.mainAnimationWindow.Location.X < 0)
@@ -209,7 +233,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void btn_CreateAlertForm_Click(object sender, EventArgs e)
         {
-            Creation_Forms.AlertCreationForm alertCreationForm = new Creation_Forms.AlertCreationForm(this, this.mainAnimationWindow, (dg_Alerts.DataSource as BindingSource).AddNew() as TADAAlert);
+            Creation_Forms.AlertCreationForm alertCreationForm = new Creation_Forms.AlertCreationForm(this, (dg_Alerts.DataSource as BindingSource).AddNew() as TADAAlert);
             alertCreationForm.Show();
         }
 
@@ -219,7 +243,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 BindingSource bindingSource = (sender as DataGridView).DataSource as BindingSource;
 
-                Creation_Forms.AlertCreationForm alertCreationForm = new Creation_Forms.AlertCreationForm(this, this.mainAnimationWindow, bindingSource.Current as TADAAlert);
+                Creation_Forms.AlertCreationForm alertCreationForm = new Creation_Forms.AlertCreationForm(this, bindingSource.Current as TADAAlert);
                 alertCreationForm.Show();
             }
         }

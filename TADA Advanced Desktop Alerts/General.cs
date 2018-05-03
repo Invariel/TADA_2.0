@@ -9,6 +9,13 @@ using System.Windows.Forms;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
+    public enum DrawingStep
+    {
+        BELOW_IMAGE,
+        IMAGE,
+        ABOVE_IMAGE
+    }
+
     public sealed class General
     {
         public static void LogFile(String message)
