@@ -171,33 +171,32 @@ namespace TADA_Advanced_Desktop_Alerts
 
             while (reader.Read())
             {
-                if (reader.IsStartElement())
+                if (reader.IsStartElement("Images"))
                 {
-                    switch (reader.Name)
+                    Read<TADAAlertImage>(reader, "Image", "Images", this.images);
+                }
+                else if (reader.IsStartElement("Audios"))
+                {
+                    Read<TADAAlertAudio>(reader, "Audio", "Audios", this.audios);
+                }
+                else if (reader.IsStartElement("StreamerTexts"))
+                {
+                    Read<TADAAlertText>(reader, "Text", "StreamerTexts", this.streamerTexts);
+                }
+                else if (reader.IsStartElement("ViewerTexts"))
+                {
+                    Read<TADAAlertText>(reader, "Text", "ViewerTexts", this.viewerTexts);
+                }
+                else if (reader.IsStartElement("Conditions"))
+                {
+                    Read<TADAAlertCondition>(reader, "Condition", "Conditions", this.conditions);
+                }
+                else if (reader.IsStartElement())
+                {
+                    if (!error)
                     {
-                        case "Images":
-                            Read<TADAAlertImage>(reader, "Image", "Images", this.images);
-                            break;
-                        case "Audios":
-                            Read<TADAAlertAudio>(reader, "Audio", "Audios", this.audios);
-                            break;
-                        case "StreamerTexts":
-                            Read<TADAAlertText>(reader, "Text", "StreamerTexts", this.streamerTexts);
-                            break;
-                        case "ViewerTexts":
-                            Read<TADAAlertText>(reader, "Text", "ViewerTexts", this.viewerTexts);
-                            break;
-                        case "Conditions":
-                            Read<TADAAlertCondition>(reader, "Condition", "Conditions", this.conditions);
-                            break;
-                        default:
-                            // Unknown tag detected.  Ignore it and continue.
-                            if (!error)
-                            {
-                                MessageBox.Show(null, String.Format("Unknown tag '{0}' detected in <Alert> definition.  No more errors for this <Alert> will be shown.", reader.Name), "Error in Parsing XML", MessageBoxButtons.OK);
-                                error = true;
-                            }
-                            break;
+                        MessageBox.Show(null, String.Format("Unknown tag '{0}' detected in <Alert> definition.  No more errors for this <Alert> will be shown.", reader.Name), "Error in Parsing XML", MessageBoxButtons.OK);
+                        error = true;
                     }
                 }
                 else if (!reader.IsStartElement() && reader.Name == "Alert")
@@ -611,6 +610,9 @@ namespace TADA_Advanced_Desktop_Alerts
         private String message;
         private String readMessage;
 
+        private String substitutedMessage;
+        private String substitutedReadMessage;
+
         [DisplayName("Displayed Message")]
         public String Message
         {
@@ -685,6 +687,27 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = new WaypointContainer();
         }
 
+        // These are functions and not properties so that they don't affect the binding sources.
+        public String GetMessage()
+        {
+            return this.substitutedMessage;
+        }
+
+        public void SetMessage(String message)
+        {
+            this.substitutedMessage = message;
+        }
+
+        public String GetReadMessage()
+        {
+            return this.substitutedReadMessage;
+        }
+
+        public void SetReadMessage(String message)
+        {
+            this.substitutedReadMessage = message;
+        }
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -754,6 +777,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 else if (reader.IsStartElement("Waypoints"))
                 {
                     XmlHelper.ReadWaypoints(reader, this.Waypoints);
+                }
+                else if (!reader.IsStartElement() && reader.Name == "Text")
+                {
+                    break;
                 }
             }
         }

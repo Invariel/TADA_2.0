@@ -367,6 +367,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 txt_NarratedText.Text = alertText.ReadMessage;
                 cmb_TTSVoice.Text = alertText.TTSVoice;
                 trk_VoiceVolume.Value = alertText.TTSVolume;
+                numud_VoiceVolume.Value = alertText.TTSVolume;
 
                 if (alertText.ChosenFont != null)
                 {
@@ -444,6 +445,24 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 playingAlert.Stop();
                 TADAAnimationWindow.AnimationWindow.RemovePlayingAlert(playingAlert);
             }
+
+            SubstitutionObject subObject = new SubstitutionObject()
+            {
+                Amount = 5,
+                RecipientName = "Invariel",
+                Tier = "Tier One",
+                TierName = "Level 99 Black Mage",
+                ViewerName = "LeiRavni"
+            };
+
+            String message = alertText.Message;
+            String readMessage = alertText.ReadMessage;
+
+            General.PerformSubstitutions(ref message, subObject);
+            General.PerformSubstitutions(ref readMessage, subObject);
+
+            alertText.Message = message;
+            alertText.ReadMessage = readMessage;
 
             playingAlert = new PlayingAlert(null, null, alertText, null);
             this.animationWindow.AddPlayingAlert(playingAlert);

@@ -112,6 +112,7 @@ namespace TADA_Advanced_Desktop_Alerts
             Size animationWindowSize = TADAAnimationWindow.AnimationWindow.Listen(this);
             numud_AnimationWindowSizeX.Value = animationWindowSize.Width;
             numud_AnimationWindowSizeY.Value = animationWindowSize.Height;
+            TADAAnimationWindow.AnimationWindow.BackColor = Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
             blockUpdates = false;
 
             new TimePeriod(1);

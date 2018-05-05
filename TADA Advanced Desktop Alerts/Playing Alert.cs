@@ -345,8 +345,11 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix();
-                colorMatrix.Matrix33 = (float)(this.opacity / 100.0);
+                System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix()
+                {
+                    Matrix33 = (float)(this.opacity / 100.0)
+                };
+
                 System.Drawing.Imaging.ImageAttributes imageAttributes = new System.Drawing.Imaging.ImageAttributes();
                 imageAttributes.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
 
@@ -375,7 +378,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public bool BehindImage()
         {
-            return this.waypoints.CurrentWaypoint.BehindImage;
+            return this.waypoints.CurrentWaypoint != null && this.waypoints.CurrentWaypoint.BehindImage;
         }
 
         public PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage)
@@ -402,7 +405,6 @@ namespace TADA_Advanced_Desktop_Alerts
                 Task.Run(() =>
                 {
                     this.NextPosition();
-                    General.LogFile(String.Format("I am currently at ({0}, {1}).", this.position.X, this.position.Y), "position.txt");
                     TADAAnimationWindow.AnimationWindow.InvalidateMe();
                 });
 
@@ -491,9 +493,9 @@ namespace TADA_Advanced_Desktop_Alerts
             this.persistTimer.Stop();
 
             Waypoint w = this.waypoints.CurrentWaypoint;
-
+            
             // Press keys, if this is a press keys sorta situation.
-            if (!String.IsNullOrEmpty(w.WindowTarget) && !String.IsNullOrEmpty(w.Keypresses))
+            if (w != null && !String.IsNullOrEmpty(w.WindowTarget) && !String.IsNullOrEmpty(w.Keypresses))
             {
                 if (!KeyHandler.SendKeyToProgram(w.WindowTarget, w.Keypresses))
                 {
@@ -807,10 +809,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (!String.IsNullOrEmpty(alertText.Message))
             {
-                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.Transparent, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.Message);
+                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.Transparent, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage());
             }
 
-            if (alertText.TTSVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.ReadMessage))
+            if (alertText.TTSVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.GetReadMessage()))
             {
                 talky = new System.Speech.Synthesis.SpeechSynthesizer();
                 try
@@ -818,7 +820,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     talky.SelectVoice(alertText.TTSVoice);
 
                     prompt = new System.Speech.Synthesis.PromptBuilder();
-                    prompt.AppendText(alertText.ReadMessage);
+                    prompt.AppendText(alertText.GetReadMessage());
                 }
                 catch (Exception)
                 {
@@ -837,7 +839,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.persistTimer.Stop();
 
-            if (this.waypoints.CurrentWaypoint.ReadMessage && this.talky != null && this.prompt != null)
+            if (this.waypoints.CurrentWaypoint != null && this.waypoints.CurrentWaypoint.ReadMessage && this.talky != null && this.prompt != null)
             {
                 this.talky.SpeakAsync(this.prompt);
             }

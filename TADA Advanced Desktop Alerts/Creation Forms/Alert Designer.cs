@@ -222,14 +222,14 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 General.PerformSubstitutions(ref streamerMessage, subObject);
                 General.PerformSubstitutions(ref streamerReadMessage, subObject);
 
-                streamerText.Message = streamerMessage;
-                streamerText.ReadMessage = streamerReadMessage;
+                streamerText.SetMessage(streamerMessage);
+                streamerText.SetReadMessage(streamerReadMessage);
             }
 
             if (whichViewerMessage > 0)
             {
                 viewerText = (dg_ViewerMessages.DataSource as BindingSource)[whichViewerMessage - 1] as TADAAlertText;
-                viewerText.Message = txt_ViewerMessage.Text;
+                viewerText.SetMessage(txt_ViewerMessage.Text);
             }
 
             PlayingAlert playingAlert = new PlayingAlert(image, audio, streamerText, viewerText);

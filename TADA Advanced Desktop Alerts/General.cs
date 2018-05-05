@@ -234,7 +234,7 @@ namespace TADA_Advanced_Desktop_Alerts
             message = message.Replace("{es}", substitutionObject.Amount == 1 ? "" : "es");
 
             // Now figure out [a|b]
-            String pattern = @"\[([^|]+)|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.
+            String pattern = @"\[([^|]+)\|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.
             Regex regex = new Regex(pattern);
             Match match;
             while ((match = regex.Match(message)) != Match.Empty)
