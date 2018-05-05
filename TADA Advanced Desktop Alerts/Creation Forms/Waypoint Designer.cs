@@ -13,7 +13,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
     public partial class MainWaypointForm : Form
     {
-        private double MIN_SAFE_RESOLUTION = 30.0;
+        private double MIN_SAFE_RESOLUTION = 15.0;
 
         private bool disableUpdates;
 
@@ -242,10 +242,10 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 foreach (Tuple<Effect, String> tuple in tuples)
                 {
                     double time = tuple.Item1.duration * 1000 / tuple.Item1.frames;
-                    if (tuple.Item1.change && time < MIN_SAFE_RESOLUTION)
+                    if (tuple.Item1.change && time < MIN_SAFE_RESOLUTION && time > 0)
                     {
                         MessageBox.Show(null,
-                                        String.Format("Your {0} effect may take longer than desired because {1} is lower than the safe {2} ms resolution.",
+                                        String.Format("Your {0} effect may take longer than desired because {1:F3} is lower than the safe {2} ms resolution.",
                                                      tuple.Item2,
                                                      time,
                                                      MIN_SAFE_RESOLUTION),

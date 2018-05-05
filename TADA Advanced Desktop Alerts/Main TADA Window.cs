@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -40,6 +36,7 @@ using System.Xml;
  * Trogdor
  * ixirsii
  * Troupster
+ * PyurJenius
  */
 
  // Add a button that makes the window "disappear" --> get rendered over at position (-3000, -3000).  Test this with OBS to make sure things still render.
@@ -50,10 +47,11 @@ namespace TADA_Advanced_Desktop_Alerts
     public partial class MainTADAForm : Form
     {
         const String TADAVersion = "0.0.5";
+        const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
+        const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
 
-        List<Creation_Forms.MainWaypointForm> animationWindowListeners = new List<Creation_Forms.MainWaypointForm>();
-
-        TADAAnimationWindow mainAnimationWindow;
+        const String DEFAULT_OAUTH = "./oauth.cfg";
+        const String DEFAULT_MANIFEST = "./default.tada";
 
         bool blockUpdates = false;
 
@@ -61,12 +59,16 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             InitializeComponent();
 
-            this.mainAnimationWindow = TADAAnimationWindow.AnimationWindow;
-            this.mainAnimationWindow.Show();
+            TADAAnimationWindow.AnimationWindow.Show();
 
             btn_SaveManifest.Click += btn_SaveManifest_Click;
             btn_LoadManifest.Click += btn_LoadManifest_Click;
             btn_MergeManifest.Click += btn_MergeManifest_Click;
+
+            btn_SaveChannelDetails.Click += btn_SaveChannelDetails_Click;
+            btn_LoadChannelDetails.Click += btn_LoadChannelDetails_Click;
+
+            btn_GetAccessToken.Click += GetAccessToken;
 
             numud_AnimationWindowSizeX.ValueChanged += ResizeAnimationWindow;
             numud_AnimationWindowSizeY.ValueChanged += ResizeAnimationWindow;
@@ -82,12 +84,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
             btn_Connect.Click += Btn_Connect_Click;
 
-            // This is where the default manifest file would be loaded.
-            if (System.IO.File.Exists("./default.tada"))
+            if (System.IO.File.Exists(DEFAULT_MANIFEST))
             {
                 try
                 {
-                    LoadManifest("./default.tada");
+                    LoadManifest(DEFAULT_MANIFEST);
                 }
                 catch (Exception e)
                 {
@@ -102,13 +103,28 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
-            ResizeAnimationWindow(null, null);
+            if (System.IO.File.Exists(DEFAULT_OAUTH))
+            {
+                LoadChannelConfiguration(DEFAULT_OAUTH);
+            }
+
+            blockUpdates = true;
+            Size animationWindowSize = TADAAnimationWindow.AnimationWindow.Listen(this);
+            numud_AnimationWindowSizeX.Value = animationWindowSize.Width;
+            numud_AnimationWindowSizeY.Value = animationWindowSize.Height;
+            blockUpdates = false;
+
             new TimePeriod(1);
         }
 
         private void Btn_Connect_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Not yet, sorry.");
+        }
+
+        private void GetAccessToken(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://api.twitch.tv/kraken/oauth2/authorize?client_id=" + CLIENT_ID + "&redirect_uri=" + AUTH_URI + "&response_type=token");
         }
 
         private void PasswordMask(object sender, EventArgs e)
@@ -143,7 +159,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
                 else
                 {
-                    txt_BackgroundARGB.Text = String.Format("#{0:X2}{1:X2}{2:X2}", numud_bgR.Value, numud_bgG.Value, numud_bgR.Value);
+                    txt_BackgroundARGB.Text = String.Format("#{0:X2}{1:X2}{2:X2}", Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
                 }
 
                 ColorAnimationWindow();
@@ -153,12 +169,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void ColorAnimationWindow()
         {
-            if (this.mainAnimationWindow == null)
-            {
-                this.mainAnimationWindow = new TADAAnimationWindow();
-                this.mainAnimationWindow.Show();
-            }
-
             if (!blockUpdates)
             {
                 blockUpdates = true;
@@ -167,7 +177,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 int g = Convert.ToInt32(numud_bgG.Value);
                 int b = Convert.ToInt32(numud_bgB.Value);
 
-                this.mainAnimationWindow.BackColor = Color.FromArgb(r, g, b);
+
+                TADAAnimationWindow.AnimationWindow.BackColor = Color.FromArgb(r, g, b);
 
                 blockUpdates = false;
             }
@@ -175,17 +186,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void ResizeAnimationWindow(object sender, EventArgs e)
         {
-            if (this.mainAnimationWindow == null)
-            {
-                this.mainAnimationWindow = new TADAAnimationWindow();
-                this.mainAnimationWindow.Show();
-            }
-            
             if (!blockUpdates)
             {
                 blockUpdates = true;
 
-                this.mainAnimationWindow.ClientSize = new Size(Convert.ToInt32(numud_AnimationWindowSizeX.Value), Convert.ToInt32(numud_AnimationWindowSizeY.Value));
+                TADAAnimationWindow.AnimationWindow.ClientSize = new Size(Convert.ToInt32(numud_AnimationWindowSizeX.Value), Convert.ToInt32(numud_AnimationWindowSizeY.Value));
 
                 blockUpdates = false;
             }
@@ -219,14 +224,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void HideAnimationWindow(object sender, EventArgs e)
         {
-            if (this.mainAnimationWindow.Location.X < 0)
+            if (TADAAnimationWindow.AnimationWindow.Location.X < 0)
             {
-                this.mainAnimationWindow.Location = new Point(0, 0);
+                TADAAnimationWindow.AnimationWindow.Location = new Point(0, 0);
                 btn_ShowHideAnimationWindow.Text = "Hide Animation Window";
             }
             else
             {
-                this.mainAnimationWindow.Location = new Point(-5000, -5000);
+                TADAAnimationWindow.AnimationWindow.Location = new Point(-5000, -5000);
                 btn_ShowHideAnimationWindow.Text = "Show Animation Window";
             }
         }
@@ -284,9 +289,9 @@ namespace TADA_Advanced_Desktop_Alerts
                     XmlHelper.WriteColor(xmlWriter, Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value)), "Window");
                     XmlHelper.WriteSize(xmlWriter, new Size(Convert.ToInt32(numud_AnimationWindowSizeX.Value), Convert.ToInt32(numud_AnimationWindowSizeY.Value)), "Window");
 
-                    if (!this.mainAnimationWindow.IsDisposed)
+                    if (!TADAAnimationWindow.AnimationWindow.IsDisposed)
                     {
-                        XmlHelper.WritePoint(xmlWriter, this.mainAnimationWindow.Location, "Window");
+                        XmlHelper.WritePoint(xmlWriter, TADAAnimationWindow.AnimationWindow.Location, "Window");
                     }
 
                     xmlWriter.WriteEndElement();
@@ -367,9 +372,9 @@ namespace TADA_Advanced_Desktop_Alerts
                             else if (xmlReader.IsStartElement("Point"))
                             {
                                 XmlHelper.ReadPoint(xmlReader, out Point point, out string name);
-                                if (!this.mainAnimationWindow.IsDisposed)
+                                if (!TADAAnimationWindow.AnimationWindow.IsDisposed)
                                 {
-                                    this.mainAnimationWindow.Location = point;
+                                    TADAAnimationWindow.AnimationWindow.Location = point;
                                 }
                             }
                             else if (!xmlReader.IsStartElement() && xmlReader.Name == "Window")
@@ -379,6 +384,60 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                     }
                 }
+            }
+        }
+
+        private void btn_SaveChannelDetails_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                DefaultExt = "cfg",
+                Filter = "Channel Configuration Files (*.cfg)|*.cfg|All Files (*.*)|*.*",
+                FilterIndex = 0,
+                InitialDirectory = Environment.CurrentDirectory,
+                RestoreDirectory = true,
+                CreatePrompt = false,
+                OverwritePrompt = true
+            };
+
+            DialogResult result = saveFileDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName, false))
+                {
+                    writer.WriteLine(txt_ChannelName.Text);
+                    writer.WriteLine(txt_AccessToken.Text);
+                }
+            }
+        }
+
+        private void btn_LoadChannelDetails_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Channel Configuration Files(*.cfg)|*.cfg|All Files (*.*)|*.*",
+                DefaultExt = ".cfg",
+                FilterIndex = 0,
+                InitialDirectory = Environment.CurrentDirectory,
+                CheckFileExists = true,
+                RestoreDirectory = true
+            };
+
+            DialogResult result = openFileDialog.ShowDialog();
+
+            if (result == DialogResult.OK && System.IO.File.Exists(openFileDialog.FileName))
+            {
+                LoadChannelConfiguration(openFileDialog.FileName);
+            }
+        }
+
+        private void LoadChannelConfiguration(String filename)
+        {
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(filename))
+            {
+                txt_ChannelName.Text = reader.ReadLine();
+                txt_AccessToken.Text = reader.ReadLine();
             }
         }
     }

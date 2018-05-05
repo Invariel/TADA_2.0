@@ -12,6 +12,41 @@ using System.Xml.Serialization;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
+    public class ActiveEffect : Effect
+    {
+        public int framesRemaining;
+        public double delta;
+
+        public override void Copy (Effect e)
+        {
+            base.Copy(e);
+
+            this.framesRemaining = this.frames;
+            this.delta = this.target / this.frames;
+        }
+
+        public void NextEffectFrame (ref double variable, System.Timers.Timer timer)
+        {
+            variable += this.delta;
+            --this.framesRemaining;
+
+            if ((this.delta < 0 && variable < this.target) || (this.delta > 0 && variable > this.target))
+            {
+                variable = this.target;
+            }
+
+            if (this.framesRemaining <= 0)
+            {
+                variable = this.target;
+            }
+
+            if (variable == this.target)
+            {
+                timer.Stop();
+            }
+        }
+    }
+
     public class Effect : IXmlSerializable
     {
         public bool change = false;
@@ -20,7 +55,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public double duration = 0;
         public bool aroundCenter = false;
 
-        public void Copy(Effect e)
+        public virtual void Copy(Effect e)
         {
             this.change = e.change;
             this.frames = e.frames;

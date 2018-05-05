@@ -160,40 +160,46 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public static Bitmap GenerateMessageBitmap(Color foreColor, Color backColor, Color outlineColor, Color transparentColor, Font textFont, float outlineWidth, Size maximumSize, SizeF padding, string text)
         {
-            Bitmap b = new Bitmap(maximumSize.Width, maximumSize.Height);
-            Graphics image = Graphics.FromImage(b);
+            SizeF textSize;
+
+            StringFormat textFormat = new StringFormat();
+            textFormat.Alignment = StringAlignment.Center;
+            textFormat.LineAlignment = StringAlignment.Center;
+
+            // Figure out the actual dimensions of the image.
+            // TODO:  Future work: let people choose their text alignment.
+            using (Bitmap b = new Bitmap(maximumSize.Width, maximumSize.Height))
+            using (Graphics image = Graphics.FromImage(b))
+            {
+                textSize = image.MeasureString(text, textFont, Convert.ToInt32(maximumSize.Width - padding.Width * 2), textFormat);
+            }
+
+            Bitmap outputBitmap = new Bitmap(Convert.ToInt32(Math.Min(textSize.Width, maximumSize.Width)), Convert.ToInt32(Math.Min(textSize.Height, maximumSize.Height)));
 
             using (SolidBrush foreBrush = new SolidBrush(foreColor))
             using (SolidBrush backBrush = new SolidBrush(backColor))
             {
-                image.FillRectangle(backBrush, 0, 0, b.Width, b.Height);
-
-                StringFormat textFormat = new StringFormat();
-                textFormat.Alignment = StringAlignment.Center;
-                textFormat.LineAlignment = StringAlignment.Center;
-
-                SizeF textSize = image.MeasureString(text, textFont, Convert.ToInt32(maximumSize.Width - padding.Width * 2), textFormat);
-
-                System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
-                path.AddString(text, textFont.FontFamily, (int)textFont.Style, textFont.Size, new RectangleF(new PointF(padding.Width, padding.Height), textSize), textFormat);
+                Graphics image = Graphics.FromImage(outputBitmap);
+                System.Drawing.Drawing2D.GraphicsPath textOutline = new System.Drawing.Drawing2D.GraphicsPath();
+                textOutline.AddString(text, textFont.FontFamily, (int)textFont.Style, textFont.Size, new RectangleF(new PointF(padding.Width, padding.Height), textSize), textFormat);
 
                 if (outlineColor != Color.Empty && outlineWidth > 0)
                 {
                     using (Pen pen = new Pen(outlineColor, (float)outlineWidth))
                     {
-                        image.DrawPath(pen, path);
+                        image.DrawPath(pen, textOutline);
                     }
                 }
 
-                image.FillPath(foreBrush, path);
+                image.FillPath(foreBrush, textOutline);
 
                 if (transparentColor != Color.Empty && transparentColor != Color.Transparent)
                 {
-                    b.MakeTransparent(transparentColor);
+                    outputBitmap.MakeTransparent(transparentColor);
                 }
             }
 
-            return b;
+            return outputBitmap;
         }
 
         public static double GetTotalWaypointDuration(WaypointContainer wc)
@@ -248,7 +254,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             // Now figure out <a|b|c|d|e>
-            pattern = @"\<([^|])*|[^|])*|[^|])*|[^|])*|[^|])*\>";
+            pattern = @"<([^|])*\|([^|])*\|([^|])*\|([^|])*\|([^|])*>";
             regex = new Regex(pattern);
             while ((match = regex.Match(message)) != Match.Empty)
             {

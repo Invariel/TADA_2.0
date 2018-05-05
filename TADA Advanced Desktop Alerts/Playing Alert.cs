@@ -183,9 +183,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
         protected Size initialSize;
 
-        protected Effect angleEffect = new Effect();
-        protected Effect magnificationEffect = new Effect();
-        protected Effect opacityEffect = new Effect();
+        protected ActiveEffect angleEffect = new ActiveEffect();
+        protected ActiveEffect magnificationEffect = new ActiveEffect();
+        protected ActiveEffect opacityEffect = new ActiveEffect();
 
         protected double angle = 0;
         protected double magnification = 1;
@@ -210,7 +210,7 @@ namespace TADA_Advanced_Desktop_Alerts
         protected Timer positionTimer = new Timer();
         protected Timer persistTimer = new Timer();
 
-        protected bool ReachedTarget (Effect effect, double value)
+        protected bool ReachedTarget (ActiveEffect effect, double value)
         {
             return effect.target == value;
         }
@@ -254,7 +254,7 @@ namespace TADA_Advanced_Desktop_Alerts
             SetNextEffect(this.angleEffect, tempAngle, this.angleTimer);
         }
 
-        protected void SetNextEffect(Effect currentEffect, Effect nextEffect, Timer timer)
+        protected void SetNextEffect(ActiveEffect currentEffect, Effect nextEffect, Timer timer)
         {
             currentEffect.Copy(nextEffect);
             timer.Interval = currentEffect.duration * 1000.0 / currentEffect.frames;
@@ -280,29 +280,12 @@ namespace TADA_Advanced_Desktop_Alerts
             this.stopwatch.Restart();
         }
 
-        public void NextEffectFrame (ref double variable, ref Effect effect, Timer timer)
+        public void NextEffectFrame (ref double variable, ref ActiveEffect effect, Timer timer)
         {
-            double delta = (effect.target - variable) / effect.frames;
-            variable += delta;
-            effect.frames--;
-            if (delta < 0 && variable < effect.target ||
-                delta > 0 && variable > effect.target)
-            {
-                variable = effect.target;
-            }
+            effect.NextEffectFrame(ref variable, timer);
 
             this.redrawMe = true;
             this.animationWindow.InvalidateMe();
-
-            if (effect.frames <= 0)
-            {
-                variable = effect.target;
-            }
-
-            if (variable == effect.target)
-            {
-                timer.Stop();
-            }
         }
 
         protected void NextPosition ()
@@ -321,89 +304,44 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (g == null)
             {
-                g = this.graphics;
+                g = TADAAnimationWindow.AnimationWindow.graphics;
             }
 
             if (this.redrawMe)
             {
-                this.modifiedPosition = this.position;
-
                 if (this.modifiedImage != null)
                 {
                     this.modifiedImage.Dispose();
                 }
 
-                Size size = new Size(Convert.ToInt32(Math.Floor (this.initialSize.Width * this.magnification)),
-                                     Convert.ToInt32(Math.Floor (this.initialSize.Height * this.magnification)));
+                Size size = new Size(Convert.ToInt32(Math.Floor(this.initialSize.Width * this.magnification)),
+                                     Convert.ToInt32(Math.Floor(this.initialSize.Height * this.magnification)));
                 this.modifiedImage = new Bitmap(this.mainImage, size);
-
-                // If magnifying from upper left, there's nothing to do here.
-                // If magnifying from center, the new position needs to be determined.
-
-                if (this.angle != 0)
-                {
-                    double alpha = this.angle;
-                    while (alpha < 0)
-                    {
-                        alpha += 360;
-                    }
-
-                    double gamma = 90;
-                    double beta = 180 - alpha - gamma;
-
-                    double c1 = this.modifiedImage.Height;
-                    double c2 = this.modifiedImage.Width;
-
-                    double a1 = c1 * Math.Sin(alpha * Math.PI / 180f) / Math.Sin(gamma * Math.PI / 180f);
-                    double a2 = c2 * Math.Sin(alpha * Math.PI / 180f) / Math.Sin(gamma * Math.PI / 180f);
-
-                    double b1 = c1 * Math.Sin(beta * Math.PI / 180f) / Math.Sin(gamma * Math.PI / 180f);
-                    double b2 = c2 * Math.Sin(beta * Math.PI / 180f) / Math.Sin(gamma * Math.PI / 180f);
-
-                    int width = Convert.ToInt32(Math.Ceiling(Math.Abs(a1) + Math.Abs(b2)));
-                    int height = Convert.ToInt32(Math.Ceiling(Math.Abs(a2) + Math.Abs(b1)));
-
-                    Bitmap r = new Bitmap(width, height);
-                    PointF newOrigin = new PointF((width - this.modifiedImage.Width) / 2.0f, (height - this.modifiedImage.Height) / 2.0f);
-
-                    float midwidth = r.Width / 2.0f;
-                    float midheight = r.Height / 2.0f;
-                    using (Graphics gr = Graphics.FromImage(r))
-                    {
-                        gr.TranslateTransform(midwidth, midheight);
-                        gr.RotateTransform((float)alpha);
-                        gr.TranslateTransform(-midwidth, -midheight);
-                        gr.DrawImage(this.modifiedImage, newOrigin);
-                    }
-
-                    PointF[] points = new PointF[] { newOrigin };
-                    System.Drawing.Drawing2D.Matrix m = new System.Drawing.Drawing2D.Matrix();
-                    m.RotateAt((float)alpha, new PointF(midwidth, midheight));
-                    m.TransformPoints(points);
-                    m.Reset();
-
-                    // modifiedPosition - newOrigin => rotate around center.
-                    if (this.angleEffect.aroundCenter)
-                    {
-                        this.modifiedPosition.X -= newOrigin.X;
-                        this.modifiedPosition.Y -= newOrigin.Y;
-                    }
-                    else
-                    {
-                        this.modifiedPosition.X -= points[0].X;
-                        this.modifiedPosition.Y -= points[0].Y;
-                    }
-
-                    this.modifiedImage.Dispose();
-                    this.modifiedImage = r;
-                }
 
                 this.redrawMe = false;
             }
 
+            this.modifiedPosition = this.position;
+
+            if (this.angleEffect.change && this.angleEffect.aroundCenter)
+            {
+                this.modifiedPosition.X += this.modifiedImage.Width / 2;
+                this.modifiedPosition.Y += this.modifiedImage.Height / 2;
+            }
+
+            g.TranslateTransform(this.modifiedPosition.X, this.modifiedPosition.Y);
+            g.RotateTransform((float)this.angle);
+
+            PointF destinationPoint = new PointF(0, 0);
+            if (this.angleEffect.change && this.angleEffect.aroundCenter)
+            {
+                destinationPoint.X = -this.modifiedImage.Width / 2;
+                destinationPoint.Y = -this.modifiedImage.Height / 2;
+            }
+
             if (this.opacity == 1)
             {
-                g.DrawImage(this.modifiedImage, this.modifiedPosition);
+                g.DrawImage(this.modifiedImage, destinationPoint);
             }
             else
             {
@@ -413,17 +351,20 @@ namespace TADA_Advanced_Desktop_Alerts
                 imageAttributes.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
 
                 g.DrawImage(this.modifiedImage,
-                            new Rectangle(Convert.ToInt32(Math.Floor(this.modifiedPosition.X)),
-                                          Convert.ToInt32(Math.Floor(this.modifiedPosition.Y)),
+                            new Rectangle(Convert.ToInt32(Math.Floor(destinationPoint.X)),
+                                          Convert.ToInt32(Math.Floor(destinationPoint.Y)),
                                           this.modifiedImage.Width,
                                           this.modifiedImage.Height),
-                             0,
-                             0,
-                             this.modifiedImage.Width,
-                             this.modifiedImage.Height,
-                             GraphicsUnit.Pixel,
-                             imageAttributes);
+                            0,
+                            0,
+                            this.modifiedImage.Width,
+                            this.modifiedImage.Height,
+                            GraphicsUnit.Pixel,
+                            imageAttributes);
             }
+
+            g.RotateTransform((float)(-this.angle));
+            g.TranslateTransform(-this.modifiedPosition.X, -this.modifiedPosition.Y);
         }
 
         protected PlayingAlert containerAlert;
@@ -461,7 +402,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 Task.Run(() =>
                 {
                     this.NextPosition();
-                    this.animationWindow.InvalidateMe();
+                    General.LogFile(String.Format("I am currently at ({0}, {1}).", this.position.X, this.position.Y), "position.txt");
+                    TADAAnimationWindow.AnimationWindow.InvalidateMe();
                 });
 
                 if (this.ReachedDestination())
@@ -667,8 +609,8 @@ namespace TADA_Advanced_Desktop_Alerts
         private Timer balanceTimer = new Timer();
         private Timer volumeTimer = new Timer();
 
-        private Effect balanceEffect = new Effect();
-        private Effect volumeEffect = new Effect();
+        private ActiveEffect balanceEffect = new ActiveEffect();
+        private ActiveEffect volumeEffect = new ActiveEffect();
 
         private double balance = 0;
         private double volume = 0;
@@ -685,14 +627,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override void Dispose(bool disposing)
         {
-            /*
             this.mediaElement.Dispatcher.Invoke(() => { this.animationWindow.Controls.Remove(this.elementHost); });
 
             balanceTimer.Stop();
             volumeTimer.Stop();
 
             base.Dispose(disposing);
-            */
         }
 
         public PlayingElement(PlayingAlert containerAlert, TADAAlertImage alertImage) : base(containerAlert, null)
@@ -767,7 +707,6 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.isPlaying = true;
 
-            // Delay first, then start the media element.
             if (this.delay.Ticks > 0)
             {
                 await (Task.Delay(this.delay));
@@ -866,7 +805,10 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.waypoints = alertText.Waypoints;
 
-            this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.Transparent, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.Message);
+            if (!String.IsNullOrEmpty(alertText.Message))
+            {
+                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.Transparent, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.Message);
+            }
 
             if (alertText.TTSVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.ReadMessage))
             {
@@ -885,7 +827,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
-            this.initialSize = alertText.Dimensions;
+            if (this.mainImage != null)
+            {
+                this.initialSize = this.mainImage.Size;
+            }
         }
 
         protected override void Persist()

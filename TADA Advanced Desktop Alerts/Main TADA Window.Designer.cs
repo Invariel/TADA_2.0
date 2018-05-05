@@ -36,33 +36,35 @@
             this.label5 = new System.Windows.Forms.Label();
             this.numud_bgR = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.txt_BackgroundARGB = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.numud_AnimationWindowSizeY = new System.Windows.Forms.NumericUpDown();
-            this.numud_AnimationWindowSizeX = new System.Windows.Forms.NumericUpDown();
             this.btn_ShowHideAnimationWindow = new System.Windows.Forms.Button();
+            this.txt_BackgroundARGB = new System.Windows.Forms.TextBox();
+            this.numud_AnimationWindowSizeY = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numud_AnimationWindowSizeX = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.btn_CreateAlertForm = new System.Windows.Forms.Button();
             this.btn_SaveManifest = new System.Windows.Forms.Button();
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
+            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txt_ChannelName = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.txt_AccessToken = new System.Windows.Forms.TextBox();
+            this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
+            this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
             this.btn_RevokeAccessToken = new System.Windows.Forms.Button();
+            this.txt_AccessToken = new System.Windows.Forms.TextBox();
+            this.btn_GetAccessToken = new System.Windows.Forms.Button();
+            this.txt_ChannelName = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.btn_Connect = new System.Windows.Forms.Button();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.imageCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.audioCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.streamerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
@@ -174,6 +176,16 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "Red";
             // 
+            // btn_ShowHideAnimationWindow
+            // 
+            this.btn_ShowHideAnimationWindow.Location = new System.Drawing.Point(118, 110);
+            this.btn_ShowHideAnimationWindow.Name = "btn_ShowHideAnimationWindow";
+            this.btn_ShowHideAnimationWindow.Size = new System.Drawing.Size(156, 23);
+            this.btn_ShowHideAnimationWindow.TabIndex = 15;
+            this.btn_ShowHideAnimationWindow.Text = "Hide &Animation Window";
+            this.btn_ShowHideAnimationWindow.UseVisualStyleBackColor = true;
+            this.btn_ShowHideAnimationWindow.Click += new System.EventHandler(this.HideAnimationWindow);
+            // 
             // txt_BackgroundARGB
             // 
             this.txt_BackgroundARGB.Location = new System.Drawing.Point(24, 33);
@@ -181,33 +193,6 @@
             this.txt_BackgroundARGB.Size = new System.Drawing.Size(72, 20);
             this.txt_BackgroundARGB.TabIndex = 11;
             this.txt_BackgroundARGB.Text = "#FFFFFF";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(98, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "&Background Colour";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(145, 18);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "&Window Dimensions";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(190, 37);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(12, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "x";
             // 
             // numud_AnimationWindowSizeY
             // 
@@ -231,6 +216,24 @@
             0,
             0});
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(145, 18);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(103, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "&Window Dimensions";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(98, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "&Background Colour";
+            // 
             // numud_AnimationWindowSizeX
             // 
             this.numud_AnimationWindowSizeX.Location = new System.Drawing.Point(118, 34);
@@ -253,15 +256,14 @@
             0,
             0});
             // 
-            // btn_ShowHideAnimationWindow
+            // label1
             // 
-            this.btn_ShowHideAnimationWindow.Location = new System.Drawing.Point(118, 110);
-            this.btn_ShowHideAnimationWindow.Name = "btn_ShowHideAnimationWindow";
-            this.btn_ShowHideAnimationWindow.Size = new System.Drawing.Size(156, 23);
-            this.btn_ShowHideAnimationWindow.TabIndex = 15;
-            this.btn_ShowHideAnimationWindow.Text = "Hide &Animation Window";
-            this.btn_ShowHideAnimationWindow.UseVisualStyleBackColor = true;
-            this.btn_ShowHideAnimationWindow.Click += new System.EventHandler(this.HideAnimationWindow);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(190, 37);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(12, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "x";
             // 
             // btn_CreateAlertForm
             // 
@@ -318,52 +320,46 @@
             this.dg_Alerts.Size = new System.Drawing.Size(721, 184);
             this.dg_Alerts.TabIndex = 5;
             // 
+            // Edit
+            // 
+            this.Edit.HeaderText = "Edit";
+            this.Edit.MinimumWidth = 40;
+            this.Edit.Name = "Edit";
+            this.Edit.Width = 40;
+            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btn_LoadChannelDetails);
+            this.groupBox2.Controls.Add(this.btn_SaveChannelDetails);
             this.groupBox2.Controls.Add(this.btn_RevokeAccessToken);
             this.groupBox2.Controls.Add(this.txt_AccessToken);
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.btn_GetAccessToken);
             this.groupBox2.Controls.Add(this.txt_ChannelName);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Location = new System.Drawing.Point(299, 233);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(434, 74);
+            this.groupBox2.Size = new System.Drawing.Size(434, 102);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Twitch Settings";
             // 
-            // label7
+            // btn_LoadChannelDetails
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(43, 21);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(77, 13);
-            this.label7.TabIndex = 17;
-            this.label7.Text = "Channel Name";
+            this.btn_LoadChannelDetails.Location = new System.Drawing.Point(272, 73);
+            this.btn_LoadChannelDetails.Name = "btn_LoadChannelDetails";
+            this.btn_LoadChannelDetails.Size = new System.Drawing.Size(156, 23);
+            this.btn_LoadChannelDetails.TabIndex = 23;
+            this.btn_LoadChannelDetails.Text = "Load Channel Details";
+            this.btn_LoadChannelDetails.UseVisualStyleBackColor = true;
             // 
-            // txt_ChannelName
+            // btn_SaveChannelDetails
             // 
-            this.txt_ChannelName.Location = new System.Drawing.Point(127, 17);
-            this.txt_ChannelName.Name = "txt_ChannelName";
-            this.txt_ChannelName.Size = new System.Drawing.Size(301, 20);
-            this.txt_ChannelName.TabIndex = 18;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(10, 43);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 23);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "Get Access Token";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // txt_AccessToken
-            // 
-            this.txt_AccessToken.Location = new System.Drawing.Point(127, 44);
-            this.txt_AccessToken.Name = "txt_AccessToken";
-            this.txt_AccessToken.Size = new System.Drawing.Size(185, 20);
-            this.txt_AccessToken.TabIndex = 20;
-            this.txt_AccessToken.Text = "Paste Access Token Here";
+            this.btn_SaveChannelDetails.Location = new System.Drawing.Point(10, 73);
+            this.btn_SaveChannelDetails.Name = "btn_SaveChannelDetails";
+            this.btn_SaveChannelDetails.Size = new System.Drawing.Size(156, 23);
+            this.btn_SaveChannelDetails.TabIndex = 22;
+            this.btn_SaveChannelDetails.Text = "Save Channel Details";
+            this.btn_SaveChannelDetails.UseVisualStyleBackColor = true;
             // 
             // btn_RevokeAccessToken
             // 
@@ -374,18 +370,47 @@
             this.btn_RevokeAccessToken.Text = "Revoke Token";
             this.btn_RevokeAccessToken.UseVisualStyleBackColor = true;
             // 
+            // txt_AccessToken
+            // 
+            this.txt_AccessToken.Location = new System.Drawing.Point(127, 44);
+            this.txt_AccessToken.Name = "txt_AccessToken";
+            this.txt_AccessToken.Size = new System.Drawing.Size(185, 20);
+            this.txt_AccessToken.TabIndex = 20;
+            this.txt_AccessToken.Text = "Paste Access Token Here";
+            // 
+            // btn_GetAccessToken
+            // 
+            this.btn_GetAccessToken.Location = new System.Drawing.Point(10, 43);
+            this.btn_GetAccessToken.Name = "btn_GetAccessToken";
+            this.btn_GetAccessToken.Size = new System.Drawing.Size(110, 23);
+            this.btn_GetAccessToken.TabIndex = 19;
+            this.btn_GetAccessToken.Text = "Get Access Token";
+            this.btn_GetAccessToken.UseVisualStyleBackColor = true;
+            // 
+            // txt_ChannelName
+            // 
+            this.txt_ChannelName.Location = new System.Drawing.Point(127, 17);
+            this.txt_ChannelName.Name = "txt_ChannelName";
+            this.txt_ChannelName.Size = new System.Drawing.Size(301, 20);
+            this.txt_ChannelName.TabIndex = 18;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(43, 21);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 13);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "Channel Name";
+            // 
             // btn_Connect
             // 
-            this.btn_Connect.Location = new System.Drawing.Point(617, 344);
+            this.btn_Connect.Location = new System.Drawing.Point(577, 343);
             this.btn_Connect.Name = "btn_Connect";
-            this.btn_Connect.Size = new System.Drawing.Size(110, 23);
+            this.btn_Connect.Size = new System.Drawing.Size(156, 23);
             this.btn_Connect.TabIndex = 17;
             this.btn_Connect.Text = "Connect!";
             this.btn_Connect.UseVisualStyleBackColor = true;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // alertNameDataGridViewTextBoxColumn
             // 
@@ -443,12 +468,9 @@
             this.viewerCountDataGridViewTextBoxColumn.ReadOnly = true;
             this.viewerCountDataGridViewTextBoxColumn.Width = 90;
             // 
-            // Edit
+            // alertBindingSource
             // 
-            this.Edit.HeaderText = "Edit";
-            this.Edit.MinimumWidth = 40;
-            this.Edit.Name = "Edit";
-            this.Edit.Width = 40;
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // MainTADAForm
             // 
@@ -505,7 +527,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btn_RevokeAccessToken;
         private System.Windows.Forms.TextBox txt_AccessToken;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_GetAccessToken;
         private System.Windows.Forms.TextBox txt_ChannelName;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btn_Connect;
@@ -516,6 +538,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn streamerCountDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn viewerCountDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
+        private System.Windows.Forms.Button btn_LoadChannelDetails;
+        private System.Windows.Forms.Button btn_SaveChannelDetails;
     }
 }
 
