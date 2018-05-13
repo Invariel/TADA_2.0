@@ -18,6 +18,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public sealed class General
     {
+        public const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
+        public const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
+
         public static void LogFile(String message)
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"./logfile.txt", true))

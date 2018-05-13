@@ -48,7 +48,14 @@
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
+            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.imageCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.audioCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.streamerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.viewerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
             this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
@@ -58,13 +65,8 @@
             this.txt_ChannelName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btn_Connect = new System.Windows.Forms.Button();
-            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.imageCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.audioCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.streamerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.viewerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txt_Status = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
@@ -72,8 +74,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -320,12 +323,72 @@
             this.dg_Alerts.Size = new System.Drawing.Size(721, 184);
             this.dg_Alerts.TabIndex = 5;
             // 
+            // alertNameDataGridViewTextBoxColumn
+            // 
+            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
+            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
+            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // imageCountDataGridViewTextBoxColumn
+            // 
+            this.imageCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.imageCountDataGridViewTextBoxColumn.DataPropertyName = "ImageCount";
+            this.imageCountDataGridViewTextBoxColumn.HeaderText = "Images";
+            this.imageCountDataGridViewTextBoxColumn.MinimumWidth = 90;
+            this.imageCountDataGridViewTextBoxColumn.Name = "imageCountDataGridViewTextBoxColumn";
+            this.imageCountDataGridViewTextBoxColumn.ReadOnly = true;
+            this.imageCountDataGridViewTextBoxColumn.Width = 90;
+            // 
+            // audioCountDataGridViewTextBoxColumn
+            // 
+            this.audioCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.audioCountDataGridViewTextBoxColumn.DataPropertyName = "AudioCount";
+            this.audioCountDataGridViewTextBoxColumn.HeaderText = "Audio";
+            this.audioCountDataGridViewTextBoxColumn.MinimumWidth = 90;
+            this.audioCountDataGridViewTextBoxColumn.Name = "audioCountDataGridViewTextBoxColumn";
+            this.audioCountDataGridViewTextBoxColumn.ReadOnly = true;
+            this.audioCountDataGridViewTextBoxColumn.Width = 90;
+            // 
+            // streamerCountDataGridViewTextBoxColumn
+            // 
+            this.streamerCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.streamerCountDataGridViewTextBoxColumn.DataPropertyName = "StreamerCount";
+            this.streamerCountDataGridViewTextBoxColumn.HeaderText = "Your Text";
+            this.streamerCountDataGridViewTextBoxColumn.MinimumWidth = 90;
+            this.streamerCountDataGridViewTextBoxColumn.Name = "streamerCountDataGridViewTextBoxColumn";
+            this.streamerCountDataGridViewTextBoxColumn.ReadOnly = true;
+            this.streamerCountDataGridViewTextBoxColumn.Width = 90;
+            // 
+            // viewerCountDataGridViewTextBoxColumn
+            // 
+            this.viewerCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.viewerCountDataGridViewTextBoxColumn.DataPropertyName = "ViewerCount";
+            this.viewerCountDataGridViewTextBoxColumn.HeaderText = "Viewer Text";
+            this.viewerCountDataGridViewTextBoxColumn.MinimumWidth = 90;
+            this.viewerCountDataGridViewTextBoxColumn.Name = "viewerCountDataGridViewTextBoxColumn";
+            this.viewerCountDataGridViewTextBoxColumn.ReadOnly = true;
+            this.viewerCountDataGridViewTextBoxColumn.Width = 90;
+            // 
             // Edit
             // 
             this.Edit.HeaderText = "Edit";
             this.Edit.MinimumWidth = 40;
             this.Edit.Name = "Edit";
             this.Edit.Width = 40;
+            // 
+            // alertBindingSource
+            // 
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 
@@ -412,71 +475,34 @@
             this.btn_Connect.Text = "Connect!";
             this.btn_Connect.UseVisualStyleBackColor = true;
             // 
-            // alertNameDataGridViewTextBoxColumn
+            // groupBox3
             // 
-            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
-            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
-            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.txt_Status);
+            this.groupBox3.Location = new System.Drawing.Point(12, 376);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(721, 35);
+            this.groupBox3.TabIndex = 18;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Status";
             // 
-            // alertTypeDataGridViewTextBoxColumn
+            // txt_Status
             // 
-            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // imageCountDataGridViewTextBoxColumn
-            // 
-            this.imageCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.imageCountDataGridViewTextBoxColumn.DataPropertyName = "ImageCount";
-            this.imageCountDataGridViewTextBoxColumn.HeaderText = "Images";
-            this.imageCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.imageCountDataGridViewTextBoxColumn.Name = "imageCountDataGridViewTextBoxColumn";
-            this.imageCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.imageCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // audioCountDataGridViewTextBoxColumn
-            // 
-            this.audioCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.audioCountDataGridViewTextBoxColumn.DataPropertyName = "AudioCount";
-            this.audioCountDataGridViewTextBoxColumn.HeaderText = "Audio";
-            this.audioCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.audioCountDataGridViewTextBoxColumn.Name = "audioCountDataGridViewTextBoxColumn";
-            this.audioCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.audioCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // streamerCountDataGridViewTextBoxColumn
-            // 
-            this.streamerCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.streamerCountDataGridViewTextBoxColumn.DataPropertyName = "StreamerCount";
-            this.streamerCountDataGridViewTextBoxColumn.HeaderText = "Your Text";
-            this.streamerCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.streamerCountDataGridViewTextBoxColumn.Name = "streamerCountDataGridViewTextBoxColumn";
-            this.streamerCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.streamerCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // viewerCountDataGridViewTextBoxColumn
-            // 
-            this.viewerCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.viewerCountDataGridViewTextBoxColumn.DataPropertyName = "ViewerCount";
-            this.viewerCountDataGridViewTextBoxColumn.HeaderText = "Viewer Text";
-            this.viewerCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.viewerCountDataGridViewTextBoxColumn.Name = "viewerCountDataGridViewTextBoxColumn";
-            this.viewerCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.viewerCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
+            this.txt_Status.BackColor = System.Drawing.SystemColors.Control;
+            this.txt_Status.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txt_Status.Enabled = false;
+            this.txt_Status.Location = new System.Drawing.Point(7, 13);
+            this.txt_Status.Name = "txt_Status";
+            this.txt_Status.Size = new System.Drawing.Size(708, 13);
+            this.txt_Status.TabIndex = 0;
             // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(745, 378);
+            this.ClientSize = new System.Drawing.Size(745, 412);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btn_Connect);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.dg_Alerts);
@@ -495,9 +521,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -540,6 +568,8 @@
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
         private System.Windows.Forms.Button btn_LoadChannelDetails;
         private System.Windows.Forms.Button btn_SaveChannelDetails;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox txt_Status;
     }
 }
 

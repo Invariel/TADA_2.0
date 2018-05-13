@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -37,18 +39,17 @@ using System.Xml;
  * ixirsii
  * Troupster
  * PyurJenius
+ * Unkle_J
  */
 
- // Add a button that makes the window "disappear" --> get rendered over at position (-3000, -3000).  Test this with OBS to make sure things still render.
- // Figure out why window size is wrong.
+// Add a button that makes the window "disappear" --> get rendered over at position (-3000, -3000).  Test this with OBS to make sure things still render.
+// Figure out why window size is wrong.
 
 namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
         const String TADAVersion = "0.0.5";
-        const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
-        const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
 
         const String DEFAULT_OAUTH = "./oauth.cfg";
         const String DEFAULT_MANIFEST = "./default.tada";
@@ -82,7 +83,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             dg_Alerts.CellClick += EditExistingEntry;
 
-            btn_Connect.Click += Btn_Connect_Click;
+            btn_Connect.Click += ConnectToTwitch;
 
             if (System.IO.File.Exists(DEFAULT_MANIFEST))
             {
@@ -118,14 +119,11 @@ namespace TADA_Advanced_Desktop_Alerts
             new TimePeriod(1);
         }
 
-        private void Btn_Connect_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Not yet, sorry.");
-        }
-
         private void GetAccessToken(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://api.twitch.tv/kraken/oauth2/authorize?client_id=" + CLIENT_ID + "&redirect_uri=" + AUTH_URI + "&response_type=token");
+            // channel_subscription - for PubSub to be able to read when someone subscribes
+            // channel_check_subscription - to check if a user is subscribed
+            System.Diagnostics.Process.Start("https://api.twitch.tv/kraken/oauth2/authorize?client_id=" + General.CLIENT_ID + "&redirect_uri=" + General.AUTH_URI + "&response_type=token&scope=channel_subscriptions channel_check_subscription");
         }
 
         private void PasswordMask(object sender, EventArgs e)
@@ -440,6 +438,12 @@ namespace TADA_Advanced_Desktop_Alerts
                 txt_ChannelName.Text = reader.ReadLine();
                 txt_AccessToken.Text = reader.ReadLine();
             }
+        }
+
+        private void ConnectToTwitch(object sender, EventArgs e)
+        {
+            Played_Alerts playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+            playedAlerts.Show();
         }
     }
 }
