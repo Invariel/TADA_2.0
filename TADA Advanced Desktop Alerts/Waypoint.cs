@@ -20,9 +20,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public override void Copy (Effect e)
         {
             base.Copy(e);
-
-            this.framesRemaining = this.frames;
-            this.delta = this.target / this.frames;
+            this.framesRemaining = e.frames;
         }
 
         public void NextEffectFrame (ref double variable, System.Timers.Timer timer)
@@ -286,6 +284,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.leaveScreen = Boolean.Parse(reader.GetAttribute("LeaveScreen"));
                 this.behindImage = Boolean.Parse(reader.GetAttribute("BehindImage"));
                 this.readMessage = Boolean.Parse(reader.GetAttribute("ReadMessage"));
+                this.isCurve = Boolean.Parse(reader.GetAttribute("IsCurve"));
             }
             else
             {
@@ -363,6 +362,7 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteAttributeString("LeaveScreen", this.leaveScreen.ToString());
             writer.WriteAttributeString("BehindImage", this.behindImage.ToString());
             writer.WriteAttributeString("ReadMessage", this.readMessage.ToString());
+            writer.WriteAttributeString("IsCurve", this.isCurve.ToString());
 
             XmlHelper.WritePoint(writer, p1, "P1");
             XmlHelper.WritePoint(writer, c0, "C0");

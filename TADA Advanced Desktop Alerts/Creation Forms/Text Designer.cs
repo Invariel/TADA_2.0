@@ -450,7 +450,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 Amount = 5,
                 RecipientName = "Invariel",
-                Tier = "Tier One",
+                Tier = General.stringToTwitchLibSubPlan["Tier One"],
                 TierName = "Level 99 Black Mage",
                 ViewerName = "LeiRavni"
             };

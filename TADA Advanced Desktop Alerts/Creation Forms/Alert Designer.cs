@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,18 +29,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.animationWindow = TADAAnimationWindow.AnimationWindow;
             this.currentAlert = tadaAlert;
 
-            btn_CreateAudio.Click += CreateAudio;
-            btn_CreateImage.Click += CreateImage;
-            btn_CreateYour.Click += CreateYour;
-            btn_CreateViewer.Click += CreateViewer;
-
             btn_TestAlert.Click += TestAlert;
             btn_Save.Click += SaveAlert;
 
-            dg_Images.CellClick += EditExistingEntry;
-            dg_Audio.CellClick += EditExistingEntry;
-            dg_StreamerMessages.CellClick += EditExistingEntry;
-            dg_ViewerMessages.CellClick += EditExistingEntry;
+            dg_Images.CellContentClick += CellEditClicked;
+            dg_Audio.CellContentClick += CellEditClicked;
+            dg_StreamerMessages.CellContentClick += CellEditClicked;
+            dg_ViewerMessages.CellContentClick += CellEditClicked;
 
             dg_Images.RowsAdded += UpdateMaximum;
             dg_Audio.RowsAdded += UpdateMaximum;
@@ -50,6 +46,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             dg_Audio.RowsRemoved += UpdateMaximum;
             dg_StreamerMessages.RowsRemoved += UpdateMaximum;
             dg_ViewerMessages.RowsRemoved += UpdateMaximum;
+
+            dg_Images.RowsAdded += DefaultButtonValue;
+            dg_Audio.RowsAdded += DefaultButtonValue;
+            dg_StreamerMessages.RowsAdded += DefaultButtonValue;
+            dg_ViewerMessages.RowsAdded += DefaultButtonValue;
 
             numud_TestAudio.GotFocus += UpdateMaximum;
             numud_TestImage.GotFocus += UpdateMaximum;
@@ -62,6 +63,18 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
+        private void DefaultButtonValue (object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            DataGridViewRow r = (sender as DataGridView).Rows[e.RowIndex];
+            for (int cell = 0; cell < r.Cells.Count; ++ cell)
+            {
+                if (r.Cells[cell] is DataGridViewButtonCell)
+                {
+                    r.Cells[cell].Value = "New";
+                }
+            }
+        }
+
         private void LoadExisting()
         {
             BindingSource audioSource = dg_Audio.DataSource as BindingSource;
@@ -69,6 +82,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             BindingSource streamerSource = dg_StreamerMessages.DataSource as BindingSource;
             BindingSource viewerSource = dg_ViewerMessages.DataSource as BindingSource;
 
+            cmb_AlertType.Text = this.currentAlert.AlertType;
             txt_AlertName.Text = this.currentAlert.AlertName;
 
             audioSource.Clear();
@@ -96,42 +110,56 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
-        private void EditExistingEntry(object sender, DataGridViewCellEventArgs e)
+        private void CellEditClicked(object sender, DataGridViewCellEventArgs e)
         {
-            if ((sender as DataGridView).Columns[e.ColumnIndex] is DataGridViewButtonColumn)
+            if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && (sender as DataGridView).Columns[e.ColumnIndex] is DataGridViewButtonColumn)
             {
-                BindingSource bindingSource = (sender as DataGridView).DataSource as BindingSource;
+                DataGridView dataGrid = (sender as DataGridView);
+                BindingSource bindingSource = dataGrid.DataSource as BindingSource;
+                object editObject;
 
-                if (sender == dg_Images)
+                DataGridView dgView = (sender as DataGridView);
+                if (dataGrid.Rows[e.RowIndex].IsNewRow)
+                {
+                    bindingSource.CancelEdit();
+                    editObject = bindingSource.AddNew();
+                }
+                else
+                {
+                    editObject = bindingSource.Current;
+                }
+
+                if (dataGrid == dg_Images)
                 {
                     if (this.currentImageForm == null || this.currentImageForm.IsDisposed)
                     {
-                        this.currentImageForm = new ImageCreationForm(this.animationWindow, bindingSource.Current as TADAAlertImage);
+                        this.currentImageForm = new ImageCreationForm(this.animationWindow, editObject as TADAAlertImage);
                     }
                     this.currentImageForm.Show();
                 }
-                else if (sender == dg_Audio)
+                else if (dataGrid == dg_Audio)
                 {
                     if (this.currentAudioForm == null || this.currentAudioForm.IsDisposed)
                     {
-                        this.currentAudioForm = new AudioCreationForm(this.animationWindow, bindingSource.Current as TADAAlertAudio);
+                        this.currentAudioForm = new AudioCreationForm(this.animationWindow, editObject as TADAAlertAudio);
                     }
                     this.currentAudioForm.Show();
                 }
-                else if (sender == dg_StreamerMessages)
+                else if (dataGrid == dg_StreamerMessages)
                 {
                     if (this.currentStreamerForm == null || this.currentStreamerForm.IsDisposed)
                     {
-                        this.currentStreamerForm = new TextCreationForm(this.animationWindow, bindingSource.Current as TADAAlertText, true);
+                        this.currentStreamerForm = new TextCreationForm(this.animationWindow, editObject as TADAAlertText, true);
                     }
                     this.currentStreamerForm.Show();
                 }
-                else if (sender == dg_ViewerMessages)
+                else if (dataGrid == dg_ViewerMessages)
                 {
                     if (this.currentViewerForm == null || this.currentViewerForm.IsDisposed)
                     {
-                        this.currentViewerForm = new TextCreationForm(this.animationWindow, bindingSource.Current as TADAAlertText, false);
+                        this.currentViewerForm = new TextCreationForm(this.animationWindow, editObject as TADAAlertText, false);
                     }
+                    this.currentViewerForm.Show();
                 }
             }
         }
@@ -153,34 +181,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
-        private void CreateAudio(object sender, EventArgs e)
-        {
-            BindingSource bindingSource = dg_Audio.DataSource as BindingSource;
-            Creation_Forms.AudioCreationForm audioCreationForm = new AudioCreationForm(this.animationWindow, bindingSource.AddNew() as TADAAlertAudio);
-            audioCreationForm.Show();
-        }
-
-        private void CreateImage(object sender, EventArgs e)
-        {
-            BindingSource bindingSource = dg_Images.DataSource as BindingSource;
-            Creation_Forms.ImageCreationForm imageCreationForm = new ImageCreationForm(this.animationWindow, bindingSource.AddNew() as TADAAlertImage);
-            imageCreationForm.Show();
-        }
-
-        private void CreateYour(object sender, EventArgs e)
-        {
-            BindingSource bindingSource = dg_StreamerMessages.DataSource as BindingSource;
-            Creation_Forms.TextCreationForm textCreationForm = new TextCreationForm(this.animationWindow, bindingSource.AddNew() as TADAAlertText, true);
-            textCreationForm.Show();
-        }
-
-        private void CreateViewer(object sender, EventArgs e)
-        {
-            BindingSource bindingSource = dg_ViewerMessages.DataSource as BindingSource;
-            Creation_Forms.TextCreationForm textCreationForm = new TextCreationForm(this.animationWindow, bindingSource.AddNew() as TADAAlertText, false);
-            textCreationForm.Show();
-        }
-
         private void TestAlert(object sender, EventArgs e)
         {
             int whichAudio = Convert.ToInt32(numud_TestAudio.Value);
@@ -198,7 +198,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 ViewerName = txt_ViewerName.Text,
                 RecipientName = txt_RecipientName.Text,
                 Amount = Convert.ToInt32(numud_Amount.Value),
-                Tier = dom_SubTier.Text,
+                Tier = General.stringToTwitchLibSubPlan[dom_SubTier.Text],
                 TierName = txt_SubTierName.Text
             };
 

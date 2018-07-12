@@ -15,13 +15,12 @@ using TwitchLib.Client.Events;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
-
-
 namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class Played_Alerts : Form
     {
-        const bool TWITCHAPI = false;
+        const bool TWITCHAPI = true;
+        const int ABSOLUTE_MINIMUM_SCORE = -10000000;
 
         private TwitchAPI twitchAPI;
 
@@ -29,11 +28,12 @@ namespace TADA_Advanced_Desktop_Alerts
         private String channelID;
         private String channelName;
 
-        // I might want to create a User object that stores all of the things: user ID, subscription status, time they said their first words of the day, 
-        private Dictionary<String, User> viewers = new Dictionary<String, User>();
-
         TwitchPubSub pubSub;
         TwitchClient twitchClient;
+
+        private Dictionary<String, List<TADAAlert>> currentAlerts;
+
+        private Dictionary<String, User> viewers = new Dictionary<String, User>();
 
         public Played_Alerts(String channelName, String accessToken)
         {
@@ -51,26 +51,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async void Connect()
         {
-# if TWITCHAPI
-            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { channelName }, authToken);
+            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { channelName }, accessToken);
             channelID = result.Users[0].Id;
-# else
-            HttpClient twitchAPIRequest = new HttpClient();
-            twitchAPIRequest.DefaultRequestHeaders.Add("Client-ID", General.CLIENT_ID);
-            HttpResponseMessage twitchAPIResponse = twitchAPIRequest.GetAsync(new Uri("https://api.twitch.tv/helix/users?login=" + channelName)).Result;
-
-            if (twitchAPIResponse.IsSuccessStatusCode)
-            {
-                HttpContent content = twitchAPIResponse.Content;
-                JsonTextReader responseReader = new JsonTextReader(new System.IO.StringReader(content.ReadAsStringAsync().Result));
-                do
-                {
-                    responseReader.Read();
-                } while (responseReader.TokenType != JsonToken.PropertyName || (String)responseReader.Value != "id");
-                responseReader.Read();
-                channelID = (String)responseReader.Value;
-            }
-# endif
 
             pubSub = new TwitchPubSub();
             pubSub.OnBitsReceived += OnBitsReceivedEvent;
@@ -78,11 +60,12 @@ namespace TADA_Advanced_Desktop_Alerts
             pubSub.OnChannelSubscription += OnChannelSubscribeEvent;
             pubSub.OnFollow += OnFollowEvent;
             pubSub.OnListenResponse += OnListenEvent;
+
             pubSub.OnPubSubServiceConnected += delegate
             {
                 // Even if there are no events of the chosen type specified, listening to them is important in case one is added later.
                 pubSub.ListenToBitsEvents(channelID);
-                //pubSub.ListenToCommerce(channelID);
+                pubSub.ListenToCommerce(channelID);
                 pubSub.ListenToFollows(channelID);
                 pubSub.ListenToSubscriptions(channelID);
             };
@@ -95,38 +78,7 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnRaidNotification += OnRaidReceivedEvent;
             twitchClient.OnMessageReceived += OnMessageReceivedEvent;
 
-
-
-
-
-
-
-            /*
-            String capn = "109832196";
-
-            var aSubscription = await GetUserSubscription(capn);
-            Console.WriteLine("Capn is subscribed at: " + aSubscription.SubPlanName);
-
-            // These are the calls from the example.
-            //Checks subscription for a specific user and the channel specified.
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await twitchAPI.Channels.v5.CheckChannelSubscriptionByUserAsync(channelID, capn, twitchAPI.Settings.AccessToken);
-
-            //Gets a list of all the subscritions of the specified channel.
-            List<TwitchLib.Api.Models.v5.Subscriptions.Subscription> allSubscriptions = await twitchAPI.Channels.v5.GetAllSubscribersAsync(channelID);
-
-            //Get channels a specified user follows.
-            TwitchLib.Api.Models.Helix.Users.GetUsersFollows.GetUsersFollowsResponse userFollows = await twitchAPI.Users.helix.GetUsersFollowsAsync(channelID);
-
-            //Get Spedicified Channel Follows
-            var channelFollowers = await twitchAPI.Channels.v5.GetChannelFollowersAsync(channelID);
-
-            //Return bool if channel is online/offline.
-            bool isStreaming = await twitchAPI.Streams.v5.BroadcasterOnlineAsync(channelID);
-
-            //Update Channel Title/Game
-            //await twitchAPI.Channels.v5.UpdateChannelAsync("channel_id", "New stream title", "Stronghold Crusader");
-
-            */
+            currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
         }
 
         private void OnListenEvent(object sender, OnListenResponseArgs l)
@@ -135,13 +87,18 @@ namespace TADA_Advanced_Desktop_Alerts
             txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions.";
         }
 
-        // If TwitchLib.Api doesn't want to work, might have to replace this with a regular call.
         private async Task<TwitchLib.Api.Models.v5.Subscriptions.Subscription> GetUserSubscription(String userID)
         {
-            var subTask = twitchAPI.Users.v5.CheckUserSubscriptionByChannelAsync(userID, channelID, twitchAPI.Settings.AccessToken);
-            subTask.Start();
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = subTask.Result;
-            return subscription;
+            return await twitchAPI.Users.v5.CheckUserSubscriptionByChannelAsync(userID, channelID, twitchAPI.Settings.AccessToken);
+        }
+
+        private void MergeSubscriptionWithSubstitutionObject(TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription, SubstitutionObject subObject)
+        {
+            if (subscription.SubPlan != null)
+            {
+                subObject.Tier = General.stringToTwitchLibSubPlan[subscription.SubPlan];
+                subObject.TierName = subscription.SubPlanName;
+            }
         }
 
         private async void OnBitsReceivedEvent(object sender, OnBitsReceivedArgs bits)
@@ -153,50 +110,203 @@ namespace TADA_Advanced_Desktop_Alerts
             };
 
             TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(bits.UserId);
+            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
+
+            // Now find a suitable bits alert.
         }
 
         private async void OnCommerceReceivedEvent(object sender, OnChannelCommerceReceivedArgs commerce)
         {
             SubstitutionObject subObject = new SubstitutionObject()
             {
+                ViewerName = commerce.Username
             };
 
             TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(commerce.UserId);
+            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
         }
 
         private void OnChannelSubscribeEvent(object sender, OnChannelSubscriptionArgs subscription)
         {
-
+            SubstitutionObject subObject = new SubstitutionObject()
+            {
+                Amount = subscription.Subscription.Months,
+                RecipientName = subscription.Subscription.RecipientDisplayName,
+                Tier = subscription.Subscription.SubscriptionPlan,
+                TierName = subscription.Subscription.SubscriptionPlanName,
+                ViewerName = subscription.Subscription.Username
+            };
         }
 
         private async void OnFollowEvent(object sender, OnFollowArgs follow)
         {
+            SubstitutionObject subObject = new SubstitutionObject()
+            {
+                ViewerName = follow.Username
+            };
 
             TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(follow.UserId);
+            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
         }
 
         private async void OnHostReceivedEvent(object sender, OnBeingHostedArgs host)
         {
-            //host.BeingHostedNotification.HostedByChannel;
+            SubstitutionObject subObject = new SubstitutionObject()
+            {
+                Amount = host.BeingHostedNotification.Viewers,
+                ViewerName = host.BeingHostedNotification.HostedByChannel
+            };
+
+            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { host.BeingHostedNotification.HostedByChannel }, accessToken);
+
+            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(result.Users[0].Id);
+            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
+
             //host.BeingHostedNotification.IsAutoHosted;
 
-            // Have to first look up the username of the hoster, because this is a username.
-
-
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(host.BeingHostedNotification.HostedByChannel);
         }
 
         private async void OnRaidReceivedEvent(object sender, OnRaidNotificationArgs raid)
         {
             // raid.RaidNotificaiton.MsgParamDisplayName Name of the raider.
             // raid.RaidNotificaiton.MsgParamViewerCount Number of viewers in the raid.
+            SubstitutionObject subObject = new SubstitutionObject()
+            {
+                Amount = Int32.Parse(raid.RaidNotificaiton.MsgParamViewerCount),
+                ViewerName = raid.RaidNotificaiton.MsgParamDisplayName
+            };
 
             TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(raid.RaidNotificaiton.UserId);
+            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
         }
 
         private async void OnMessageReceivedEvent(object sender, OnMessageReceivedArgs message)
         {
             TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(message.ChatMessage.UserId);
+        }
+
+        private TADAAlert FindSuitableAlert(String alertType, String username, int amount, String message, String tier)
+        {
+            TADAAlert returnedAlert = null;
+            List<TADAAlert> potentialAlerts = new List<TADAAlert>();
+
+            int alertScore = ABSOLUTE_MINIMUM_SCORE;
+
+            foreach (TADAAlert alert in currentAlerts[alertType])
+            {
+                /*
+                 * Loop through the appropriate alerts, and assign each one a score.
+                 * name > tier > keyword > amount
+                 */
+
+                if (alert.AlertType == alertType)
+                {
+                    int thisAlertScore = ScoreAlert(alert, username, amount, message, tier);
+                    if (thisAlertScore > alertScore)
+                    {
+                        potentialAlerts.Clear();
+                        alertScore = thisAlertScore;
+                    }
+
+                    if (thisAlertScore == alertScore)
+                    {
+                        potentialAlerts.Add(alert);
+                    }
+                }
+            }
+
+            // Then potentialAlerts is the list of potential alerts, given the scores.  Return one of them at random.
+            if (potentialAlerts.Count > 0)
+            {
+                returnedAlert = potentialAlerts[General.rng.Next(potentialAlerts.Count)];
+            }
+
+
+            return returnedAlert;
+        }
+
+        private int ScoreAlert (TADAAlert alert, String username, int amount, String message, String tier)
+        {
+            int score = 0;
+            foreach (TADAAlertCondition condition in alert.Conditions)
+            {
+                if (!condition.NoTier)
+                {
+                    if (condition.TwitchPrime && tier == "Twitch Prime" ||
+                        condition.TierOne && tier == "Tier One" ||
+                        condition.TierTwo && tier == "Tier Two" ||
+                        condition.TierThree && tier == "Tier Three")
+                    {
+                        score += (int)General.SCORES.SCORE_TIER_MATCHED;
+                    }
+                    else
+                    {
+                        // The tier was set and didn't match, so move onto the next condition.
+                        score = 0;
+                        continue;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(condition.Usernames))
+                {
+                    username = username.ToLower();
+
+                    List<String> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+                    if (names.Contains(username))
+                    {
+                        score += (int)General.SCORES.SCORE_NAME_MATCHED;
+                    }
+                    else
+                    {
+                        score = 0;
+                        continue;
+                    }
+                }
+
+                if (condition.Minimum > 0 || condition.Maximum > 0)
+                {
+                    if ((condition.Minimum == 0 || amount >= condition.Minimum) &&
+                        (condition.Maximum == 0 || amount <= condition.Maximum))
+                    {
+                        score += (int)General.SCORES.SCORE_WITHIN_AMOUNT;
+                    }
+                    else
+                    {
+                        score = 0;
+                        continue;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(condition.Keywords))
+                {
+                    bool matched = false;
+
+                    List<String> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+
+                    foreach (String key in keywords)
+                    {
+                        String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
+                        if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase) != null)
+                        {
+                            matched = true;
+                            score += (int)General.SCORES.SCORE_KEYWORD_MATCHED;
+                        }
+                    }
+
+                    if (!matched)
+                    {
+                        score = 0;
+                        continue;
+                    }
+                }
+
+                if (condition.NoTier && String.IsNullOrEmpty(condition.Usernames) && String.IsNullOrEmpty(condition.Keywords) && condition.Minimum == 0 && condition.Maximum == 0)
+                {
+                    score = (int)General.SCORES.SCORE_NO_CONDITIONS;
+                }
+            }
+
+            return score;
         }
     }
 
@@ -205,6 +315,7 @@ namespace TADA_Advanced_Desktop_Alerts
         // I might want to create a User object that stores all of the things: user ID, subscription status, time they said their first words of the day, 
         public TwitchLib.Api.Models.Helix.Users.GetUsers.User user;
         public TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription;
+        public DateTime lastUpdated;
         public DateTime lastSpoke;
 
         public String UserID()

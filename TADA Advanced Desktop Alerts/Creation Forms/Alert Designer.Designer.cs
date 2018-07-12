@@ -60,10 +60,6 @@
             this.numud_TestAudio = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.btn_CreateImage = new System.Windows.Forms.Button();
-            this.btn_CreateAudio = new System.Windows.Forms.Button();
-            this.btn_CreateYour = new System.Windows.Forms.Button();
-            this.btn_CreateViewer = new System.Windows.Forms.Button();
             this.cmb_AlertType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -71,27 +67,6 @@
             this.btn_Save = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dg_Conditions = new System.Windows.Forms.DataGridView();
-            this.alertImageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dimensionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Images_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Images_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.alertAudioBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Audio_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Audio_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.streamerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Your_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Your_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.viewerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Viewer_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Viewer_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewCheckBoxColumn2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -101,6 +76,27 @@
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.alertImageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.alertAudioBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.streamerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.viewerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dimensionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Images_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Images_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Audio_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Audio_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Your_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Your_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Viewer_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Viewer_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_AlertPieces.SuspendLayout();
             this.tab_Image.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Images)).BeginInit();
@@ -118,11 +114,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_TestAudio)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Conditions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertConditionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertImageBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertAudioBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.streamerAlertTextBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewerAlertTextBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.alertConditionBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tab_AlertPieces
@@ -132,7 +128,7 @@
             this.tab_AlertPieces.Controls.Add(this.tab_Streamer);
             this.tab_AlertPieces.Controls.Add(this.tab_Viewer);
             this.tab_AlertPieces.Controls.Add(this.tabPage1);
-            this.tab_AlertPieces.Location = new System.Drawing.Point(174, 45);
+            this.tab_AlertPieces.Location = new System.Drawing.Point(20, 48);
             this.tab_AlertPieces.Margin = new System.Windows.Forms.Padding(0);
             this.tab_AlertPieces.Name = "tab_AlertPieces";
             this.tab_AlertPieces.Padding = new System.Drawing.Point(0, 0);
@@ -396,7 +392,7 @@
             // 
             // btn_TestAlert
             // 
-            this.btn_TestAlert.Location = new System.Drawing.Point(699, 83);
+            this.btn_TestAlert.Location = new System.Drawing.Point(692, 83);
             this.btn_TestAlert.Name = "btn_TestAlert";
             this.btn_TestAlert.Size = new System.Drawing.Size(82, 23);
             this.btn_TestAlert.TabIndex = 110;
@@ -487,42 +483,6 @@
             this.label4.TabIndex = 77;
             this.label4.Text = "Audio";
             // 
-            // btn_CreateImage
-            // 
-            this.btn_CreateImage.Location = new System.Drawing.Point(17, 67);
-            this.btn_CreateImage.Name = "btn_CreateImage";
-            this.btn_CreateImage.Size = new System.Drawing.Size(140, 23);
-            this.btn_CreateImage.TabIndex = 1;
-            this.btn_CreateImage.Text = "Create New Image";
-            this.btn_CreateImage.UseVisualStyleBackColor = true;
-            // 
-            // btn_CreateAudio
-            // 
-            this.btn_CreateAudio.Location = new System.Drawing.Point(17, 99);
-            this.btn_CreateAudio.Name = "btn_CreateAudio";
-            this.btn_CreateAudio.Size = new System.Drawing.Size(140, 23);
-            this.btn_CreateAudio.TabIndex = 2;
-            this.btn_CreateAudio.Text = "Create New Audio";
-            this.btn_CreateAudio.UseVisualStyleBackColor = true;
-            // 
-            // btn_CreateYour
-            // 
-            this.btn_CreateYour.Location = new System.Drawing.Point(17, 131);
-            this.btn_CreateYour.Name = "btn_CreateYour";
-            this.btn_CreateYour.Size = new System.Drawing.Size(140, 23);
-            this.btn_CreateYour.TabIndex = 3;
-            this.btn_CreateYour.Text = "Customize Your Text";
-            this.btn_CreateYour.UseVisualStyleBackColor = true;
-            // 
-            // btn_CreateViewer
-            // 
-            this.btn_CreateViewer.Location = new System.Drawing.Point(17, 163);
-            this.btn_CreateViewer.Name = "btn_CreateViewer";
-            this.btn_CreateViewer.Size = new System.Drawing.Size(140, 23);
-            this.btn_CreateViewer.TabIndex = 4;
-            this.btn_CreateViewer.Text = "Customize Viewer Text";
-            this.btn_CreateViewer.UseVisualStyleBackColor = true;
-            // 
             // cmb_AlertType
             // 
             this.cmb_AlertType.FormattingEnabled = true;
@@ -563,12 +523,12 @@
             // 
             this.txt_AlertName.Location = new System.Drawing.Point(239, 13);
             this.txt_AlertName.Name = "txt_AlertName";
-            this.txt_AlertName.Size = new System.Drawing.Size(726, 20);
+            this.txt_AlertName.Size = new System.Drawing.Size(573, 20);
             this.txt_AlertName.TabIndex = 8;
             // 
             // btn_Save
             // 
-            this.btn_Save.Location = new System.Drawing.Point(17, 378);
+            this.btn_Save.Location = new System.Drawing.Point(20, 378);
             this.btn_Save.Name = "btn_Save";
             this.btn_Save.Size = new System.Drawing.Size(140, 23);
             this.btn_Save.TabIndex = 12;
@@ -578,9 +538,9 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dg_Conditions);
-            this.groupBox2.Location = new System.Drawing.Point(17, 197);
+            this.groupBox2.Location = new System.Drawing.Point(20, 197);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(948, 175);
+            this.groupBox2.Size = new System.Drawing.Size(795, 175);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Trigger Conditions";
@@ -603,151 +563,8 @@
             this.dg_Conditions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_Conditions.Location = new System.Drawing.Point(3, 16);
             this.dg_Conditions.Name = "dg_Conditions";
-            this.dg_Conditions.Size = new System.Drawing.Size(942, 156);
+            this.dg_Conditions.Size = new System.Drawing.Size(789, 156);
             this.dg_Conditions.TabIndex = 0;
-            // 
-            // alertImageBindingSource
-            // 
-            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertImage);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Filename";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Filename";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dimensionsDataGridViewTextBoxColumn
-            // 
-            this.dimensionsDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dimensionsDataGridViewTextBoxColumn.DataPropertyName = "Dimensions";
-            this.dimensionsDataGridViewTextBoxColumn.HeaderText = "Size";
-            this.dimensionsDataGridViewTextBoxColumn.MinimumWidth = 75;
-            this.dimensionsDataGridViewTextBoxColumn.Name = "dimensionsDataGridViewTextBoxColumn";
-            this.dimensionsDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dimensionsDataGridViewTextBoxColumn.Width = 75;
-            // 
-            // dataGridViewCheckBoxColumn1
-            // 
-            this.dataGridViewCheckBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewCheckBoxColumn1.DataPropertyName = "IsVideo";
-            this.dataGridViewCheckBoxColumn1.HeaderText = "Video ?";
-            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
-            this.dataGridViewCheckBoxColumn1.ReadOnly = true;
-            this.dataGridViewCheckBoxColumn1.Width = 49;
-            // 
-            // Images_Chance
-            // 
-            this.Images_Chance.HeaderText = "Chance";
-            this.Images_Chance.MinimumWidth = 50;
-            this.Images_Chance.Name = "Images_Chance";
-            this.Images_Chance.ReadOnly = true;
-            this.Images_Chance.Width = 50;
-            // 
-            // Images_Edit
-            // 
-            this.Images_Edit.HeaderText = "Edit";
-            this.Images_Edit.MinimumWidth = 40;
-            this.Images_Edit.Name = "Images_Edit";
-            this.Images_Edit.ReadOnly = true;
-            this.Images_Edit.Text = "Edit";
-            this.Images_Edit.ToolTipText = "Edit this Image or Video.";
-            this.Images_Edit.Width = 40;
-            // 
-            // alertAudioBindingSource
-            // 
-            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertAudio);
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Filename";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Filename";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // Audio_Chance
-            // 
-            this.Audio_Chance.HeaderText = "Chance";
-            this.Audio_Chance.MinimumWidth = 50;
-            this.Audio_Chance.Name = "Audio_Chance";
-            this.Audio_Chance.Width = 50;
-            // 
-            // Audio_Edit
-            // 
-            this.Audio_Edit.HeaderText = "Edit";
-            this.Audio_Edit.MinimumWidth = 40;
-            this.Audio_Edit.Name = "Audio_Edit";
-            this.Audio_Edit.Width = 40;
-            // 
-            // streamerAlertTextBindingSource
-            // 
-            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "Message";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Displayed Message";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "ReadMessage";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Narrated Message";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            // 
-            // Your_Chance
-            // 
-            this.Your_Chance.HeaderText = "Chance";
-            this.Your_Chance.MinimumWidth = 50;
-            this.Your_Chance.Name = "Your_Chance";
-            this.Your_Chance.Width = 50;
-            // 
-            // Your_Edit
-            // 
-            this.Your_Edit.HeaderText = "Edit";
-            this.Your_Edit.MinimumWidth = 40;
-            this.Your_Edit.Name = "Your_Edit";
-            this.Your_Edit.Width = 40;
-            // 
-            // viewerAlertTextBindingSource
-            // 
-            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn5.DataPropertyName = "Message";
-            this.dataGridViewTextBoxColumn5.HeaderText = "Displayed Message";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            this.dataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn6.DataPropertyName = "ReadMessage";
-            this.dataGridViewTextBoxColumn6.HeaderText = "Narrated Message";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            // 
-            // Viewer_Chance
-            // 
-            this.Viewer_Chance.DataPropertyName = "Message";
-            this.Viewer_Chance.HeaderText = "Chance";
-            this.Viewer_Chance.MinimumWidth = 50;
-            this.Viewer_Chance.Name = "Viewer_Chance";
-            this.Viewer_Chance.Width = 50;
-            // 
-            // Viewer_Edit
-            // 
-            this.Viewer_Edit.HeaderText = "Edit";
-            this.Viewer_Edit.MinimumWidth = 40;
-            this.Viewer_Edit.Name = "Viewer_Edit";
-            this.Viewer_Edit.Width = 40;
-            // 
-            // alertConditionBindingSource
-            // 
-            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertCondition);
             // 
             // dataGridViewCheckBoxColumn2
             // 
@@ -819,21 +636,170 @@
             this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
             this.dataGridViewTextBoxColumn10.Width = 60;
             // 
+            // alertConditionBindingSource
+            // 
+            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertCondition);
+            // 
+            // alertImageBindingSource
+            // 
+            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertImage);
+            // 
+            // alertAudioBindingSource
+            // 
+            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertAudio);
+            // 
+            // streamerAlertTextBindingSource
+            // 
+            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
+            // 
+            // viewerAlertTextBindingSource
+            // 
+            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Filename";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Filename";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dimensionsDataGridViewTextBoxColumn
+            // 
+            this.dimensionsDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dimensionsDataGridViewTextBoxColumn.DataPropertyName = "Dimensions";
+            this.dimensionsDataGridViewTextBoxColumn.HeaderText = "Size";
+            this.dimensionsDataGridViewTextBoxColumn.MinimumWidth = 75;
+            this.dimensionsDataGridViewTextBoxColumn.Name = "dimensionsDataGridViewTextBoxColumn";
+            this.dimensionsDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dimensionsDataGridViewTextBoxColumn.Width = 75;
+            // 
+            // dataGridViewCheckBoxColumn1
+            // 
+            this.dataGridViewCheckBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewCheckBoxColumn1.DataPropertyName = "IsVideo";
+            this.dataGridViewCheckBoxColumn1.HeaderText = "Video ?";
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.dataGridViewCheckBoxColumn1.ReadOnly = true;
+            this.dataGridViewCheckBoxColumn1.Width = 49;
+            // 
+            // Images_Chance
+            // 
+            this.Images_Chance.HeaderText = "Chance";
+            this.Images_Chance.MinimumWidth = 50;
+            this.Images_Chance.Name = "Images_Chance";
+            this.Images_Chance.ReadOnly = true;
+            this.Images_Chance.Width = 50;
+            // 
+            // Images_Edit
+            // 
+            this.Images_Edit.HeaderText = "New / Edit";
+            this.Images_Edit.MinimumWidth = 75;
+            this.Images_Edit.Name = "Images_Edit";
+            this.Images_Edit.ReadOnly = true;
+            this.Images_Edit.Text = "Edit";
+            this.Images_Edit.ToolTipText = "Create a new image/video alert piece, or edit an existing one.";
+            this.Images_Edit.UseColumnTextForButtonValue = true;
+            this.Images_Edit.Width = 75;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Filename";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Filename";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // Audio_Chance
+            // 
+            this.Audio_Chance.HeaderText = "Chance";
+            this.Audio_Chance.MinimumWidth = 50;
+            this.Audio_Chance.Name = "Audio_Chance";
+            this.Audio_Chance.Width = 50;
+            // 
+            // Audio_Edit
+            // 
+            this.Audio_Edit.HeaderText = "New / Edit";
+            this.Audio_Edit.MinimumWidth = 75;
+            this.Audio_Edit.Name = "Audio_Edit";
+            this.Audio_Edit.Text = "Edit";
+            this.Audio_Edit.ToolTipText = "Create a new audio piece or edit an existing one.";
+            this.Audio_Edit.UseColumnTextForButtonValue = true;
+            this.Audio_Edit.Width = 75;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "Message";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Displayed Message";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "ReadMessage";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Narrated Message";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            // 
+            // Your_Chance
+            // 
+            this.Your_Chance.HeaderText = "Chance";
+            this.Your_Chance.MinimumWidth = 50;
+            this.Your_Chance.Name = "Your_Chance";
+            this.Your_Chance.Width = 50;
+            // 
+            // Your_Edit
+            // 
+            this.Your_Edit.HeaderText = "New / Edit";
+            this.Your_Edit.MinimumWidth = 75;
+            this.Your_Edit.Name = "Your_Edit";
+            this.Your_Edit.Text = "Edit";
+            this.Your_Edit.ToolTipText = "Create a new piece of displayed text, or edit an existing one.";
+            this.Your_Edit.UseColumnTextForButtonValue = true;
+            this.Your_Edit.Width = 75;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn5.DataPropertyName = "Message";
+            this.dataGridViewTextBoxColumn5.HeaderText = "Displayed Message";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "ReadMessage";
+            this.dataGridViewTextBoxColumn6.HeaderText = "Narrated Message";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // Viewer_Chance
+            // 
+            this.Viewer_Chance.DataPropertyName = "Message";
+            this.Viewer_Chance.HeaderText = "Chance";
+            this.Viewer_Chance.MinimumWidth = 50;
+            this.Viewer_Chance.Name = "Viewer_Chance";
+            this.Viewer_Chance.Width = 50;
+            // 
+            // Viewer_Edit
+            // 
+            this.Viewer_Edit.HeaderText = "New / Edit";
+            this.Viewer_Edit.MinimumWidth = 75;
+            this.Viewer_Edit.Name = "Viewer_Edit";
+            this.Viewer_Edit.Text = "Edit";
+            this.Viewer_Edit.ToolTipText = "Create a new style for a viewer\'s text, or edit an existing one.";
+            this.Viewer_Edit.UseColumnTextForButtonValue = true;
+            this.Viewer_Edit.Width = 75;
+            // 
             // AlertCreationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(983, 409);
+            this.ClientSize = new System.Drawing.Size(826, 409);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btn_Save);
             this.Controls.Add(this.txt_AlertName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmb_AlertType);
-            this.Controls.Add(this.btn_CreateViewer);
-            this.Controls.Add(this.btn_CreateYour);
-            this.Controls.Add(this.btn_CreateAudio);
-            this.Controls.Add(this.btn_CreateImage);
             this.Controls.Add(this.tab_AlertPieces);
             this.Name = "AlertCreationForm";
             this.Text = "Configure Alert";
@@ -855,11 +821,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_TestAudio)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_Conditions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertConditionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertImageBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertAudioBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.streamerAlertTextBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewerAlertTextBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.alertConditionBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -876,10 +842,6 @@
         private System.Windows.Forms.DataGridView dg_Audio;
         private System.Windows.Forms.DataGridView dg_StreamerMessages;
         private System.Windows.Forms.DataGridView dg_ViewerMessages;
-        private System.Windows.Forms.Button btn_CreateImage;
-        private System.Windows.Forms.Button btn_CreateAudio;
-        private System.Windows.Forms.Button btn_CreateYour;
-        private System.Windows.Forms.Button btn_CreateViewer;
         private System.Windows.Forms.ComboBox cmb_AlertType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -909,25 +871,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txt_ViewerMessage;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dimensionsDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Images_Chance;
-        private System.Windows.Forms.DataGridViewButtonColumn Images_Edit;
         private System.Windows.Forms.BindingSource alertImageBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Audio_Chance;
-        private System.Windows.Forms.DataGridViewButtonColumn Audio_Edit;
         private System.Windows.Forms.BindingSource alertAudioBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Your_Chance;
-        private System.Windows.Forms.DataGridViewButtonColumn Your_Edit;
         private System.Windows.Forms.BindingSource streamerAlertTextBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Viewer_Chance;
-        private System.Windows.Forms.DataGridViewButtonColumn Viewer_Edit;
         private System.Windows.Forms.BindingSource viewerAlertTextBindingSource;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
@@ -939,5 +885,21 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.BindingSource alertConditionBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dimensionsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Images_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Images_Edit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Audio_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Audio_Edit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Your_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Your_Edit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Viewer_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Viewer_Edit;
     }
 }

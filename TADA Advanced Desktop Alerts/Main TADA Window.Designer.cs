@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.numud_bgB = new System.Windows.Forms.NumericUpDown();
             this.numud_bgG = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
@@ -43,19 +42,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.numud_AnimationWindowSizeX = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.btn_CreateAlertForm = new System.Windows.Forms.Button();
             this.btn_SaveManifest = new System.Windows.Forms.Button();
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
-            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.imageCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.audioCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.streamerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.viewerCountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
             this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
@@ -67,43 +57,32 @@
             this.btn_Connect = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txt_Status = new System.Windows.Forms.TextBox();
-            this.groupBox1.SuspendLayout();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tab_Manifest = new System.Windows.Forms.TabPage();
+            this.tab_Other = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tab_Manifest.SuspendLayout();
+            this.tab_Other.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.numud_bgB);
-            this.groupBox1.Controls.Add(this.numud_bgG);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.numud_bgR);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.btn_ShowHideAnimationWindow);
-            this.groupBox1.Controls.Add(this.txt_BackgroundARGB);
-            this.groupBox1.Controls.Add(this.numud_AnimationWindowSizeY);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.numud_AnimationWindowSizeX);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 233);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(280, 141);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Animation Window";
             // 
             // numud_bgB
             // 
-            this.numud_bgB.Location = new System.Drawing.Point(54, 111);
+            this.numud_bgB.Location = new System.Drawing.Point(164, 50);
             this.numud_bgB.Maximum = new decimal(new int[] {
             255,
             0,
@@ -120,7 +99,7 @@
             // 
             // numud_bgG
             // 
-            this.numud_bgG.Location = new System.Drawing.Point(54, 85);
+            this.numud_bgG.Location = new System.Drawing.Point(96, 50);
             this.numud_bgG.Maximum = new decimal(new int[] {
             255,
             0,
@@ -138,24 +117,24 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(21, 115);
+            this.label6.Location = new System.Drawing.Point(144, 54);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(28, 13);
+            this.label6.Size = new System.Drawing.Size(14, 13);
             this.label6.TabIndex = 5;
-            this.label6.Text = "Blue";
+            this.label6.Text = "B";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 89);
+            this.label5.Location = new System.Drawing.Point(75, 54);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(36, 13);
+            this.label5.Size = new System.Drawing.Size(15, 13);
             this.label5.TabIndex = 5;
-            this.label5.Text = "Green";
+            this.label5.Text = "G";
             // 
             // numud_bgR
             // 
-            this.numud_bgR.Location = new System.Drawing.Point(54, 59);
+            this.numud_bgR.Location = new System.Drawing.Point(27, 50);
             this.numud_bgR.Maximum = new decimal(new int[] {
             255,
             0,
@@ -173,15 +152,15 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(22, 63);
+            this.label4.Location = new System.Drawing.Point(6, 54);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(27, 13);
+            this.label4.Size = new System.Drawing.Size(15, 13);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Red";
+            this.label4.Text = "R";
             // 
             // btn_ShowHideAnimationWindow
             // 
-            this.btn_ShowHideAnimationWindow.Location = new System.Drawing.Point(118, 110);
+            this.btn_ShowHideAnimationWindow.Location = new System.Drawing.Point(326, 53);
             this.btn_ShowHideAnimationWindow.Name = "btn_ShowHideAnimationWindow";
             this.btn_ShowHideAnimationWindow.Size = new System.Drawing.Size(156, 23);
             this.btn_ShowHideAnimationWindow.TabIndex = 15;
@@ -191,15 +170,15 @@
             // 
             // txt_BackgroundARGB
             // 
-            this.txt_BackgroundARGB.Location = new System.Drawing.Point(24, 33);
+            this.txt_BackgroundARGB.Location = new System.Drawing.Point(110, 23);
             this.txt_BackgroundARGB.Name = "txt_BackgroundARGB";
-            this.txt_BackgroundARGB.Size = new System.Drawing.Size(72, 20);
+            this.txt_BackgroundARGB.Size = new System.Drawing.Size(96, 20);
             this.txt_BackgroundARGB.TabIndex = 11;
             this.txt_BackgroundARGB.Text = "#FFFFFF";
             // 
             // numud_AnimationWindowSizeY
             // 
-            this.numud_AnimationWindowSizeY.Location = new System.Drawing.Point(202, 34);
+            this.numud_AnimationWindowSizeY.Location = new System.Drawing.Point(410, 23);
             this.numud_AnimationWindowSizeY.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -222,7 +201,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(145, 18);
+            this.label2.Location = new System.Drawing.Point(219, 27);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(103, 13);
             this.label2.TabIndex = 7;
@@ -231,7 +210,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 17);
+            this.label3.Location = new System.Drawing.Point(6, 27);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(98, 13);
             this.label3.TabIndex = 10;
@@ -239,7 +218,7 @@
             // 
             // numud_AnimationWindowSizeX
             // 
-            this.numud_AnimationWindowSizeX.Location = new System.Drawing.Point(118, 34);
+            this.numud_AnimationWindowSizeX.Location = new System.Drawing.Point(326, 23);
             this.numud_AnimationWindowSizeX.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -262,45 +241,35 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(190, 37);
+            this.label1.Location = new System.Drawing.Point(398, 27);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(12, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "x";
             // 
-            // btn_CreateAlertForm
-            // 
-            this.btn_CreateAlertForm.Location = new System.Drawing.Point(12, 12);
-            this.btn_CreateAlertForm.Name = "btn_CreateAlertForm";
-            this.btn_CreateAlertForm.Size = new System.Drawing.Size(122, 23);
-            this.btn_CreateAlertForm.TabIndex = 1;
-            this.btn_CreateAlertForm.Text = "New Alert";
-            this.btn_CreateAlertForm.UseVisualStyleBackColor = true;
-            this.btn_CreateAlertForm.Click += new System.EventHandler(this.btn_CreateAlertForm_Click);
-            // 
             // btn_SaveManifest
             // 
-            this.btn_SaveManifest.Location = new System.Drawing.Point(353, 12);
+            this.btn_SaveManifest.Location = new System.Drawing.Point(8, 196);
             this.btn_SaveManifest.Name = "btn_SaveManifest";
-            this.btn_SaveManifest.Size = new System.Drawing.Size(122, 23);
+            this.btn_SaveManifest.Size = new System.Drawing.Size(120, 23);
             this.btn_SaveManifest.TabIndex = 2;
             this.btn_SaveManifest.Text = "Save Manifest";
             this.btn_SaveManifest.UseVisualStyleBackColor = true;
             // 
             // btn_LoadManifest
             // 
-            this.btn_LoadManifest.Location = new System.Drawing.Point(482, 12);
+            this.btn_LoadManifest.Location = new System.Drawing.Point(133, 196);
             this.btn_LoadManifest.Name = "btn_LoadManifest";
-            this.btn_LoadManifest.Size = new System.Drawing.Size(122, 23);
+            this.btn_LoadManifest.Size = new System.Drawing.Size(120, 23);
             this.btn_LoadManifest.TabIndex = 3;
             this.btn_LoadManifest.Text = "Load Manifest";
             this.btn_LoadManifest.UseVisualStyleBackColor = true;
             // 
             // btn_MergeManifest
             // 
-            this.btn_MergeManifest.Location = new System.Drawing.Point(611, 12);
+            this.btn_MergeManifest.Location = new System.Drawing.Point(258, 196);
             this.btn_MergeManifest.Name = "btn_MergeManifest";
-            this.btn_MergeManifest.Size = new System.Drawing.Size(122, 23);
+            this.btn_MergeManifest.Size = new System.Drawing.Size(120, 23);
             this.btn_MergeManifest.TabIndex = 4;
             this.btn_MergeManifest.Text = "Merge Manifest";
             this.btn_MergeManifest.UseVisualStyleBackColor = true;
@@ -312,83 +281,12 @@
             this.dg_Alerts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.alertNameDataGridViewTextBoxColumn,
             this.alertTypeDataGridViewTextBoxColumn,
-            this.imageCountDataGridViewTextBoxColumn,
-            this.audioCountDataGridViewTextBoxColumn,
-            this.streamerCountDataGridViewTextBoxColumn,
-            this.viewerCountDataGridViewTextBoxColumn,
             this.Edit});
             this.dg_Alerts.DataSource = this.alertBindingSource;
-            this.dg_Alerts.Location = new System.Drawing.Point(12, 43);
+            this.dg_Alerts.Location = new System.Drawing.Point(8, 6);
             this.dg_Alerts.Name = "dg_Alerts";
-            this.dg_Alerts.Size = new System.Drawing.Size(721, 184);
+            this.dg_Alerts.Size = new System.Drawing.Size(494, 184);
             this.dg_Alerts.TabIndex = 5;
-            // 
-            // alertNameDataGridViewTextBoxColumn
-            // 
-            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
-            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
-            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
-            // 
-            // alertTypeDataGridViewTextBoxColumn
-            // 
-            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // imageCountDataGridViewTextBoxColumn
-            // 
-            this.imageCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.imageCountDataGridViewTextBoxColumn.DataPropertyName = "ImageCount";
-            this.imageCountDataGridViewTextBoxColumn.HeaderText = "Images";
-            this.imageCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.imageCountDataGridViewTextBoxColumn.Name = "imageCountDataGridViewTextBoxColumn";
-            this.imageCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.imageCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // audioCountDataGridViewTextBoxColumn
-            // 
-            this.audioCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.audioCountDataGridViewTextBoxColumn.DataPropertyName = "AudioCount";
-            this.audioCountDataGridViewTextBoxColumn.HeaderText = "Audio";
-            this.audioCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.audioCountDataGridViewTextBoxColumn.Name = "audioCountDataGridViewTextBoxColumn";
-            this.audioCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.audioCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // streamerCountDataGridViewTextBoxColumn
-            // 
-            this.streamerCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.streamerCountDataGridViewTextBoxColumn.DataPropertyName = "StreamerCount";
-            this.streamerCountDataGridViewTextBoxColumn.HeaderText = "Your Text";
-            this.streamerCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.streamerCountDataGridViewTextBoxColumn.Name = "streamerCountDataGridViewTextBoxColumn";
-            this.streamerCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.streamerCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // viewerCountDataGridViewTextBoxColumn
-            // 
-            this.viewerCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.viewerCountDataGridViewTextBoxColumn.DataPropertyName = "ViewerCount";
-            this.viewerCountDataGridViewTextBoxColumn.HeaderText = "Viewer Text";
-            this.viewerCountDataGridViewTextBoxColumn.MinimumWidth = 90;
-            this.viewerCountDataGridViewTextBoxColumn.Name = "viewerCountDataGridViewTextBoxColumn";
-            this.viewerCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.viewerCountDataGridViewTextBoxColumn.Width = 90;
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "Edit";
-            this.Edit.MinimumWidth = 40;
-            this.Edit.Name = "Edit";
-            this.Edit.Width = 40;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 
@@ -399,16 +297,16 @@
             this.groupBox2.Controls.Add(this.btn_GetAccessToken);
             this.groupBox2.Controls.Add(this.txt_ChannelName);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Location = new System.Drawing.Point(299, 233);
+            this.groupBox2.Location = new System.Drawing.Point(7, 95);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(434, 102);
+            this.groupBox2.Size = new System.Drawing.Size(493, 127);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Twitch Settings";
             // 
             // btn_LoadChannelDetails
             // 
-            this.btn_LoadChannelDetails.Location = new System.Drawing.Point(272, 73);
+            this.btn_LoadChannelDetails.Location = new System.Drawing.Point(326, 73);
             this.btn_LoadChannelDetails.Name = "btn_LoadChannelDetails";
             this.btn_LoadChannelDetails.Size = new System.Drawing.Size(156, 23);
             this.btn_LoadChannelDetails.TabIndex = 23;
@@ -426,7 +324,7 @@
             // 
             // btn_RevokeAccessToken
             // 
-            this.btn_RevokeAccessToken.Location = new System.Drawing.Point(318, 43);
+            this.btn_RevokeAccessToken.Location = new System.Drawing.Point(372, 43);
             this.btn_RevokeAccessToken.Name = "btn_RevokeAccessToken";
             this.btn_RevokeAccessToken.Size = new System.Drawing.Size(110, 23);
             this.btn_RevokeAccessToken.TabIndex = 21;
@@ -437,7 +335,7 @@
             // 
             this.txt_AccessToken.Location = new System.Drawing.Point(127, 44);
             this.txt_AccessToken.Name = "txt_AccessToken";
-            this.txt_AccessToken.Size = new System.Drawing.Size(185, 20);
+            this.txt_AccessToken.Size = new System.Drawing.Size(239, 20);
             this.txt_AccessToken.TabIndex = 20;
             this.txt_AccessToken.Text = "Paste Access Token Here";
             // 
@@ -454,7 +352,7 @@
             // 
             this.txt_ChannelName.Location = new System.Drawing.Point(127, 17);
             this.txt_ChannelName.Name = "txt_ChannelName";
-            this.txt_ChannelName.Size = new System.Drawing.Size(301, 20);
+            this.txt_ChannelName.Size = new System.Drawing.Size(355, 20);
             this.txt_ChannelName.TabIndex = 18;
             // 
             // label7
@@ -468,9 +366,10 @@
             // 
             // btn_Connect
             // 
-            this.btn_Connect.Location = new System.Drawing.Point(577, 343);
+            this.btn_Connect.Enabled = false;
+            this.btn_Connect.Location = new System.Drawing.Point(383, 196);
             this.btn_Connect.Name = "btn_Connect";
-            this.btn_Connect.Size = new System.Drawing.Size(156, 23);
+            this.btn_Connect.Size = new System.Drawing.Size(120, 23);
             this.btn_Connect.TabIndex = 17;
             this.btn_Connect.Text = "Connect!";
             this.btn_Connect.UseVisualStyleBackColor = true;
@@ -480,9 +379,9 @@
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.txt_Status);
-            this.groupBox3.Location = new System.Drawing.Point(12, 376);
+            this.groupBox3.Location = new System.Drawing.Point(12, 270);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(721, 35);
+            this.groupBox3.Size = new System.Drawing.Size(514, 35);
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Status";
@@ -497,47 +396,128 @@
             this.txt_Status.Size = new System.Drawing.Size(708, 13);
             this.txt_Status.TabIndex = 0;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tab_Manifest);
+            this.tabControl1.Controls.Add(this.tab_Other);
+            this.tabControl1.Location = new System.Drawing.Point(13, 13);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(516, 254);
+            this.tabControl1.TabIndex = 19;
+            // 
+            // tab_Manifest
+            // 
+            this.tab_Manifest.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Manifest.Controls.Add(this.dg_Alerts);
+            this.tab_Manifest.Controls.Add(this.btn_SaveManifest);
+            this.tab_Manifest.Controls.Add(this.btn_Connect);
+            this.tab_Manifest.Controls.Add(this.btn_LoadManifest);
+            this.tab_Manifest.Controls.Add(this.btn_MergeManifest);
+            this.tab_Manifest.Location = new System.Drawing.Point(4, 22);
+            this.tab_Manifest.Name = "tab_Manifest";
+            this.tab_Manifest.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Manifest.Size = new System.Drawing.Size(508, 228);
+            this.tab_Manifest.TabIndex = 0;
+            this.tab_Manifest.Text = "Alert Manifest";
+            // 
+            // tab_Other
+            // 
+            this.tab_Other.Controls.Add(this.groupBox1);
+            this.tab_Other.Controls.Add(this.groupBox2);
+            this.tab_Other.Location = new System.Drawing.Point(4, 22);
+            this.tab_Other.Name = "tab_Other";
+            this.tab_Other.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Other.Size = new System.Drawing.Size(508, 228);
+            this.tab_Other.TabIndex = 1;
+            this.tab_Other.Text = "Animation Window and Twitch Settings";
+            this.tab_Other.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.btn_ShowHideAnimationWindow);
+            this.groupBox1.Controls.Add(this.numud_AnimationWindowSizeY);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.numud_AnimationWindowSizeX);
+            this.groupBox1.Controls.Add(this.numud_bgB);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.numud_bgR);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.txt_BackgroundARGB);
+            this.groupBox1.Controls.Add(this.numud_bgG);
+            this.groupBox1.Location = new System.Drawing.Point(7, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(493, 82);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Animation Window Settings";
+            // 
+            // Edit
+            // 
+            this.Edit.HeaderText = "New / Edit";
+            this.Edit.MinimumWidth = 75;
+            this.Edit.Name = "Edit";
+            this.Edit.Text = "Edit";
+            this.Edit.UseColumnTextForButtonValue = true;
+            this.Edit.Width = 75;
+            // 
+            // alertNameDataGridViewTextBoxColumn
+            // 
+            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
+            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
+            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // alertBindingSource
+            // 
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
+            // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(745, 412);
+            this.ClientSize = new System.Drawing.Size(538, 306);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.btn_Connect);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.dg_Alerts);
-            this.Controls.Add(this.btn_MergeManifest);
-            this.Controls.Add(this.btn_LoadManifest);
-            this.Controls.Add(this.btn_SaveManifest);
-            this.Controls.Add(this.btn_CreateAlertForm);
-            this.Controls.Add(this.groupBox1);
             this.Name = "MainTADAForm";
             this.Text = "TADA Advanced Desktop Alerts";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tab_Manifest.ResumeLayout(false);
+            this.tab_Other.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numud_AnimationWindowSizeY;
         private System.Windows.Forms.NumericUpDown numud_AnimationWindowSizeX;
         private System.Windows.Forms.Button btn_ShowHideAnimationWindow;
-        private System.Windows.Forms.Button btn_CreateAlertForm;
         private System.Windows.Forms.BindingSource alertBindingSource;
         private System.Windows.Forms.Button btn_SaveManifest;
         private System.Windows.Forms.Button btn_LoadManifest;
@@ -559,17 +539,17 @@
         private System.Windows.Forms.TextBox txt_ChannelName;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btn_Connect;
-        private System.Windows.Forms.DataGridViewTextBoxColumn alertNameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn alertTypeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn imageCountDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn audioCountDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn streamerCountDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn viewerCountDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewButtonColumn Edit;
         private System.Windows.Forms.Button btn_LoadChannelDetails;
         private System.Windows.Forms.Button btn_SaveChannelDetails;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox txt_Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn alertNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn alertTypeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewButtonColumn Edit;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tab_Manifest;
+        private System.Windows.Forms.TabPage tab_Other;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

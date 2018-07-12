@@ -210,6 +210,14 @@ namespace TADA_Advanced_Desktop_Alerts
         protected Timer positionTimer = new Timer();
         protected Timer persistTimer = new Timer();
 
+        protected double DrawAngle
+        {
+            get
+            {
+                return this.angle % 360;
+            }
+        }
+
         protected bool ReachedTarget (ActiveEffect effect, double value)
         {
             return effect.target == value;
@@ -232,31 +240,25 @@ namespace TADA_Advanced_Desktop_Alerts
 
         protected void SetNextAngle(Effect nextAngle)
         {
-            while (this.angle < 0)
-            {
-                this.angle += 360;
-            }
-
-            this.angle %= 360;
+            this.angle = (this.DrawAngle + 360) % 360;
 
             double targetAngle = nextAngle.target;
-
-            while (targetAngle < 0)
-            {
-                this.angle += 360;
-                targetAngle += 360;
-            }
 
             Effect tempAngle = new Effect();
             tempAngle.Copy(nextAngle);
             tempAngle.target = targetAngle;
+
+Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", tempAngle.target, this.angle);
 
             SetNextEffect(this.angleEffect, tempAngle, this.angleTimer);
         }
 
         protected void SetNextEffect(ActiveEffect currentEffect, Effect nextEffect, Timer timer)
         {
+            double delta = nextEffect.target - currentEffect.target;
+
             currentEffect.Copy(nextEffect);
+            currentEffect.delta = delta / nextEffect.frames;
             timer.Interval = currentEffect.duration * 1000.0 / currentEffect.frames;
         }
 
@@ -330,7 +332,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             g.TranslateTransform(this.modifiedPosition.X, this.modifiedPosition.Y);
-            g.RotateTransform((float)this.angle);
+            g.RotateTransform((float)this.DrawAngle);
 
             PointF destinationPoint = new PointF(0, 0);
             if (this.angleEffect.change && this.angleEffect.aroundCenter)
@@ -366,7 +368,7 @@ namespace TADA_Advanced_Desktop_Alerts
                             imageAttributes);
             }
 
-            g.RotateTransform((float)(-this.angle));
+            g.RotateTransform((float)(-this.DrawAngle));
             g.TranslateTransform(-this.modifiedPosition.X, -this.modifiedPosition.Y);
         }
 

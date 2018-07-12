@@ -20,6 +20,40 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         public const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
         public const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
+        public static Random rng = new Random();
+
+        public static Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String> TwitchLibSubPlanToString = new Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String>() {
+            { TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet, "None" },
+            { TwitchLib.PubSub.Enums.SubscriptionPlan.Prime, "Twitch Prime" },
+            { TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1, "Tier One" },
+            { TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2, "Tier Two" },
+            { TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3, "Tier Three" },
+        };
+
+        public static Dictionary<String, TwitchLib.PubSub.Enums.SubscriptionPlan> stringToTwitchLibSubPlan = new Dictionary<string, TwitchLib.PubSub.Enums.SubscriptionPlan>()
+        {
+            { "None", TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet },
+            { "0", TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet },
+            { "Twitch Prime", TwitchLib.PubSub.Enums.SubscriptionPlan.Prime },
+            { "Prime", TwitchLib.PubSub.Enums.SubscriptionPlan.Prime },
+            { "Tier One", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1 },
+            { "1000", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1 },
+            { "Tier Two", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2 },
+            { "2000", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2 },
+            { "Tier Three", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3 },
+            { "3000", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3 },
+        };
+
+        [Flags]
+        public enum SCORES
+        {
+            SCORE_ABSOLUTE_MINIMUM = -1,
+            SCORE_TIER_MATCHED = 0x8000,
+            SCORE_NAME_MATCHED = 0x4000,
+            SCORE_KEYWORD_MATCHED = 0x2000,
+            SCORE_WITHIN_AMOUNT = 0x1000,
+            SCORE_NO_CONDITIONS = 0x0100
+        }
 
         public static void LogFile(String message)
         {
@@ -47,21 +81,24 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public static void ConfigureToolTip(Control c, String text)
         {
-            ToolTip t = new ToolTip();
-            t.AutomaticDelay = 500;
-            t.AutoPopDelay = 5000;
+            ToolTip t = new ToolTip
+            {
+                AutomaticDelay = 500,
+                AutoPopDelay = 5000
+            };
             t.SetToolTip(c, text);
         }
 
         public static void openFileDialogBox(TextBox destination, String filter, int index)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-
-            fileDialog.InitialDirectory = Environment.CurrentDirectory;
-            fileDialog.Filter = filter;
-            fileDialog.FilterIndex = index;
-            fileDialog.RestoreDirectory = false;
-            fileDialog.Multiselect = false;
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Environment.CurrentDirectory,
+                Filter = filter,
+                FilterIndex = index,
+                RestoreDirectory = false,
+                Multiselect = false
+            };
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -96,8 +133,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public static void GetImageDuration(Bitmap bitmap, out int[] timing, out int totalDuration)
         {
-            Bitmap[] frames;
-            ExtractAllFrames(bitmap, bitmap.Size, out frames, out timing, out totalDuration);
+            ExtractAllFrames(bitmap, bitmap.Size, out Bitmap[] frames, out timing, out totalDuration);
 
             for (int i = 0; i < frames.Length; ++i)
             {
@@ -165,9 +201,11 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             SizeF textSize;
 
-            StringFormat textFormat = new StringFormat();
-            textFormat.Alignment = StringAlignment.Center;
-            textFormat.LineAlignment = StringAlignment.Center;
+            StringFormat textFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
 
             // Figure out the actual dimensions of the image.
             // TODO:  Future work: let people choose their text alignment.
@@ -229,7 +267,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             message = message.Replace("{name}", substitutionObject.ViewerName);
             message = message.Replace("{giftee}", substitutionObject.RecipientName);
-            message = message.Replace("{tier}", substitutionObject.Tier);
+            message = message.Replace("{tier}", General.TwitchLibSubPlanToString[substitutionObject.Tier]);
             message = message.Replace("{tierName}", substitutionObject.TierName);
 
             message = message.Replace("{amount}", substitutionObject.Amount.ToString());
@@ -249,15 +287,15 @@ namespace TADA_Advanced_Desktop_Alerts
 
             switch (substitutionObject.Tier)
             {
-                case "No Tier": tierNumber = 1; break;
-                case "Twitch Prime": tierNumber = 2; break;
-                case "Tier One": tierNumber = 3; break;
-                case "Tier Two": tierNumber = 4; break;
-                case "Tier Three": tierNumber = 5; break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet: tierNumber = 1; break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Prime: tierNumber = 2; break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1: tierNumber = 3; break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2: tierNumber = 4; break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3: tierNumber = 5; break;
             }
 
             // Now figure out <a|b|c|d|e>
-            pattern = @"<([^|])*\|([^|])*\|([^|])*\|([^|])*\|([^|])*>";
+            pattern = @"<([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)>";
             regex = new Regex(pattern);
             while ((match = regex.Match(message)) != Match.Empty)
             {

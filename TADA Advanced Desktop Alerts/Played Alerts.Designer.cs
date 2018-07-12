@@ -35,8 +35,8 @@
             this.dg_Pending = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.txt_Status = new System.Windows.Forms.TextBox();
             this.btn_Stop = new System.Windows.Forms.Button();
+            this.txt_Status = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).BeginInit();
@@ -62,7 +62,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(356, 310);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(493, 310);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox1
@@ -72,7 +72,7 @@
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(275, 134);
+            this.groupBox1.Size = new System.Drawing.Size(412, 134);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Played Alerts";
@@ -84,7 +84,7 @@
             this.dg_Played.Location = new System.Drawing.Point(0, 13);
             this.dg_Played.Margin = new System.Windows.Forms.Padding(0);
             this.dg_Played.Name = "dg_Played";
-            this.dg_Played.Size = new System.Drawing.Size(275, 121);
+            this.dg_Played.Size = new System.Drawing.Size(412, 121);
             this.dg_Played.TabIndex = 0;
             // 
             // groupBox2
@@ -94,7 +94,7 @@
             this.groupBox2.Location = new System.Drawing.Point(3, 143);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(275, 134);
+            this.groupBox2.Size = new System.Drawing.Size(412, 134);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pending Alerts";
@@ -106,13 +106,13 @@
             this.dg_Pending.Location = new System.Drawing.Point(0, 13);
             this.dg_Pending.Margin = new System.Windows.Forms.Padding(0);
             this.dg_Pending.Name = "dg_Pending";
-            this.dg_Pending.Size = new System.Drawing.Size(275, 121);
+            this.dg_Pending.Size = new System.Drawing.Size(412, 121);
             this.dg_Pending.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button1.Location = new System.Drawing.Point(284, 143);
+            this.button1.Location = new System.Drawing.Point(421, 143);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(69, 134);
             this.button1.TabIndex = 3;
@@ -122,38 +122,39 @@
             // button2
             // 
             this.button2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button2.Location = new System.Drawing.Point(284, 3);
+            this.button2.Location = new System.Drawing.Point(421, 3);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(69, 134);
             this.button2.TabIndex = 4;
             this.button2.Text = "Replay Alert";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // txt_Status
-            // 
-            this.txt_Status.BackColor = System.Drawing.SystemColors.Control;
-            this.txt_Status.Enabled = false;
-            this.txt_Status.Location = new System.Drawing.Point(0, 285);
-            this.txt_Status.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.txt_Status.Name = "txt_Status";
-            this.txt_Status.Size = new System.Drawing.Size(281, 20);
-            this.txt_Status.TabIndex = 5;
-            // 
             // btn_Stop
             // 
             this.btn_Stop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_Stop.Location = new System.Drawing.Point(284, 283);
+            this.btn_Stop.Location = new System.Drawing.Point(421, 283);
             this.btn_Stop.Name = "btn_Stop";
             this.btn_Stop.Size = new System.Drawing.Size(69, 24);
             this.btn_Stop.TabIndex = 6;
             this.btn_Stop.Text = "Stop";
             this.btn_Stop.UseVisualStyleBackColor = true;
             // 
+            // txt_Status
+            // 
+            this.txt_Status.BackColor = System.Drawing.SystemColors.Control;
+            this.txt_Status.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_Status.Enabled = false;
+            this.txt_Status.Location = new System.Drawing.Point(0, 285);
+            this.txt_Status.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.txt_Status.Name = "txt_Status";
+            this.txt_Status.Size = new System.Drawing.Size(418, 20);
+            this.txt_Status.TabIndex = 5;
+            // 
             // Played_Alerts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(356, 310);
+            this.ClientSize = new System.Drawing.Size(493, 310);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Played_Alerts";
             this.Text = "Alert Controls";

@@ -56,6 +56,15 @@ namespace TADA_Advanced_Desktop_Alerts
 
         bool blockUpdates = false;
 
+        Creation_Forms.AlertCreationForm _alertCreationForm;
+
+        private static MainTADAForm _mainTADAForm;
+
+        public static MainTADAForm mainTADAForm
+        {
+            get { return _mainTADAForm; }
+        }
+        
         public MainTADAForm()
         {
             InitializeComponent();
@@ -81,7 +90,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             txt_AccessToken.TextChanged += PasswordMask;
 
-            dg_Alerts.CellClick += EditExistingEntry;
+            dg_Alerts.CellContentClick += NewOrEditEntry;
+            dg_Alerts.RowsAdded += DefaultButtonValue;
 
             btn_Connect.Click += ConnectToTwitch;
 
@@ -117,13 +127,20 @@ namespace TADA_Advanced_Desktop_Alerts
             blockUpdates = false;
 
             new TimePeriod(1);
+
+            _mainTADAForm = this;
         }
 
         private void GetAccessToken(object sender, EventArgs e)
         {
             // channel_subscription - for PubSub to be able to read when someone subscribes
             // channel_check_subscription - to check if a user is subscribed
-            System.Diagnostics.Process.Start("https://api.twitch.tv/kraken/oauth2/authorize?client_id=" + General.CLIENT_ID + "&redirect_uri=" + General.AUTH_URI + "&response_type=token&scope=channel_subscriptions channel_check_subscription");
+            System.Diagnostics.Process.Start("https://api.twitch.tv/kraken/oauth2/authorize?client_id=" +
+                                             General.CLIENT_ID +
+                                             "&redirect_uri=" +
+                                             General.AUTH_URI +
+                                             "&response_type=token&" +
+                                             "scope=channel_subscriptions channel_check_subscription user_subscriptions");
         }
 
         private void PasswordMask(object sender, EventArgs e)
@@ -161,8 +178,8 @@ namespace TADA_Advanced_Desktop_Alerts
                     txt_BackgroundARGB.Text = String.Format("#{0:X2}{1:X2}{2:X2}", Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
                 }
 
-                ColorAnimationWindow();
                 blockUpdates = false;
+                ColorAnimationWindow();
             }
         }
 
@@ -235,20 +252,43 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private void btn_CreateAlertForm_Click(object sender, EventArgs e)
+        private void DefaultButtonValue(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            Creation_Forms.AlertCreationForm alertCreationForm = new Creation_Forms.AlertCreationForm(this, (dg_Alerts.DataSource as BindingSource).AddNew() as TADAAlert);
-            alertCreationForm.Show();
+            DataGridViewRow r = (sender as DataGridView).Rows[e.RowIndex];
+            for (int cell = 0; cell < r.Cells.Count; ++cell)
+            {
+                if (r.Cells[cell] is DataGridViewButtonCell)
+                {
+                    r.Cells[cell].Value = "New";
+                }
+            }
         }
 
-        private void EditExistingEntry(object sender, DataGridViewCellEventArgs e)
+        private void NewOrEditEntry(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex >= 0 && (sender as DataGridView).Columns[e.ColumnIndex] is DataGridViewButtonColumn)
+            if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && (sender as DataGridView).Columns[e.ColumnIndex] is DataGridViewButtonColumn)
             {
-                BindingSource bindingSource = (sender as DataGridView).DataSource as BindingSource;
+                if (_alertCreationForm == null || _alertCreationForm.IsDisposed)
+                {
+                    DataGridView dataGrid = (sender as DataGridView);
+                    BindingSource bindingSource = dataGrid.DataSource as BindingSource;
+                    TADAAlert editObject;
 
-                Creation_Forms.AlertCreationForm alertCreationForm = new Creation_Forms.AlertCreationForm(this, bindingSource.Current as TADAAlert);
-                alertCreationForm.Show();
+                    DataGridView dgView = (sender as DataGridView);
+                    if (dataGrid.Rows[e.RowIndex].IsNewRow)
+                    {
+                        bindingSource.CancelEdit();
+                        editObject = bindingSource.AddNew() as TADAAlert;
+                    }
+                    else
+                    {
+                        editObject = bindingSource.Current as TADAAlert;
+                    }
+
+                    _alertCreationForm = new Creation_Forms.AlertCreationForm(this, editObject);
+                }
+
+                _alertCreationForm.Show();
             }
         }
 
@@ -444,6 +484,24 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             Played_Alerts playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
             playedAlerts.Show();
+        }
+
+        public Dictionary<String, List<TADAAlert>> snapshotAlerts ()
+        {
+            Dictionary<String, List<TADAAlert>> dictionary = new Dictionary<string, List<TADAAlert>>();
+
+            BindingSource definedAlerts = dg_Alerts.DataSource as BindingSource;
+            foreach (TADAAlert alert in definedAlerts)
+            {
+                if (!dictionary.ContainsKey(alert.AlertType))
+                {
+                    dictionary.Add(alert.AlertType, new List<TADAAlert>());
+                }
+
+                dictionary[alert.AlertType].Add(alert);
+            }
+
+            return dictionary;
         }
     }
 }

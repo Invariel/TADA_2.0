@@ -50,6 +50,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             me.MediaFailed += FailedMediaFile;
 
             btn_Complete.Click += btn_Complete_Click;
+
+            if (this.alertAudio != null)
+            {
+                LoadExisting(this.alertAudio);
+            }
         }
 
         private void TestAudioFile(object sender, EventArgs e)
