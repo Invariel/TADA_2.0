@@ -190,9 +190,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
-            TADAAlert alertToPlay = FindSuitableAlert(alertType, subObject);
+            TADAAlert alertToUse = FindSuitableAlert(alertType, subObject);
 
-            if (alertToPlay != null)
+            if (alertToUse != null)
             {
                 if (alertType == General.ALERTTYPES.FIRSTMESSAGE)
                 {
@@ -205,8 +205,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
-            // Now that an alert has been decided on, add it to the to-play list.
-
+            PrepareAndPlayAlert(alertToUse, subObject);
             /*
              * On receiving an event
              * - Figure out what type of event it actually is
@@ -214,6 +213,22 @@ namespace TADA_Advanced_Desktop_Alerts
              * - Figure out which alert to play
              * - Play the alert
              */
+        }
+
+        private void PrepareAndPlayAlert (TADAAlert alertToUse, SubstitutionObject subObject)
+        {
+            // Now that an alert has been decided on, pick pieces, and then add it to the to-play list.
+            TADAAlertImage alertImage;
+            TADAAlertAudio alertAudio;
+            TADAAlertText alertText;
+            TADAAlertText alertResponse;
+
+            alertImage = (alertToUse.ImageCount == 0 ? null : alertToUse.Images[General.rng.Next(alertToUse.ImageCount)]);
+            alertAudio = (alertToUse.AudioCount == 0 ? null : alertToUse.Audios[General.rng.Next(alertToUse.AudioCount)]);
+            alertText = (alertToUse.StreamerCount == 0 ? null : alertToUse.StreamerTexts[General.rng.Next(alertToUse.StreamerCount)]);
+            alertResponse = (alertToUse.ViewerCount == 0 ? null : alertToUse.ViewerTexts[General.rng.Next(alertToUse.ViewerCount)]);
+
+            PlayingAlert alertToPlay = new PlayingAlert(alertImage, alertAudio, alertText, alertResponse);
         }
 
         #region UserStuff
