@@ -29,6 +29,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.animationWindow = TADAAnimationWindow.AnimationWindow;
             this.currentAlert = tadaAlert;
 
+            foreach (String alertType in General.alertTypes.Values)
+            {
+                cmb_AlertType.Items.Add(alertType);
+            }
+
             btn_TestAlert.Click += TestAlert;
             btn_Save.Click += SaveAlert;
 

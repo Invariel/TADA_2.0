@@ -896,10 +896,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public class SubstitutionObject
     {
-        public String ViewerName { get; set; }
-        public String RecipientName { get; set; }
-        public int Amount { get; set; }
-        public TwitchLib.PubSub.Enums.SubscriptionPlan Tier { get; set; }
-        public String TierName { get; set; }
+        public int Amount { get; set; } = 0;
+        public String Message { get; set; } = "";
+        public String RecipientName { get; set; } = "";
+        public TwitchLib.PubSub.Enums.SubscriptionPlan Tier { get; set; } = TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet;
+        public String TierName { get; set; } = "";
+        public String ViewerName { get; set; } = "";
     }
 }

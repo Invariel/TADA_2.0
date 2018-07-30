@@ -65,6 +65,16 @@ namespace TADA_Advanced_Desktop_Alerts
             get { return _mainTADAForm; }
         }
         
+        public String ChannelName()
+        {
+            return txt_ChannelName.Text;
+        }
+
+        public String OauthToken()
+        {
+            return txt_AccessToken.Text;
+        }
+
         public MainTADAForm()
         {
             InitializeComponent();

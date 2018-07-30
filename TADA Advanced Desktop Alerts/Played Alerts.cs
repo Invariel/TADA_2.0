@@ -19,17 +19,15 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class Played_Alerts : Form
     {
-        const bool TWITCHAPI = true;
         const int ABSOLUTE_MINIMUM_SCORE = -10000000;
 
         private TwitchAPI twitchAPI;
+        private TwitchPubSub pubSub;
+        private TwitchClient twitchClient;
 
         private String accessToken;
         private String channelID;
         private String channelName;
-
-        TwitchPubSub pubSub;
-        TwitchClient twitchClient;
 
         private Dictionary<String, List<TADAAlert>> currentAlerts;
 
@@ -55,10 +53,10 @@ namespace TADA_Advanced_Desktop_Alerts
             channelID = result.Users[0].Id;
 
             pubSub = new TwitchPubSub();
-            pubSub.OnBitsReceived += OnBitsReceivedEvent;
-            pubSub.OnChannelCommerceReceived += OnCommerceReceivedEvent;
-            pubSub.OnChannelSubscription += OnChannelSubscribeEvent;
-            pubSub.OnFollow += OnFollowEvent;
+            pubSub.OnBitsReceived += (sender, e) => ReceivedTwitchEvent (General.ALERTTYPES.BITS, e);
+            pubSub.OnChannelCommerceReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.COMMERCE, e);
+            pubSub.OnFollow += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
+            pubSub.OnChannelSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
             pubSub.OnListenResponse += OnListenEvent;
 
             pubSub.OnPubSubServiceConnected += delegate
@@ -74,9 +72,9 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient = new TwitchClient();
             twitchClient.Initialize(new TwitchLib.Client.Models.ConnectionCredentials(this.channelName, this.accessToken), this.channelName, '\0', '\0', true);
 
-            twitchClient.OnBeingHosted += OnHostReceivedEvent;
-            twitchClient.OnRaidNotification += OnRaidReceivedEvent;
-            twitchClient.OnMessageReceived += OnMessageReceivedEvent;
+            twitchClient.OnBeingHosted += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.HOST, e);
+            twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
+            twitchClient.OnRaidNotification += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.RAID, e);
 
             currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
         }
@@ -87,121 +85,222 @@ namespace TADA_Advanced_Desktop_Alerts
             txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions.";
         }
 
-        private async Task<TwitchLib.Api.Models.v5.Subscriptions.Subscription> GetUserSubscription(String userID)
+        public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
         {
-            return await twitchAPI.Users.v5.CheckUserSubscriptionByChannelAsync(userID, channelID, twitchAPI.Settings.AccessToken);
+            SubstitutionObject subObject = new SubstitutionObject();
+            User user;
+
+            switch (alertType)
+            {
+                case General.ALERTTYPES.AUTOHOST:
+                case General.ALERTTYPES.HOST:
+                    OnBeingHostedArgs eHost = eventDetails as OnBeingHostedArgs;
+
+                    subObject.Amount = eHost.BeingHostedNotification.Viewers;
+                    subObject.ViewerName = eHost.BeingHostedNotification.HostedByChannel;
+
+                    user = await GetUser(await GetUserIdFromUsername(eHost.BeingHostedNotification.HostedByChannel));
+
+                    alertType = eHost.BeingHostedNotification.IsAutoHosted ? General.ALERTTYPES.AUTOHOST : General.ALERTTYPES.HOST;
+                    break;
+                case General.ALERTTYPES.BITS:
+                    OnBitsReceivedArgs eBits = eventDetails as OnBitsReceivedArgs;
+
+                    subObject.Amount = eBits.BitsUsed;
+                    subObject.Message = eBits.ChatMessage;
+                    subObject.ViewerName = eBits.Username;
+
+                    user = await GetUser(eBits.UserId);
+                    break;
+                case General.ALERTTYPES.COMMERCE:
+                    OnChannelCommerceReceivedArgs eCommerce = eventDetails as OnChannelCommerceReceivedArgs;
+
+                    subObject.Message = eCommerce.PurchaseMessage;
+                    subObject.ViewerName = eCommerce.Username;
+
+                    user = await GetUser(eCommerce.UserId);
+                    break;
+                case General.ALERTTYPES.FIRSTMESSAGE:
+                case General.ALERTTYPES.MESSAGE:
+                    /* This block needs a way to keep track of peoples' first messages of the day,
+                     * as well as for each message when it was last triggered, so that people can't spam it.
+                     * Also, because these are coming through separate sources, this could be a bits message
+                     * or a subscribe message possibly?
+                     */
+                    OnMessageReceivedArgs eMessage = eventDetails as OnMessageReceivedArgs;
+
+                    // If the message has bits in it, this should be handled by PubSub instead.
+                    if (eMessage.ChatMessage.Bits > 0) return;
+
+                    subObject.Message = eMessage.ChatMessage.Message;
+                    subObject.ViewerName = eMessage.ChatMessage.Username;
+
+                    user = await GetUser(eMessage.ChatMessage.UserId);
+                    break;
+                case General.ALERTTYPES.FOLLOW:
+                    OnFollowArgs eFollow = eventDetails as OnFollowArgs;
+
+                    subObject.ViewerName = eFollow.DisplayName;
+
+                    user = await GetUser(eFollow.UserId);
+                    break;
+                case General.ALERTTYPES.MACRO:
+                    // This doesn't do any setup.  The trick below is to pick the appropriate
+                    // alert based on the keypress.  Or, better, it should be handled elsewhere.
+                    return;
+                case General.ALERTTYPES.RAID:
+                    OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
+
+                    subObject.Amount = Int32.Parse(eRaid.RaidNotificaiton.MsgParamViewerCount);
+                    subObject.ViewerName = eRaid.RaidNotificaiton.DisplayName;
+
+                    user = await GetUser(eRaid.RaidNotificaiton.UserId);
+                    break;
+                case General.ALERTTYPES.SUBGIFT:
+                case General.ALERTTYPES.SUBSCRIPTION:
+                    OnChannelSubscriptionArgs eSubscription = eventDetails as OnChannelSubscriptionArgs;
+
+                    subObject.Amount = eSubscription.Subscription.Months;
+                    subObject.Message = eSubscription.Subscription.SubMessage.Message;
+                    subObject.RecipientName = eSubscription.Subscription.RecipientName;
+                    subObject.ViewerName = eSubscription.Subscription.Username; 
+
+                    if (alertType == General.ALERTTYPES.SUBGIFT)
+                    {
+                        UpdateUserSubscription(await GetUser(eSubscription.Subscription.RecipientId));
+                    }
+
+                    user = await GetUser(eSubscription.Subscription.UserId);
+
+                    break;
+                default:
+                    return;
+            }
+
+            if (DateTime.Now.Subtract(user.subscriptionLastUpdated).Hours >= 2)
+            {
+                UpdateUserSubscription(user);
+            }
+
+            if (alertType == General.ALERTTYPES.FIRSTMESSAGE)
+            {
+                if (user.firstMessage || FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) == null)
+                {
+                    alertType = General.ALERTTYPES.MESSAGE;
+                }
+            }
+
+            TADAAlert alertToPlay = FindSuitableAlert(alertType, subObject);
+
+            if (alertToPlay != null)
+            {
+                if (alertType == General.ALERTTYPES.FIRSTMESSAGE)
+                {
+                    user.firstMessage = true;
+                }
+                else if (alertType == General.ALERTTYPES.MESSAGE)
+                {
+                    // Somehow mark that this user triggered the message at X time, and prevent it from playing again for some cooldown period.
+                    // This may involve dropping <trigger message> from the message and checking again.
+                }
+            }
+
+            // Now that an alert has been decided on, add it to the to-play list.
+
+            /*
+             * On receiving an event
+             * - Figure out what type of event it actually is
+             * - Fill a SubstitutionObject with relevant data
+             * - Figure out which alert to play
+             * - Play the alert
+             */
         }
 
-        private void MergeSubscriptionWithSubstitutionObject(TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription, SubstitutionObject subObject)
+        #region UserStuff
+        // These "User" functions aren't part of the User class because it doesn't know anything about TwitchLib or those parts.
+        private async Task<User> GetUser(String userId)
         {
-            if (subscription.SubPlan != null)
+            User user;
+
+            if (viewers.ContainsKey(userId))
             {
-                subObject.Tier = General.stringToTwitchLibSubPlan[subscription.SubPlan];
-                subObject.TierName = subscription.SubPlanName;
+                user = viewers[userId];
+            }
+            else
+            {
+                // Not setting lastSpoke because this isn't a guarantee.
+                user = new User()
+                {
+                    user = (await twitchAPI.Users.helix.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0],
+                    subscription = await GetUserSubscription(userId),
+                    subscriptionLastUpdated = DateTime.Now,
+                    firstMessage = false
+                };
+
+                viewers.Add(userId, user);
+            }
+
+            return user;
+        }
+
+        private async void UpdateUserSubscription(User user)
+        {
+            user.UpdateSubscription(await GetUserSubscription(user.user.Id));
+        }
+
+        private async Task UpdateUserSubscription(String userId, bool forceUpdate = false)
+        {
+            User user = await GetUser(userId);
+
+            if (forceUpdate || DateTime.Now.Subtract(user.subscriptionLastUpdated).Hours >= 2)
+            {
+                UpdateUserSubscription(user);
+            }
+        }
+        #endregion
+
+        private async Task<TwitchLib.Api.Models.v5.Subscriptions.Subscription> GetUserSubscription(String userId)
+        {
+            return await twitchAPI.Users.v5.CheckUserSubscriptionByChannelAsync(userId, channelID, twitchAPI.Settings.AccessToken);
+        }
+
+        private async Task<string> GetUserIdFromUsername(String username)
+        {
+            return (await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { username }, accessToken)).Users[0].Id;
+        }
+
+        private void AddSubscriptionDetailsToSubstitutionObject(User user, SubstitutionObject subObject)
+        {
+            if (user.subscription?.SubPlan != null)
+            {
+                subObject.Tier = General.stringToTwitchLibSubPlan[user.subscription.SubPlan];
+                subObject.TierName = user.subscription.SubPlanName;
             }
         }
 
-        private async void OnBitsReceivedEvent(object sender, OnBitsReceivedArgs bits)
-        {
-            SubstitutionObject subObject = new SubstitutionObject()
-            {
-                Amount = bits.BitsUsed,
-                ViewerName = bits.Username,
-            };
-
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(bits.UserId);
-            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
-
-            // Now find a suitable bits alert.
-        }
-
-        private async void OnCommerceReceivedEvent(object sender, OnChannelCommerceReceivedArgs commerce)
-        {
-            SubstitutionObject subObject = new SubstitutionObject()
-            {
-                ViewerName = commerce.Username
-            };
-
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(commerce.UserId);
-            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
-        }
-
-        private void OnChannelSubscribeEvent(object sender, OnChannelSubscriptionArgs subscription)
-        {
-            SubstitutionObject subObject = new SubstitutionObject()
-            {
-                Amount = subscription.Subscription.Months,
-                RecipientName = subscription.Subscription.RecipientDisplayName,
-                Tier = subscription.Subscription.SubscriptionPlan,
-                TierName = subscription.Subscription.SubscriptionPlanName,
-                ViewerName = subscription.Subscription.Username
-            };
-        }
-
-        private async void OnFollowEvent(object sender, OnFollowArgs follow)
-        {
-            SubstitutionObject subObject = new SubstitutionObject()
-            {
-                ViewerName = follow.Username
-            };
-
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(follow.UserId);
-            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
-        }
-
-        private async void OnHostReceivedEvent(object sender, OnBeingHostedArgs host)
-        {
-            SubstitutionObject subObject = new SubstitutionObject()
-            {
-                Amount = host.BeingHostedNotification.Viewers,
-                ViewerName = host.BeingHostedNotification.HostedByChannel
-            };
-
-            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { host.BeingHostedNotification.HostedByChannel }, accessToken);
-
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(result.Users[0].Id);
-            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
-
-            //host.BeingHostedNotification.IsAutoHosted;
-
-        }
-
-        private async void OnRaidReceivedEvent(object sender, OnRaidNotificationArgs raid)
-        {
-            // raid.RaidNotificaiton.MsgParamDisplayName Name of the raider.
-            // raid.RaidNotificaiton.MsgParamViewerCount Number of viewers in the raid.
-            SubstitutionObject subObject = new SubstitutionObject()
-            {
-                Amount = Int32.Parse(raid.RaidNotificaiton.MsgParamViewerCount),
-                ViewerName = raid.RaidNotificaiton.MsgParamDisplayName
-            };
-
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(raid.RaidNotificaiton.UserId);
-            MergeSubscriptionWithSubstitutionObject(subscription, subObject);
-        }
-
-        private async void OnMessageReceivedEvent(object sender, OnMessageReceivedArgs message)
-        {
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = await GetUserSubscription(message.ChatMessage.UserId);
-        }
-
-        private TADAAlert FindSuitableAlert(String alertType, String username, int amount, String message, String tier)
+        private TADAAlert FindSuitableAlert(General.ALERTTYPES alertType, SubstitutionObject subObject)
         {
             TADAAlert returnedAlert = null;
             List<TADAAlert> potentialAlerts = new List<TADAAlert>();
 
             int alertScore = ABSOLUTE_MINIMUM_SCORE;
 
-            foreach (TADAAlert alert in currentAlerts[alertType])
+            String alertTypeString = General.alertTypes[alertType];
+            String viewerName = subObject.ViewerName;
+            int amount = subObject.Amount;
+            String message = subObject.Message;
+            String tier = General.TwitchLibSubPlanToString[subObject.Tier];
+
+            foreach (TADAAlert alert in currentAlerts[alertTypeString])
             {
                 /*
                  * Loop through the appropriate alerts, and assign each one a score.
                  * name > tier > keyword > amount
                  */
 
-                if (alert.AlertType == alertType)
+                if (alert.AlertType == alertTypeString)
                 {
-                    int thisAlertScore = ScoreAlert(alert, username, amount, message, tier);
+                    int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier);
                     if (thisAlertScore > alertScore)
                     {
                         potentialAlerts.Clear();
@@ -220,7 +319,6 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 returnedAlert = potentialAlerts[General.rng.Next(potentialAlerts.Count)];
             }
-
 
             return returnedAlert;
         }
@@ -312,11 +410,16 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public class User
     {
-        // I might want to create a User object that stores all of the things: user ID, subscription status, time they said their first words of the day, 
+        // In the future, this sort of information might be stored in a database to be stored beyond one session.
+        // Also, things that could be added to this are preferred pronouns, so that messages can have pronoun/possessive tags in them that reference these values.
+        // Eg. Everyone say thanks to {user} for {poss} {amount} month{s} of support
+        // => Everyone say thanks to Invariel for his 3 months of support
+        // => Everyone say thanks to RedDempshun for her 1 month of support
         public TwitchLib.Api.Models.Helix.Users.GetUsers.User user;
         public TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription;
-        public DateTime lastUpdated;
-        public DateTime lastSpoke;
+        public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
+        public DateTime lastSpoke;                  // Is this necessary?  Maybe not...
+        public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
 
         public String UserID()
         {
@@ -331,6 +434,17 @@ namespace TADA_Advanced_Desktop_Alerts
         public String SubscriptionTierName()
         {
             return subscription?.SubPlanName ?? "None";
+        }
+
+        public void UpdateLastSpoke()
+        {
+            this.lastSpoke = DateTime.Now;
+        }
+
+        public void UpdateSubscription(TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription)
+        {
+            this.subscription = subscription;
+            this.subscriptionLastUpdated = DateTime.Now;
         }
     }
 }

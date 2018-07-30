@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -54,6 +55,36 @@ namespace TADA_Advanced_Desktop_Alerts
             SCORE_WITHIN_AMOUNT = 0x1000,
             SCORE_NO_CONDITIONS = 0x0100
         }
+
+        public enum ALERTTYPES
+        {
+            AUTOHOST,
+            BITS,
+            COMMERCE,
+            FIRSTMESSAGE,
+            FOLLOW,
+            HOST,
+            MACRO,
+            MESSAGE,
+            RAID,
+            SUBGIFT,
+            SUBSCRIPTION
+        };
+
+        public static Dictionary<ALERTTYPES, String> alertTypes = new Dictionary<ALERTTYPES, String>()
+        {
+            { ALERTTYPES.AUTOHOST, "Auto-Host" },
+            { ALERTTYPES.BITS, "Bits" },
+            { ALERTTYPES.COMMERCE, "Commerce" },
+            { ALERTTYPES.FIRSTMESSAGE, "First Message" },
+            { ALERTTYPES.FOLLOW, "Follow" },
+            { ALERTTYPES.HOST, "Host" },
+            { ALERTTYPES.MACRO, "Macro" },
+            { ALERTTYPES.MESSAGE, "Message" },
+            { ALERTTYPES.RAID, "Raid" },
+            { ALERTTYPES.SUBGIFT, "Sub Gift" },
+            { ALERTTYPES.SUBSCRIPTION, "Subscription" },
+        };
 
         public static void LogFile(String message)
         {
