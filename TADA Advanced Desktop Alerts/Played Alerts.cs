@@ -44,13 +44,18 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchAPI.Settings.ClientId = General.CLIENT_ID;
             twitchAPI.Settings.AccessToken = accessToken;
 
+            (dg_Pending.DataSource as BindingSource).AddingNew += PendingAlertAdded;
             Connect();
         }
 
         private async void Connect()
         {
-            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { channelName }, accessToken);
+            txt_Status.Text = "Trying to Connect()";
+
+            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { channelName }, twitchAPI.Settings.AccessToken);
             channelID = result.Users[0].Id;
+
+            txt_Status.Text += ", channelID = " + channelID.ToString();
 
             pubSub = new TwitchPubSub();
             pubSub.OnBitsReceived += (sender, e) => ReceivedTwitchEvent (General.ALERTTYPES.BITS, e);
@@ -66,6 +71,16 @@ namespace TADA_Advanced_Desktop_Alerts
                 pubSub.ListenToCommerce(channelID);
                 pubSub.ListenToFollows(channelID);
                 pubSub.ListenToSubscriptions(channelID);
+                pubSub.SendTopics(twitchAPI.Settings.AccessToken);
+
+                if (txt_Status.InvokeRequired)
+                {
+
+                }
+                else
+                {
+                    txt_Status.Text = "Connected to PubSub";
+                }
             };
 
             // TwitchClient is required for hosts, raids, and reading messages because it reads IRC directly.
@@ -76,13 +91,23 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
             twitchClient.OnRaidNotification += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.RAID, e);
 
+            pubSub.Connect();
+            twitchClient.Connect();
+
             currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
         }
 
         private void OnListenEvent(object sender, OnListenResponseArgs l)
         {
             // Don't do anything just yet.  This is where the Grizzly Tracker adds the event that was received to the status bar.
-            txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions.";
+            if (this.InvokeRequired)
+            {
+                this.Invoke((Action)(() => { this.txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions."; }));
+            }
+            else
+            {
+                txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions.";
+            }
         }
 
         public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
@@ -190,6 +215,12 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
+            DateTime rightNow = DateTime.Now;
+            String filename = String.Format("{0}{1:D2}{2:D2}.{3}.txt", rightNow.Year, rightNow.Month, rightNow.Day, channelName);
+            General.LogFile(General.alertTypes[alertType], filename);
+            General.LogFile(user.ToString(), filename);
+            General.LogFile(subObject.ToString(), filename);
+
             TADAAlert alertToUse = FindSuitableAlert(alertType, subObject);
 
             if (alertToUse != null)
@@ -205,7 +236,12 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
-            PrepareAndPlayAlert(alertToUse, subObject);
+            General.LogFile((alertToUse == null ? "No alert found." : alertToUse.ToString()), filename);
+            General.LogFile("", filename);
+
+            return;
+
+            //PrepareAndPlayAlert(alertToUse, subObject);
             /*
              * On receiving an event
              * - Figure out what type of event it actually is
@@ -228,6 +264,15 @@ namespace TADA_Advanced_Desktop_Alerts
             alertText = (alertToUse.StreamerCount == 0 ? null : alertToUse.StreamerTexts[General.rng.Next(alertToUse.StreamerCount)]);
             alertResponse = (alertToUse.ViewerCount == 0 ? null : alertToUse.ViewerTexts[General.rng.Next(alertToUse.ViewerCount)]);
 
+            String alertTextMessage = alertText.GetMessage();
+            String alertReadMessage = alertText.GetReadMessage();
+
+            General.PerformSubstitutions(ref alertTextMessage, subObject);
+            General.PerformSubstitutions(ref alertReadMessage, subObject);
+
+            alertText.SetMessage(alertTextMessage);
+            alertText.SetReadMessage(alertReadMessage);
+
             PlayingAlert alertToPlay = new PlayingAlert(alertImage, alertAudio, alertText, alertResponse);
         }
 
@@ -243,11 +288,14 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
+                TwitchLib.Api.Models.Helix.Users.GetUsers.User twitchUser = (await twitchAPI.Users.helix.GetUsersAsync(new List<String> { userId }, null, accessToken)).Users[0];
+                TwitchLib.Api.Models.v5.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
+
                 // Not setting lastSpoke because this isn't a guarantee.
                 user = new User()
                 {
-                    user = (await twitchAPI.Users.helix.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0],
-                    subscription = await GetUserSubscription(userId),
+                    user = twitchUser,
+                    subscription = twitchSubscription,
                     subscriptionLastUpdated = DateTime.Now,
                     firstMessage = false
                 };
@@ -276,7 +324,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task<TwitchLib.Api.Models.v5.Subscriptions.Subscription> GetUserSubscription(String userId)
         {
-            return await twitchAPI.Users.v5.CheckUserSubscriptionByChannelAsync(userId, channelID, twitchAPI.Settings.AccessToken);
+            return await twitchAPI.Channels.v5.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
         }
 
         private async Task<string> GetUserIdFromUsername(String username)
@@ -306,25 +354,28 @@ namespace TADA_Advanced_Desktop_Alerts
             String message = subObject.Message;
             String tier = General.TwitchLibSubPlanToString[subObject.Tier];
 
-            foreach (TADAAlert alert in currentAlerts[alertTypeString])
+            if (currentAlerts.ContainsKey(alertTypeString))
             {
-                /*
-                 * Loop through the appropriate alerts, and assign each one a score.
-                 * name > tier > keyword > amount
-                 */
-
-                if (alert.AlertType == alertTypeString)
+                foreach (TADAAlert alert in currentAlerts[alertTypeString])
                 {
-                    int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier);
-                    if (thisAlertScore > alertScore)
-                    {
-                        potentialAlerts.Clear();
-                        alertScore = thisAlertScore;
-                    }
+                    /*
+                     * Loop through the appropriate alerts, and assign each one a score.
+                     * name > tier > keyword > amount
+                     */
 
-                    if (thisAlertScore == alertScore)
+                    if (alert.AlertType == alertTypeString)
                     {
-                        potentialAlerts.Add(alert);
+                        int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier);
+                        if (thisAlertScore > alertScore)
+                        {
+                            potentialAlerts.Clear();
+                            alertScore = thisAlertScore;
+                        }
+
+                        if (thisAlertScore == alertScore)
+                        {
+                            potentialAlerts.Add(alert);
+                        }
                     }
                 }
             }
@@ -421,6 +472,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
             return score;
         }
+
+        private void PendingAlertAdded(object sender, AddingNewEventArgs e)
+        {
+            // 
+        }
     }
 
     public class User
@@ -460,6 +516,40 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.subscription = subscription;
             this.subscriptionLastUpdated = DateTime.Now;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.SubPlan);
+        }
+    }
+
+    public class ListedAlert
+    {
+        [DisplayName("Viewer Name")]
+        public String ViewerName { get; set; }
+
+        [DisplayName("Alert Message")]
+        public String AlertMessage { get; set; }
+
+        [DisplayName("Alert Type")]
+        public String AlertType { get; set; }
+
+        private TADAAlert actualAlert;
+
+        public TADAAlert GetAlert() { return this.actualAlert; }
+
+        public ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlert actualAlert)
+        {
+            this.ViewerName = viewerName;
+            this.AlertMessage = alertMessage;
+            this.AlertType = alertType;
+            this.actualAlert = actualAlert;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} - {1} : {2}", this.AlertType, this.ViewerName, this.AlertMessage);
         }
     }
 }

@@ -248,6 +248,11 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             writer.WriteEndElement();
         }
+
+        public override string ToString()
+        {
+            return String.Format("{0} [{1}]: {1} {2} {3} {4}", this.alertName, this.alertType, this.ImageCount, this.AudioCount, this.StreamerCount, this.ViewerCount);
+        }
     }
 
     public class TADAAlertImage : INotifyPropertyChanged, IXmlSerializable
@@ -902,5 +907,10 @@ namespace TADA_Advanced_Desktop_Alerts
         public TwitchLib.PubSub.Enums.SubscriptionPlan Tier { get; set; } = TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet;
         public String TierName { get; set; } = "";
         public String ViewerName { get; set; } = "";
+
+        public override string ToString()
+        {
+            return String.Format("{0}, {1}, {2}, {3}", this.ViewerName, this.Amount, this.Message, this.TierName);
+        }
     }
 }

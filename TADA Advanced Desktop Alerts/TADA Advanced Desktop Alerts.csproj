@@ -283,6 +283,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\ListedAlert.datasource" />
     <None Include="Properties\DataSources\TADAAlert.datasource" />
     <None Include="Properties\DataSources\TADAAlertAudio.datasource" />
     <None Include="Properties\DataSources\TADAAlertCondition.datasource" />
