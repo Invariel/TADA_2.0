@@ -58,6 +58,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public enum ALERTTYPES
         {
+            NONE,   // Used when, for whatever reason, an alert needs to not play.
             AUTOHOST,
             BITS,
             COMMERCE,
@@ -73,6 +74,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public static Dictionary<ALERTTYPES, String> alertTypes = new Dictionary<ALERTTYPES, String>()
         {
+            { ALERTTYPES.NONE, "No alert." },
             { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
             { ALERTTYPES.COMMERCE, "Commerce" },
@@ -88,10 +90,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public static void LogFile(String message)
         {
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"./logfile.txt", true))
+            try
             {
-                file.WriteLine(String.Format("[{0}] : {1}", DateTime.Now, message));
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"./logfile.txt", true))
+                {
+                    file.WriteLine(String.Format("[{0}] : {1}", DateTime.Now, message));
+                }
             }
+            catch (Exception) { }
         }
 
         public static void LogFile(String message, String filename)

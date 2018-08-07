@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Shell;
 using System.Xml;
 
 /*
@@ -41,9 +42,6 @@ using System.Xml;
  * PyurJenius
  * Unkle_J
  */
-
-// Add a button that makes the window "disappear" --> get rendered over at position (-3000, -3000).  Test this with OBS to make sure things still render.
-// Figure out why window size is wrong.
 
 namespace TADA_Advanced_Desktop_Alerts
 {
@@ -150,7 +148,7 @@ namespace TADA_Advanced_Desktop_Alerts
                                              "&redirect_uri=" +
                                              General.AUTH_URI +
                                              "&response_type=token&" +
-                                             "scope=channel_subscriptions channel_check_subscription user_subscriptions");
+                                             "scope=chat_login channel_subscriptions channel_check_subscription");
         }
 
         private void PasswordMask(object sender, EventArgs e)

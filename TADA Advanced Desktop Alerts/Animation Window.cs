@@ -14,10 +14,13 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         private static TADAAnimationWindow animationWindowSingleton;
 
-        public List<PlayingAlert> playingAlerts = new List<PlayingAlert>();
+        public List<PlayingAlert> pendingAlerts = new List<PlayingAlert>();
         public List<PlayingAlert> keyboardAlerts = new List<PlayingAlert>();
 
+        private PlayingAlert nowPlaying = null;
+
         private List<Creation_Forms.MainWaypointForm> listeningDesignWindows = new List<Creation_Forms.MainWaypointForm>();
+        private Played_Alerts playedAlerts;
         private MainTADAForm listeningMainForm;
 
         private Graphics myGraphics;
@@ -112,25 +115,71 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public void SetPlayedAlerts (Played_Alerts alertForm)
+        {
+            this.playedAlerts = alertForm;
+        }
+
+        public void PendingAlert ()
+        {
+            this.DecideWhatToPlay();
+        }
+
+        public void AlertFinished(PlayingAlert alert)
+        {
+            if (alert == nowPlaying)
+            {
+                this.nowPlaying = null;
+                DecideWhatToPlay();
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
-            foreach (PlayingAlert alert in playingAlerts)
+            foreach (PlayingAlert alert in pendingAlerts)
             {
                 alert.DrawElements(e.Graphics);
             }
         }
 
-        public void AddPlayingAlert (PlayingAlert playingAlert)
+        public void AddPlayingAlert(PlayingAlert playingAlert, bool isTest = false)
         {
-            if (!this.playingAlerts.Contains(playingAlert))
+            this.pendingAlerts.Add(playingAlert);
+            if (isTest || this.keyboardAlerts.Count >= 0)
             {
-                this.playingAlerts.Add(playingAlert);
+                DecideWhatToPlay();
+            }
+            else
+            {
+                // Then give it about five seconds.
+
+                DecideWhatToPlay();
             }
         }
 
-        public void RemovePlayingAlert(PlayingAlert playingAlert)
+        private void DecideWhatToPlay ()
         {
-            this.playingAlerts.Remove(playingAlert);
+            if (this.nowPlaying == null)
+            {
+                if (keyboardAlerts.Count > 0)
+                {
+                    // Then we've got to play the macro.
+                    this.nowPlaying = keyboardAlerts[0];
+                    keyboardAlerts.RemoveAt(0);
+                    this.nowPlaying.Play();
+                }
+                else if (pendingAlerts.Count > 0)
+                {
+                    this.nowPlaying = pendingAlerts[0];
+                    pendingAlerts.RemoveAt(0);
+                    this.nowPlaying.Play();
+                }
+                else if (this.playedAlerts.HasAlertsWaiting())
+                {
+                    this.nowPlaying = this.playedAlerts.PlayFirstPendingAlert();
+                    this.nowPlaying.Play();
+                }
+            }
         }
     }
 }

@@ -468,7 +468,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             if (ValidityChecks())
             {
                 PlayingAlert playingAlert = new PlayingAlert(this.alertImage, null, null, null);
-                this.animationWindow.AddPlayingAlert(playingAlert);
+                this.animationWindow.AddPlayingAlert(playingAlert, true);
                 playingAlert.Play();
             }
         }

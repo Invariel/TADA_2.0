@@ -238,7 +238,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
 
             PlayingAlert playingAlert = new PlayingAlert(image, audio, streamerText, viewerText);
-            this.animationWindow.AddPlayingAlert(playingAlert);
+            this.animationWindow.AddPlayingAlert(playingAlert, true);
             playingAlert.Play();
             this.animationWindow.Show();
         }

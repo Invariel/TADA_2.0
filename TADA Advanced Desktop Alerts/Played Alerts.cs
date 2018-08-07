@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +9,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Shell;
 using TwitchLib.Api;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -83,9 +86,15 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             };
 
+
             // TwitchClient is required for hosts, raids, and reading messages because it reads IRC directly.
-            twitchClient = new TwitchClient();
+            twitchClient = new TwitchClient(null);
             twitchClient.Initialize(new TwitchLib.Client.Models.ConnectionCredentials(this.channelName, this.accessToken), this.channelName, '\0', '\0', true);
+
+            twitchClient.OnConnected += (sender, e) => { General.LogFile("TwitchClient claims to be connected.", "twitchClient.txt"); };
+            twitchClient.OnConnectionError += (sender, e) => { General.LogFile(e.Error.Message, "twitchClient.txt"); };
+            twitchClient.OnIncorrectLogin += (sender, e) => { General.LogFile(e.Exception.Message, "twitchClient.txt"); };
+            twitchClient.OnJoinedChannel += (sender, e) => { General.LogFile("Joined channel " + e.Channel, "twitchClient.txt"); };
 
             twitchClient.OnBeingHosted += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.HOST, e);
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
@@ -95,6 +104,7 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.Connect();
 
             currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
+            TADAAnimationWindow.AnimationWindow.SetPlayedAlerts(this);
         }
 
         private void OnListenEvent(object sender, OnListenResponseArgs l)
@@ -214,14 +224,22 @@ namespace TADA_Advanced_Desktop_Alerts
                     alertType = General.ALERTTYPES.MESSAGE;
                 }
             }
+            else if (alertType == General.ALERTTYPES.FOLLOW && user.hasFollowed)
+            {
+                alertType = General.ALERTTYPES.NONE;
+            }
 
             DateTime rightNow = DateTime.Now;
             String filename = String.Format("{0}{1:D2}{2:D2}.{3}.txt", rightNow.Year, rightNow.Month, rightNow.Day, channelName);
-            General.LogFile(General.alertTypes[alertType], filename);
-            General.LogFile(user.ToString(), filename);
-            General.LogFile(subObject.ToString(), filename);
+            if (alertType == General.ALERTTYPES.RAID)
+            {
+                General.LogFile(General.alertTypes[alertType], filename);
+                General.LogFile(user.ToString(), filename);
+                General.LogFile(subObject.ToString(), filename);
+                General.LogFile("", filename);
+            }
 
-            TADAAlert alertToUse = FindSuitableAlert(alertType, subObject);
+            TADAAlert alertToUse = (alertType == General.ALERTTYPES.NONE ? null : FindSuitableAlert(alertType, subObject));
 
             if (alertToUse != null)
             {
@@ -234,14 +252,13 @@ namespace TADA_Advanced_Desktop_Alerts
                     // Somehow mark that this user triggered the message at X time, and prevent it from playing again for some cooldown period.
                     // This may involve dropping <trigger message> from the message and checking again.
                 }
+                else if (alertType == General.ALERTTYPES.FOLLOW)
+                {
+                    user.hasFollowed = true;
+                }
+
+                PrepareAndPlayAlert(alertToUse, subObject, alertType);
             }
-
-            General.LogFile((alertToUse == null ? "No alert found." : alertToUse.ToString()), filename);
-            General.LogFile("", filename);
-
-            return;
-
-            //PrepareAndPlayAlert(alertToUse, subObject);
             /*
              * On receiving an event
              * - Figure out what type of event it actually is
@@ -251,7 +268,7 @@ namespace TADA_Advanced_Desktop_Alerts
              */
         }
 
-        private void PrepareAndPlayAlert (TADAAlert alertToUse, SubstitutionObject subObject)
+        private void PrepareAndPlayAlert (TADAAlert alertToUse, SubstitutionObject subObject, General.ALERTTYPES alertType)
         {
             // Now that an alert has been decided on, pick pieces, and then add it to the to-play list.
             TADAAlertImage alertImage;
@@ -273,7 +290,21 @@ namespace TADA_Advanced_Desktop_Alerts
             alertText.SetMessage(alertTextMessage);
             alertText.SetReadMessage(alertReadMessage);
 
-            PlayingAlert alertToPlay = new PlayingAlert(alertImage, alertAudio, alertText, alertResponse);
+            PlayingAlert alertToPlay;
+
+            alertToPlay = new PlayingAlert(alertImage, alertAudio, alertText, alertResponse);
+
+            if (!String.IsNullOrEmpty(alertTextMessage) || !String.IsNullOrEmpty(alertReadMessage))
+            {
+                General.LogFile(String.Format("{0}; {1}", alertTextMessage ?? "(nil)", alertReadMessage ?? "(nil)"));
+            }
+
+            ListedAlert alert = new ListedAlert(subObject.ViewerName,
+                                                alertText.GetMessage() ?? alertText.GetReadMessage() ?? "no message",
+                                                General.alertTypes[alertType],
+                                                alertToPlay);
+            dg_Pending.Invoke((Action)(() => { pendingAlertBindingSource.Add(alert); }));
+            TADAAnimationWindow.AnimationWindow.Invoke((Action)(() => { TADAAnimationWindow.AnimationWindow.PendingAlert(); }));
         }
 
         #region UserStuff
@@ -300,7 +331,14 @@ namespace TADA_Advanced_Desktop_Alerts
                     firstMessage = false
                 };
 
-                viewers.Add(userId, user);
+                try
+                {
+                    viewers.Add(userId, user);
+                }
+                catch (ArgumentException)
+                {
+                    // And do nothing because that likely means that the key already exists and it's not a problem.
+                }
             }
 
             return user;
@@ -324,7 +362,18 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task<TwitchLib.Api.Models.v5.Subscriptions.Subscription> GetUserSubscription(String userId)
         {
-            return await twitchAPI.Channels.v5.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = null;
+
+            try
+            {
+                subscription = await twitchAPI.Channels.v5.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            }
+            catch (TwitchLib.Api.Exceptions.BadResourceException)
+            {
+                // Then this 404'd or something and we don't have a subscribed user.
+            }
+
+            return subscription;
         }
 
         private async Task<string> GetUserIdFromUsername(String username)
@@ -475,7 +524,23 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void PendingAlertAdded(object sender, AddingNewEventArgs e)
         {
-            // 
+            // Something has been added to the to-play list.  Let the playing alert window know that there's something there, and to play something.
+            TADAAnimationWindow.AnimationWindow.PendingAlert();
+        }
+
+        internal PlayingAlert PlayFirstPendingAlert()
+        {
+            ListedAlert alertInTransition = (ListedAlert)pendingAlertBindingSource[0];
+
+            dg_Pending.Invoke((Action)(() => { pendingAlertBindingSource.RemoveAt(0); }));
+            dg_Played.Invoke((Action)(() => { playedAlertBindingSource.Add(alertInTransition); }));
+
+            return alertInTransition.GetAlert();
+        }
+
+        public bool HasAlertsWaiting()
+        {
+            return pendingAlertBindingSource.Count > 0;
         }
     }
 
@@ -491,6 +556,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
         public DateTime lastSpoke;                  // Is this necessary?  Maybe not...
         public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
+        public bool hasFollowed;                    // Because you can unfollow and refollow and Twitch doesn't care it'll keep sending the message.
 
         public String UserID()
         {
@@ -535,11 +601,11 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Alert Type")]
         public String AlertType { get; set; }
 
-        private TADAAlert actualAlert;
+        private PlayingAlert actualAlert;
 
-        public TADAAlert GetAlert() { return this.actualAlert; }
+        public PlayingAlert GetAlert() { return this.actualAlert; }
 
-        public ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlert actualAlert)
+        public ListedAlert(String viewerName, String alertMessage, String alertType, PlayingAlert actualAlert)
         {
             this.ViewerName = viewerName;
             this.AlertMessage = alertMessage;

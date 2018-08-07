@@ -16,6 +16,12 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            if (System.Windows.Application.Current == null)
+            {
+                new System.Windows.Application();
+            }
+
             Application.Run(new MainTADAForm());
         }
     }

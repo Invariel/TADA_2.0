@@ -443,7 +443,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             if (playingAlert != null)
             {
                 playingAlert.Stop();
-                TADAAnimationWindow.AnimationWindow.RemovePlayingAlert(playingAlert);
             }
 
             SubstitutionObject subObject = new SubstitutionObject()
@@ -465,7 +464,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             alertText.ReadMessage = readMessage;
 
             playingAlert = new PlayingAlert(null, null, alertText, null);
-            this.animationWindow.AddPlayingAlert(playingAlert);
+            this.animationWindow.AddPlayingAlert(playingAlert, true);
             playingAlert.Play();
         }
 

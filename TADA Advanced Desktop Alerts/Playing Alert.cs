@@ -79,7 +79,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 // Then this is done and can stop being played by the animation window.
                 // BUT DO NOT GET RID OF IT because it should be saved for history reasons.
-                this.animationWindow.RemovePlayingAlert(this);
+                this.animationWindow.AlertFinished(this);
             }
         }
 
@@ -126,6 +126,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 o.Dispose(true);
             }
             this.animationWindow.InvalidateMe();
+            this.CheckCompleted();
         }
     }
 
@@ -210,6 +211,8 @@ namespace TADA_Advanced_Desktop_Alerts
         protected Timer positionTimer = new Timer();
         protected Timer persistTimer = new Timer();
 
+        protected bool animationCompleted = false;
+
         protected double DrawAngle
         {
             get
@@ -247,8 +250,6 @@ namespace TADA_Advanced_Desktop_Alerts
             Effect tempAngle = new Effect();
             tempAngle.Copy(nextAngle);
             tempAngle.target = targetAngle;
-
-Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", tempAngle.target, this.angle);
 
             SetNextEffect(this.angleEffect, tempAngle, this.angleTimer);
         }
@@ -508,6 +509,7 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
             this.waypoints.NextWaypoint();
             if (this.waypoints.CurrentWaypoint == null)
             {
+                this.animationCompleted = true;
                 positionTimer.Dispose();
                 this.Dispose();
             }
@@ -600,8 +602,8 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
     // For playing both videos and audio files.
     public class PlayingElement : PlayingObject
     {
-        private System.Windows.Forms.Integration.ElementHost elementHost = new System.Windows.Forms.Integration.ElementHost();
-        private System.Windows.Controls.MediaElement mediaElement = new System.Windows.Controls.MediaElement();
+        private System.Windows.Forms.Integration.ElementHost elementHost;
+        private System.Windows.Controls.MediaElement mediaElement;
 
         private String mediaFile;
 
@@ -679,20 +681,47 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
 
         private void SharedSetup()
         {
+            this.animationWindow.Invoke((Action)(() =>
+            {
+                this.elementHost = new System.Windows.Forms.Integration.ElementHost();
+                this.mediaElement = new System.Windows.Controls.MediaElement();
+
+                this.elementHost.Child = this.mediaElement;
+
+                this.elementHost.Width = this.initialSize.Width;
+                this.elementHost.Height = this.initialSize.Height;
+                this.mediaElement.Width = this.initialSize.Width;
+                this.mediaElement.Height = this.initialSize.Height;
+
+                this.mediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
+                this.mediaElement.Source = new Uri(this.mediaFile);
+                this.mediaElement.Balance = this.balance;
+                this.mediaElement.Volume = this.volume;
+            }));
+/*
+            System.Threading.Thread thread = new System.Threading.Thread(() =>
+            {
+                this.elementHost = new System.Windows.Forms.Integration.ElementHost();
+                this.mediaElement = new System.Windows.Controls.MediaElement();
+
+                this.elementHost.Child = this.mediaElement;
+
+                this.elementHost.Width = this.initialSize.Width;
+                this.elementHost.Height = this.initialSize.Height;
+                this.mediaElement.Width = this.initialSize.Width;
+                this.mediaElement.Height = this.initialSize.Height;
+
+                this.mediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
+                this.mediaElement.Source = new Uri(this.mediaFile);
+                this.mediaElement.Balance = this.balance;
+                this.mediaElement.Volume = this.volume;
+            });
+
+            thread.SetApartmentState(System.Threading.ApartmentState.STA);
+            thread.Start();
+*/
             // Waypoint volume is from 0 to 100, while mediaElement volume is from 0 to 1.
             this.volume /= 100.0;
-
-            this.elementHost.Child = this.mediaElement;
-
-            this.elementHost.Width = this.initialSize.Width;
-            this.elementHost.Height = this.initialSize.Height;
-            this.mediaElement.Width = this.initialSize.Width;
-            this.mediaElement.Height = this.initialSize.Height;
-
-            this.mediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
-            this.mediaElement.Source = new Uri(this.mediaFile);
-            this.mediaElement.Balance = this.balance;
-            this.mediaElement.Volume = this.volume;
 
             this.balanceTimer.Elapsed += new ElapsedEventHandler((sender, e) =>
             {
@@ -719,7 +748,10 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
             this.mediaElement.Play();
             this.mediaElement.Pause();
 
-            this.animationWindow.Controls.Add(this.elementHost);
+            this.animationWindow.Invoke((Action)(() => { this.animationWindow.Controls.Add(this.elementHost); }));
+
+//            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => { this.animationWindow.Controls.Add(this.elementHost); }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+
             this.waypoints.FirstWaypoint();
 
             if (this.waypoints.CurrentWaypoint != null)
@@ -805,6 +837,8 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
         private System.Speech.Synthesis.SpeechSynthesizer talky;
         private System.Speech.Synthesis.PromptBuilder prompt;
 
+        private bool talkingCompleted = true;
+
         public PlayingText(PlayingAlert containerAlert, TADAAlertText alertText) : base(containerAlert, null)
         {
             this.waypoints = alertText.Waypoints;
@@ -823,6 +857,12 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
 
                     prompt = new System.Speech.Synthesis.PromptBuilder();
                     prompt.AppendText(alertText.GetReadMessage());
+
+                    talky.SpeakCompleted += (sender, e) =>
+                    {
+                        this.talkingCompleted = true;
+                        this.Dispose();
+                    };
                 }
                 catch (Exception)
                 {
@@ -843,10 +883,31 @@ Console.WriteLine("Effective desired angle: {0}, effective current angle: {1}", 
 
             if (this.waypoints.CurrentWaypoint != null && this.waypoints.CurrentWaypoint.ReadMessage && this.talky != null && this.prompt != null)
             {
+                this.talkingCompleted = false;
                 this.talky.SpeakAsync(this.prompt);
             }
 
             base.Persist();
+        }
+
+        // Need to not dispose of this until SpeakCompleted.
+        public override void Dispose()
+        {
+            if (this.talkingCompleted)
+            {
+                talky.Dispose();
+            }
+
+            if (this.animationCompleted)
+            {
+                this.mainImage?.Dispose();
+                this.modifiedImage?.Dispose();
+            }
+
+            if (this.talkingCompleted && this.animationCompleted)
+            {
+                base.Dispose();
+            }
         }
     }
 }

@@ -90,6 +90,7 @@
             // 
             // dg_Played
             // 
+            this.dg_Played.AllowUserToAddRows = false;
             this.dg_Played.AutoGenerateColumns = false;
             this.dg_Played.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_Played.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -118,6 +119,7 @@
             // 
             // dg_Pending
             // 
+            this.dg_Pending.AllowUserToAddRows = false;
             this.dg_Pending.AutoGenerateColumns = false;
             this.dg_Pending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_Pending.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -196,6 +198,7 @@
             // 
             // playedAlertBindingSource
             // 
+            this.playedAlertBindingSource.AllowNew = true;
             this.playedAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
             // 
             // viewerNameDataGridViewTextBoxColumn
@@ -222,6 +225,7 @@
             // 
             // pendingAlertBindingSource
             // 
+            this.pendingAlertBindingSource.AllowNew = true;
             this.pendingAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
             // 
             // Played_Alerts

@@ -695,7 +695,7 @@ namespace TADA_Advanced_Desktop_Alerts
         // These are functions and not properties so that they don't affect the binding sources.
         public String GetMessage()
         {
-            return this.substitutedMessage;
+            return this.substitutedMessage ?? this.Message;
         }
 
         public void SetMessage(String message)
@@ -705,7 +705,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public String GetReadMessage()
         {
-            return this.substitutedReadMessage;
+            return this.substitutedReadMessage ?? this.ReadMessage;
         }
 
         public void SetReadMessage(String message)
