@@ -104,7 +104,7 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.Connect();
 
             currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
-            TADAAnimationWindow.AnimationWindow.SetPlayedAlerts(this);
+            MainTADAForm.mainTADAForm.AnimationWindow.SetPlayedAlerts(this);
         }
 
         private void OnListenEvent(object sender, OnListenResponseArgs l)
@@ -198,12 +198,9 @@ namespace TADA_Advanced_Desktop_Alerts
                     subObject.Amount = eSubscription.Subscription.Months;
                     subObject.Message = eSubscription.Subscription.SubMessage.Message;
                     subObject.RecipientName = eSubscription.Subscription.RecipientName;
-                    subObject.ViewerName = eSubscription.Subscription.Username; 
+                    subObject.ViewerName = eSubscription.Subscription.Username;
 
-                    if (alertType == General.ALERTTYPES.SUBGIFT)
-                    {
-                        UpdateUserSubscription(await GetUser(eSubscription.Subscription.RecipientId));
-                    }
+                    UpdateUserSubscription(await GetUser(alertType == General.ALERTTYPES.SUBGIFT ? eSubscription.Subscription.RecipientId : eSubscription.Subscription.UserId));
 
                     user = await GetUser(eSubscription.Subscription.UserId);
 
@@ -217,6 +214,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 UpdateUserSubscription(user);
             }
 
+            subObject.Tier = General.stringToTwitchLibSubPlan[user.SubscriptionTier()];
+            subObject.TierName = user.SubscriptionTierName();
+
             if (alertType == General.ALERTTYPES.FIRSTMESSAGE)
             {
                 if (user.firstMessage || FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) == null)
@@ -227,16 +227,6 @@ namespace TADA_Advanced_Desktop_Alerts
             else if (alertType == General.ALERTTYPES.FOLLOW && user.hasFollowed)
             {
                 alertType = General.ALERTTYPES.NONE;
-            }
-
-            DateTime rightNow = DateTime.Now;
-            String filename = String.Format("{0}{1:D2}{2:D2}.{3}.txt", rightNow.Year, rightNow.Month, rightNow.Day, channelName);
-            if (alertType == General.ALERTTYPES.RAID)
-            {
-                General.LogFile(General.alertTypes[alertType], filename);
-                General.LogFile(user.ToString(), filename);
-                General.LogFile(subObject.ToString(), filename);
-                General.LogFile("", filename);
             }
 
             TADAAlert alertToUse = (alertType == General.ALERTTYPES.NONE ? null : FindSuitableAlert(alertType, subObject));
@@ -290,10 +280,6 @@ namespace TADA_Advanced_Desktop_Alerts
             alertText.SetMessage(alertTextMessage);
             alertText.SetReadMessage(alertReadMessage);
 
-            PlayingAlert alertToPlay;
-
-            alertToPlay = new PlayingAlert(alertImage, alertAudio, alertText, alertResponse);
-
             if (!String.IsNullOrEmpty(alertTextMessage) || !String.IsNullOrEmpty(alertReadMessage))
             {
                 General.LogFile(String.Format("{0}; {1}", alertTextMessage ?? "(nil)", alertReadMessage ?? "(nil)"));
@@ -302,9 +288,12 @@ namespace TADA_Advanced_Desktop_Alerts
             ListedAlert alert = new ListedAlert(subObject.ViewerName,
                                                 alertText.GetMessage() ?? alertText.GetReadMessage() ?? "no message",
                                                 General.alertTypes[alertType],
-                                                alertToPlay);
+                                                alertImage,
+                                                alertAudio,
+                                                alertText,
+                                                alertResponse);
             dg_Pending.Invoke((Action)(() => { pendingAlertBindingSource.Add(alert); }));
-            TADAAnimationWindow.AnimationWindow.Invoke((Action)(() => { TADAAnimationWindow.AnimationWindow.PendingAlert(); }));
+            MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() => { MainTADAForm.mainTADAForm.AnimationWindow.PendingAlert(); }));
         }
 
         #region UserStuff
@@ -320,6 +309,7 @@ namespace TADA_Advanced_Desktop_Alerts
             else
             {
                 TwitchLib.Api.Models.Helix.Users.GetUsers.User twitchUser = (await twitchAPI.Users.helix.GetUsersAsync(new List<String> { userId }, null, accessToken)).Users[0];
+                bool following = (await twitchAPI.Users.helix.GetUsersFollowsAsync(null, null, 1, userId, channelID)).TotalFollows == 1;
                 TwitchLib.Api.Models.v5.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
 
                 // Not setting lastSpoke because this isn't a guarantee.
@@ -328,7 +318,8 @@ namespace TADA_Advanced_Desktop_Alerts
                     user = twitchUser,
                     subscription = twitchSubscription,
                     subscriptionLastUpdated = DateTime.Now,
-                    firstMessage = false
+                    firstMessage = false,
+                    hasFollowed = following
                 };
 
                 try
@@ -525,17 +516,17 @@ namespace TADA_Advanced_Desktop_Alerts
         private void PendingAlertAdded(object sender, AddingNewEventArgs e)
         {
             // Something has been added to the to-play list.  Let the playing alert window know that there's something there, and to play something.
-            TADAAnimationWindow.AnimationWindow.PendingAlert();
+            MainTADAForm.mainTADAForm.AnimationWindow.PendingAlert();
         }
 
-        internal PlayingAlert PlayFirstPendingAlert()
+        internal ListedAlert PlayFirstPendingAlert()
         {
             ListedAlert alertInTransition = (ListedAlert)pendingAlertBindingSource[0];
 
             dg_Pending.Invoke((Action)(() => { pendingAlertBindingSource.RemoveAt(0); }));
             dg_Played.Invoke((Action)(() => { playedAlertBindingSource.Add(alertInTransition); }));
 
-            return alertInTransition.GetAlert();
+            return alertInTransition;
         }
 
         public bool HasAlertsWaiting()
@@ -601,16 +592,20 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Alert Type")]
         public String AlertType { get; set; }
 
-        private PlayingAlert actualAlert;
+        public TADAAlertImage alertImage;
+        public TADAAlertAudio alertAudio;
+        public TADAAlertText alertStreamerText;
+        public TADAAlertText alertViewerText;
 
-        public PlayingAlert GetAlert() { return this.actualAlert; }
-
-        public ListedAlert(String viewerName, String alertMessage, String alertType, PlayingAlert actualAlert)
+        public ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText)
         {
             this.ViewerName = viewerName;
             this.AlertMessage = alertMessage;
             this.AlertType = alertType;
-            this.actualAlert = actualAlert;
+            this.alertImage = alertImage;
+            this.alertAudio = alertAudio;
+            this.alertStreamerText = alertStreamerText;
+            this.alertViewerText = alertViewerText;
         }
 
         public override string ToString()

@@ -18,8 +18,7 @@ namespace TADA_Advanced_Desktop_Alerts
         TADAAlertText alertText;
         TADAAlertText alertResponse;
 
-        TADAAnimationWindow animationWindow = TADAAnimationWindow.AnimationWindow;
-        Graphics graphics = TADAAnimationWindow.AnimationWindow.graphics;
+        Graphics graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
 
 
         public PlayingAlert (TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
@@ -69,7 +68,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public void RemoveObject (PlayingObject playingObject)
         {
             this.playingObjects.Remove(playingObject);
-            this.animationWindow.InvalidateMe();
+            MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
             CheckCompleted();
         }
 
@@ -79,7 +78,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 // Then this is done and can stop being played by the animation window.
                 // BUT DO NOT GET RID OF IT because it should be saved for history reasons.
-                this.animationWindow.AlertFinished(this);
+                MainTADAForm.mainTADAForm.AnimationWindow.AlertFinished(this);
             }
         }
 
@@ -116,7 +115,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 o.Start();
             }
-            this.animationWindow.InvalidateMe();
+            MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
         public void Stop ()
@@ -125,7 +124,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 o.Dispose(true);
             }
-            this.animationWindow.InvalidateMe();
+            MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
             this.CheckCompleted();
         }
     }
@@ -288,7 +287,7 @@ namespace TADA_Advanced_Desktop_Alerts
             effect.NextEffectFrame(ref variable, timer);
 
             this.redrawMe = true;
-            this.animationWindow.InvalidateMe();
+            MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
         protected void NextPosition ()
@@ -307,7 +306,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (g == null)
             {
-                g = TADAAnimationWindow.AnimationWindow.graphics;
+                g = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
             }
 
             if (this.redrawMe)
@@ -376,7 +375,6 @@ namespace TADA_Advanced_Desktop_Alerts
         protected PlayingAlert containerAlert;
         protected TADAAlertImage alertImage;
         protected WaypointContainer waypoints;
-        protected TADAAnimationWindow animationWindow;
         protected Graphics graphics;
 
         public bool BehindImage()
@@ -387,8 +385,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage)
         {
             this.containerAlert = containerAlert;
-            this.animationWindow = TADAAnimationWindow.AnimationWindow;
-            this.graphics = this.animationWindow.graphics;
+            this.graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
 
             if (alertImage != null)
             {
@@ -408,7 +405,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 Task.Run(() =>
                 {
                     this.NextPosition();
-                    TADAAnimationWindow.AnimationWindow.InvalidateMe();
+                    MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
                 });
 
                 if (this.ReachedDestination())
@@ -576,7 +573,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.frameTimer.Interval = this.CurrentDelay;
             this.frameTimer.Start();
             this.redrawMe = true;
-            this.animationWindow.InvalidateMe();
+            MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
         public PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage) : base (containerAlert, alertImage)
@@ -633,7 +630,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override void Dispose(bool disposing)
         {
-            this.mediaElement.Dispatcher.Invoke(() => { this.animationWindow.Controls.Remove(this.elementHost); });
+            this.mediaElement.Dispatcher.Invoke(() => { MainTADAForm.mainTADAForm.AnimationWindow.Controls.Remove(this.elementHost); });
 
             balanceTimer.Stop();
             volumeTimer.Stop();
@@ -681,7 +678,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void SharedSetup()
         {
-            this.animationWindow.Invoke((Action)(() =>
+            MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
             {
                 this.elementHost = new System.Windows.Forms.Integration.ElementHost();
                 this.mediaElement = new System.Windows.Controls.MediaElement();
@@ -748,7 +745,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.mediaElement.Play();
             this.mediaElement.Pause();
 
-            this.animationWindow.Invoke((Action)(() => { this.animationWindow.Controls.Add(this.elementHost); }));
+            MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() => { MainTADAForm.mainTADAForm.AnimationWindow.Controls.Add(this.elementHost); }));
 
 //            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => { this.animationWindow.Controls.Add(this.elementHost); }), System.Windows.Threading.DispatcherPriority.ContextIdle);
 

@@ -12,8 +12,6 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class TADAAnimationWindow : Form
     {
-        private static TADAAnimationWindow animationWindowSingleton;
-
         public List<PlayingAlert> pendingAlerts = new List<PlayingAlert>();
         public List<PlayingAlert> keyboardAlerts = new List<PlayingAlert>();
 
@@ -21,22 +19,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private List<Creation_Forms.MainWaypointForm> listeningDesignWindows = new List<Creation_Forms.MainWaypointForm>();
         private Played_Alerts playedAlerts;
-        private MainTADAForm listeningMainForm;
 
         private Graphics myGraphics;
-
-        public static TADAAnimationWindow AnimationWindow
-        {
-            get
-            {
-                if (animationWindowSingleton == null)
-                {
-                    animationWindowSingleton = new TADAAnimationWindow();
-                }
-
-                return animationWindowSingleton;
-            }
-        }
 
         public Graphics graphics
         {
@@ -84,13 +68,8 @@ namespace TADA_Advanced_Desktop_Alerts
             return this.ClientSize;
         }
 
-        public Size Listen(MainTADAForm form)
+        public Size GetClientSize()
         {
-            if (listeningMainForm == null)
-            {
-                listeningMainForm = form;
-            }
-
             return this.ClientSize;
         }
 
@@ -106,12 +85,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 form.SetAnimationWindowSize(this.ClientSize);
             }
 
-            if (listeningMainForm != null &&
-                (listeningMainForm != sender ||
-                (sender is NumericUpDown && (sender as NumericUpDown).ParentForm != listeningMainForm)))
+            if (sender is NumericUpDown && (sender as NumericUpDown).ParentForm != MainTADAForm.mainTADAForm)
             {
-                // Then it probably wasn't the main form, so let's tell it our size changed too.
-                listeningMainForm.SetAnimationWindowSize(this.ClientSize);
+                MainTADAForm.mainTADAForm.SetAnimationWindowSize(this.ClientSize);
             }
         }
 
@@ -176,7 +152,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
                 else if (this.playedAlerts.HasAlertsWaiting())
                 {
-                    this.nowPlaying = this.playedAlerts.PlayFirstPendingAlert();
+                    ListedAlert alertToPlay = this.playedAlerts.PlayFirstPendingAlert();
+                    this.nowPlaying = new PlayingAlert(alertToPlay.alertImage ?? null, alertToPlay.alertAudio ?? null, alertToPlay.alertStreamerText ?? null, alertToPlay.alertViewerText ?? null);
                     this.nowPlaying.Play();
                 }
             }

@@ -55,12 +55,26 @@ namespace TADA_Advanced_Desktop_Alerts
         bool blockUpdates = false;
 
         Creation_Forms.AlertCreationForm _alertCreationForm;
+        private TADAAnimationWindow animationWindow;
 
         private static MainTADAForm _mainTADAForm;
 
         public static MainTADAForm mainTADAForm
         {
             get { return _mainTADAForm; }
+        }
+
+        public TADAAnimationWindow AnimationWindow
+        {
+            get
+            {
+                if (this.animationWindow == null)
+                {
+                    this.animationWindow = new TADAAnimationWindow();
+                }
+
+                return this.animationWindow;
+            }
         }
         
         public String ChannelName()
@@ -77,7 +91,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             InitializeComponent();
 
-            TADAAnimationWindow.AnimationWindow.Show();
+            this.animationWindow.Show();
 
             btn_SaveManifest.Click += btn_SaveManifest_Click;
             btn_LoadManifest.Click += btn_LoadManifest_Click;
@@ -128,10 +142,10 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             blockUpdates = true;
-            Size animationWindowSize = TADAAnimationWindow.AnimationWindow.Listen(this);
+            Size animationWindowSize = this.animationWindow.GetClientSize();
             numud_AnimationWindowSizeX.Value = animationWindowSize.Width;
             numud_AnimationWindowSizeY.Value = animationWindowSize.Height;
-            TADAAnimationWindow.AnimationWindow.BackColor = Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
+            this.animationWindow.BackColor = Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
             blockUpdates = false;
 
             new TimePeriod(1);
@@ -201,8 +215,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 int g = Convert.ToInt32(numud_bgG.Value);
                 int b = Convert.ToInt32(numud_bgB.Value);
 
-
-                TADAAnimationWindow.AnimationWindow.BackColor = Color.FromArgb(r, g, b);
+                this.animationWindow.BackColor = Color.FromArgb(r, g, b);
 
                 blockUpdates = false;
             }
@@ -214,7 +227,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 blockUpdates = true;
 
-                TADAAnimationWindow.AnimationWindow.ClientSize = new Size(Convert.ToInt32(numud_AnimationWindowSizeX.Value), Convert.ToInt32(numud_AnimationWindowSizeY.Value));
+                this.animationWindow.ClientSize = new Size(Convert.ToInt32(numud_AnimationWindowSizeX.Value), Convert.ToInt32(numud_AnimationWindowSizeY.Value));
 
                 blockUpdates = false;
             }
@@ -248,14 +261,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void HideAnimationWindow(object sender, EventArgs e)
         {
-            if (TADAAnimationWindow.AnimationWindow.Location.X < 0)
+            if (this.animationWindow.Location.X < 0)
             {
-                TADAAnimationWindow.AnimationWindow.Location = new Point(0, 0);
+                this.animationWindow.Location = new Point(0, 0);
                 btn_ShowHideAnimationWindow.Text = "Hide Animation Window";
             }
             else
             {
-                TADAAnimationWindow.AnimationWindow.Location = new Point(-5000, -5000);
+                this.animationWindow.Location = new Point(-5000, -5000);
                 btn_ShowHideAnimationWindow.Text = "Show Animation Window";
             }
         }
@@ -336,9 +349,9 @@ namespace TADA_Advanced_Desktop_Alerts
                     XmlHelper.WriteColor(xmlWriter, Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value)), "Window");
                     XmlHelper.WriteSize(xmlWriter, new Size(Convert.ToInt32(numud_AnimationWindowSizeX.Value), Convert.ToInt32(numud_AnimationWindowSizeY.Value)), "Window");
 
-                    if (!TADAAnimationWindow.AnimationWindow.IsDisposed)
+                    if (!this.animationWindow.IsDisposed)
                     {
-                        XmlHelper.WritePoint(xmlWriter, TADAAnimationWindow.AnimationWindow.Location, "Window");
+                        XmlHelper.WritePoint(xmlWriter, this.animationWindow.Location, "Window");
                     }
 
                     xmlWriter.WriteEndElement();
@@ -419,9 +432,9 @@ namespace TADA_Advanced_Desktop_Alerts
                             else if (xmlReader.IsStartElement("Point"))
                             {
                                 XmlHelper.ReadPoint(xmlReader, out Point point, out string name);
-                                if (!TADAAnimationWindow.AnimationWindow.IsDisposed)
+                                if (!this.animationWindow.IsDisposed)
                                 {
-                                    TADAAnimationWindow.AnimationWindow.Location = point;
+                                    this.animationWindow.Location = point;
                                 }
                             }
                             else if (!xmlReader.IsStartElement() && xmlReader.Name == "Window")
