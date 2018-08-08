@@ -14,7 +14,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
     public partial class AlertCreationForm : Form
     {
         private MainTADAForm parentWindow;
-        private TADAAnimationWindow animationWindow;
         private ImageCreationForm currentImageForm;
         private AudioCreationForm currentAudioForm;
         private TextCreationForm currentStreamerForm;
@@ -26,7 +25,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             InitializeComponent();
 
             this.parentWindow = parentWindow;
-            this.animationWindow = TADAAnimationWindow.AnimationWindow;
             this.currentAlert = tadaAlert;
 
             foreach (String alertType in General.alertTypes.Values)
@@ -138,7 +136,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentImageForm == null || this.currentImageForm.IsDisposed)
                     {
-                        this.currentImageForm = new ImageCreationForm(this.animationWindow, editObject as TADAAlertImage);
+                        this.currentImageForm = new ImageCreationForm(editObject as TADAAlertImage);
                     }
                     this.currentImageForm.Show();
                 }
@@ -146,7 +144,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentAudioForm == null || this.currentAudioForm.IsDisposed)
                     {
-                        this.currentAudioForm = new AudioCreationForm(this.animationWindow, editObject as TADAAlertAudio);
+                        this.currentAudioForm = new AudioCreationForm(editObject as TADAAlertAudio);
                     }
                     this.currentAudioForm.Show();
                 }
@@ -154,7 +152,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentStreamerForm == null || this.currentStreamerForm.IsDisposed)
                     {
-                        this.currentStreamerForm = new TextCreationForm(this.animationWindow, editObject as TADAAlertText, true);
+                        this.currentStreamerForm = new TextCreationForm(editObject as TADAAlertText, true);
                     }
                     this.currentStreamerForm.Show();
                 }
@@ -162,7 +160,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentViewerForm == null || this.currentViewerForm.IsDisposed)
                     {
-                        this.currentViewerForm = new TextCreationForm(this.animationWindow, editObject as TADAAlertText, false);
+                        this.currentViewerForm = new TextCreationForm(editObject as TADAAlertText, false);
                     }
                     this.currentViewerForm.Show();
                 }
@@ -238,9 +236,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
 
             PlayingAlert playingAlert = new PlayingAlert(image, audio, streamerText, viewerText);
-            this.animationWindow.AddPlayingAlert(playingAlert, true);
+            MainTADAForm.mainTADAForm.AnimationWindow.AddPlayingAlert(playingAlert, true);
             playingAlert.Play();
-            this.animationWindow.Show();
+            MainTADAForm.mainTADAForm.AnimationWindow.Show();
         }
 
         private void SaveAlert(object sender, EventArgs e)

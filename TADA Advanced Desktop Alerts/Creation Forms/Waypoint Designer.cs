@@ -34,8 +34,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         protected SizeF itemSize = new SizeF(225, 150);
         protected SizeF animationWindowSize = new SizeF(1280, 1024);
 
-        protected TADAAnimationWindow animationWindow;
-
         public MainWaypointForm()
         {
             InitializeComponent();
@@ -554,12 +552,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             itemSize = size;
         }
 
-        protected void SetAnimationWindow (TADAAnimationWindow animationWindow)
-        {
-            this.animationWindow = animationWindow;
-            animationWindow.Listen(this);
-        }
-
         public void SetAnimationWindowSize (float width = 0, float height = 0)
         {
             if (width == 0 && height == 0)
@@ -799,8 +791,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 return;
             }
 
-            float widthRatio = pb_Preview.Width / (this.animationWindow != null ? this.animationWindow.Width : this.animationWindowSize.Width);
-            float heightRatio = pb_Preview.Height / (this.animationWindow != null ? this.animationWindow.Height : this.animationWindowSize.Height);
+            float widthRatio = pb_Preview.Width / (MainTADAForm.mainTADAForm.AnimationWindow != null ? MainTADAForm.mainTADAForm.AnimationWindow.Width : this.animationWindowSize.Width);
+            float heightRatio = pb_Preview.Height / (MainTADAForm.mainTADAForm.AnimationWindow != null ? MainTADAForm.mainTADAForm.AnimationWindow.Height : this.animationWindowSize.Height);
 
             PointF P0 = (bindingSource[0] as Waypoint).P1;
             P0.X *= widthRatio;

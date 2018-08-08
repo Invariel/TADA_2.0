@@ -112,9 +112,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            foreach (PlayingAlert alert in pendingAlerts)
+            if (this.nowPlaying != null)
             {
-                alert.DrawElements(e.Graphics);
+                this.nowPlaying.DrawElements(e.Graphics);
             }
         }
 
@@ -150,7 +150,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     pendingAlerts.RemoveAt(0);
                     this.nowPlaying.Play();
                 }
-                else if (this.playedAlerts.HasAlertsWaiting())
+                else if (this.playedAlerts != null && this.playedAlerts.HasAlertsWaiting())
                 {
                     ListedAlert alertToPlay = this.playedAlerts.PlayFirstPendingAlert();
                     this.nowPlaying = new PlayingAlert(alertToPlay.alertImage ?? null, alertToPlay.alertAudio ?? null, alertToPlay.alertStreamerText ?? null, alertToPlay.alertViewerText ?? null);

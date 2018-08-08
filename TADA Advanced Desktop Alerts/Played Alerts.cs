@@ -179,10 +179,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     user = await GetUser(eFollow.UserId);
                     break;
+/*
                 case General.ALERTTYPES.MACRO:
                     // This doesn't do any setup.  The trick below is to pick the appropriate
                     // alert based on the keypress.  Or, better, it should be handled elsewhere.
                     return;
+*/
                 case General.ALERTTYPES.RAID:
                     OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
 
@@ -271,8 +273,8 @@ namespace TADA_Advanced_Desktop_Alerts
             alertText = (alertToUse.StreamerCount == 0 ? null : alertToUse.StreamerTexts[General.rng.Next(alertToUse.StreamerCount)]);
             alertResponse = (alertToUse.ViewerCount == 0 ? null : alertToUse.ViewerTexts[General.rng.Next(alertToUse.ViewerCount)]);
 
-            String alertTextMessage = alertText.GetMessage();
-            String alertReadMessage = alertText.GetReadMessage();
+            String alertTextMessage = alertText.Message;
+            String alertReadMessage = alertText.ReadMessage;
 
             General.PerformSubstitutions(ref alertTextMessage, subObject);
             General.PerformSubstitutions(ref alertReadMessage, subObject);

@@ -15,11 +15,10 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private bool blocked = false;
         private TADAAlertAudio alertAudio;
 
-        public AudioCreationForm(TADAAnimationWindow animationWindow, TADAAlertAudio alertAudio)
+        public AudioCreationForm(TADAAlertAudio alertAudio)
         {
             InitializeComponent();
 
-            this.animationWindow = animationWindow;
             this.alertAudio = alertAudio;
 
             grp_Coordinates.Enabled = false;
@@ -270,17 +269,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private void btn_TestItem_Click(object sender, EventArgs e)
         {
             GenerateAlertAudio();
-            if (this.animationWindow == null)
-            {
-                this.animationWindow = new TADAAnimationWindow();
-            }
-            this.animationWindow.Show();
+            MainTADAForm.mainTADAForm.AnimationWindow.Show();
 
             if (ValidityChecks())
             {
                 PlayingAlert playingAlert = new PlayingAlert(null, this.alertAudio, null, null);
-                this.animationWindow.AddPlayingAlert(playingAlert, true);
-                playingAlert.Play();
+                MainTADAForm.mainTADAForm.AnimationWindow.AddPlayingAlert(playingAlert, true);
             }
         }
 

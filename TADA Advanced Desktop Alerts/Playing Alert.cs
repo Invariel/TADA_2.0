@@ -20,7 +20,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
         Graphics graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
 
-
         public PlayingAlert (TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
         {
             if (alertImage != null)
@@ -302,11 +301,6 @@ namespace TADA_Advanced_Desktop_Alerts
             if (this.isDisposed)
             {
                 return;
-            }
-
-            if (g == null)
-            {
-                g = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
             }
 
             if (this.redrawMe)
@@ -747,8 +741,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() => { MainTADAForm.mainTADAForm.AnimationWindow.Controls.Add(this.elementHost); }));
 
-//            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => { this.animationWindow.Controls.Add(this.elementHost); }), System.Windows.Threading.DispatcherPriority.ContextIdle);
-
             this.waypoints.FirstWaypoint();
 
             if (this.waypoints.CurrentWaypoint != null)
@@ -761,7 +753,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             this.redrawMe = false;
-            this.DrawImage(null);
+            this.DrawImage(MainTADAForm.mainTADAForm.AnimationWindow.graphics);
 
             TimeSpan playDuration = this.endingPosition.Subtract(this.startingPosition);
             base.Start();   // Start the waypoints and such.
@@ -892,7 +884,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             if (this.talkingCompleted)
             {
-                talky.Dispose();
+                talky?.Dispose();
             }
 
             if (this.animationCompleted)

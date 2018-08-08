@@ -91,7 +91,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             InitializeComponent();
 
-            this.animationWindow.Show();
+            this.AnimationWindow.Show();
 
             btn_SaveManifest.Click += btn_SaveManifest_Click;
             btn_LoadManifest.Click += btn_LoadManifest_Click;

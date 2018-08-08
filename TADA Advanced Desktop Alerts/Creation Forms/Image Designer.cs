@@ -21,11 +21,10 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private TADAAlertImage alertImage;
 
-        public ImageCreationForm(TADAAnimationWindow animationWindow, TADAAlertImage alertImage)
+        public ImageCreationForm(TADAAlertImage alertImage)
         {
             InitializeComponent();
 
-            SetAnimationWindow(animationWindow);
             this.alertImage = alertImage;
 
             eh_1.Child = mediaElement;
@@ -459,17 +458,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         {
             GenerateAlertImage();
 
-            if (this.animationWindow == null)
-            {
-                this.animationWindow = new TADAAnimationWindow();
-            }
-            this.animationWindow.Show();
+            MainTADAForm.mainTADAForm.AnimationWindow.Show();
 
             if (ValidityChecks())
             {
                 PlayingAlert playingAlert = new PlayingAlert(this.alertImage, null, null, null);
-                this.animationWindow.AddPlayingAlert(playingAlert, true);
-                playingAlert.Play();
+                MainTADAForm.mainTADAForm.AnimationWindow.AddPlayingAlert(playingAlert, true);
             }
         }
 
