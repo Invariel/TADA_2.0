@@ -65,6 +65,7 @@ namespace TADA_Advanced_Desktop_Alerts
             FIRSTMESSAGE,
             FOLLOW,
             HOST,
+            JOIN,
 //            MACRO,
             MESSAGE,
             RAID,
@@ -81,11 +82,29 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.FIRSTMESSAGE, "First Message" },
             { ALERTTYPES.FOLLOW, "Follow" },
             { ALERTTYPES.HOST, "Host" },
+            { ALERTTYPES.JOIN, "Join" },
 //            { ALERTTYPES.MACRO, "Macro" },
             { ALERTTYPES.MESSAGE, "Message" },
             { ALERTTYPES.RAID, "Raid" },
             { ALERTTYPES.SUBGIFT, "Sub Gift" },
             { ALERTTYPES.SUBSCRIPTION, "Subscription" },
+        };
+
+        public static Dictionary<String, ALERTTYPES> alertStrings = new Dictionary<string, ALERTTYPES>()
+        {
+            { "No alert.", ALERTTYPES.NONE },
+            { "Auto-Host", ALERTTYPES.AUTOHOST },
+            { "Bits", ALERTTYPES.BITS },
+            { "Commerce", ALERTTYPES.COMMERCE },
+            { "First Message", ALERTTYPES.FIRSTMESSAGE },
+            { "Follow", ALERTTYPES.FOLLOW },
+            { "Host", ALERTTYPES.HOST },
+            { "Join", ALERTTYPES.JOIN },
+//            { "Macro", ALERTTYPES.MACRO },
+            { "Message", ALERTTYPES.MESSAGE },
+            { "Raid", ALERTTYPES.RAID  },
+            { "Sub Gift", ALERTTYPES.SUBGIFT },
+            { "Subscription", ALERTTYPES.SUBSCRIPTION },
         };
 
         public static void LogFile(String message)

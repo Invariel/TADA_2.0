@@ -57,6 +57,8 @@ namespace TADA_Advanced_Desktop_Alerts
         Creation_Forms.AlertCreationForm _alertCreationForm;
         private TADAAnimationWindow animationWindow;
 
+        internal WebSocketServer webSocketServer;
+
         private static MainTADAForm _mainTADAForm;
 
         public static MainTADAForm mainTADAForm
@@ -151,6 +153,7 @@ namespace TADA_Advanced_Desktop_Alerts
             new TimePeriod(1);
 
             _mainTADAForm = this;
+            webSocketServer = new WebSocketServer(21573);
         }
 
         private void GetAccessToken(object sender, EventArgs e)

@@ -34,8 +34,8 @@
             this.dg_Played = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dg_Pending = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_Pause = new System.Windows.Forms.Button();
+            this.btn_Replay = new System.Windows.Forms.Button();
             this.btn_Stop = new System.Windows.Forms.Button();
             this.txt_Status = new System.Windows.Forms.TextBox();
             this.viewerNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,8 +62,8 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.button1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.button2, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btn_Pause, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.btn_Replay, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.btn_Stop, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.txt_Status, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -134,25 +134,25 @@
             this.dg_Pending.Size = new System.Drawing.Size(548, 120);
             this.dg_Pending.TabIndex = 0;
             // 
-            // button1
+            // btn_Pause
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button1.Location = new System.Drawing.Point(557, 142);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(69, 133);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Pause Alerts";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_Pause.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btn_Pause.Location = new System.Drawing.Point(557, 142);
+            this.btn_Pause.Name = "btn_Pause";
+            this.btn_Pause.Size = new System.Drawing.Size(69, 133);
+            this.btn_Pause.TabIndex = 3;
+            this.btn_Pause.Text = "Pause Alerts";
+            this.btn_Pause.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btn_Replay
             // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button2.Location = new System.Drawing.Point(557, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(69, 133);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Replay Alert";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_Replay.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btn_Replay.Location = new System.Drawing.Point(557, 3);
+            this.btn_Replay.Name = "btn_Replay";
+            this.btn_Replay.Size = new System.Drawing.Size(69, 133);
+            this.btn_Replay.TabIndex = 4;
+            this.btn_Replay.Text = "Replay Alert";
+            this.btn_Replay.UseVisualStyleBackColor = true;
             // 
             // btn_Stop
             // 
@@ -255,8 +255,8 @@
         private System.Windows.Forms.DataGridView dg_Played;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView dg_Pending;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_Pause;
+        private System.Windows.Forms.Button btn_Replay;
         private System.Windows.Forms.Button btn_Stop;
         private System.Windows.Forms.TextBox txt_Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn viewerNameDataGridViewTextBoxColumn1;

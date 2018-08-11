@@ -47,8 +47,41 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchAPI.Settings.ClientId = General.CLIENT_ID;
             twitchAPI.Settings.AccessToken = accessToken;
 
+            btn_Pause.Click += PauseAlerts;
+            btn_Replay.Click += ReplayAlerts;
+            btn_Stop.Click += StopAlert;
+
             (dg_Pending.DataSource as BindingSource).AddingNew += PendingAlertAdded;
             Connect();
+        }
+
+        private void PauseAlerts(object sender, EventArgs e)
+        {
+            bool paused = MainTADAForm.mainTADAForm.AnimationWindow.TogglePause();
+            this.Invoke((Action)(() => { this.btn_Pause.Text = (paused ? "Unpause Alerts" : "Pause Alerts"); }));
+        }
+
+        private void ReplayAlerts(object sender, EventArgs e)
+        {
+            if (dg_Played.SelectedRows.Count > 0)
+            {
+                while (dg_Played.SelectedRows.Count > 0)
+                {
+                    // Then copy them over, in the order selected
+                    pendingAlertBindingSource.Add(playedAlertBindingSource[dg_Played.SelectedRows[0].Index]);
+
+                    // and deletes them from dg_Played
+                    playedAlertBindingSource.RemoveAt(dg_Played.SelectedRows[0].Index);
+                }
+
+                // And then let the system know that there are alerts waiting.
+                MainTADAForm.mainTADAForm.AnimationWindow.PendingAlert();
+            }
+        }
+
+        private void StopAlert(object sender, EventArgs e)
+        {
+            MainTADAForm.mainTADAForm.AnimationWindow.nowPlaying.Stop();
         }
 
         private async void Connect()
@@ -97,6 +130,7 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnJoinedChannel += (sender, e) => { General.LogFile("Joined channel " + e.Channel, "twitchClient.txt"); };
 
             twitchClient.OnBeingHosted += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.HOST, e);
+            twitchClient.OnUserJoined += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.JOIN, e);
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
             twitchClient.OnRaidNotification += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.RAID, e);
 
@@ -157,11 +191,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.FIRSTMESSAGE:
                 case General.ALERTTYPES.MESSAGE:
-                    /* This block needs a way to keep track of peoples' first messages of the day,
-                     * as well as for each message when it was last triggered, so that people can't spam it.
-                     * Also, because these are coming through separate sources, this could be a bits message
-                     * or a subscribe message possibly?
-                     */
                     OnMessageReceivedArgs eMessage = eventDetails as OnMessageReceivedArgs;
 
                     // If the message has bits in it, this should be handled by PubSub instead.
@@ -177,7 +206,24 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     subObject.ViewerName = eFollow.DisplayName;
 
+                    bool hasRecordedFollow = false;
+                    if (viewers.ContainsKey(eFollow.UserId))
+                    {
+                        hasRecordedFollow = viewers[eFollow.UserId].hasFollowed;
+                    }
+
                     user = await GetUser(eFollow.UserId);
+
+                    if (hasRecordedFollow)
+                    {
+                        alertType = General.ALERTTYPES.NONE;
+                    }
+
+                    user.hasFollowed = true;
+                    break;
+                case General.ALERTTYPES.JOIN:
+                    OnUserJoinedArgs eJoin = eventDetails as OnUserJoinedArgs;
+                    user = await GetUser(await GetUserIdFromUsername(eJoin.Username));
                     break;
 /*
                 case General.ALERTTYPES.MACRO:
@@ -219,16 +265,13 @@ namespace TADA_Advanced_Desktop_Alerts
             subObject.Tier = General.stringToTwitchLibSubPlan[user.SubscriptionTier()];
             subObject.TierName = user.SubscriptionTierName();
 
-            if (alertType == General.ALERTTYPES.FIRSTMESSAGE)
+            // A FIRSTMESSAGE can't possibly come through Twitch channels.  It doesn't know.
+            if (alertType == General.ALERTTYPES.MESSAGE)
             {
-                if (user.firstMessage || FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) == null)
+                if (!user.firstMessage && FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) != null)
                 {
-                    alertType = General.ALERTTYPES.MESSAGE;
+                    alertType = General.ALERTTYPES.FIRSTMESSAGE;
                 }
-            }
-            else if (alertType == General.ALERTTYPES.FOLLOW && user.hasFollowed)
-            {
-                alertType = General.ALERTTYPES.NONE;
             }
 
             TADAAlert alertToUse = (alertType == General.ALERTTYPES.NONE ? null : FindSuitableAlert(alertType, subObject));

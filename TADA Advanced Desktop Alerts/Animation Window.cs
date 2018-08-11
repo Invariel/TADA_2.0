@@ -15,12 +15,14 @@ namespace TADA_Advanced_Desktop_Alerts
         public List<PlayingAlert> pendingAlerts = new List<PlayingAlert>();
         public List<PlayingAlert> keyboardAlerts = new List<PlayingAlert>();
 
-        private PlayingAlert nowPlaying = null;
+        internal PlayingAlert nowPlaying = null;
 
         private List<Creation_Forms.MainWaypointForm> listeningDesignWindows = new List<Creation_Forms.MainWaypointForm>();
         private Played_Alerts playedAlerts;
 
         private Graphics myGraphics;
+
+        public bool pauseAlerts = false;
 
         public Graphics graphics
         {
@@ -118,6 +120,13 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public bool TogglePause()
+        {
+            pauseAlerts = !pauseAlerts;
+            DecideWhatToPlay();
+            return pauseAlerts;
+        }
+
         public void AddPlayingAlert(PlayingAlert playingAlert, bool isTest = false)
         {
             this.pendingAlerts.Add(playingAlert);
@@ -127,15 +136,15 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                // Then give it about five seconds.
-
+                // Give it a short rest between alerts.
+                System.Threading.Thread.Sleep(2500);
                 DecideWhatToPlay();
             }
         }
 
         private void DecideWhatToPlay ()
         {
-            if (this.nowPlaying == null)
+            if (this.nowPlaying == null && !this.pauseAlerts)
             {
                 if (keyboardAlerts.Count > 0)
                 {
