@@ -411,18 +411,36 @@ namespace TADA_Advanced_Desktop_Alerts
             alertText = (alertToUse.StreamerCount == 0 ? null : alertToUse.StreamerTexts[General.rng.Next(alertToUse.StreamerCount)]);
             alertResponse = (alertToUse.ViewerCount == 0 ? null : alertToUse.ViewerTexts[General.rng.Next(alertToUse.ViewerCount)]);
 
-            String alertTextMessage = alertText.Message;
-            String alertReadMessage = alertText.ReadMessage;
-
-            General.PerformSubstitutions(ref alertTextMessage, subObject);
-            General.PerformSubstitutions(ref alertReadMessage, subObject);
-
-            alertText.SetMessage(alertTextMessage);
-            alertText.SetReadMessage(alertReadMessage);
-
-            if (!String.IsNullOrEmpty(alertTextMessage) || !String.IsNullOrEmpty(alertReadMessage))
+            if (alertText != null)
             {
-                General.LogFile(String.Format("{0}; {1}", alertTextMessage ?? "(nil)", alertReadMessage ?? "(nil)"));
+                String alertTextMessage = alertText.Message;
+                String alertReadMessage = alertText.ReadMessage;
+
+                General.PerformSubstitutions(ref alertTextMessage, subObject);
+                General.PerformSubstitutions(ref alertReadMessage, subObject);
+
+                alertText.SetMessage(alertTextMessage);
+                alertText.SetReadMessage(alertReadMessage);
+
+                if (!String.IsNullOrEmpty(alertTextMessage) || !String.IsNullOrEmpty(alertReadMessage))
+                {
+                    General.LogFile(String.Format("{0}; {1}", alertTextMessage ?? "(nil)", alertReadMessage ?? "(nil)"));
+                }
+            }
+
+            if (alertResponse != null)
+            {
+                String message = subObject.Message ?? "";
+
+                if (!String.IsNullOrEmpty(message))
+                {
+                    // Remove blocked words.
+
+                    // Optionally remove cheer words.
+                }
+
+                alertResponse.SetMessage(message);
+                alertResponse.SetReadMessage(message);
             }
 
             ListedAlert alert = new ListedAlert(subObject.ViewerName,

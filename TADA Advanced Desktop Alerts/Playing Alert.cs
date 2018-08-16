@@ -12,6 +12,7 @@ namespace TADA_Advanced_Desktop_Alerts
     public class PlayingAlert
     {
         List<PlayingObject> playingObjects = new List<PlayingObject>();
+        List<PlayingObject> completedObjects = new List<PlayingObject>();
 
         TADAAlertImage alertImage;
         TADAAlertAudio alertAudio;
@@ -66,17 +67,19 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void RemoveObject (PlayingObject playingObject)
         {
-            this.playingObjects.Remove(playingObject);
-            MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
-            CheckCompleted();
+            if (!this.completedObjects.Contains(playingObject))
+            {
+                this.completedObjects.Add(playingObject);
+                this.playingObjects.Remove(playingObject);
+                MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
+                CheckCompleted();
+            }
         }
 
         public void CheckCompleted()
         {
-            if (playingObjects.Count == 0)
+            if (this.completedObjects.Intersect<PlayingObject>(this.playingObjects).Count() == this.playingObjects.Count())
             {
-                // Then this is done and can stop being played by the animation window.
-                // BUT DO NOT GET RID OF IT because it should be saved for history reasons.
                 MainTADAForm.mainTADAForm.AnimationWindow.AlertFinished(this);
             }
         }
