@@ -32,6 +32,12 @@ namespace TADA_Advanced_Desktop_Alerts
         private String channelID;
         private String channelName;
 
+        private Dictionary<String, List<String>> followers;
+        private bool followerFileWritten = false;
+        private String missingFollowers = "";
+
+        private String statusBar = "";
+
         private Dictionary<String, List<TADAAlert>> currentAlerts;
 
         private Dictionary<String, User> viewers = new Dictionary<String, User>();
@@ -94,11 +100,17 @@ namespace TADA_Advanced_Desktop_Alerts
             txt_Status.Text += ", channelID = " + channelID.ToString();
 
             pubSub = new TwitchPubSub();
-            pubSub.OnBitsReceived += (sender, e) => ReceivedTwitchEvent (General.ALERTTYPES.BITS, e);
+            pubSub.OnBitsReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
             pubSub.OnChannelCommerceReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.COMMERCE, e);
             pubSub.OnFollow += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
             pubSub.OnChannelSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
-            pubSub.OnListenResponse += OnListenEvent;
+            pubSub.OnListenResponse += (sender, e) =>
+            {
+                if (e.Successful)
+                {
+                    AppendToStatusBar("Connected for Bits, Game Purchases, Follows, Subscriptions.");
+                }
+            };
 
             pubSub.OnPubSubServiceConnected += delegate
             {
@@ -109,14 +121,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 pubSub.ListenToSubscriptions(channelID);
                 pubSub.SendTopics(twitchAPI.Settings.AccessToken);
 
-                if (txt_Status.InvokeRequired)
-                {
-
-                }
-                else
-                {
-                    txt_Status.Text = "Connected to PubSub";
-                }
+                AppendToStatusBar("Connected to PubSub.");
             };
 
 
@@ -130,9 +135,10 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnJoinedChannel += (sender, e) => { General.LogFile("Joined channel " + e.Channel, "twitchClient.txt"); };
 
             twitchClient.OnBeingHosted += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.HOST, e);
-            twitchClient.OnUserJoined += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.JOIN, e);
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
             twitchClient.OnRaidNotification += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.RAID, e);
+
+            GetAllFollowers();
 
             pubSub.Connect();
             twitchClient.Connect();
@@ -141,8 +147,95 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.SetPlayedAlerts(this);
         }
 
-        private void OnListenEvent(object sender, OnListenResponseArgs l)
+        private async void GetAllFollowers()
         {
+            this.followers = new Dictionary<String, List<string>>();
+
+            if (System.IO.File.Exists("followers.txt"))
+            {
+                String text = System.IO.File.ReadAllText("followers.txt");
+                AddFollowers(text.Split(' ').ToList<String>());
+                followerFileWritten = true;
+            }
+
+            await GetFollowers(null);
+            WriteFollowers();
+            followerFileWritten = true;
+
+            return;
+        }
+
+        private void WriteFollowers()
+        {
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter("followers.txt"))
+            {
+                foreach (String userList in this.followers.Keys)
+                {
+                    foreach (String userId in followers[userList])
+                    {
+                        file.Write("{0} ", userId);
+                    }
+                }
+            }
+        }
+
+        private bool FindFollower(String userId)
+        {
+            String substr = "0";
+            if (userId.Length > 5)
+            {
+                substr = userId.Substring(0, 5);
+            }
+            return this.followers.ContainsKey(substr) && this.followers[substr].Contains(userId);
+        }
+
+        private void AddFollowers(List<String> followerList)
+        {
+            foreach (String follower in followerList)
+            {
+                String substr = "0";
+
+                if (follower.Length > 5)
+                {
+                    substr = follower.Substring(0, 5);
+                }
+
+                if (!this.followers.ContainsKey(substr))
+                {
+                    this.followers.Add(substr, new List<string>());
+                }
+
+                if (!String.IsNullOrWhiteSpace(follower) && !this.followers[substr].Contains(follower))
+                {
+                    this.followers[substr].Add(follower);
+                }
+            }
+        }
+
+        private async Task GetFollowers(String after)
+        {
+            TwitchLib.Api.Models.Helix.Users.GetUsersFollows.GetUsersFollowsResponse followers = await twitchAPI.Users.helix.GetUsersFollowsAsync(after, null, 100, null, channelID);
+            if (followers.Follows.Length > 0)
+            {
+                List<String> followerList = new List<String>();
+                foreach (TwitchLib.Api.Models.Helix.Users.GetUsersFollows.Follow follower in followers.Follows)
+                {
+                    followerList.Add(follower.FromUserId);
+                }
+                AddFollowers(followerList);
+
+                if (followers.Pagination != null)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    await GetFollowers(followers.Pagination.Cursor);
+                }
+            }
+        }
+
+        private void AppendToStatusBar(String s)
+        {
+            this.statusBar += " " + s;
+
             // Don't do anything just yet.  This is where the Grizzly Tracker adds the event that was received to the status bar.
             if (this.InvokeRequired)
             {
@@ -205,25 +298,28 @@ namespace TADA_Advanced_Desktop_Alerts
                     OnFollowArgs eFollow = eventDetails as OnFollowArgs;
 
                     subObject.ViewerName = eFollow.DisplayName;
-
-                    bool hasRecordedFollow = false;
-                    if (viewers.ContainsKey(eFollow.UserId))
-                    {
-                        hasRecordedFollow = viewers[eFollow.UserId].hasFollowed;
-                    }
-
                     user = await GetUser(eFollow.UserId);
 
-                    if (hasRecordedFollow)
+                    if (FindFollower(eFollow.UserId))
                     {
                         alertType = General.ALERTTYPES.NONE;
                     }
+                    else
+                    {
+                        AddFollowers(new List<String> { eFollow.UserId });
 
-                    user.hasFollowed = true;
-                    break;
-                case General.ALERTTYPES.JOIN:
-                    OnUserJoinedArgs eJoin = eventDetails as OnUserJoinedArgs;
-                    user = await GetUser(await GetUserIdFromUsername(eJoin.Username));
+                        // And then add them to the followers file.
+                        this.missingFollowers += eFollow.UserId + " ";
+                        if (this.followerFileWritten)
+                        {
+                            using (System.IO.StreamWriter writer = new System.IO.StreamWriter("followers.txt", true))
+                            {
+                                writer.Write(missingFollowers);
+                            }
+                            this.missingFollowers = "";
+                        }
+                    }
+
                     break;
 /*
                 case General.ALERTTYPES.MACRO:
@@ -274,6 +370,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
+            subObject.AlertType = General.alertTypes[alertType];
+
             TADAAlert alertToUse = (alertType == General.ALERTTYPES.NONE ? null : FindSuitableAlert(alertType, subObject));
 
             if (alertToUse != null)
@@ -287,12 +385,9 @@ namespace TADA_Advanced_Desktop_Alerts
                     // Somehow mark that this user triggered the message at X time, and prevent it from playing again for some cooldown period.
                     // This may involve dropping <trigger message> from the message and checking again.
                 }
-                else if (alertType == General.ALERTTYPES.FOLLOW)
-                {
-                    user.hasFollowed = true;
-                }
 
                 PrepareAndPlayAlert(alertToUse, subObject, alertType);
+                MainTADAForm.mainTADAForm.webSocketServer.TellConnectedSockets(subObject);
             }
             /*
              * On receiving an event
@@ -354,7 +449,6 @@ namespace TADA_Advanced_Desktop_Alerts
             else
             {
                 TwitchLib.Api.Models.Helix.Users.GetUsers.User twitchUser = (await twitchAPI.Users.helix.GetUsersAsync(new List<String> { userId }, null, accessToken)).Users[0];
-                bool following = (await twitchAPI.Users.helix.GetUsersFollowsAsync(null, null, 1, userId, channelID)).TotalFollows == 1;
                 TwitchLib.Api.Models.v5.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
 
                 // Not setting lastSpoke because this isn't a guarantee.
@@ -364,7 +458,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     subscription = twitchSubscription,
                     subscriptionLastUpdated = DateTime.Now,
                     firstMessage = false,
-                    hasFollowed = following
                 };
 
                 try
@@ -592,7 +685,6 @@ namespace TADA_Advanced_Desktop_Alerts
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
         public DateTime lastSpoke;                  // Is this necessary?  Maybe not...
         public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
-        public bool hasFollowed;                    // Because you can unfollow and refollow and Twitch doesn't care it'll keep sending the message.
 
         public String UserID()
         {

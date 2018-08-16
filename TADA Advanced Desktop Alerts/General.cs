@@ -78,7 +78,7 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.NONE, "No alert." },
             { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
-            { ALERTTYPES.COMMERCE, "Commerce" },
+            { ALERTTYPES.COMMERCE, "Game Purchase" },
             { ALERTTYPES.FIRSTMESSAGE, "First Message" },
             { ALERTTYPES.FOLLOW, "Follow" },
             { ALERTTYPES.HOST, "Host" },
@@ -90,12 +90,52 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.SUBSCRIPTION, "Subscription" },
         };
 
+        internal static void ColourPicker(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        {
+            ColorDialog colorDialog = new ColorDialog()
+            {
+                Color = Color.FromArgb(
+                    Convert.ToInt32(alpha?.Value ?? 0),
+                    Convert.ToInt32(red?.Value ?? 0),
+                    Convert.ToInt32(green?.Value ?? 0),
+                    Convert.ToInt32(blue?.Value ?? 0)),
+                FullOpen = true
+            };
+
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Color color = colorDialog.Color;
+
+                // Only need to set RGBA because the RGBA numuds will call their OnValueChanged code that will then update the textbox.
+                if (red != null)
+                {
+                    red.Value = color.R;
+                }
+
+                if (green != null)
+                {
+                    green.Value = color.G;
+                }
+
+                if (blue != null)
+                {
+                    blue.Value = color.B;
+                }
+
+                if (alpha != null)
+                {
+                    alpha.Value = color.A;
+                }
+            }
+        }
+
         public static Dictionary<String, ALERTTYPES> alertStrings = new Dictionary<string, ALERTTYPES>()
         {
             { "No alert.", ALERTTYPES.NONE },
             { "Auto-Host", ALERTTYPES.AUTOHOST },
             { "Bits", ALERTTYPES.BITS },
-            { "Commerce", ALERTTYPES.COMMERCE },
+            { "Game Purchase", ALERTTYPES.COMMERCE },
             { "First Message", ALERTTYPES.FIRSTMESSAGE },
             { "Follow", ALERTTYPES.FOLLOW },
             { "Host", ALERTTYPES.HOST },
@@ -253,7 +293,7 @@ namespace TADA_Advanced_Desktop_Alerts
             milliseconds.Value = time.Milliseconds;
         }
 
-        public static Bitmap GenerateMessageBitmap(Color foreColor, Color backColor, Color outlineColor, Color transparentColor, Font textFont, float outlineWidth, Size maximumSize, SizeF padding, string text)
+        public static Bitmap GenerateMessageBitmap(Color foreColor, Color backColor, Color outlineColor, Font textFont, float outlineWidth, Size maximumSize, SizeF padding, string text)
         {
             SizeF textSize;
 
@@ -277,6 +317,8 @@ namespace TADA_Advanced_Desktop_Alerts
             using (SolidBrush backBrush = new SolidBrush(backColor))
             {
                 Graphics image = Graphics.FromImage(outputBitmap);
+                image.FillRectangle(backBrush, new Rectangle(new Point(0, 0), outputBitmap.Size));
+
                 System.Drawing.Drawing2D.GraphicsPath textOutline = new System.Drawing.Drawing2D.GraphicsPath();
                 textOutline.AddString(text, textFont.FontFamily, (int)textFont.Style, textFont.Size, new RectangleF(new PointF(padding.Width, padding.Height), textSize), textFormat);
 
@@ -290,10 +332,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
                 image.FillPath(foreBrush, textOutline);
 
-                if (transparentColor != Color.Empty && transparentColor != Color.Transparent)
-                {
-                    outputBitmap.MakeTransparent(transparentColor);
-                }
             }
 
             return outputBitmap;

@@ -32,7 +32,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         protected double totalTime = 0;
 
         protected SizeF itemSize = new SizeF(225, 150);
-        protected SizeF animationWindowSize = new SizeF(1280, 1024);
+        protected SizeF animationWindowSize;
 
         public MainWaypointForm()
         {
@@ -103,6 +103,18 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             btn_CopyWaypoints.Click += btn_CopyWaypoints_Click;
             btn_ShiftWaypoints.Click += btn_ShiftWaypoints_Click;
+
+            UpdateAnimationWindowSize();
+        }
+
+        private void UpdateAnimationWindowSize()
+        {
+            if (MainTADAForm.mainTADAForm != null && MainTADAForm.mainTADAForm.AnimationWindow != null)
+            {
+                float width = MainTADAForm.mainTADAForm.AnimationWindow?.ClientSize.Width ?? 1280.0f;
+                float height = MainTADAForm.mainTADAForm.AnimationWindow?.ClientSize.Height ?? 1080.0f;
+                animationWindowSize = new SizeF(width, height);
+            }
         }
 
         private void ConfigureToolTips()
@@ -242,6 +254,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     double time = tuple.Item1.duration * 1000 / tuple.Item1.frames;
                     if (tuple.Item1.change && time < MIN_SAFE_RESOLUTION && time > 0)
                     {
+                        // Only make this happen when focus is left.
                         MessageBox.Show(null,
                                         String.Format("Your {0} effect may take longer than desired because {1:F3} is lower than the safe {2} ms resolution.",
                                                      tuple.Item2,
@@ -640,14 +653,16 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 numud_P0Y.Enabled = false;
                 numud_P1X.Enabled = true;
                 numud_P1Y.Enabled = true;
-                numud_C0X.Enabled = true;
-                numud_C0Y.Enabled = true;
-                numud_C1X.Enabled = true;
-                numud_C1Y.Enabled = true;
+                numud_C0X.Enabled = w.IsCurve;
+                numud_C0Y.Enabled = w.IsCurve;
+                numud_C1X.Enabled = w.IsCurve;
+                numud_C1Y.Enabled = w.IsCurve;
             }
 
             radio_Curve.Checked = w.IsCurve;
             radio_Line.Checked = !w.IsCurve;
+
+
 
             chk_LeaveScreen.Checked = w.LeaveScreen;
             chk_BehindImage.Checked = w.BehindImage;

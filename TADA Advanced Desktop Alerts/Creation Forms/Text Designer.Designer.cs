@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextCreationForm));
             this.txt_DisplayedText = new System.Windows.Forms.TextBox();
             this.txt_NarratedText = new System.Windows.Forms.TextBox();
             this.grp_FontAndOutline = new System.Windows.Forms.GroupBox();
@@ -75,18 +76,6 @@
             this.numud_OutlineG = new System.Windows.Forms.NumericUpDown();
             this.numud_OutlineR = new System.Windows.Forms.NumericUpDown();
             this.cmb_OutlineColor = new System.Windows.Forms.ComboBox();
-            this.grp_TransparentColor = new System.Windows.Forms.GroupBox();
-            this.lbl_TransparentHex = new System.Windows.Forms.Label();
-            this.lbl_TransparentA = new System.Windows.Forms.Label();
-            this.lbl_TransparentB = new System.Windows.Forms.Label();
-            this.lbl_TransparentG = new System.Windows.Forms.Label();
-            this.lbl_TransparentR = new System.Windows.Forms.Label();
-            this.txt_TransparentHex = new System.Windows.Forms.TextBox();
-            this.numud_TransparentA = new System.Windows.Forms.NumericUpDown();
-            this.numud_TransparentB = new System.Windows.Forms.NumericUpDown();
-            this.numud_TransparentG = new System.Windows.Forms.NumericUpDown();
-            this.numud_TransparentR = new System.Windows.Forms.NumericUpDown();
-            this.cmb_TransparentColor = new System.Windows.Forms.ComboBox();
             this.pb_TextPreview = new System.Windows.Forms.PictureBox();
             this.lbl_DisplayedText = new System.Windows.Forms.Label();
             this.lbl_NarratedText = new System.Windows.Forms.Label();
@@ -107,6 +96,9 @@
             this.trk_VoiceVolume = new System.Windows.Forms.TrackBar();
             this.cmb_TTSVoice = new System.Windows.Forms.ComboBox();
             this.btn_TextSubstitution = new System.Windows.Forms.Button();
+            this.btn_ForePicker = new System.Windows.Forms.Button();
+            this.btn_BackPicker = new System.Windows.Forms.Button();
+            this.btn_OutlinePicker = new System.Windows.Forms.Button();
             this.grp_Coordinates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_C1Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_P1Y)).BeginInit();
@@ -141,11 +133,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineR)).BeginInit();
-            this.grp_TransparentColor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentA)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentG)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_TextPreview)).BeginInit();
             this.grp_TextDimensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).BeginInit();
@@ -165,7 +152,6 @@
             this.grp_CreateItem.Controls.Add(this.grp_TextDimensions);
             this.grp_CreateItem.Controls.Add(this.lbl_NarratedText);
             this.grp_CreateItem.Controls.Add(this.lbl_DisplayedText);
-            this.grp_CreateItem.Controls.Add(this.grp_TransparentColor);
             this.grp_CreateItem.Controls.Add(this.grp_OutlineColor);
             this.grp_CreateItem.Controls.Add(this.grp_BackColor);
             this.grp_CreateItem.Controls.Add(this.grp_ForeColor);
@@ -301,6 +287,7 @@
             // 
             // grp_ForeColor
             // 
+            this.grp_ForeColor.Controls.Add(this.btn_ForePicker);
             this.grp_ForeColor.Controls.Add(this.lbl_ForeHex);
             this.grp_ForeColor.Controls.Add(this.lbl_ForeA);
             this.grp_ForeColor.Controls.Add(this.lbl_ForeB);
@@ -314,7 +301,7 @@
             this.grp_ForeColor.Controls.Add(this.cmb_ForeColor);
             this.grp_ForeColor.Location = new System.Drawing.Point(5, 163);
             this.grp_ForeColor.Name = "grp_ForeColor";
-            this.grp_ForeColor.Size = new System.Drawing.Size(118, 183);
+            this.grp_ForeColor.Size = new System.Drawing.Size(160, 183);
             this.grp_ForeColor.TabIndex = 15;
             this.grp_ForeColor.TabStop = false;
             this.grp_ForeColor.Text = "Foreground Color";
@@ -322,7 +309,7 @@
             // lbl_ForeHex
             // 
             this.lbl_ForeHex.AutoSize = true;
-            this.lbl_ForeHex.Location = new System.Drawing.Point(1, 157);
+            this.lbl_ForeHex.Location = new System.Drawing.Point(7, 157);
             this.lbl_ForeHex.Name = "lbl_ForeHex";
             this.lbl_ForeHex.Size = new System.Drawing.Size(26, 13);
             this.lbl_ForeHex.TabIndex = 25;
@@ -333,40 +320,40 @@
             this.lbl_ForeA.AutoSize = true;
             this.lbl_ForeA.Location = new System.Drawing.Point(7, 130);
             this.lbl_ForeA.Name = "lbl_ForeA";
-            this.lbl_ForeA.Size = new System.Drawing.Size(14, 13);
+            this.lbl_ForeA.Size = new System.Drawing.Size(34, 13);
             this.lbl_ForeA.TabIndex = 23;
-            this.lbl_ForeA.Text = "A";
+            this.lbl_ForeA.Text = "Alpha";
             // 
             // lbl_ForeB
             // 
             this.lbl_ForeB.AutoSize = true;
             this.lbl_ForeB.Location = new System.Drawing.Point(7, 104);
             this.lbl_ForeB.Name = "lbl_ForeB";
-            this.lbl_ForeB.Size = new System.Drawing.Size(14, 13);
+            this.lbl_ForeB.Size = new System.Drawing.Size(28, 13);
             this.lbl_ForeB.TabIndex = 21;
-            this.lbl_ForeB.Text = "B";
+            this.lbl_ForeB.Text = "Blue";
             // 
             // lbl_ForeG
             // 
             this.lbl_ForeG.AutoSize = true;
             this.lbl_ForeG.Location = new System.Drawing.Point(7, 78);
             this.lbl_ForeG.Name = "lbl_ForeG";
-            this.lbl_ForeG.Size = new System.Drawing.Size(15, 13);
+            this.lbl_ForeG.Size = new System.Drawing.Size(36, 13);
             this.lbl_ForeG.TabIndex = 19;
-            this.lbl_ForeG.Text = "G";
+            this.lbl_ForeG.Text = "Green";
             // 
             // lbl_ForeR
             // 
             this.lbl_ForeR.AutoSize = true;
             this.lbl_ForeR.Location = new System.Drawing.Point(7, 52);
             this.lbl_ForeR.Name = "lbl_ForeR";
-            this.lbl_ForeR.Size = new System.Drawing.Size(15, 13);
+            this.lbl_ForeR.Size = new System.Drawing.Size(27, 13);
             this.lbl_ForeR.TabIndex = 17;
-            this.lbl_ForeR.Text = "R";
+            this.lbl_ForeR.Text = "Red";
             // 
             // txt_ForeHex
             // 
-            this.txt_ForeHex.Location = new System.Drawing.Point(29, 153);
+            this.txt_ForeHex.Location = new System.Drawing.Point(71, 153);
             this.txt_ForeHex.Name = "txt_ForeHex";
             this.txt_ForeHex.Size = new System.Drawing.Size(83, 20);
             this.txt_ForeHex.TabIndex = 26;
@@ -374,7 +361,7 @@
             // 
             // numud_ForeA
             // 
-            this.numud_ForeA.Location = new System.Drawing.Point(29, 126);
+            this.numud_ForeA.Location = new System.Drawing.Point(71, 126);
             this.numud_ForeA.Maximum = new decimal(new int[] {
             255,
             0,
@@ -391,7 +378,7 @@
             // 
             // numud_ForeB
             // 
-            this.numud_ForeB.Location = new System.Drawing.Point(29, 100);
+            this.numud_ForeB.Location = new System.Drawing.Point(71, 100);
             this.numud_ForeB.Maximum = new decimal(new int[] {
             255,
             0,
@@ -403,7 +390,7 @@
             // 
             // numud_ForeG
             // 
-            this.numud_ForeG.Location = new System.Drawing.Point(29, 74);
+            this.numud_ForeG.Location = new System.Drawing.Point(71, 74);
             this.numud_ForeG.Maximum = new decimal(new int[] {
             255,
             0,
@@ -415,7 +402,7 @@
             // 
             // numud_ForeR
             // 
-            this.numud_ForeR.Location = new System.Drawing.Point(29, 48);
+            this.numud_ForeR.Location = new System.Drawing.Point(71, 47);
             this.numud_ForeR.Maximum = new decimal(new int[] {
             255,
             0,
@@ -430,11 +417,12 @@
             this.cmb_ForeColor.FormattingEnabled = true;
             this.cmb_ForeColor.Location = new System.Drawing.Point(7, 20);
             this.cmb_ForeColor.Name = "cmb_ForeColor";
-            this.cmb_ForeColor.Size = new System.Drawing.Size(105, 21);
+            this.cmb_ForeColor.Size = new System.Drawing.Size(115, 21);
             this.cmb_ForeColor.TabIndex = 16;
             // 
             // grp_BackColor
             // 
+            this.grp_BackColor.Controls.Add(this.btn_BackPicker);
             this.grp_BackColor.Controls.Add(this.lbl_BackHex);
             this.grp_BackColor.Controls.Add(this.lbl_BackA);
             this.grp_BackColor.Controls.Add(this.lbl_BackB);
@@ -446,9 +434,9 @@
             this.grp_BackColor.Controls.Add(this.numud_BackG);
             this.grp_BackColor.Controls.Add(this.numud_BackR);
             this.grp_BackColor.Controls.Add(this.cmb_BackColor);
-            this.grp_BackColor.Location = new System.Drawing.Point(129, 163);
+            this.grp_BackColor.Location = new System.Drawing.Point(170, 163);
             this.grp_BackColor.Name = "grp_BackColor";
-            this.grp_BackColor.Size = new System.Drawing.Size(118, 183);
+            this.grp_BackColor.Size = new System.Drawing.Size(160, 183);
             this.grp_BackColor.TabIndex = 27;
             this.grp_BackColor.TabStop = false;
             this.grp_BackColor.Text = "Background Color";
@@ -456,7 +444,7 @@
             // lbl_BackHex
             // 
             this.lbl_BackHex.AutoSize = true;
-            this.lbl_BackHex.Location = new System.Drawing.Point(1, 157);
+            this.lbl_BackHex.Location = new System.Drawing.Point(7, 157);
             this.lbl_BackHex.Name = "lbl_BackHex";
             this.lbl_BackHex.Size = new System.Drawing.Size(26, 13);
             this.lbl_BackHex.TabIndex = 37;
@@ -467,40 +455,40 @@
             this.lbl_BackA.AutoSize = true;
             this.lbl_BackA.Location = new System.Drawing.Point(7, 130);
             this.lbl_BackA.Name = "lbl_BackA";
-            this.lbl_BackA.Size = new System.Drawing.Size(14, 13);
+            this.lbl_BackA.Size = new System.Drawing.Size(34, 13);
             this.lbl_BackA.TabIndex = 35;
-            this.lbl_BackA.Text = "A";
+            this.lbl_BackA.Text = "Alpha";
             // 
             // lbl_BackB
             // 
             this.lbl_BackB.AutoSize = true;
             this.lbl_BackB.Location = new System.Drawing.Point(7, 104);
             this.lbl_BackB.Name = "lbl_BackB";
-            this.lbl_BackB.Size = new System.Drawing.Size(14, 13);
+            this.lbl_BackB.Size = new System.Drawing.Size(28, 13);
             this.lbl_BackB.TabIndex = 33;
-            this.lbl_BackB.Text = "B";
+            this.lbl_BackB.Text = "Blue";
             // 
             // lbl_BackG
             // 
             this.lbl_BackG.AutoSize = true;
             this.lbl_BackG.Location = new System.Drawing.Point(7, 78);
             this.lbl_BackG.Name = "lbl_BackG";
-            this.lbl_BackG.Size = new System.Drawing.Size(15, 13);
+            this.lbl_BackG.Size = new System.Drawing.Size(36, 13);
             this.lbl_BackG.TabIndex = 31;
-            this.lbl_BackG.Text = "G";
+            this.lbl_BackG.Text = "Green";
             // 
             // lbl_BackR
             // 
             this.lbl_BackR.AutoSize = true;
             this.lbl_BackR.Location = new System.Drawing.Point(7, 52);
             this.lbl_BackR.Name = "lbl_BackR";
-            this.lbl_BackR.Size = new System.Drawing.Size(15, 13);
+            this.lbl_BackR.Size = new System.Drawing.Size(27, 13);
             this.lbl_BackR.TabIndex = 29;
-            this.lbl_BackR.Text = "R";
+            this.lbl_BackR.Text = "Red";
             // 
             // txt_BackHex
             // 
-            this.txt_BackHex.Location = new System.Drawing.Point(29, 153);
+            this.txt_BackHex.Location = new System.Drawing.Point(71, 153);
             this.txt_BackHex.Name = "txt_BackHex";
             this.txt_BackHex.Size = new System.Drawing.Size(83, 20);
             this.txt_BackHex.TabIndex = 38;
@@ -508,7 +496,7 @@
             // 
             // numud_BackA
             // 
-            this.numud_BackA.Location = new System.Drawing.Point(29, 126);
+            this.numud_BackA.Location = new System.Drawing.Point(71, 126);
             this.numud_BackA.Maximum = new decimal(new int[] {
             255,
             0,
@@ -525,7 +513,7 @@
             // 
             // numud_BackB
             // 
-            this.numud_BackB.Location = new System.Drawing.Point(29, 100);
+            this.numud_BackB.Location = new System.Drawing.Point(71, 100);
             this.numud_BackB.Maximum = new decimal(new int[] {
             255,
             0,
@@ -537,7 +525,7 @@
             // 
             // numud_BackG
             // 
-            this.numud_BackG.Location = new System.Drawing.Point(29, 74);
+            this.numud_BackG.Location = new System.Drawing.Point(71, 74);
             this.numud_BackG.Maximum = new decimal(new int[] {
             255,
             0,
@@ -549,7 +537,7 @@
             // 
             // numud_BackR
             // 
-            this.numud_BackR.Location = new System.Drawing.Point(29, 48);
+            this.numud_BackR.Location = new System.Drawing.Point(71, 48);
             this.numud_BackR.Maximum = new decimal(new int[] {
             255,
             0,
@@ -564,11 +552,12 @@
             this.cmb_BackColor.FormattingEnabled = true;
             this.cmb_BackColor.Location = new System.Drawing.Point(7, 20);
             this.cmb_BackColor.Name = "cmb_BackColor";
-            this.cmb_BackColor.Size = new System.Drawing.Size(105, 21);
+            this.cmb_BackColor.Size = new System.Drawing.Size(115, 21);
             this.cmb_BackColor.TabIndex = 28;
             // 
             // grp_OutlineColor
             // 
+            this.grp_OutlineColor.Controls.Add(this.btn_OutlinePicker);
             this.grp_OutlineColor.Controls.Add(this.lbl_OutlineHex);
             this.grp_OutlineColor.Controls.Add(this.lbl_OutlineA);
             this.grp_OutlineColor.Controls.Add(this.lbl_OutlineB);
@@ -580,9 +569,9 @@
             this.grp_OutlineColor.Controls.Add(this.numud_OutlineG);
             this.grp_OutlineColor.Controls.Add(this.numud_OutlineR);
             this.grp_OutlineColor.Controls.Add(this.cmb_OutlineColor);
-            this.grp_OutlineColor.Location = new System.Drawing.Point(253, 163);
+            this.grp_OutlineColor.Location = new System.Drawing.Point(335, 163);
             this.grp_OutlineColor.Name = "grp_OutlineColor";
-            this.grp_OutlineColor.Size = new System.Drawing.Size(118, 183);
+            this.grp_OutlineColor.Size = new System.Drawing.Size(160, 183);
             this.grp_OutlineColor.TabIndex = 39;
             this.grp_OutlineColor.TabStop = false;
             this.grp_OutlineColor.Text = "Outline Color";
@@ -590,7 +579,7 @@
             // lbl_OutlineHex
             // 
             this.lbl_OutlineHex.AutoSize = true;
-            this.lbl_OutlineHex.Location = new System.Drawing.Point(1, 157);
+            this.lbl_OutlineHex.Location = new System.Drawing.Point(7, 157);
             this.lbl_OutlineHex.Name = "lbl_OutlineHex";
             this.lbl_OutlineHex.Size = new System.Drawing.Size(26, 13);
             this.lbl_OutlineHex.TabIndex = 49;
@@ -601,40 +590,40 @@
             this.lbl_OutlineA.AutoSize = true;
             this.lbl_OutlineA.Location = new System.Drawing.Point(7, 130);
             this.lbl_OutlineA.Name = "lbl_OutlineA";
-            this.lbl_OutlineA.Size = new System.Drawing.Size(14, 13);
+            this.lbl_OutlineA.Size = new System.Drawing.Size(34, 13);
             this.lbl_OutlineA.TabIndex = 47;
-            this.lbl_OutlineA.Text = "A";
+            this.lbl_OutlineA.Text = "Alpha";
             // 
             // lbl_OutlineB
             // 
             this.lbl_OutlineB.AutoSize = true;
             this.lbl_OutlineB.Location = new System.Drawing.Point(7, 104);
             this.lbl_OutlineB.Name = "lbl_OutlineB";
-            this.lbl_OutlineB.Size = new System.Drawing.Size(14, 13);
+            this.lbl_OutlineB.Size = new System.Drawing.Size(28, 13);
             this.lbl_OutlineB.TabIndex = 45;
-            this.lbl_OutlineB.Text = "B";
+            this.lbl_OutlineB.Text = "Blue";
             // 
             // lbl_OutlineG
             // 
             this.lbl_OutlineG.AutoSize = true;
             this.lbl_OutlineG.Location = new System.Drawing.Point(7, 78);
             this.lbl_OutlineG.Name = "lbl_OutlineG";
-            this.lbl_OutlineG.Size = new System.Drawing.Size(15, 13);
+            this.lbl_OutlineG.Size = new System.Drawing.Size(36, 13);
             this.lbl_OutlineG.TabIndex = 43;
-            this.lbl_OutlineG.Text = "G";
+            this.lbl_OutlineG.Text = "Green";
             // 
             // lbl_OutlineR
             // 
             this.lbl_OutlineR.AutoSize = true;
             this.lbl_OutlineR.Location = new System.Drawing.Point(7, 52);
             this.lbl_OutlineR.Name = "lbl_OutlineR";
-            this.lbl_OutlineR.Size = new System.Drawing.Size(15, 13);
+            this.lbl_OutlineR.Size = new System.Drawing.Size(27, 13);
             this.lbl_OutlineR.TabIndex = 41;
-            this.lbl_OutlineR.Text = "R";
+            this.lbl_OutlineR.Text = "Red";
             // 
             // txt_OutlineHex
             // 
-            this.txt_OutlineHex.Location = new System.Drawing.Point(29, 153);
+            this.txt_OutlineHex.Location = new System.Drawing.Point(71, 153);
             this.txt_OutlineHex.Name = "txt_OutlineHex";
             this.txt_OutlineHex.Size = new System.Drawing.Size(83, 20);
             this.txt_OutlineHex.TabIndex = 50;
@@ -642,7 +631,7 @@
             // 
             // numud_OutlineA
             // 
-            this.numud_OutlineA.Location = new System.Drawing.Point(29, 126);
+            this.numud_OutlineA.Location = new System.Drawing.Point(71, 126);
             this.numud_OutlineA.Maximum = new decimal(new int[] {
             255,
             0,
@@ -659,7 +648,7 @@
             // 
             // numud_OutlineB
             // 
-            this.numud_OutlineB.Location = new System.Drawing.Point(29, 100);
+            this.numud_OutlineB.Location = new System.Drawing.Point(71, 100);
             this.numud_OutlineB.Maximum = new decimal(new int[] {
             255,
             0,
@@ -671,7 +660,7 @@
             // 
             // numud_OutlineG
             // 
-            this.numud_OutlineG.Location = new System.Drawing.Point(29, 74);
+            this.numud_OutlineG.Location = new System.Drawing.Point(71, 74);
             this.numud_OutlineG.Maximum = new decimal(new int[] {
             255,
             0,
@@ -683,7 +672,7 @@
             // 
             // numud_OutlineR
             // 
-            this.numud_OutlineR.Location = new System.Drawing.Point(29, 48);
+            this.numud_OutlineR.Location = new System.Drawing.Point(71, 48);
             this.numud_OutlineR.Maximum = new decimal(new int[] {
             255,
             0,
@@ -698,142 +687,8 @@
             this.cmb_OutlineColor.FormattingEnabled = true;
             this.cmb_OutlineColor.Location = new System.Drawing.Point(7, 20);
             this.cmb_OutlineColor.Name = "cmb_OutlineColor";
-            this.cmb_OutlineColor.Size = new System.Drawing.Size(105, 21);
+            this.cmb_OutlineColor.Size = new System.Drawing.Size(115, 21);
             this.cmb_OutlineColor.TabIndex = 40;
-            // 
-            // grp_TransparentColor
-            // 
-            this.grp_TransparentColor.Controls.Add(this.lbl_TransparentHex);
-            this.grp_TransparentColor.Controls.Add(this.lbl_TransparentA);
-            this.grp_TransparentColor.Controls.Add(this.lbl_TransparentB);
-            this.grp_TransparentColor.Controls.Add(this.lbl_TransparentG);
-            this.grp_TransparentColor.Controls.Add(this.lbl_TransparentR);
-            this.grp_TransparentColor.Controls.Add(this.txt_TransparentHex);
-            this.grp_TransparentColor.Controls.Add(this.numud_TransparentA);
-            this.grp_TransparentColor.Controls.Add(this.numud_TransparentB);
-            this.grp_TransparentColor.Controls.Add(this.numud_TransparentG);
-            this.grp_TransparentColor.Controls.Add(this.numud_TransparentR);
-            this.grp_TransparentColor.Controls.Add(this.cmb_TransparentColor);
-            this.grp_TransparentColor.Location = new System.Drawing.Point(377, 163);
-            this.grp_TransparentColor.Name = "grp_TransparentColor";
-            this.grp_TransparentColor.Size = new System.Drawing.Size(118, 183);
-            this.grp_TransparentColor.TabIndex = 51;
-            this.grp_TransparentColor.TabStop = false;
-            this.grp_TransparentColor.Text = "Transparent Color";
-            // 
-            // lbl_TransparentHex
-            // 
-            this.lbl_TransparentHex.AutoSize = true;
-            this.lbl_TransparentHex.Location = new System.Drawing.Point(1, 157);
-            this.lbl_TransparentHex.Name = "lbl_TransparentHex";
-            this.lbl_TransparentHex.Size = new System.Drawing.Size(26, 13);
-            this.lbl_TransparentHex.TabIndex = 61;
-            this.lbl_TransparentHex.Text = "Hex";
-            // 
-            // lbl_TransparentA
-            // 
-            this.lbl_TransparentA.AutoSize = true;
-            this.lbl_TransparentA.Location = new System.Drawing.Point(7, 130);
-            this.lbl_TransparentA.Name = "lbl_TransparentA";
-            this.lbl_TransparentA.Size = new System.Drawing.Size(14, 13);
-            this.lbl_TransparentA.TabIndex = 59;
-            this.lbl_TransparentA.Text = "A";
-            // 
-            // lbl_TransparentB
-            // 
-            this.lbl_TransparentB.AutoSize = true;
-            this.lbl_TransparentB.Location = new System.Drawing.Point(7, 104);
-            this.lbl_TransparentB.Name = "lbl_TransparentB";
-            this.lbl_TransparentB.Size = new System.Drawing.Size(14, 13);
-            this.lbl_TransparentB.TabIndex = 57;
-            this.lbl_TransparentB.Text = "B";
-            // 
-            // lbl_TransparentG
-            // 
-            this.lbl_TransparentG.AutoSize = true;
-            this.lbl_TransparentG.Location = new System.Drawing.Point(7, 78);
-            this.lbl_TransparentG.Name = "lbl_TransparentG";
-            this.lbl_TransparentG.Size = new System.Drawing.Size(15, 13);
-            this.lbl_TransparentG.TabIndex = 55;
-            this.lbl_TransparentG.Text = "G";
-            // 
-            // lbl_TransparentR
-            // 
-            this.lbl_TransparentR.AutoSize = true;
-            this.lbl_TransparentR.Location = new System.Drawing.Point(7, 52);
-            this.lbl_TransparentR.Name = "lbl_TransparentR";
-            this.lbl_TransparentR.Size = new System.Drawing.Size(15, 13);
-            this.lbl_TransparentR.TabIndex = 53;
-            this.lbl_TransparentR.Text = "R";
-            // 
-            // txt_TransparentHex
-            // 
-            this.txt_TransparentHex.Location = new System.Drawing.Point(29, 153);
-            this.txt_TransparentHex.Name = "txt_TransparentHex";
-            this.txt_TransparentHex.Size = new System.Drawing.Size(83, 20);
-            this.txt_TransparentHex.TabIndex = 62;
-            this.txt_TransparentHex.Text = "#000000FF";
-            // 
-            // numud_TransparentA
-            // 
-            this.numud_TransparentA.Location = new System.Drawing.Point(29, 126);
-            this.numud_TransparentA.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_TransparentA.Name = "numud_TransparentA";
-            this.numud_TransparentA.Size = new System.Drawing.Size(83, 20);
-            this.numud_TransparentA.TabIndex = 60;
-            this.numud_TransparentA.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            // 
-            // numud_TransparentB
-            // 
-            this.numud_TransparentB.Location = new System.Drawing.Point(29, 100);
-            this.numud_TransparentB.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_TransparentB.Name = "numud_TransparentB";
-            this.numud_TransparentB.Size = new System.Drawing.Size(83, 20);
-            this.numud_TransparentB.TabIndex = 58;
-            // 
-            // numud_TransparentG
-            // 
-            this.numud_TransparentG.Location = new System.Drawing.Point(29, 74);
-            this.numud_TransparentG.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_TransparentG.Name = "numud_TransparentG";
-            this.numud_TransparentG.Size = new System.Drawing.Size(83, 20);
-            this.numud_TransparentG.TabIndex = 56;
-            // 
-            // numud_TransparentR
-            // 
-            this.numud_TransparentR.Location = new System.Drawing.Point(29, 48);
-            this.numud_TransparentR.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_TransparentR.Name = "numud_TransparentR";
-            this.numud_TransparentR.Size = new System.Drawing.Size(83, 20);
-            this.numud_TransparentR.TabIndex = 54;
-            // 
-            // cmb_TransparentColor
-            // 
-            this.cmb_TransparentColor.FormattingEnabled = true;
-            this.cmb_TransparentColor.Location = new System.Drawing.Point(7, 20);
-            this.cmb_TransparentColor.Name = "cmb_TransparentColor";
-            this.cmb_TransparentColor.Size = new System.Drawing.Size(105, 21);
-            this.cmb_TransparentColor.TabIndex = 52;
             // 
             // pb_TextPreview
             // 
@@ -1030,7 +885,7 @@
             this.trk_VoiceVolume.Name = "trk_VoiceVolume";
             this.trk_VoiceVolume.Size = new System.Drawing.Size(122, 45);
             this.trk_VoiceVolume.TabIndex = 76;
-            this.trk_VoiceVolume.TickFrequency = 10;
+            this.trk_VoiceVolume.TickFrequency = 50;
             // 
             // cmb_TTSVoice
             // 
@@ -1049,10 +904,38 @@
             this.btn_TextSubstitution.Text = "&Text Substitution Cheat Sheet";
             this.btn_TextSubstitution.UseVisualStyleBackColor = true;
             // 
+            // btn_ForePicker
+            // 
+            this.btn_ForePicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_ForePicker.Image")));
+            this.btn_ForePicker.Location = new System.Drawing.Point(132, 19);
+            this.btn_ForePicker.Name = "btn_ForePicker";
+            this.btn_ForePicker.Size = new System.Drawing.Size(22, 23);
+            this.btn_ForePicker.TabIndex = 89;
+            this.btn_ForePicker.UseVisualStyleBackColor = true;
+            // 
+            // btn_BackPicker
+            // 
+            this.btn_BackPicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_BackPicker.Image")));
+            this.btn_BackPicker.Location = new System.Drawing.Point(132, 19);
+            this.btn_BackPicker.Name = "btn_BackPicker";
+            this.btn_BackPicker.Size = new System.Drawing.Size(22, 23);
+            this.btn_BackPicker.TabIndex = 90;
+            this.btn_BackPicker.UseVisualStyleBackColor = true;
+            // 
+            // btn_OutlinePicker
+            // 
+            this.btn_OutlinePicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_OutlinePicker.Image")));
+            this.btn_OutlinePicker.Location = new System.Drawing.Point(132, 19);
+            this.btn_OutlinePicker.Name = "btn_OutlinePicker";
+            this.btn_OutlinePicker.Size = new System.Drawing.Size(22, 23);
+            this.btn_OutlinePicker.TabIndex = 91;
+            this.btn_OutlinePicker.UseVisualStyleBackColor = true;
+            // 
             // TextCreationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1279, 711);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TextCreationForm";
             this.Text = "Configure Text";
             this.grp_Coordinates.ResumeLayout(false);
@@ -1100,12 +983,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineG)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineR)).EndInit();
-            this.grp_TransparentColor.ResumeLayout(false);
-            this.grp_TransparentColor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentA)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentG)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_TransparentR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_TextPreview)).EndInit();
             this.grp_TextDimensions.ResumeLayout(false);
             this.grp_TextDimensions.PerformLayout();
@@ -1143,18 +1020,6 @@
         private System.Windows.Forms.Label lbl_NarratedText;
         private System.Windows.Forms.Label lbl_DisplayedText;
         private System.Windows.Forms.PictureBox pb_TextPreview;
-        private System.Windows.Forms.GroupBox grp_TransparentColor;
-        private System.Windows.Forms.Label lbl_TransparentHex;
-        private System.Windows.Forms.Label lbl_TransparentA;
-        private System.Windows.Forms.Label lbl_TransparentB;
-        private System.Windows.Forms.Label lbl_TransparentG;
-        private System.Windows.Forms.Label lbl_TransparentR;
-        private System.Windows.Forms.TextBox txt_TransparentHex;
-        private System.Windows.Forms.NumericUpDown numud_TransparentA;
-        private System.Windows.Forms.NumericUpDown numud_TransparentB;
-        private System.Windows.Forms.NumericUpDown numud_TransparentG;
-        private System.Windows.Forms.NumericUpDown numud_TransparentR;
-        private System.Windows.Forms.ComboBox cmb_TransparentColor;
         private System.Windows.Forms.GroupBox grp_OutlineColor;
         private System.Windows.Forms.Label lbl_OutlineHex;
         private System.Windows.Forms.Label lbl_OutlineA;
@@ -1202,5 +1067,8 @@
         private System.Windows.Forms.Label lbl_Font;
         private System.Windows.Forms.Button btn_TextSubstitution;
         private System.Windows.Forms.Button btn_TestVoice;
+        private System.Windows.Forms.Button btn_OutlinePicker;
+        private System.Windows.Forms.Button btn_BackPicker;
+        private System.Windows.Forms.Button btn_ForePicker;
     }
 }

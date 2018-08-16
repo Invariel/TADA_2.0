@@ -657,7 +657,6 @@ namespace TADA_Advanced_Desktop_Alerts
         public Color Foreground { get; set; }
         public Color Background { get; set; }
         public Color Outline { get; set; }
-        public Color Transparent { get; set; }
 
         public Size Dimensions { get; set; }
         public Size Padding { get; set; }
@@ -666,7 +665,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public TADAAlertText(String message, String readMessage, String ttsVoice, int ttsVolume, Font font, float outlineWidth, Color foreground, Color background, Color outline, Color transparent, Size dimensions, Size padding, WaypointContainer waypoints)
+        public TADAAlertText(String message, String readMessage, String ttsVoice, int ttsVolume, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
         {
             this.Message = message;
             this.ReadMessage = readMessage;
@@ -679,7 +678,6 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Foreground = foreground;
             this.Background = background;
             this.Outline = outline;
-            this.Transparent = transparent;
 
             this.Dimensions = dimensions;
             this.Padding = padding;
@@ -761,9 +759,6 @@ namespace TADA_Advanced_Desktop_Alerts
                         case "Outline":
                             this.Outline = color;
                             break;
-                        case "Transparent":
-                            this.Transparent = color;
-                            break;
                     }
                 }
                 else if (reader.IsStartElement("Size"))
@@ -807,7 +802,6 @@ namespace TADA_Advanced_Desktop_Alerts
             XmlHelper.WriteColor(writer, Foreground, "Foreground");
             XmlHelper.WriteColor(writer, Background, "Background");
             XmlHelper.WriteColor(writer, Outline, "Outline");
-            XmlHelper.WriteColor(writer, Transparent, "Transparent");
 
             XmlHelper.WriteSize(writer, Dimensions, "Dimensions");
             XmlHelper.WriteSize(writer, Padding, "Padding");
@@ -901,6 +895,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public class SubstitutionObject
     {
+        public String AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
         public int Amount { get; set; } = 0;
         public String Message { get; set; } = "";
         public String RecipientName { get; set; } = "";

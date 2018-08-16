@@ -32,26 +32,26 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dg_Played = new System.Windows.Forms.DataGridView();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dg_Pending = new System.Windows.Forms.DataGridView();
-            this.btn_Pause = new System.Windows.Forms.Button();
-            this.btn_Replay = new System.Windows.Forms.Button();
-            this.btn_Stop = new System.Windows.Forms.Button();
-            this.txt_Status = new System.Windows.Forms.TextBox();
             this.viewerNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertMessageDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.playedAlertBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dg_Pending = new System.Windows.Forms.DataGridView();
             this.viewerNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertMessageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pendingAlertBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btn_Pause = new System.Windows.Forms.Button();
+            this.btn_Replay = new System.Windows.Forms.Button();
+            this.btn_Stop = new System.Windows.Forms.Button();
+            this.txt_Status = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Pending)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -105,6 +105,32 @@
             this.dg_Played.Size = new System.Drawing.Size(548, 120);
             this.dg_Played.TabIndex = 0;
             // 
+            // viewerNameDataGridViewTextBoxColumn1
+            // 
+            this.viewerNameDataGridViewTextBoxColumn1.DataPropertyName = "ViewerName";
+            this.viewerNameDataGridViewTextBoxColumn1.HeaderText = "Viewer Name";
+            this.viewerNameDataGridViewTextBoxColumn1.MinimumWidth = 100;
+            this.viewerNameDataGridViewTextBoxColumn1.Name = "viewerNameDataGridViewTextBoxColumn1";
+            // 
+            // alertTypeDataGridViewTextBoxColumn1
+            // 
+            this.alertTypeDataGridViewTextBoxColumn1.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn1.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn1.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn1.Name = "alertTypeDataGridViewTextBoxColumn1";
+            // 
+            // alertMessageDataGridViewTextBoxColumn1
+            // 
+            this.alertMessageDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertMessageDataGridViewTextBoxColumn1.DataPropertyName = "AlertMessage";
+            this.alertMessageDataGridViewTextBoxColumn1.HeaderText = "Alert Message";
+            this.alertMessageDataGridViewTextBoxColumn1.Name = "alertMessageDataGridViewTextBoxColumn1";
+            // 
+            // playedAlertBindingSource
+            // 
+            this.playedAlertBindingSource.AllowNew = true;
+            this.playedAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dg_Pending);
@@ -133,6 +159,33 @@
             this.dg_Pending.Name = "dg_Pending";
             this.dg_Pending.Size = new System.Drawing.Size(548, 120);
             this.dg_Pending.TabIndex = 0;
+            // 
+            // viewerNameDataGridViewTextBoxColumn
+            // 
+            this.viewerNameDataGridViewTextBoxColumn.DataPropertyName = "ViewerName";
+            this.viewerNameDataGridViewTextBoxColumn.HeaderText = "Viewer Name";
+            this.viewerNameDataGridViewTextBoxColumn.MinimumWidth = 100;
+            this.viewerNameDataGridViewTextBoxColumn.Name = "viewerNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // alertMessageDataGridViewTextBoxColumn
+            // 
+            this.alertMessageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertMessageDataGridViewTextBoxColumn.DataPropertyName = "AlertMessage";
+            this.alertMessageDataGridViewTextBoxColumn.HeaderText = "Alert Message";
+            this.alertMessageDataGridViewTextBoxColumn.Name = "alertMessageDataGridViewTextBoxColumn";
+            // 
+            // pendingAlertBindingSource
+            // 
+            this.pendingAlertBindingSource.AllowNew = true;
+            this.pendingAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
             // 
             // btn_Pause
             // 
@@ -175,59 +228,6 @@
             this.txt_Status.Size = new System.Drawing.Size(554, 20);
             this.txt_Status.TabIndex = 5;
             // 
-            // viewerNameDataGridViewTextBoxColumn1
-            // 
-            this.viewerNameDataGridViewTextBoxColumn1.DataPropertyName = "ViewerName";
-            this.viewerNameDataGridViewTextBoxColumn1.HeaderText = "Viewer Name";
-            this.viewerNameDataGridViewTextBoxColumn1.MinimumWidth = 100;
-            this.viewerNameDataGridViewTextBoxColumn1.Name = "viewerNameDataGridViewTextBoxColumn1";
-            // 
-            // alertTypeDataGridViewTextBoxColumn1
-            // 
-            this.alertTypeDataGridViewTextBoxColumn1.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn1.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn1.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn1.Name = "alertTypeDataGridViewTextBoxColumn1";
-            // 
-            // alertMessageDataGridViewTextBoxColumn1
-            // 
-            this.alertMessageDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertMessageDataGridViewTextBoxColumn1.DataPropertyName = "AlertMessage";
-            this.alertMessageDataGridViewTextBoxColumn1.HeaderText = "Alert Message";
-            this.alertMessageDataGridViewTextBoxColumn1.Name = "alertMessageDataGridViewTextBoxColumn1";
-            // 
-            // playedAlertBindingSource
-            // 
-            this.playedAlertBindingSource.AllowNew = true;
-            this.playedAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
-            // 
-            // viewerNameDataGridViewTextBoxColumn
-            // 
-            this.viewerNameDataGridViewTextBoxColumn.DataPropertyName = "ViewerName";
-            this.viewerNameDataGridViewTextBoxColumn.HeaderText = "Viewer Name";
-            this.viewerNameDataGridViewTextBoxColumn.MinimumWidth = 100;
-            this.viewerNameDataGridViewTextBoxColumn.Name = "viewerNameDataGridViewTextBoxColumn";
-            // 
-            // alertTypeDataGridViewTextBoxColumn
-            // 
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // alertMessageDataGridViewTextBoxColumn
-            // 
-            this.alertMessageDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertMessageDataGridViewTextBoxColumn.DataPropertyName = "AlertMessage";
-            this.alertMessageDataGridViewTextBoxColumn.HeaderText = "Alert Message";
-            this.alertMessageDataGridViewTextBoxColumn.Name = "alertMessageDataGridViewTextBoxColumn";
-            // 
-            // pendingAlertBindingSource
-            // 
-            this.pendingAlertBindingSource.AllowNew = true;
-            this.pendingAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
-            // 
             // Played_Alerts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -240,9 +240,9 @@
             this.tableLayoutPanel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_Pending)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).EndInit();
             this.ResumeLayout(false);
 

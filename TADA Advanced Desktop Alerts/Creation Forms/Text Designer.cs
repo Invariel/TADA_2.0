@@ -18,7 +18,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private PlayingAlert playingAlert;
 
-        public TextCreationForm(TADAAlertText alertText, bool isStreamer) : base()
+        public TextCreationForm(TADAAlertText alertText, bool isStreamer, bool isNewObject) : base()
         {
             InitializeComponent();
 
@@ -26,8 +26,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             if (!isStreamer)
             {
-                txt_DisplayedText.Enabled = false;
-                txt_NarratedText.Enabled = false;
+                txt_DisplayedText.ReadOnly = true;
+                txt_NarratedText.ReadOnly = true;
             }
 
             // Fonts
@@ -68,7 +68,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             cmb_ForeColor.DataSource = foreColours;
             cmb_BackColor.DataSource = backColours;
             cmb_OutlineColor.DataSource = outlineColours;
-            cmb_TransparentColor.DataSource = transparentColours;
 
             // Voices
             List<String> installedVoices = new List<string>();
@@ -89,13 +88,20 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             tab_Effects.TabPages.Remove(tab_Volume);
 
             ConfigureCallbacks();
-            if (this.alertText == null)
+
+            if (isNewObject)
             {
                 GenerateRandomValues();
             }
             else
             {
                 LoadExisting(this.alertText);
+            }
+
+            if (!isStreamer)
+            {
+                txt_DisplayedText.Text = "Viewer Message Goes Here";
+                txt_NarratedText.Text = "Viewer Message Goes Here";
             }
         }
 
@@ -117,11 +123,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_OutlineG.Value = rng.Next(0, 256);
             numud_OutlineB.Value = rng.Next(0, 256);
 
-            numud_TransparentA.Value = rng.Next(0, 256);
-            numud_TransparentR.Value = rng.Next(0, 256);
-            numud_TransparentG.Value = rng.Next(0, 256);
-            numud_TransparentB.Value = rng.Next(0, 256);
-
             numud_Size.Value = rng.Next(12, 37);
             cmb_Font.SelectedIndex = rng.Next(cmb_Font.Items.Count);
         }
@@ -138,6 +139,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_ForeG.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_ForeG, cmb_ForeColor, numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA, txt_ForeHex); });
             numud_ForeB.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_ForeB, cmb_ForeColor, numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA, txt_ForeHex); });
             txt_ForeHex.TextChanged += new EventHandler((sender, e) => { UpdateFields(txt_ForeHex, cmb_ForeColor, numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA, txt_ForeHex); });
+            btn_ForePicker.Click += (sender, e) => General.ColourPicker(numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA);
 
             cmb_BackColor.SelectedValueChanged += new EventHandler((sender, e) => { UpdateFields(cmb_BackColor, cmb_BackColor, numud_BackR, numud_BackG, numud_BackB, numud_BackA, txt_BackHex); });
             numud_BackA.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_BackA, cmb_BackColor, numud_BackR, numud_BackG, numud_BackB, numud_BackA, txt_BackHex); });
@@ -145,6 +147,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_BackG.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_BackG, cmb_BackColor, numud_BackR, numud_BackG, numud_BackB, numud_BackA, txt_BackHex); });
             numud_BackB.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_BackB, cmb_BackColor, numud_BackR, numud_BackG, numud_BackB, numud_BackA, txt_BackHex); });
             txt_BackHex.TextChanged += new EventHandler((sender, e) => { UpdateFields(txt_BackHex, cmb_BackColor, numud_BackR, numud_BackG, numud_BackB, numud_BackA, txt_BackHex); });
+            btn_BackPicker.Click += (sender, e) => General.ColourPicker(numud_BackR, numud_BackG, numud_BackB, numud_BackA);
 
             cmb_OutlineColor.SelectedValueChanged += new EventHandler((sender, e) => { UpdateFields(cmb_OutlineColor, cmb_OutlineColor, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA, txt_OutlineHex); });
             numud_OutlineA.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_OutlineA, cmb_OutlineColor, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA, txt_OutlineHex); });
@@ -152,13 +155,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_OutlineG.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_OutlineG, cmb_OutlineColor, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA, txt_OutlineHex); });
             numud_OutlineB.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_OutlineB, cmb_OutlineColor, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA, txt_OutlineHex); });
             txt_OutlineHex.TextChanged += new EventHandler((sender, e) => { UpdateFields(txt_OutlineHex, cmb_OutlineColor, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA, txt_OutlineHex); });
-
-            cmb_TransparentColor.SelectedValueChanged += new EventHandler((sender, e) => { UpdateFields(cmb_TransparentColor, cmb_TransparentColor, numud_TransparentR, numud_TransparentG, numud_TransparentB, numud_TransparentA, txt_TransparentHex); });
-            numud_TransparentA.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_TransparentA, cmb_TransparentColor, numud_TransparentR, numud_TransparentG, numud_TransparentB, numud_TransparentA, txt_TransparentHex); });
-            numud_TransparentR.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_TransparentR, cmb_TransparentColor, numud_TransparentR, numud_TransparentG, numud_TransparentB, numud_TransparentA, txt_TransparentHex); });
-            numud_TransparentG.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_TransparentG, cmb_TransparentColor, numud_TransparentR, numud_TransparentG, numud_TransparentB, numud_TransparentA, txt_TransparentHex); });
-            numud_TransparentB.ValueChanged += new EventHandler((sender, e) => { UpdateFields(numud_TransparentB, cmb_TransparentColor, numud_TransparentR, numud_TransparentG, numud_TransparentB, numud_TransparentA, txt_TransparentHex); });
-            txt_TransparentHex.TextChanged += new EventHandler((sender, e) => { UpdateFields(txt_TransparentHex, cmb_TransparentColor, numud_TransparentR, numud_TransparentG, numud_TransparentB, numud_TransparentA, txt_TransparentHex); });
+            btn_OutlinePicker.Click += (sender, e) => General.ColourPicker(numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA);
 
             numud_MaxSizeX.ValueChanged += UpdateSize;
             numud_MaxSizeY.ValueChanged += UpdateSize;
@@ -272,7 +269,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             Color foreColor = ColorFromDecimals(numud_ForeA.Value, numud_ForeR.Value, numud_ForeG.Value, numud_ForeB.Value);
             Color backColor = ColorFromDecimals(numud_BackA.Value, numud_BackR.Value, numud_BackG.Value, numud_BackB.Value);
             Color outlineColor = ColorFromDecimals(numud_OutlineA.Value, numud_OutlineR.Value, numud_OutlineG.Value, numud_OutlineB.Value);
-            Color transparentColor = ColorFromDecimals(numud_TransparentA.Value, numud_TransparentR.Value, numud_TransparentG.Value, numud_TransparentB.Value);
             float outlineWidth = (float)numud_Outline.Value;
             Size maximumSize = new Size(Convert.ToInt32(numud_MaxSizeX.Value), Convert.ToInt32(numud_MaxSizeY.Value));
             SizeF padding = new SizeF((float)numud_PaddingX.Value, (float)numud_PaddingY.Value);
@@ -284,7 +280,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 previewBitmap.Dispose();
             }
 
-            previewBitmap = General.GenerateMessageBitmap(foreColor, backColor, outlineColor, transparentColor, textFont, outlineWidth, maximumSize, padding, text);
+            previewBitmap = General.GenerateMessageBitmap(foreColor, backColor, outlineColor, textFont, outlineWidth, maximumSize, padding, text);
 
             pb_TextPreview.Image = previewBitmap;
             pb_TextPreview.Update();
@@ -329,14 +325,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             Color foreground = ColorFromDecimals(numud_ForeA.Value, numud_ForeR.Value, numud_ForeG.Value, numud_ForeB.Value);
             Color background = ColorFromDecimals(numud_BackA.Value, numud_BackR.Value, numud_BackG.Value, numud_BackB.Value);
             Color outline = ColorFromDecimals(numud_OutlineA.Value, numud_OutlineR.Value, numud_OutlineG.Value, numud_OutlineB.Value);
-            Color transparent = ColorFromDecimals(numud_TransparentA.Value, numud_TransparentR.Value, numud_TransparentG.Value, numud_TransparentB.Value);
             Size dimensions = new Size(Convert.ToInt32(numud_MaxSizeX.Value), Convert.ToInt32(numud_MaxSizeY.Value));
             Size padding = new Size(Convert.ToInt32(numud_PaddingX.Value), Convert.ToInt32(numud_PaddingY.Value));
             WaypointContainer waypointContainer = GetWaypoints();
 
             if (this.alertText == null)
             {
-                this.alertText = new TADAAlertText(message, readMessage, ttsVoice, ttsVolume, font, outlineWidth, foreground, background, outline, transparent, dimensions, padding, waypointContainer);
+                this.alertText = new TADAAlertText(message, readMessage, ttsVoice, ttsVolume, font, outlineWidth, foreground, background, outline, dimensions, padding, waypointContainer);
             }
             else
             {
@@ -349,7 +344,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 this.alertText.Foreground = foreground;
                 this.alertText.Background = background;
                 this.alertText.Outline = outline;
-                this.alertText.Transparent = transparent;
                 this.alertText.Dimensions = dimensions;
                 this.alertText.Padding = padding;
                 this.alertText.Waypoints = waypointContainer;
@@ -400,14 +394,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     numud_OutlineB.Value = alertText.Outline.B;
                 }
 
-                if (alertText.Transparent != Color.Empty)
-                {
-                    numud_TransparentA.Value = alertText.Transparent.A;
-                    numud_TransparentR.Value = alertText.Transparent.R;
-                    numud_TransparentG.Value = alertText.Transparent.G;
-                    numud_TransparentB.Value = alertText.Transparent.B;
-                }
-
                 if (alertText.Dimensions.Width > 0)
                 {
                     numud_MaxSizeX.Value = alertText.Dimensions.Width;
@@ -453,8 +439,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 ViewerName = "LeiRavni"
             };
 
-            String message = alertText.Message;
-            String readMessage = alertText.ReadMessage;
+            String message = (String.IsNullOrEmpty(alertText.Message) ? "Viewer's Message Here" : alertText.Message);
+            String readMessage = (String.IsNullOrEmpty(alertText.ReadMessage) ? "Viewer's Message Here" : alertText.ReadMessage);
 
             General.PerformSubstitutions(ref message, subObject);
             General.PerformSubstitutions(ref readMessage, subObject);

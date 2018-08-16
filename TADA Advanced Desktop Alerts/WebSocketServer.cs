@@ -14,15 +14,24 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         private HttpListener httpListener;
         private Dictionary<General.ALERTTYPES, List<WebSocket>> listeningWebSockets = new Dictionary<General.ALERTTYPES, List<WebSocket>>();
+        private Dictionary<WebSocket, List<General.ALERTTYPES>> listeningWebSocketDictionary = new Dictionary<WebSocket, List<General.ALERTTYPES>>();
+
+        Thread listeningThread;
 
         public WebSocketServer(int port = 21573)
+        {
+            listeningThread = new Thread(() => InitializeWebSocketServer(port));
+            listeningThread.Start();
+        }
+
+        private void InitializeWebSocketServer(int port = 21573)
         {
             General.LogFile(String.Format("Starting WebSocket on port {0}.", port));
 
             httpListener = new HttpListener();
-            httpListener.Prefixes.Add(String.Format("http://localhost:{0}", port));
-            httpListener.Prefixes.Add(String.Format("http://127.0.0.1:{0}", port));
-            httpListener.Prefixes.Add(String.Format("http://[::1]:{0}", port));
+            httpListener.Prefixes.Add(String.Format("http://localhost:{0}/", port));
+            httpListener.Prefixes.Add(String.Format("http://127.0.0.1:{0}/", port));
+            httpListener.Prefixes.Add(String.Format("http://[::1]:{0}/", port));
 
             httpListener.Start();
             ListenForever();
@@ -44,25 +53,34 @@ namespace TADA_Advanced_Desktop_Alerts
                         {
                             foreach (String type in context.Request.Headers["Sec-WebSocket-Protocol"].Split(','))
                             {
+                                String formattedType = type.Trim().Replace('_', ' ');
                                 // Semi-convoluted way of getting the requested alert types.
-                                if (General.alertTypes.ContainsValue(type.Trim()))
+                                if (General.alertTypes.ContainsValue(formattedType))
                                 {
-                                    listeningTypes.Add(General.alertStrings[type.Trim()]);
+                                    listeningTypes.Add(General.alertStrings[formattedType]);
                                 }
                             }
                         }
 
                         if (listeningTypes.Count > 0)
                         {
-                            HttpListenerWebSocketContext webSocketContext = await context.AcceptWebSocketAsync(null);
+                            HttpListenerWebSocketContext webSocketContext = await context.AcceptWebSocketAsync("success");
+                            WebSocket webSocket = webSocketContext.WebSocket;
+
                             foreach (General.ALERTTYPES alertType in listeningTypes)
                             {
-                                listeningWebSockets[alertType].Add(webSocketContext.WebSocket);
+                                if (!listeningWebSockets.ContainsKey(alertType))
+                                {
+                                    listeningWebSockets.Add(alertType, new List<WebSocket>());
+                                }
+
+                                listeningWebSockets[alertType].Add(webSocket);
                             }
+                            listeningWebSocketDictionary.Add(webSocket, listeningTypes);
                         }
                         else
                         {
-                            HttpListenerWebSocketContext webSocketContext = await context.AcceptWebSocketAsync(null);
+                            HttpListenerWebSocketContext webSocketContext = await context.AcceptWebSocketAsync("false");
                             await webSocketContext.WebSocket.CloseOutputAsync(WebSocketCloseStatus.ProtocolError, "No valid SubProtocols.", CancellationToken.None);
                         }
                     }
@@ -83,6 +101,33 @@ namespace TADA_Advanced_Desktop_Alerts
         private void SendMessage(WebSocket webSocket, String message)
         {
             webSocket.SendAsync(new ArraySegment<byte>(System.Text.Encoding.ASCII.GetBytes(message)), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
+        public async void TellConnectedSockets(SubstitutionObject subObject)
+        {
+            General.ALERTTYPES alertType = General.alertStrings[subObject.AlertType];
+            if (listeningWebSockets.ContainsKey(alertType) && listeningWebSockets[alertType].Count > 0)
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                String serializedObject = serializer.Serialize(subObject);
+                foreach (WebSocket webSocket in listeningWebSockets[alertType])
+                {
+                    if (webSocket.State == WebSocketState.CloseSent || webSocket.State == WebSocketState.Closed)
+                    {
+                        foreach (General.ALERTTYPES type in listeningWebSocketDictionary[webSocket])
+                        {
+                            listeningWebSockets[type].Remove(webSocket);
+                        }
+                        listeningWebSocketDictionary.Remove(webSocket);
+
+                        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "WebSocket closed remotely.", CancellationToken.None);
+                    }
+                    else
+                    {
+                        SendMessage(webSocket, serializedObject);
+                    }
+                }
+            }
         }
 
         public void StopListening()

@@ -111,6 +111,7 @@ namespace TADA_Advanced_Desktop_Alerts
             numud_bgR.ValueChanged += UpdateARGB;
             numud_bgG.ValueChanged += UpdateARGB;
             numud_bgB.ValueChanged += UpdateARGB;
+            btn_ColourPicker.Click += (sender, e) => General.ColourPicker(numud_bgR, numud_bgG, numud_bgB, null);
 
             txt_AccessToken.TextChanged += PasswordMask;
 
@@ -118,6 +119,8 @@ namespace TADA_Advanced_Desktop_Alerts
             dg_Alerts.RowsAdded += DefaultButtonValue;
 
             btn_Connect.Click += ConnectToTwitch;
+
+            this.FormClosing += StopWebSocketServer;
 
             if (System.IO.File.Exists(DEFAULT_MANIFEST))
             {
@@ -154,6 +157,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
             _mainTADAForm = this;
             webSocketServer = new WebSocketServer(21573);
+        }
+
+        private void StopWebSocketServer(object sender, FormClosingEventArgs e)
+        {
+            webSocketServer.StopListening();
         }
 
         private void GetAccessToken(object sender, EventArgs e)
@@ -506,8 +514,19 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void ConnectToTwitch(object sender, EventArgs e)
         {
-            Played_Alerts playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
-            playedAlerts.Show();
+            if (!String.IsNullOrEmpty(txt_ChannelName.Text) && !String.IsNullOrEmpty(txt_AccessToken.Text))
+            {
+                Played_Alerts playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+                playedAlerts.Show();
+            }
+            else if (String.IsNullOrEmpty(txt_ChannelName.Text))
+            {
+                MessageBox.Show(null, "No channel name entered.", "No Channel Entered", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (String.IsNullOrEmpty(txt_AccessToken.Text))
+            {
+                MessageBox.Show(null, "No Oauth code supplied.", "No Oauth Code", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public Dictionary<String, List<TADAAlert>> snapshotAlerts ()

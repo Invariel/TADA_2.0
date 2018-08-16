@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageCreationForm));
             this.lbl_Filename = new System.Windows.Forms.Label();
             this.txt_Filename = new System.Windows.Forms.TextBox();
             this.btn_FilenameBrowse = new System.Windows.Forms.Button();
@@ -918,6 +919,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(1279, 711);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ImageCreationForm";
             this.Text = "Configure Image";
             this.grp_Coordinates.ResumeLayout(false);

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainTADAForm));
             this.numud_bgB = new System.Windows.Forms.NumericUpDown();
             this.numud_bgG = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
@@ -46,7 +47,10 @@
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
+            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
             this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
@@ -56,28 +60,23 @@
             this.txt_ChannelName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btn_Connect = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.txt_Status = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_Manifest = new System.Windows.Forms.TabPage();
             this.tab_Other = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.btn_ColourPicker = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tab_Manifest.SuspendLayout();
             this.tab_Other.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // numud_bgB
@@ -172,7 +171,7 @@
             // 
             this.txt_BackgroundARGB.Location = new System.Drawing.Point(110, 23);
             this.txt_BackgroundARGB.Name = "txt_BackgroundARGB";
-            this.txt_BackgroundARGB.Size = new System.Drawing.Size(96, 20);
+            this.txt_BackgroundARGB.Size = new System.Drawing.Size(67, 20);
             this.txt_BackgroundARGB.TabIndex = 11;
             this.txt_BackgroundARGB.Text = "#FFFFFF";
             // 
@@ -253,7 +252,7 @@
             this.btn_SaveManifest.Name = "btn_SaveManifest";
             this.btn_SaveManifest.Size = new System.Drawing.Size(120, 23);
             this.btn_SaveManifest.TabIndex = 2;
-            this.btn_SaveManifest.Text = "Save Manifest";
+            this.btn_SaveManifest.Text = "Save Alerts";
             this.btn_SaveManifest.UseVisualStyleBackColor = true;
             // 
             // btn_LoadManifest
@@ -262,7 +261,7 @@
             this.btn_LoadManifest.Name = "btn_LoadManifest";
             this.btn_LoadManifest.Size = new System.Drawing.Size(120, 23);
             this.btn_LoadManifest.TabIndex = 3;
-            this.btn_LoadManifest.Text = "Load Manifest";
+            this.btn_LoadManifest.Text = "Load Alerts";
             this.btn_LoadManifest.UseVisualStyleBackColor = true;
             // 
             // btn_MergeManifest
@@ -271,7 +270,7 @@
             this.btn_MergeManifest.Name = "btn_MergeManifest";
             this.btn_MergeManifest.Size = new System.Drawing.Size(120, 23);
             this.btn_MergeManifest.TabIndex = 4;
-            this.btn_MergeManifest.Text = "Merge Manifest";
+            this.btn_MergeManifest.Text = "Merge Alerts";
             this.btn_MergeManifest.UseVisualStyleBackColor = true;
             // 
             // dg_Alerts
@@ -288,6 +287,22 @@
             this.dg_Alerts.Size = new System.Drawing.Size(494, 184);
             this.dg_Alerts.TabIndex = 5;
             // 
+            // alertNameDataGridViewTextBoxColumn
+            // 
+            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
+            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
+            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
             // Edit
             // 
             this.Edit.HeaderText = "New / Edit";
@@ -296,6 +311,10 @@
             this.Edit.Text = "Edit";
             this.Edit.UseColumnTextForButtonValue = true;
             this.Edit.Width = 75;
+            // 
+            // alertBindingSource
+            // 
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 
@@ -382,28 +401,6 @@
             this.btn_Connect.Text = "Connect!";
             this.btn_Connect.UseVisualStyleBackColor = true;
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.txt_Status);
-            this.groupBox3.Location = new System.Drawing.Point(12, 270);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(514, 35);
-            this.groupBox3.TabIndex = 18;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Status";
-            // 
-            // txt_Status
-            // 
-            this.txt_Status.BackColor = System.Drawing.SystemColors.Control;
-            this.txt_Status.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt_Status.Enabled = false;
-            this.txt_Status.Location = new System.Drawing.Point(7, 13);
-            this.txt_Status.Name = "txt_Status";
-            this.txt_Status.Size = new System.Drawing.Size(510, 13);
-            this.txt_Status.TabIndex = 0;
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tab_Manifest);
@@ -443,6 +440,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btn_ColourPicker);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.btn_ShowHideAnimationWindow);
             this.groupBox1.Controls.Add(this.numud_AnimationWindowSizeY);
@@ -463,33 +461,21 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Animation Window Settings";
             // 
-            // alertNameDataGridViewTextBoxColumn
+            // btn_ColourPicker
             // 
-            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
-            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
-            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
-            // 
-            // alertTypeDataGridViewTextBoxColumn
-            // 
-            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
+            this.btn_ColourPicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_ColourPicker.Image")));
+            this.btn_ColourPicker.Location = new System.Drawing.Point(184, 23);
+            this.btn_ColourPicker.Name = "btn_ColourPicker";
+            this.btn_ColourPicker.Size = new System.Drawing.Size(22, 23);
+            this.btn_ColourPicker.TabIndex = 16;
+            this.btn_ColourPicker.UseVisualStyleBackColor = true;
             // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 306);
+            this.ClientSize = new System.Drawing.Size(538, 276);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.groupBox3);
             this.Name = "MainTADAForm";
             this.Text = "TADA Advanced Desktop Alerts";
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).EndInit();
@@ -498,16 +484,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tab_Manifest.ResumeLayout(false);
             this.tab_Other.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -540,8 +524,6 @@
         private System.Windows.Forms.Button btn_Connect;
         private System.Windows.Forms.Button btn_LoadChannelDetails;
         private System.Windows.Forms.Button btn_SaveChannelDetails;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.TextBox txt_Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertTypeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
@@ -549,6 +531,7 @@
         private System.Windows.Forms.TabPage tab_Manifest;
         private System.Windows.Forms.TabPage tab_Other;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btn_ColourPicker;
     }
 }
 

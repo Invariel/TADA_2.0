@@ -196,6 +196,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private void btn_PlayPause_Click(object sender, EventArgs e)
         {
+            me.Volume = trk_Volume.Value;
+            me.Balance = trk_Balance.Value / 100.0;
+
             if (this.isPlaying)
             {
                 TimeSpan position = me.Position;
@@ -214,8 +217,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             else
             {
                 me.Position = General.TimeSpanFromDecimals(numud_PositionMS.Value, numud_PositionS.Value, numud_PositionM.Value, numud_PositionH.Value, 0);
-                me.Volume = trk_Volume.Value;
-                me.Balance = trk_Balance.Value / 100.0;
                 me.Play();
                 this.isPlaying = true;
             }

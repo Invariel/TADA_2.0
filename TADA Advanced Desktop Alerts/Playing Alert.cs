@@ -197,7 +197,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         protected double bezierTotalTime = 0;
 
-        protected double fps = 30;
+        protected double fps = 60;  // The 60 FPS build for GGG.
 
         protected bool redrawMe = false;
 
@@ -810,8 +810,19 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.redrawMe = false;
             }
 
-            this.elementHost.Location = new System.Drawing.Point(Convert.ToInt32(Math.Floor(this.position.X)), Convert.ToInt32(Math.Floor(this.position.Y)));
-            this.elementHost.PerformLayout();
+            if (this.elementHost.InvokeRequired)
+            {
+                this.elementHost.Invoke((Action)(() =>
+                {
+                    this.elementHost.Location = new System.Drawing.Point(Convert.ToInt32(Math.Floor(this.position.X)), Convert.ToInt32(Math.Floor(this.position.Y)));
+                    this.elementHost.PerformLayout();
+                }));
+            }
+            else
+            {
+                this.elementHost.Location = new System.Drawing.Point(Convert.ToInt32(Math.Floor(this.position.X)), Convert.ToInt32(Math.Floor(this.position.Y)));
+                this.elementHost.PerformLayout();
+            }
         }
 
         private bool TestComplete()
@@ -834,7 +845,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (!String.IsNullOrEmpty(alertText.Message))
             {
-                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.Transparent, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage());
+                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage());
             }
 
             if (alertText.TTSVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.GetReadMessage()))

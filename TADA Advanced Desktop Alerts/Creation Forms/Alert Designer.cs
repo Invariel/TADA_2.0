@@ -120,12 +120,14 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 DataGridView dataGrid = (sender as DataGridView);
                 BindingSource bindingSource = dataGrid.DataSource as BindingSource;
                 object editObject;
+                bool isNewObject = false;
 
                 DataGridView dgView = (sender as DataGridView);
                 if (dataGrid.Rows[e.RowIndex].IsNewRow)
                 {
                     bindingSource.CancelEdit();
                     editObject = bindingSource.AddNew();
+                    isNewObject = true;
                 }
                 else
                 {
@@ -152,7 +154,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentStreamerForm == null || this.currentStreamerForm.IsDisposed)
                     {
-                        this.currentStreamerForm = new TextCreationForm(editObject as TADAAlertText, true);
+                        this.currentStreamerForm = new TextCreationForm(editObject as TADAAlertText, true, isNewObject);
                     }
                     this.currentStreamerForm.Show();
                 }
@@ -160,7 +162,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentViewerForm == null || this.currentViewerForm.IsDisposed)
                     {
-                        this.currentViewerForm = new TextCreationForm(editObject as TADAAlertText, false);
+                        this.currentViewerForm = new TextCreationForm(editObject as TADAAlertText, false, isNewObject);
                     }
                     this.currentViewerForm.Show();
                 }
