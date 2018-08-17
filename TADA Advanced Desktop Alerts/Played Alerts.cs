@@ -42,6 +42,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private Dictionary<String, User> viewers = new Dictionary<String, User>();
 
+        private List<String> cheermotes = new List<String>();
+
         public Played_Alerts(String channelName, String accessToken)
         {
             InitializeComponent();
@@ -92,12 +94,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async void Connect()
         {
-            txt_Status.Text = "Trying to Connect()";
-
             var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { channelName }, twitchAPI.Settings.AccessToken);
             channelID = result.Users[0].Id;
-
-            txt_Status.Text += ", channelID = " + channelID.ToString();
 
             pubSub = new TwitchPubSub();
             pubSub.OnBitsReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
@@ -111,6 +109,9 @@ namespace TADA_Advanced_Desktop_Alerts
                     AppendToStatusBar("Connected for Bits, Game Purchases, Follows, Subscriptions.");
                 }
             };
+            // Handle these, usually with a reconnection attempt or seventy thousand.
+            //pubSub.OnPubSubServiceClosed;
+            //pubSub.OnPubSubServiceError;
 
             pubSub.OnPubSubServiceConnected += delegate
             {
@@ -142,6 +143,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
             pubSub.Connect();
             twitchClient.Connect();
+
+            TwitchLib.Api.Models.v5.Bits.Cheermotes requestedCheermotes = await twitchAPI.Bits.v5.GetCheermotesAsync(channelID);
+            foreach (TwitchLib.Api.Models.v5.Bits.Action action in requestedCheermotes.Actions)
+            {
+                this.cheermotes.Add(action.Prefix.ToLower());
+            }
 
             currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
             MainTADAForm.mainTADAForm.AnimationWindow.SetPlayedAlerts(this);
@@ -237,6 +244,8 @@ namespace TADA_Advanced_Desktop_Alerts
             this.statusBar += " " + s;
 
             // Don't do anything just yet.  This is where the Grizzly Tracker adds the event that was received to the status bar.
+            // Have each component turn on (switch from red to green/blue/something not-red) its associated light.
+            /*
             if (this.InvokeRequired)
             {
                 this.Invoke((Action)(() => { this.txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions."; }));
@@ -245,6 +254,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions.";
             }
+            */
         }
 
         public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
@@ -292,6 +302,8 @@ namespace TADA_Advanced_Desktop_Alerts
                     subObject.Message = eMessage.ChatMessage.Message;
                     subObject.ViewerName = eMessage.ChatMessage.Username;
 
+                    var f = eMessage.ChatMessage.EmoteSet;
+
                     user = await GetUser(eMessage.ChatMessage.UserId);
                     break;
                 case General.ALERTTYPES.FOLLOW:
@@ -321,12 +333,12 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
 
                     break;
-/*
-                case General.ALERTTYPES.MACRO:
-                    // This doesn't do any setup.  The trick below is to pick the appropriate
-                    // alert based on the keypress.  Or, better, it should be handled elsewhere.
-                    return;
-*/
+                /*
+                                case General.ALERTTYPES.MACRO:
+                                    // This doesn't do any setup.  The trick below is to pick the appropriate
+                                    // alert based on the keypress.  Or, better, it should be handled elsewhere.
+                                    return;
+                */
                 case General.ALERTTYPES.RAID:
                     OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
 
@@ -343,6 +355,11 @@ namespace TADA_Advanced_Desktop_Alerts
                     subObject.Message = eSubscription.Subscription.SubMessage.Message;
                     subObject.RecipientName = eSubscription.Subscription.RecipientName;
                     subObject.ViewerName = eSubscription.Subscription.Username;
+
+                    if (!String.IsNullOrEmpty(eSubscription.Subscription.RecipientName))
+                    {
+                        alertType = General.ALERTTYPES.SUBGIFT;
+                    }
 
                     UpdateUserSubscription(await GetUser(alertType == General.ALERTTYPES.SUBGIFT ? eSubscription.Subscription.RecipientId : eSubscription.Subscription.UserId));
 

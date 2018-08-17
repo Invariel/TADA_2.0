@@ -113,7 +113,17 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void Play ()
         {
-            foreach (PlayingObject o in this.playingObjects)
+            List<PlayingObject> remainingObjects = new List<PlayingObject>();
+
+            foreach (PlayingObject playableObject in this.playingObjects)
+            {
+                if (!this.completedObjects.Contains(playableObject))
+                {
+                    remainingObjects.Add(playableObject);
+                }
+            }
+
+            foreach (PlayingObject o in remainingObjects)
             {
                 o.Start();
             }
@@ -692,28 +702,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.mediaElement.Balance = this.balance;
                 this.mediaElement.Volume = this.volume;
             }));
-/*
-            System.Threading.Thread thread = new System.Threading.Thread(() =>
-            {
-                this.elementHost = new System.Windows.Forms.Integration.ElementHost();
-                this.mediaElement = new System.Windows.Controls.MediaElement();
 
-                this.elementHost.Child = this.mediaElement;
-
-                this.elementHost.Width = this.initialSize.Width;
-                this.elementHost.Height = this.initialSize.Height;
-                this.mediaElement.Width = this.initialSize.Width;
-                this.mediaElement.Height = this.initialSize.Height;
-
-                this.mediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
-                this.mediaElement.Source = new Uri(this.mediaFile);
-                this.mediaElement.Balance = this.balance;
-                this.mediaElement.Volume = this.volume;
-            });
-
-            thread.SetApartmentState(System.Threading.ApartmentState.STA);
-            thread.Start();
-*/
             // Waypoint volume is from 0 to 100, while mediaElement volume is from 0 to 1.
             this.volume /= 100.0;
 
@@ -770,9 +759,12 @@ namespace TADA_Advanced_Desktop_Alerts
                 await (Task.Delay(thisRun));
             } while (this.duration.Ticks > 0);
 
-            this.mediaElement.Stop();
-            this.isPlaying = false;
-            this.Dispose();
+            MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
+            {
+                this.mediaElement.Stop();
+                this.isPlaying = false;
+                this.Dispose();
+            }));
         }
 
         protected override void ConfigureWaypoint()
