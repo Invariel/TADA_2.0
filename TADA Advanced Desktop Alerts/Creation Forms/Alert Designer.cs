@@ -84,32 +84,24 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             BindingSource imageSource = dg_Images.DataSource as BindingSource;
             BindingSource streamerSource = dg_StreamerMessages.DataSource as BindingSource;
             BindingSource viewerSource = dg_ViewerMessages.DataSource as BindingSource;
+            BindingSource conditionSource = dg_Conditions.DataSource as BindingSource;
 
             cmb_AlertType.Text = this.currentAlert.AlertType;
             txt_AlertName.Text = this.currentAlert.AlertName;
 
-            audioSource.Clear();
-            foreach (TADAAlertAudio a in this.currentAlert.Audios)
-            {
-                audioSource.Add(a);
-            }
+            UpdateBindingSource(audioSource, this.currentAlert.Audios);
+            UpdateBindingSource(imageSource, this.currentAlert.Images);
+            UpdateBindingSource(streamerSource, this.currentAlert.StreamerTexts);
+            UpdateBindingSource(viewerSource, this.currentAlert.ViewerTexts);
+            UpdateBindingSource(conditionSource, this.currentAlert.Conditions);
+        }
 
-            imageSource.Clear();
-            foreach (TADAAlertImage i in this.currentAlert.Images)
+        private void UpdateBindingSource<T>(BindingSource bindingSource, List<T> elements)
+        {
+            bindingSource.Clear();
+            foreach (T element in elements)
             {
-                imageSource.Add(i);
-            }
-
-            streamerSource.Clear();
-            foreach (TADAAlertText t in this.currentAlert.StreamerTexts)
-            {
-                streamerSource.Add(t);
-            }
-
-            viewerSource.Clear();
-            foreach (TADAAlertText t in this.currentAlert.ViewerTexts)
-            {
-                viewerSource.Add(t);
+                bindingSource.Add(element);
             }
         }
 

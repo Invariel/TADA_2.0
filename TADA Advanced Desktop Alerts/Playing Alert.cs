@@ -210,7 +210,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         protected double bezierTotalTime = 0;
 
-        protected double fps = 60;  // The 60 FPS build for GGG.
+        protected double fps = (MainTADAForm.mainTADAForm.rad_60FPS.Checked ? 60 : 30);  // The 60 FPS build for GGG.
 
         protected bool redrawMe = false;
 

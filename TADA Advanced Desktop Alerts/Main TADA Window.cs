@@ -49,9 +49,6 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         const String TADAVersion = "0.0.5";
 
-        const String DEFAULT_OAUTH = "./oauth.cfg";
-        const String DEFAULT_MANIFEST = "./default.tada";
-
         bool blockUpdates = false;
 
         Creation_Forms.AlertCreationForm _alertCreationForm;
@@ -122,11 +119,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.FormClosing += StopWebSocketServer;
 
-            if (System.IO.File.Exists(DEFAULT_MANIFEST))
+            if (System.IO.File.Exists(General.SUBDIRECTORY + General.DEFAULT_ALERTS))
             {
                 try
                 {
-                    LoadManifest(DEFAULT_MANIFEST);
+                    LoadManifest(General.SUBDIRECTORY + General.DEFAULT_ALERTS);
                 }
                 catch (Exception e)
                 {
@@ -141,9 +138,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
-            if (System.IO.File.Exists(DEFAULT_OAUTH))
+            if (System.IO.File.Exists(General.SUBDIRECTORY + General.DEFAULT_OAUTH))
             {
-                LoadChannelConfiguration(DEFAULT_OAUTH);
+                LoadChannelConfiguration(General.SUBDIRECTORY + General.DEFAULT_OAUTH);
             }
 
             blockUpdates = true;
@@ -516,6 +513,9 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             if (!String.IsNullOrEmpty(txt_ChannelName.Text) && !String.IsNullOrEmpty(txt_AccessToken.Text))
             {
+                rad_30FPS.Enabled = false;
+                rad_60FPS.Enabled = false;
+
                 Played_Alerts playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
                 playedAlerts.Show();
             }

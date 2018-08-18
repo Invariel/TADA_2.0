@@ -47,7 +47,10 @@
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
+            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
             this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
@@ -62,28 +65,27 @@
             this.tab_Other = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btn_ColourPicker = new System.Windows.Forms.Button();
-            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tab_Banned = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.rad_30FPS = new System.Windows.Forms.RadioButton();
+            this.rad_60FPS = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tab_Manifest.SuspendLayout();
             this.tab_Other.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.tab_Banned.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -295,6 +297,22 @@
             this.dg_Alerts.Size = new System.Drawing.Size(494, 184);
             this.dg_Alerts.TabIndex = 5;
             // 
+            // alertNameDataGridViewTextBoxColumn
+            // 
+            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
+            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
+            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
             // Edit
             // 
             this.Edit.HeaderText = "New / Edit";
@@ -303,6 +321,10 @@
             this.Edit.Text = "Edit";
             this.Edit.UseColumnTextForButtonValue = true;
             this.Edit.Width = 75;
+            // 
+            // alertBindingSource
+            // 
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 
@@ -459,26 +481,6 @@
             this.btn_ColourPicker.TabIndex = 16;
             this.btn_ColourPicker.UseVisualStyleBackColor = true;
             // 
-            // alertNameDataGridViewTextBoxColumn
-            // 
-            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
-            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
-            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
-            // 
-            // alertTypeDataGridViewTextBoxColumn
-            // 
-            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
-            // 
             // tab_Banned
             // 
             this.tab_Banned.Controls.Add(this.checkBox3);
@@ -495,56 +497,10 @@
             this.tab_Banned.Text = "Banned Words";
             this.tab_Banned.UseVisualStyleBackColor = true;
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(47, 3);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(401, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Banned words will be removed from all viewer messages, and will not be read aloud" +
-    ".";
-            // 
-            // label9
-            // 
-            this.label9.Location = new System.Drawing.Point(6, 38);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(97, 32);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Banned Terms (comma separated)";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(119, 25);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(367, 59);
-            this.textBox1.TabIndex = 2;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(119, 182);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(112, 17);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Block Cheermotes";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(119, 205);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(193, 17);
-            this.checkBox2.TabIndex = 4;
-            this.checkBox2.Text = "Block my Cheermote (Partners only)";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
+            this.checkBox3.Enabled = false;
             this.checkBox3.Location = new System.Drawing.Point(119, 159);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(118, 17);
@@ -552,11 +508,87 @@
             this.checkBox3.Text = "Don\'t Read Emotes";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Location = new System.Drawing.Point(119, 205);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(193, 17);
+            this.checkBox2.TabIndex = 4;
+            this.checkBox2.Text = "Block my Cheermote (Partners only)";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(119, 182);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(112, 17);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "Block Cheermotes";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(119, 25);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(367, 59);
+            this.textBox1.TabIndex = 2;
+            // 
+            // label9
+            // 
+            this.label9.Enabled = false;
+            this.label9.Location = new System.Drawing.Point(6, 38);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(97, 32);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Banned Terms (comma separated)";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Enabled = false;
+            this.label8.Location = new System.Drawing.Point(47, 3);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(401, 13);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Banned words will be removed from all viewer messages, and will not be read aloud" +
+    ".";
+            // 
+            // rad_30FPS
+            // 
+            this.rad_30FPS.AutoSize = true;
+            this.rad_30FPS.Checked = true;
+            this.rad_30FPS.Location = new System.Drawing.Point(392, 269);
+            this.rad_30FPS.Name = "rad_30FPS";
+            this.rad_30FPS.Size = new System.Drawing.Size(60, 17);
+            this.rad_30FPS.TabIndex = 20;
+            this.rad_30FPS.TabStop = true;
+            this.rad_30FPS.Text = "30 FPS";
+            this.rad_30FPS.UseVisualStyleBackColor = true;
+            // 
+            // rad_60FPS
+            // 
+            this.rad_60FPS.AutoSize = true;
+            this.rad_60FPS.Location = new System.Drawing.Point(459, 269);
+            this.rad_60FPS.Name = "rad_60FPS";
+            this.rad_60FPS.Size = new System.Drawing.Size(60, 17);
+            this.rad_60FPS.TabIndex = 21;
+            this.rad_60FPS.Text = "60 FPS";
+            this.rad_60FPS.UseVisualStyleBackColor = true;
+            // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 287);
+            this.ClientSize = new System.Drawing.Size(538, 291);
+            this.Controls.Add(this.rad_60FPS);
+            this.Controls.Add(this.rad_30FPS);
             this.Controls.Add(this.tabControl1);
             this.Name = "MainTADAForm";
             this.Text = "TADA Advanced Desktop Alerts";
@@ -566,6 +598,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -573,10 +606,10 @@
             this.tab_Other.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.tab_Banned.ResumeLayout(false);
             this.tab_Banned.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -623,6 +656,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox checkBox3;
+        internal System.Windows.Forms.RadioButton rad_30FPS;
+        internal System.Windows.Forms.RadioButton rad_60FPS;
     }
 }
 

@@ -21,6 +21,11 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         public const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
         public const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
+
+        public const String SUBDIRECTORY = @"config/";
+        public const String DEFAULT_OAUTH = @"oauth.cfg";
+        public const String DEFAULT_ALERTS = @"default.tada";
+
         public static Random rng = new Random();
 
         public static Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String> TwitchLibSubPlanToString = new Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String>() {

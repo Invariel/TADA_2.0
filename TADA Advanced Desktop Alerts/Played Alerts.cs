@@ -418,10 +418,10 @@ namespace TADA_Advanced_Desktop_Alerts
         private void PrepareAndPlayAlert (TADAAlert alertToUse, SubstitutionObject subObject, General.ALERTTYPES alertType)
         {
             // Now that an alert has been decided on, pick pieces, and then add it to the to-play list.
-            TADAAlertImage alertImage;
-            TADAAlertAudio alertAudio;
-            TADAAlertText alertText;
-            TADAAlertText alertResponse;
+            TADAAlertImage alertImage = null;
+            TADAAlertAudio alertAudio = null;
+            TADAAlertText alertText = null;
+            TADAAlertText alertResponse = null;
 
             alertImage = (alertToUse.ImageCount == 0 ? null : alertToUse.Images[General.rng.Next(alertToUse.ImageCount)]);
             alertAudio = (alertToUse.AudioCount == 0 ? null : alertToUse.Audios[General.rng.Next(alertToUse.AudioCount)]);
@@ -764,10 +764,10 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Alert Type")]
         public String AlertType { get; set; }
 
-        public TADAAlertImage alertImage;
-        public TADAAlertAudio alertAudio;
-        public TADAAlertText alertStreamerText;
-        public TADAAlertText alertViewerText;
+        public TADAAlertImage alertImage = null;
+        public TADAAlertAudio alertAudio = null;
+        public TADAAlertText alertStreamerText = null;
+        public TADAAlertText alertViewerText = null;
 
         public ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText)
         {
