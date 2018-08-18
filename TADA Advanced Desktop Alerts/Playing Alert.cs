@@ -81,6 +81,10 @@ namespace TADA_Advanced_Desktop_Alerts
             if (this.completedObjects.Intersect<PlayingObject>(this.playingObjects).Count() == this.playingObjects.Count())
             {
                 MainTADAForm.mainTADAForm.AnimationWindow.AlertFinished(this);
+                foreach (PlayingObject o in this.completedObjects)
+                {
+                    o.Dispose();
+                }
             }
         }
 
@@ -134,8 +138,14 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             foreach (PlayingObject o in this.playingObjects)
             {
+                o.Stop();
+            }
+
+            foreach (PlayingObject o in this.playingObjects)
+            {
                 o.Dispose(true);
             }
+
             MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
             this.CheckCompleted();
         }
@@ -185,6 +195,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.containerAlert.RemoveObject(this);
             this.isDisposed = true;
+        }
+
+        public virtual void Stop()
+        {
+
         }
 
         protected Bitmap mainImage;
@@ -762,6 +777,18 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
             {
                 this.mediaElement.Stop();
+                this.mediaElement.ClearValue(System.Windows.Controls.MediaElement.SourceProperty);
+                this.isPlaying = false;
+                this.Dispose();
+            }));
+        }
+        
+        public override void Stop()
+        {
+            MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
+            {
+                this.mediaElement.Stop();
+                this.mediaElement.ClearValue(System.Windows.Controls.MediaElement.SourceProperty);
                 this.isPlaying = false;
                 this.Dispose();
             }));

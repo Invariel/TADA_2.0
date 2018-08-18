@@ -433,6 +433,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private void LoadExisting(TADAAlertImage alertImage)
         {
             txt_Filename.Text = alertImage.Filename;
+            justLoaded = !String.IsNullOrEmpty(txt_Filename.Text);
 
             this.isVideo = alertImage.IsVideo;
 
@@ -450,8 +451,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             trk_Volume.Value = Convert.ToInt32(alertImage.Volume * 10.0);
 
             this.SetWaypoints(alertImage.Waypoints);
-
-            justLoaded = !String.IsNullOrEmpty(txt_Filename.Text);
         }
 
         private void TestImage(object sender, EventArgs e)

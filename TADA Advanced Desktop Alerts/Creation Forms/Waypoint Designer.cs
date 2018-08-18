@@ -203,6 +203,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     w.C1 = new PointF((float)(numud_C1X.Value), (float)(numud_C1Y.Value));
                 }
 
+                numud_C0X.Enabled = w.IsCurve;
+                numud_C0Y.Enabled = w.IsCurve;
+                numud_C1X.Enabled = w.IsCurve;
+                numud_C1Y.Enabled = w.IsCurve;
+
                 w.LeaveScreen = chk_LeaveScreen.Checked;
                 w.BehindImage = chk_BehindImage.Checked;
                 w.ReadMessage = chk_ReadMessage.Checked;

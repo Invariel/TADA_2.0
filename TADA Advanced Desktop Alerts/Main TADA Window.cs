@@ -364,6 +364,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     xmlWriter.WriteEndElement();
 
+                    xmlWriter.WriteStartElement("FPS");
+                    xmlWriter.WriteAttributeString("Value", (rad_60FPS.Checked ? "60" : "30"));
+                    xmlWriter.WriteEndElement();
+
                     BindingSource b = dg_Alerts.DataSource as BindingSource;
 
                     foreach (TADAAlert a in b)
@@ -443,6 +447,19 @@ namespace TADA_Advanced_Desktop_Alerts
                                 if (!this.animationWindow.IsDisposed)
                                 {
                                     this.animationWindow.Location = point;
+                                }
+                            }
+                            else if (xmlReader.IsStartElement("FPS"))
+                            {
+                                switch (xmlReader.GetAttribute("Value").ToString())
+                                {
+                                    case "60":
+                                        rad_60FPS.Checked = true;
+                                        break;
+                                    case "30":
+                                    default:
+                                        rad_30FPS.Checked = true;
+                                        break;
                                 }
                             }
                             else if (!xmlReader.IsStartElement() && xmlReader.Name == "Window")

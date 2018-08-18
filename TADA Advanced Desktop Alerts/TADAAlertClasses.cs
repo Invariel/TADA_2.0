@@ -396,7 +396,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         case "StartAt":
                             this.StartingPosition = timeSpan;
                             break;
-                        case "EndAt":
+                        case "LoopAt":
                             this.EndingPosition = timeSpan;
                             break;
                     }
