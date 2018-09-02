@@ -15,7 +15,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private bool blocked = false;
         private TADAAlertAudio alertAudio;
 
-        public AudioCreationForm(TADAAlertAudio alertAudio)
+        public AudioCreationForm(TADAAlertAudio alertAudio, bool isNew)
         {
             InitializeComponent();
 
@@ -50,7 +50,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             btn_Complete.Click += btn_Complete_Click;
 
-            if (this.alertAudio != null)
+            if (!isNew)
             {
                 LoadExisting(this.alertAudio);
             }

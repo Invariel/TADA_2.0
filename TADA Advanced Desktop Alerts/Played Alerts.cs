@@ -36,13 +36,14 @@ namespace TADA_Advanced_Desktop_Alerts
         private bool followerFileWritten = false;
         private String missingFollowers = "";
 
-        private String statusBar = "";
-
         private Dictionary<String, List<TADAAlert>> currentAlerts;
 
         private Dictionary<String, User> viewers = new Dictionary<String, User>();
 
         private List<String> cheermotes = new List<String>();
+
+        private Image redLight = Properties.Resources.circle_red;
+        private Image greenLight = Properties.Resources.circle_green;
 
         public Played_Alerts(String channelName, String accessToken)
         {
@@ -106,12 +107,40 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 if (e.Successful)
                 {
-                    AppendToStatusBar("Connected for Bits, Game Purchases, Follows, Subscriptions.");
+                    this.Invoke((Action)(() =>
+                    {
+                        this.pb_PubSub.Image = this.greenLight;
+                        General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are being tracked.");
+                    }));
+                }
+                else
+                {
+                    General.LogFile(e.Response.Error);
+                    System.Windows.Forms.MessageBox.Show("Failed to connect to Twitch to listen to bits, follows, game purchases, or subscriptions.");
+                    this.Invoke((Action)(() => { General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked."); }));
                 }
             };
+            
             // Handle these, usually with a reconnection attempt or seventy thousand.
-            //pubSub.OnPubSubServiceClosed;
-            //pubSub.OnPubSubServiceError;
+            pubSub.OnPubSubServiceClosed += (sender, e) =>
+            {
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_PubSub.Image = this.redLight;
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.");
+                    this.pubSub.Connect();
+                }));
+            };
+
+            pubSub.OnPubSubServiceError += (sender, e) =>
+            {
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_PubSub.Image = this.redLight;
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.");
+                    this.pubSub.Connect();
+                }));
+            };
 
             pubSub.OnPubSubServiceConnected += delegate
             {
@@ -122,7 +151,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 pubSub.ListenToSubscriptions(channelID);
                 pubSub.SendTopics(twitchAPI.Settings.AccessToken);
 
-                AppendToStatusBar("Connected to PubSub.");
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_PubSub.Image = this.greenLight;
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are being tracked.");
+                }));
             };
 
 
@@ -130,10 +163,44 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient = new TwitchClient(null);
             twitchClient.Initialize(new TwitchLib.Client.Models.ConnectionCredentials(this.channelName, this.accessToken), this.channelName, '\0', '\0', true);
 
-            twitchClient.OnConnected += (sender, e) => { General.LogFile("TwitchClient claims to be connected.", "twitchClient.txt"); };
-            twitchClient.OnConnectionError += (sender, e) => { General.LogFile(e.Error.Message, "twitchClient.txt"); };
-            twitchClient.OnIncorrectLogin += (sender, e) => { General.LogFile(e.Exception.Message, "twitchClient.txt"); };
-            twitchClient.OnJoinedChannel += (sender, e) => { General.LogFile("Joined channel " + e.Channel, "twitchClient.txt"); };
+            twitchClient.OnConnected += (sender, e) =>
+            {
+                General.LogFile("TwitchClient claims to be connected.", "twitchClient.txt");
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_TwitchApi.Image = this.greenLight;
+                    General.ConfigureToolTip(this.pb_TwitchApi, "Hosts, Raids, and Messages are being tracked.");
+                }));
+            };
+
+            twitchClient.OnConnectionError += (sender, e) =>
+            {
+                General.LogFile(e.Error.Message, "twitchClient.txt");
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_TwitchApi.Image = this.redLight;
+                    General.ConfigureToolTip(this.pb_TwitchApi, "Hosts, Raids, and Messages are not being tracked.");
+                }));
+            };
+            twitchClient.OnIncorrectLogin += (sender, e) =>
+            {
+                General.LogFile(e.Exception.Message, "twitchClient.txt");
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_TwitchApi.Image = this.redLight;
+                    General.ConfigureToolTip(this.pb_TwitchApi, "Hosts, Raids, and Messages are not being tracked.");
+                }));
+            };
+
+            twitchClient.OnJoinedChannel += (sender, e) =>
+            {
+                General.LogFile("Joined channel " + e.Channel, "twitchClient.txt");
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_TwitchApi.Image = this.greenLight;
+                    General.ConfigureToolTip(this.pb_TwitchApi, "Hosts, Raids, and Messages are being tracked.");
+                }));
+            };
 
             twitchClient.OnBeingHosted += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.HOST, e);
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
@@ -168,6 +235,12 @@ namespace TADA_Advanced_Desktop_Alerts
             await GetFollowers(null);
             WriteFollowers();
             followerFileWritten = true;
+
+            this.Invoke((Action)(() =>
+            {
+                this.pb_FollowerList.Image = this.greenLight;
+                General.ConfigureToolTip(this.pb_FollowerList, "Your followers have been updated.");
+            }));
 
             return;
         }
@@ -237,24 +310,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     await GetFollowers(followers.Pagination.Cursor);
                 }
             }
-        }
-
-        private void AppendToStatusBar(String s)
-        {
-            this.statusBar += " " + s;
-
-            // Don't do anything just yet.  This is where the Grizzly Tracker adds the event that was received to the status bar.
-            // Have each component turn on (switch from red to green/blue/something not-red) its associated light.
-            /*
-            if (this.InvokeRequired)
-            {
-                this.Invoke((Action)(() => { this.txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions."; }));
-            }
-            else
-            {
-                txt_Status.Text = "Connected for bits, commerce, follows, and subscriptions.";
-            }
-            */
         }
 
         public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
@@ -576,19 +631,16 @@ namespace TADA_Advanced_Desktop_Alerts
                      * name > tier > keyword > amount
                      */
 
-                    if (alert.AlertType == alertTypeString)
+                    int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier);
+                    if (thisAlertScore > alertScore)
                     {
-                        int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier);
-                        if (thisAlertScore > alertScore)
-                        {
-                            potentialAlerts.Clear();
-                            alertScore = thisAlertScore;
-                        }
+                        potentialAlerts.Clear();
+                        alertScore = thisAlertScore;
+                    }
 
-                        if (thisAlertScore == alertScore)
-                        {
-                            potentialAlerts.Add(alert);
-                        }
+                    if (thisAlertScore == alertScore && alertScore != ABSOLUTE_MINIMUM_SCORE)
+                    {
+                        potentialAlerts.Add(alert);
                     }
                 }
             }
@@ -604,27 +656,32 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private int ScoreAlert (TADAAlert alert, String username, int amount, String message, String tier)
         {
-            int score = 0;
+            int finalScore = ABSOLUTE_MINIMUM_SCORE;
+            bool continueTesting = true;
+
             foreach (TADAAlertCondition condition in alert.Conditions)
             {
-                if (!condition.NoTier)
+                int score = 0;
+                // First, check that the tier matches.
+                if (condition.NoTier || condition.TwitchPrime || condition.TierOne || condition.TierTwo || condition.TierThree)
                 {
-                    if (condition.TwitchPrime && tier == "Twitch Prime" ||
-                        condition.TierOne && tier == "Tier One" ||
-                        condition.TierTwo && tier == "Tier Two" ||
-                        condition.TierThree && tier == "Tier Three")
+                    // If any of the "tier" checkboxes are checked, we have to match against them.
+                    if ((condition.NoTier && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet]) ||
+                        (condition.TwitchPrime && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Prime]) ||
+                        (condition.TierOne && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
+                        (condition.TierTwo && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2]) ||
+                        (condition.TierThree && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3]))
                     {
                         score += (int)General.SCORES.SCORE_TIER_MATCHED;
                     }
                     else
                     {
-                        // The tier was set and didn't match, so move onto the next condition.
-                        score = 0;
-                        continue;
+                        score = ABSOLUTE_MINIMUM_SCORE;
+                        continueTesting = false;
                     }
                 }
 
-                if (!String.IsNullOrEmpty(condition.Usernames))
+                if (continueTesting && !String.IsNullOrEmpty(condition.Usernames))
                 {
                     username = username.ToLower();
 
@@ -635,12 +692,12 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else
                     {
-                        score = 0;
-                        continue;
+                        score = ABSOLUTE_MINIMUM_SCORE;
+                        continueTesting = false;
                     }
                 }
 
-                if (condition.Minimum > 0 || condition.Maximum > 0)
+                if (continueTesting && (condition.Minimum > 0 || condition.Maximum > 0))
                 {
                     if ((condition.Minimum == 0 || amount >= condition.Minimum) &&
                         (condition.Maximum == 0 || amount <= condition.Maximum))
@@ -649,12 +706,12 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else
                     {
-                        score = 0;
-                        continue;
+                        score = ABSOLUTE_MINIMUM_SCORE;
+                        continueTesting = false;
                     }
                 }
 
-                if (!String.IsNullOrEmpty(condition.Keywords))
+                if (continueTesting && !String.IsNullOrEmpty(condition.Keywords))
                 {
                     bool matched = false;
 
@@ -672,18 +729,29 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     if (!matched)
                     {
-                        score = 0;
-                        continue;
+                        score = ABSOLUTE_MINIMUM_SCORE;
+                        continueTesting = false;
                     }
                 }
 
-                if (condition.NoTier && String.IsNullOrEmpty(condition.Usernames) && String.IsNullOrEmpty(condition.Keywords) && condition.Minimum == 0 && condition.Maximum == 0)
+                if (continueTesting &&
+                    !condition.NoTier &&
+                    !condition.TwitchPrime &&
+                    !condition.TierOne &&
+                    !condition.TierTwo &&
+                    !condition.TierThree &&
+                    String.IsNullOrEmpty(condition.Usernames) &&
+                    String.IsNullOrEmpty(condition.Keywords) &&
+                    condition.Minimum == 0 &&
+                    condition.Maximum == 0)
                 {
                     score = (int)General.SCORES.SCORE_NO_CONDITIONS;
                 }
+
+                finalScore = Math.Max(finalScore, score);
             }
 
-            return score;
+            return (alert.ConditionCount == 0 ? 0 : finalScore);
         }
 
         private void PendingAlertAdded(object sender, AddingNewEventArgs e)

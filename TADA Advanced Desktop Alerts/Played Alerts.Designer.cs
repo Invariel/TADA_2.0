@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Played_Alerts));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dg_Played = new System.Windows.Forms.DataGridView();
@@ -46,6 +47,11 @@
             this.btn_Replay = new System.Windows.Forms.Button();
             this.btn_Stop = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pb_FollowerList = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.pb_TwitchApi = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pb_PubSub = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -55,6 +61,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dg_Pending)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_FollowerList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_TwitchApi)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_PubSub)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -221,6 +230,11 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pb_FollowerList);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.pb_TwitchApi);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.pb_PubSub);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 271);
@@ -228,10 +242,59 @@
             this.panel1.Size = new System.Drawing.Size(548, 55);
             this.panel1.TabIndex = 7;
             // 
+            // pb_FollowerList
+            // 
+            this.pb_FollowerList.Image = global::TADA_Advanced_Desktop_Alerts.Properties.Resources.circle_red;
+            this.pb_FollowerList.InitialImage = null;
+            this.pb_FollowerList.Location = new System.Drawing.Point(232, 30);
+            this.pb_FollowerList.Name = "pb_FollowerList";
+            this.pb_FollowerList.Size = new System.Drawing.Size(16, 16);
+            this.pb_FollowerList.TabIndex = 5;
+            this.pb_FollowerList.TabStop = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(4, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(109, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Follower List Updated";
+            // 
+            // pb_TwitchApi
+            // 
+            this.pb_TwitchApi.ErrorImage = null;
+            this.pb_TwitchApi.Image = global::TADA_Advanced_Desktop_Alerts.Properties.Resources.circle_red;
+            this.pb_TwitchApi.InitialImage = null;
+            this.pb_TwitchApi.Location = new System.Drawing.Point(529, 4);
+            this.pb_TwitchApi.Name = "pb_TwitchApi";
+            this.pb_TwitchApi.Size = new System.Drawing.Size(16, 16);
+            this.pb_TwitchApi.TabIndex = 3;
+            this.pb_TwitchApi.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(275, 6);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(146, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Chat Messages, Hosts, Raids";
+            // 
+            // pb_PubSub
+            // 
+            this.pb_PubSub.Image = global::TADA_Advanced_Desktop_Alerts.Properties.Resources.circle_red;
+            this.pb_PubSub.InitialImage = null;
+            this.pb_PubSub.Location = new System.Drawing.Point(232, 4);
+            this.pb_PubSub.Name = "pb_PubSub";
+            this.pb_PubSub.Size = new System.Drawing.Size(16, 16);
+            this.pb_PubSub.TabIndex = 1;
+            this.pb_PubSub.TabStop = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 4);
+            this.label1.Location = new System.Drawing.Point(4, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(221, 13);
             this.label1.TabIndex = 0;
@@ -243,8 +306,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 329);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Played_Alerts";
-            this.Text = "Alert Controls";
+            this.Text = "Played Alerts";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).EndInit();
@@ -254,6 +318,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_FollowerList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_TwitchApi)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_PubSub)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -278,5 +345,10 @@
         private System.Windows.Forms.BindingSource pendingAlertBindingSource;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pb_FollowerList;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.PictureBox pb_TwitchApi;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pb_PubSub;
     }
 }

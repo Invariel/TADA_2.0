@@ -8,46 +8,11 @@ using System.Windows.Forms;
 using System.Windows.Shell;
 using System.Xml;
 
-/*
- * Special thanks to
- * GrizzlyGuyGaming
- * TheCyberMonk
- * TransientGamers
- * EdwardIgnis
- * ceriam
- * PyurJenius
- * BrokeAndStoked -- Maybe OBS integration?
- * Brawli (of OverboredGaming)
- * AggyTheSalty -- users trigger stuff from chat [keyword -> alert + cooldown]
- * Shatterglasslol
- * HelloBoing
- * TheHunterWild 
- * Vinc3ntVega
- * PurpleElephantGaming
- * Unkle_J
- * SunderSeries
- * OldManSethus
- * BackgroundGuy02
- * SkaF1aw
- * 
- * for advice and opinions
- */
-
-/*
- * Testers
- * 
- * Trogdor
- * ixirsii
- * Troupster
- * PyurJenius
- * Unkle_J
- */
-
 namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
-        const String TADAVersion = "0.0.5";
+        const String TADAVersion = "1.0.1.4";
 
         bool blockUpdates = false;
 
@@ -67,7 +32,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                if (this.animationWindow == null)
+                if (this.animationWindow == null || this.animationWindow.IsDisposed)
                 {
                     this.animationWindow = new TADAAnimationWindow();
                 }
@@ -116,6 +81,7 @@ namespace TADA_Advanced_Desktop_Alerts
             dg_Alerts.RowsAdded += DefaultButtonValue;
 
             btn_Connect.Click += ConnectToTwitch;
+            btn_Update.Click += OpenDownloadPage;
 
             this.FormClosing += StopWebSocketServer;
 
@@ -154,6 +120,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
             _mainTADAForm = this;
             webSocketServer = new WebSocketServer(21573);
+
+            // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php
+
+        }
+
+        private void OpenDownloadPage(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://invariel.ca/tada/downloads.php");
         }
 
         private void StopWebSocketServer(object sender, FormClosingEventArgs e)
@@ -302,19 +276,21 @@ namespace TADA_Advanced_Desktop_Alerts
                     DataGridView dataGrid = (sender as DataGridView);
                     BindingSource bindingSource = dataGrid.DataSource as BindingSource;
                     TADAAlert editObject;
+                    bool isNew = false;
 
                     DataGridView dgView = (sender as DataGridView);
                     if (dataGrid.Rows[e.RowIndex].IsNewRow)
                     {
                         bindingSource.CancelEdit();
                         editObject = bindingSource.AddNew() as TADAAlert;
+                        isNew = true;
                     }
                     else
                     {
                         editObject = bindingSource.Current as TADAAlert;
                     }
 
-                    _alertCreationForm = new Creation_Forms.AlertCreationForm(this, editObject);
+                    _alertCreationForm = new Creation_Forms.AlertCreationForm(this, editObject, isNew);
                 }
 
                 _alertCreationForm.Show();

@@ -116,7 +116,14 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             if (this.nowPlaying != null)
             {
-                this.nowPlaying.DrawElements(e.Graphics);
+                try
+                {
+                    this.nowPlaying.DrawElements(e.Graphics);
+                }
+                catch (System.ArgumentException)
+                {
+                    // Just catch this possibility.  Let it go.
+                }
             }
         }
 

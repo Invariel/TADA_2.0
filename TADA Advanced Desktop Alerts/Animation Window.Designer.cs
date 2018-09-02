@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TADAAnimationWindow));
             this.SuspendLayout();
             // 
             // TADAAnimationWindow
@@ -36,9 +37,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
             this.Name = "TADAAnimationWindow";
-            this.Text = "Animation_Window";
+            this.Text = "TADA Animation Window";
             this.ResumeLayout(false);
 
         }

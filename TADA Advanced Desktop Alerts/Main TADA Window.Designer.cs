@@ -74,6 +74,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.rad_30FPS = new System.Windows.Forms.RadioButton();
             this.rad_60FPS = new System.Windows.Forms.RadioButton();
+            this.btn_Update = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
@@ -582,14 +583,26 @@
             this.rad_60FPS.Text = "60 FPS";
             this.rad_60FPS.UseVisualStyleBackColor = true;
             // 
+            // btn_Update
+            // 
+            this.btn_Update.Location = new System.Drawing.Point(25, 270);
+            this.btn_Update.Name = "btn_Update";
+            this.btn_Update.Size = new System.Drawing.Size(120, 23);
+            this.btn_Update.TabIndex = 22;
+            this.btn_Update.Text = "Newest Version";
+            this.btn_Update.UseVisualStyleBackColor = true;
+            this.btn_Update.Visible = false;
+            // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 291);
+            this.ClientSize = new System.Drawing.Size(538, 295);
+            this.Controls.Add(this.btn_Update);
             this.Controls.Add(this.rad_60FPS);
             this.Controls.Add(this.rad_30FPS);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainTADAForm";
             this.Text = "TADA Advanced Desktop Alerts";
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).EndInit();
@@ -658,6 +671,7 @@
         private System.Windows.Forms.CheckBox checkBox3;
         internal System.Windows.Forms.RadioButton rad_30FPS;
         internal System.Windows.Forms.RadioButton rad_60FPS;
+        private System.Windows.Forms.Button btn_Update;
     }
 }
 

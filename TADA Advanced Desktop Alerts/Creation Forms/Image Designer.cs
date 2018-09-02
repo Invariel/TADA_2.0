@@ -21,7 +21,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private TADAAlertImage alertImage;
 
-        public ImageCreationForm(TADAAlertImage alertImage)
+        public ImageCreationForm(TADAAlertImage alertImage, bool isNew)
         {
             InitializeComponent();
 
@@ -38,7 +38,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             InitializeCallbacks();
             DisplayVideoControls(false, false);
 
-            if (this.alertImage != null)
+            if (!isNew)
             {
                 LoadExisting(this.alertImage);
             }

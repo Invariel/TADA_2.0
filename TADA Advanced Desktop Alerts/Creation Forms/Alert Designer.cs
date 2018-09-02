@@ -20,7 +20,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private TextCreationForm currentViewerForm;
         private TADAAlert currentAlert;
 
-        public AlertCreationForm(MainTADAForm parentWindow, TADAAlert tadaAlert)
+        public AlertCreationForm(MainTADAForm parentWindow, TADAAlert tadaAlert, bool isNew)
         {
             InitializeComponent();
 
@@ -29,8 +29,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             foreach (String alertType in General.alertTypes.Values)
             {
-                cmb_AlertType.Items.Add(alertType);
+                if (General.alertStrings[alertType] != General.ALERTTYPES.NONE)
+                {
+                    cmb_AlertType.Items.Add(alertType);
+                }
             }
+
+            cmb_AlertType.SelectedIndex = 0;
 
             btn_TestAlert.Click += TestAlert;
             btn_Save.Click += SaveAlert;
@@ -60,7 +65,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_TestStreamerMessage.GotFocus += UpdateMaximum;
             numud_TestViewerMessage.GotFocus += UpdateMaximum;
 
-            if (this.currentAlert != null)
+            if (!isNew)
             {
                 LoadExisting();
             }
@@ -130,7 +135,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentImageForm == null || this.currentImageForm.IsDisposed)
                     {
-                        this.currentImageForm = new ImageCreationForm(editObject as TADAAlertImage);
+                        this.currentImageForm = new ImageCreationForm(editObject as TADAAlertImage, isNewObject);
                     }
                     this.currentImageForm.Show();
                 }
@@ -138,7 +143,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (this.currentAudioForm == null || this.currentAudioForm.IsDisposed)
                     {
-                        this.currentAudioForm = new AudioCreationForm(editObject as TADAAlertAudio);
+                        this.currentAudioForm = new AudioCreationForm(editObject as TADAAlertAudio, isNewObject);
                     }
                     this.currentAudioForm.Show();
                 }
