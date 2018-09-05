@@ -285,8 +285,8 @@ namespace TADA_Advanced_Desktop_Alerts
             double delta = nextEffect.target - currentEffect.target;
 
             currentEffect.Copy(nextEffect);
-            currentEffect.delta = delta / nextEffect.frames;
-            timer.Interval = currentEffect.duration * 1000.0 / currentEffect.frames;
+            currentEffect.delta = delta / Math.Max (nextEffect.frames, 1);
+            timer.Interval = (currentEffect.frames == 0 ? 1 : currentEffect.duration * 1000.0 / currentEffect.frames);
         }
 
         protected void SetNextDestination (Waypoint w)
