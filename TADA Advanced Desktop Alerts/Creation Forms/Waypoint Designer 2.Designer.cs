@@ -81,20 +81,20 @@
             this.label7 = new System.Windows.Forms.Label();
             this.chk_Opacity = new System.Windows.Forms.CheckBox();
             this.tab_Sound = new System.Windows.Forms.TabPage();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.lbl_VolumeDuration = new System.Windows.Forms.Label();
+            this.lbl_BalanceDuration = new System.Windows.Forms.Label();
+            this.lbl_VolumeFrames = new System.Windows.Forms.Label();
+            this.lbl_BalanceFrames = new System.Windows.Forms.Label();
+            this.numud_VolumeDuration = new System.Windows.Forms.NumericUpDown();
+            this.numud_VolumeFrames = new System.Windows.Forms.NumericUpDown();
+            this.numud_DesiredVolume = new System.Windows.Forms.NumericUpDown();
+            this.numud_BalanceDuration = new System.Windows.Forms.NumericUpDown();
+            this.numud_BalanceFrames = new System.Windows.Forms.NumericUpDown();
+            this.numud_DesiredBalance = new System.Windows.Forms.NumericUpDown();
+            this.lbl_DesiredVolume = new System.Windows.Forms.Label();
+            this.lbl_DesiredBalance = new System.Windows.Forms.Label();
+            this.chk_Volume = new System.Windows.Forms.CheckBox();
+            this.chk_Balance = new System.Windows.Forms.CheckBox();
             this.tab_Macro = new System.Windows.Forms.TabPage();
             this.btn_TextMacroCheatsheet = new System.Windows.Forms.Button();
             this.txt_Keypresses = new System.Windows.Forms.TextBox();
@@ -164,12 +164,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_OpacityFrames)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredOpacity)).BeginInit();
             this.tab_Sound.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).BeginInit();
             this.tab_Macro.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftX)).BeginInit();
@@ -828,188 +828,188 @@
             // tab_Sound
             // 
             this.tab_Sound.BackColor = System.Drawing.SystemColors.Control;
-            this.tab_Sound.Controls.Add(this.label6);
-            this.tab_Sound.Controls.Add(this.label8);
-            this.tab_Sound.Controls.Add(this.label9);
-            this.tab_Sound.Controls.Add(this.label10);
-            this.tab_Sound.Controls.Add(this.numericUpDown3);
-            this.tab_Sound.Controls.Add(this.numericUpDown4);
-            this.tab_Sound.Controls.Add(this.numericUpDown5);
-            this.tab_Sound.Controls.Add(this.numericUpDown6);
-            this.tab_Sound.Controls.Add(this.numericUpDown7);
-            this.tab_Sound.Controls.Add(this.numericUpDown8);
-            this.tab_Sound.Controls.Add(this.label11);
-            this.tab_Sound.Controls.Add(this.label12);
-            this.tab_Sound.Controls.Add(this.checkBox1);
-            this.tab_Sound.Controls.Add(this.checkBox2);
+            this.tab_Sound.Controls.Add(this.lbl_VolumeDuration);
+            this.tab_Sound.Controls.Add(this.lbl_BalanceDuration);
+            this.tab_Sound.Controls.Add(this.lbl_VolumeFrames);
+            this.tab_Sound.Controls.Add(this.lbl_BalanceFrames);
+            this.tab_Sound.Controls.Add(this.numud_VolumeDuration);
+            this.tab_Sound.Controls.Add(this.numud_VolumeFrames);
+            this.tab_Sound.Controls.Add(this.numud_DesiredVolume);
+            this.tab_Sound.Controls.Add(this.numud_BalanceDuration);
+            this.tab_Sound.Controls.Add(this.numud_BalanceFrames);
+            this.tab_Sound.Controls.Add(this.numud_DesiredBalance);
+            this.tab_Sound.Controls.Add(this.lbl_DesiredVolume);
+            this.tab_Sound.Controls.Add(this.lbl_DesiredBalance);
+            this.tab_Sound.Controls.Add(this.chk_Volume);
+            this.tab_Sound.Controls.Add(this.chk_Balance);
             this.tab_Sound.Location = new System.Drawing.Point(4, 22);
             this.tab_Sound.Name = "tab_Sound";
             this.tab_Sound.Size = new System.Drawing.Size(736, 74);
             this.tab_Sound.TabIndex = 5;
             this.tab_Sound.Text = "Sound Balance and Volume";
             // 
-            // label6
+            // lbl_VolumeDuration
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(534, 55);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(125, 13);
-            this.label6.TabIndex = 205;
-            this.label6.Text = "Volume Change Duration";
+            this.lbl_VolumeDuration.AutoSize = true;
+            this.lbl_VolumeDuration.Location = new System.Drawing.Point(534, 55);
+            this.lbl_VolumeDuration.Name = "lbl_VolumeDuration";
+            this.lbl_VolumeDuration.Size = new System.Drawing.Size(125, 13);
+            this.lbl_VolumeDuration.TabIndex = 205;
+            this.lbl_VolumeDuration.Text = "Volume Change Duration";
             // 
-            // label8
+            // lbl_BalanceDuration
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(530, 34);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(129, 13);
-            this.label8.TabIndex = 198;
-            this.label8.Text = "Balance Change Duration";
+            this.lbl_BalanceDuration.AutoSize = true;
+            this.lbl_BalanceDuration.Location = new System.Drawing.Point(530, 34);
+            this.lbl_BalanceDuration.Name = "lbl_BalanceDuration";
+            this.lbl_BalanceDuration.Size = new System.Drawing.Size(129, 13);
+            this.lbl_BalanceDuration.TabIndex = 198;
+            this.lbl_BalanceDuration.Text = "Balance Change Duration";
             // 
-            // label9
+            // lbl_VolumeFrames
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(376, 55);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(87, 13);
-            this.label9.TabIndex = 203;
-            this.label9.Text = "Volume Changes";
+            this.lbl_VolumeFrames.AutoSize = true;
+            this.lbl_VolumeFrames.Location = new System.Drawing.Point(376, 55);
+            this.lbl_VolumeFrames.Name = "lbl_VolumeFrames";
+            this.lbl_VolumeFrames.Size = new System.Drawing.Size(87, 13);
+            this.lbl_VolumeFrames.TabIndex = 203;
+            this.lbl_VolumeFrames.Text = "Volume Changes";
             // 
-            // label10
+            // lbl_BalanceFrames
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(372, 34);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(91, 13);
-            this.label10.TabIndex = 196;
-            this.label10.Text = "Balance Changes";
+            this.lbl_BalanceFrames.AutoSize = true;
+            this.lbl_BalanceFrames.Location = new System.Drawing.Point(372, 34);
+            this.lbl_BalanceFrames.Name = "lbl_BalanceFrames";
+            this.lbl_BalanceFrames.Size = new System.Drawing.Size(91, 13);
+            this.lbl_BalanceFrames.TabIndex = 196;
+            this.lbl_BalanceFrames.Text = "Balance Changes";
             // 
-            // numericUpDown3
+            // numud_VolumeDuration
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(662, 51);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.numud_VolumeDuration.Location = new System.Drawing.Point(662, 51);
+            this.numud_VolumeDuration.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(59, 20);
-            this.numericUpDown3.TabIndex = 206;
+            this.numud_VolumeDuration.Name = "numud_VolumeDuration";
+            this.numud_VolumeDuration.Size = new System.Drawing.Size(59, 20);
+            this.numud_VolumeDuration.TabIndex = 206;
             // 
-            // numericUpDown4
+            // numud_VolumeFrames
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(469, 51);
-            this.numericUpDown4.Maximum = new decimal(new int[] {
+            this.numud_VolumeFrames.Location = new System.Drawing.Point(469, 51);
+            this.numud_VolumeFrames.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(59, 20);
-            this.numericUpDown4.TabIndex = 204;
+            this.numud_VolumeFrames.Name = "numud_VolumeFrames";
+            this.numud_VolumeFrames.Size = new System.Drawing.Size(59, 20);
+            this.numud_VolumeFrames.TabIndex = 204;
             // 
-            // numericUpDown5
+            // numud_DesiredVolume
             // 
-            this.numericUpDown5.DecimalPlaces = 2;
-            this.numericUpDown5.Location = new System.Drawing.Point(263, 51);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
+            this.numud_DesiredVolume.DecimalPlaces = 2;
+            this.numud_DesiredVolume.Location = new System.Drawing.Point(263, 51);
+            this.numud_DesiredVolume.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(74, 20);
-            this.numericUpDown5.TabIndex = 202;
-            this.numericUpDown5.Value = new decimal(new int[] {
+            this.numud_DesiredVolume.Name = "numud_DesiredVolume";
+            this.numud_DesiredVolume.Size = new System.Drawing.Size(74, 20);
+            this.numud_DesiredVolume.TabIndex = 202;
+            this.numud_DesiredVolume.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             // 
-            // numericUpDown6
+            // numud_BalanceDuration
             // 
-            this.numericUpDown6.Location = new System.Drawing.Point(662, 30);
-            this.numericUpDown6.Maximum = new decimal(new int[] {
+            this.numud_BalanceDuration.Location = new System.Drawing.Point(662, 30);
+            this.numud_BalanceDuration.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(59, 20);
-            this.numericUpDown6.TabIndex = 199;
+            this.numud_BalanceDuration.Name = "numud_BalanceDuration";
+            this.numud_BalanceDuration.Size = new System.Drawing.Size(59, 20);
+            this.numud_BalanceDuration.TabIndex = 199;
             // 
-            // numericUpDown7
+            // numud_BalanceFrames
             // 
-            this.numericUpDown7.Location = new System.Drawing.Point(469, 30);
-            this.numericUpDown7.Maximum = new decimal(new int[] {
+            this.numud_BalanceFrames.Location = new System.Drawing.Point(469, 30);
+            this.numud_BalanceFrames.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(59, 20);
-            this.numericUpDown7.TabIndex = 197;
+            this.numud_BalanceFrames.Name = "numud_BalanceFrames";
+            this.numud_BalanceFrames.Size = new System.Drawing.Size(59, 20);
+            this.numud_BalanceFrames.TabIndex = 197;
             // 
-            // numericUpDown8
+            // numud_DesiredBalance
             // 
-            this.numericUpDown8.DecimalPlaces = 2;
-            this.numericUpDown8.Location = new System.Drawing.Point(263, 30);
-            this.numericUpDown8.Maximum = new decimal(new int[] {
+            this.numud_DesiredBalance.DecimalPlaces = 2;
+            this.numud_DesiredBalance.Location = new System.Drawing.Point(263, 30);
+            this.numud_DesiredBalance.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numericUpDown8.Minimum = new decimal(new int[] {
+            this.numud_DesiredBalance.Minimum = new decimal(new int[] {
             10000,
             0,
             0,
             -2147483648});
-            this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(74, 20);
-            this.numericUpDown8.TabIndex = 195;
-            this.numericUpDown8.Value = new decimal(new int[] {
+            this.numud_DesiredBalance.Name = "numud_DesiredBalance";
+            this.numud_DesiredBalance.Size = new System.Drawing.Size(74, 20);
+            this.numud_DesiredBalance.TabIndex = 195;
+            this.numud_DesiredBalance.Value = new decimal(new int[] {
             10000,
             0,
             0,
             -2147483648});
             // 
-            // label11
+            // lbl_DesiredVolume
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(177, 55);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(81, 13);
-            this.label11.TabIndex = 201;
-            this.label11.Text = "Desired Volume";
+            this.lbl_DesiredVolume.AutoSize = true;
+            this.lbl_DesiredVolume.Location = new System.Drawing.Point(177, 55);
+            this.lbl_DesiredVolume.Name = "lbl_DesiredVolume";
+            this.lbl_DesiredVolume.Size = new System.Drawing.Size(81, 13);
+            this.lbl_DesiredVolume.TabIndex = 201;
+            this.lbl_DesiredVolume.Text = "Desired Volume";
             // 
-            // label12
+            // lbl_DesiredBalance
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(173, 34);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(85, 13);
-            this.label12.TabIndex = 194;
-            this.label12.Text = "Desired Balance";
+            this.lbl_DesiredBalance.AutoSize = true;
+            this.lbl_DesiredBalance.Location = new System.Drawing.Point(173, 34);
+            this.lbl_DesiredBalance.Name = "lbl_DesiredBalance";
+            this.lbl_DesiredBalance.Size = new System.Drawing.Size(85, 13);
+            this.lbl_DesiredBalance.TabIndex = 194;
+            this.lbl_DesiredBalance.Text = "Desired Balance";
             // 
-            // checkBox1
+            // chk_Volume
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(11, 53);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(93, 17);
-            this.checkBox1.TabIndex = 200;
-            this.checkBox1.Text = "Adjust Volume";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chk_Volume.AutoSize = true;
+            this.chk_Volume.Location = new System.Drawing.Point(11, 53);
+            this.chk_Volume.Name = "chk_Volume";
+            this.chk_Volume.Size = new System.Drawing.Size(93, 17);
+            this.chk_Volume.TabIndex = 200;
+            this.chk_Volume.Text = "Adjust Volume";
+            this.chk_Volume.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // chk_Balance
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(11, 30);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(131, 17);
-            this.checkBox2.TabIndex = 193;
-            this.checkBox2.Text = "Adjust Sound Balance";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.chk_Balance.AutoSize = true;
+            this.chk_Balance.Location = new System.Drawing.Point(11, 30);
+            this.chk_Balance.Name = "chk_Balance";
+            this.chk_Balance.Size = new System.Drawing.Size(131, 17);
+            this.chk_Balance.TabIndex = 193;
+            this.chk_Balance.Text = "Adjust Sound Balance";
+            this.chk_Balance.UseVisualStyleBackColor = true;
             // 
             // tab_Macro
             // 
@@ -1512,12 +1512,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredOpacity)).EndInit();
             this.tab_Sound.ResumeLayout(false);
             this.tab_Sound.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).EndInit();
             this.tab_Macro.ResumeLayout(false);
             this.tab_Macro.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftY)).EndInit();
@@ -1630,20 +1630,20 @@
         private System.Windows.Forms.NumericUpDown numud_DesiredOpacity;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox chk_Opacity;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.NumericUpDown numericUpDown8;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Label lbl_VolumeDuration;
+        private System.Windows.Forms.Label lbl_BalanceDuration;
+        private System.Windows.Forms.Label lbl_VolumeFrames;
+        private System.Windows.Forms.Label lbl_BalanceFrames;
+        private System.Windows.Forms.NumericUpDown numud_VolumeDuration;
+        private System.Windows.Forms.NumericUpDown numud_VolumeFrames;
+        private System.Windows.Forms.NumericUpDown numud_DesiredVolume;
+        private System.Windows.Forms.NumericUpDown numud_BalanceDuration;
+        private System.Windows.Forms.NumericUpDown numud_BalanceFrames;
+        private System.Windows.Forms.NumericUpDown numud_DesiredBalance;
+        private System.Windows.Forms.Label lbl_DesiredVolume;
+        private System.Windows.Forms.Label lbl_DesiredBalance;
+        private System.Windows.Forms.CheckBox chk_Volume;
+        private System.Windows.Forms.CheckBox chk_Balance;
         protected internal System.Windows.Forms.Button btn_TextMacroCheatsheet;
         private System.Windows.Forms.TextBox txt_Keypresses;
         private System.Windows.Forms.TextBox txt_WindowTarget;

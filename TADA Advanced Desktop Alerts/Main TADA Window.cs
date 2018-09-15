@@ -76,6 +76,8 @@ namespace TADA_Advanced_Desktop_Alerts
             btn_ColourPicker.Click += (sender, e) => General.ColourPicker(numud_bgR, numud_bgG, numud_bgB, null);
 
             txt_AccessToken.TextChanged += PasswordMask;
+            txt_AccessToken.GotFocus += PasswordMaskText;
+            txt_AccessToken.LostFocus += PasswordMaskText;
 
             dg_Alerts.CellContentClick += NewOrEditEntry;
             dg_Alerts.RowsAdded += DefaultButtonValue;
@@ -149,14 +151,25 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void PasswordMask(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(txt_AccessToken.Text))
+            if (String.IsNullOrEmpty(txt_AccessToken.Text) || String.Equals(txt_AccessToken.Text, General.PASSWORD_FIELD_DEFAULT_TEXT))
             {
-                txt_AccessToken.Text = "Paste Access Token Here";
                 txt_AccessToken.PasswordChar = '\0';
             }
             else
             {
                 txt_AccessToken.PasswordChar = '*';
+            }
+        }
+
+        private void PasswordMaskText(object sender, EventArgs e)
+        {
+            if (txt_AccessToken.Focused && txt_AccessToken.Text == General.PASSWORD_FIELD_DEFAULT_TEXT)
+            {
+                txt_AccessToken.Text = "";
+            }
+            else if (!txt_AccessToken.Focused && String.IsNullOrEmpty(txt_AccessToken.Text))
+            {
+                txt_AccessToken.Text = General.PASSWORD_FIELD_DEFAULT_TEXT;
             }
         }
 
