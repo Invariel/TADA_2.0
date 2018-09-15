@@ -18,22 +18,16 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             pb_Preview.MouseClick += AddWaypointFromImage;
 
-            numud_InitialX.ValueChanged += UpdateInitialWaypoint;
-            numud_InitialY.ValueChanged += UpdateInitialWaypoint;
             numud_InitialAngle.ValueChanged += UpdateInitialWaypoint;
             numud_InitialMagnification.ValueChanged += UpdateInitialWaypoint;
             numud_InitialOpacity.ValueChanged += UpdateInitialWaypoint;
-            numud_InitialDelay.ValueChanged += UpdateInitialWaypoint;
         }
 
         private void UpdateInitialWaypoint(object sender, EventArgs e)
         {
             if (((dg_Waypoints.DataSource) as BindingSource).Count == 0)
             {
-                PointF firstPoint = new PointF((float)numud_InitialX.Value, (float)numud_InitialY.Value);
-                Waypoint firstWaypoint = new Waypoint(firstPoint, 0, Convert.ToDouble(numud_InitialDelay.Value));
-
-                // HUGE TODO:  Include initial state in the three classes, so that the initial angle, magnification, and opacity can be saved and used.
+                Waypoint firstWaypoint = new Waypoint(new PointF(0, 0), 0, 0);
             }
         }
 

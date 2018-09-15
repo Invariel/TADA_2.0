@@ -415,6 +415,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.alertImage = alertImage;
                 this.waypoints = alertImage.Waypoints;
                 this.initialSize = alertImage.Dimensions;
+
+                this.angle = alertImage.InitialAngle;
+                this.magnification = alertImage.InitialMagnification;
+                this.opacity = alertImage.InitialOpacity;
             }
 
             this.angleTimer.Elapsed += new ElapsedEventHandler((sender, e) => { this.NextEffectFrame(ref this.angle, ref this.angleEffect, this.angleTimer); });
@@ -671,6 +675,10 @@ namespace TADA_Advanced_Desktop_Alerts
             this.delay = alertImage.Delay;
             this.duration = alertImage.Duration;
 
+            this.angle = alertImage.InitialAngle;
+            this.magnification = alertImage.InitialMagnification;
+            this.opacity = alertImage.InitialOpacity;
+
             this.balance = alertImage.Balance;
             this.volume = alertImage.Volume;
 
@@ -864,6 +872,10 @@ namespace TADA_Advanced_Desktop_Alerts
         public PlayingText(PlayingAlert containerAlert, TADAAlertText alertText) : base(containerAlert, null)
         {
             this.waypoints = alertText.Waypoints;
+
+            this.angle = alertImage.InitialAngle;
+            this.magnification = alertImage.InitialMagnification;
+            this.opacity = alertImage.InitialOpacity;
 
             if (!String.IsNullOrEmpty(alertText.Message))
             {

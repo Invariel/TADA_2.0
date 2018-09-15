@@ -261,6 +261,10 @@ namespace TADA_Advanced_Desktop_Alerts
         private Size dimensions;
         private Boolean isVideo;
 
+        public double InitialAngle { get; set; } = 0;
+        public double InitialMagnification { get; set; } = 0;
+        public double InitialOpacity { get; set; } = 0;
+
         [DisplayName("Filename")]
         public String Filename
         {
@@ -355,6 +359,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.Filename = reader.GetAttribute("Filename");
                 this.IsVideo = Boolean.Parse(reader.GetAttribute("IsVideo"));
 
+                this.InitialAngle = Double.Parse(reader.GetAttribute("Angle") ?? "0.0");
+                this.InitialMagnification = Double.Parse(reader.GetAttribute("Magnification") ?? "1.0");
+                this.InitialOpacity = Double.Parse(reader.GetAttribute("Opacity") ?? "100.0");
+
                 if (this.IsVideo)
                 {
                     this.Volume = Double.Parse(reader.GetAttribute("Volume"));
@@ -425,6 +433,10 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteStartElement("Image");
             writer.WriteAttributeString("Filename", filename);
             writer.WriteAttributeString("IsVideo", isVideo.ToString());
+
+            writer.WriteAttributeString("Angle", InitialAngle.ToString());
+            writer.WriteAttributeString("Magnification", InitialMagnification.ToString());
+            writer.WriteAttributeString("Opacity", InitialOpacity.ToString());
 
             if (isVideo)
             {
@@ -618,6 +630,10 @@ namespace TADA_Advanced_Desktop_Alerts
         private String substitutedMessage;
         private String substitutedReadMessage;
 
+        public double InitialAngle { get; set; } = 0;
+        public double InitialMagnification { get; set; } = 0;
+        public double InitialOpacity { get; set; } = 0;
+
         [DisplayName("Displayed Message")]
         public String Message
         {
@@ -729,6 +745,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.ReadMessage = reader.GetAttribute("Read");
                 this.TTSVoice = reader.GetAttribute("Voice");
                 this.TTSVolume = Int32.Parse(reader.GetAttribute("Volume"));
+
+                this.InitialAngle = Double.Parse(reader.GetAttribute("Angle") ?? "0.0");
+                this.InitialMagnification = Double.Parse(reader.GetAttribute("Magnification") ?? "1.0");
+                this.InitialOpacity = Double.Parse(reader.GetAttribute("Opacity") ?? "100.0");
             }
             else
             {
@@ -792,6 +812,10 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteAttributeString("Read", readMessage);
             writer.WriteAttributeString("Voice", TTSVoice);
             writer.WriteAttributeString("Volume", TTSVolume.ToString());
+
+            writer.WriteAttributeString("Angle", InitialAngle.ToString());
+            writer.WriteAttributeString("Magnification", InitialMagnification.ToString());
+            writer.WriteAttributeString("Opacity", InitialOpacity.ToString());
 
             writer.WriteStartElement("Font");
             writer.WriteAttributeString("Name", ChosenFont.Name);
