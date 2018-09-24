@@ -53,6 +53,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pb_PubSub = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.lbl_Websocket = new System.Windows.Forms.Label();
+            this.pb_Websocket = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).BeginInit();
@@ -64,6 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pb_FollowerList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_TwitchApi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_PubSub)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Websocket)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -225,13 +228,15 @@
             this.btn_Stop.Name = "btn_Stop";
             this.btn_Stop.Size = new System.Drawing.Size(69, 55);
             this.btn_Stop.TabIndex = 6;
-            this.btn_Stop.Text = "Stop";
+            this.btn_Stop.Text = "Stop Alert";
             this.btn_Stop.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lbl_Websocket);
             this.panel1.Controls.Add(this.pb_FollowerList);
             this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.pb_Websocket);
             this.panel1.Controls.Add(this.pb_TwitchApi);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.pb_PubSub);
@@ -300,6 +305,26 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Bits, Follows, Game Purchases, Subscriptions";
             // 
+            // lbl_Websocket
+            // 
+            this.lbl_Websocket.AutoSize = true;
+            this.lbl_Websocket.Location = new System.Drawing.Point(275, 31);
+            this.lbl_Websocket.Name = "lbl_Websocket";
+            this.lbl_Websocket.Size = new System.Drawing.Size(189, 13);
+            this.lbl_Websocket.TabIndex = 6;
+            this.lbl_Websocket.Text = "WebSocket Connected on Port 21573";
+            // 
+            // pb_Websocket
+            // 
+            this.pb_Websocket.ErrorImage = null;
+            this.pb_Websocket.Image = global::TADA_Advanced_Desktop_Alerts.Properties.Resources.circle_red;
+            this.pb_Websocket.InitialImage = null;
+            this.pb_Websocket.Location = new System.Drawing.Point(529, 29);
+            this.pb_Websocket.Name = "pb_Websocket";
+            this.pb_Websocket.Size = new System.Drawing.Size(16, 16);
+            this.pb_Websocket.TabIndex = 3;
+            this.pb_Websocket.TabStop = false;
+            // 
             // Played_Alerts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,6 +346,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pb_FollowerList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_TwitchApi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_PubSub)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Websocket)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -350,5 +376,7 @@
         private System.Windows.Forms.PictureBox pb_TwitchApi;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pb_PubSub;
+        private System.Windows.Forms.Label lbl_Websocket;
+        private System.Windows.Forms.PictureBox pb_Websocket;
     }
 }

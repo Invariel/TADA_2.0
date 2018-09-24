@@ -90,7 +90,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void StopAlert(object sender, EventArgs e)
         {
-            MainTADAForm.mainTADAForm.AnimationWindow.nowPlaying.Stop();
+            MainTADAForm.mainTADAForm.AnimationWindow.nowPlaying?.Stop();
         }
 
         private async void Connect()
@@ -215,6 +215,12 @@ namespace TADA_Advanced_Desktop_Alerts
             foreach (TwitchLib.Api.Models.v5.Bits.Action action in requestedCheermotes.Actions)
             {
                 this.cheermotes.Add(action.Prefix.ToLower());
+            }
+
+            if (MainTADAForm.mainTADAForm.webSocketServer != null)
+            {
+                this.pb_Websocket.Image = this.greenLight;
+                General.ConfigureToolTip(this.pb_Websocket, "Websocket server configured on port 21573.");
             }
 
             currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();

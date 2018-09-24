@@ -22,6 +22,7 @@ namespace TADA_Advanced_Desktop_Alerts
         internal WebSocketServer webSocketServer;
 
         private static MainTADAForm _mainTADAForm;
+        internal Played_Alerts playedAlerts = null;
 
         public static MainTADAForm mainTADAForm
         {
@@ -122,6 +123,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
             _mainTADAForm = this;
             webSocketServer = new WebSocketServer(21573);
+
+            Creation_Forms.Waypoint_Designer_2 w2 = new Creation_Forms.Waypoint_Designer_2();
+            w2.Show();
 
             // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php
 
@@ -522,7 +526,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 rad_30FPS.Enabled = false;
                 rad_60FPS.Enabled = false;
 
-                Played_Alerts playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+                if (playedAlerts == null || playedAlerts.IsDisposed)
+                {
+                    playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+                }
+
                 playedAlerts.Show();
             }
             else if (String.IsNullOrEmpty(txt_ChannelName.Text))

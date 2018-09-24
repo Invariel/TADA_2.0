@@ -22,6 +22,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             listeningThread = new Thread(() => InitializeWebSocketServer(port));
             listeningThread.Start();
+            MainTADAForm.mainTADAForm.webSocketServer = this;
         }
 
         private void InitializeWebSocketServer(int port = 21573)
@@ -33,8 +34,17 @@ namespace TADA_Advanced_Desktop_Alerts
             httpListener.Prefixes.Add(String.Format("http://127.0.0.1:{0}/", port));
             httpListener.Prefixes.Add(String.Format("http://[::1]:{0}/", port));
 
-            httpListener.Start();
-            ListenForever();
+            try
+            {
+                httpListener.Start();
+                ListenForever();
+            }
+            catch (HttpListenerException)
+            {
+                System.Windows.Forms.MessageBox.Show(String.Format("The requested port, {0}, is already in use.  A websocket will not be set up for this TADA instance.", port), "Port In Use", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                httpListener = null;
+                MainTADAForm.mainTADAForm.webSocketServer = null;
+            }
         }
 
         public async void ListenForever()
@@ -128,6 +138,11 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                 }
             }
+        }
+
+        public int Connections()
+        {
+            return listeningWebSocketDictionary.Keys.Count;
         }
 
         public void StopListening()

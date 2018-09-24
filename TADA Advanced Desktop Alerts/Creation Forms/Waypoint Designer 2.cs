@@ -18,7 +18,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         // Section of variables for drawing the preview image.
         private Bitmap previewBitmap;
 
-        protected SizeF itemSize = new SizeF(200, 100);
+        protected SizeF itemSize = new SizeF(200, 150);
+        protected Bitmap thumbnail;
 
         private int drawWaypoint = 0;
 
@@ -26,7 +27,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                       drawMagnification = 1,
                       drawOpacity = 1;
 
-        private double drawTime;
+        private double drawTime = 0.0d;
 
         private PointF drawPosition = new PointF(0, 0);
 
@@ -39,14 +40,23 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             dg_Waypoints.SelectionChanged += UpdateAdvancedWaypoint;
             dg_Waypoints.DefaultValuesNeeded += DefaultRowValues;
             dg_Waypoints.EditingControlShowing += NumericInputsOnly;
+            dg_Waypoints.CellValueChanged += delegate { UpdatePreview(); };
+
+            btn_CopySelected.Click += btn_CopySelected_Click;
+            btn_ShiftSelected.Click += btn_ShiftSelected_Click;
 
             pb_Preview.MouseClick += AddWaypointFromImage;
 
-            radio_Line.CheckedChanged += SaveVariableState;
             radio_Curve.CheckedChanged += SaveVariableState;
+            radio_Line.CheckedChanged += SaveVariableState;
             radio_FromCenter.CheckedChanged += SaveVariableState;
-            radio_FromTopRight.CheckedChanged += SaveVariableState;
+            radio_FromTopLeft.CheckedChanged += SaveVariableState;
 
+            radio_Curve.CheckedChanged += ToggleCurve;
+            radio_Line.CheckedChanged += ToggleCurve;
+
+            numud_P0X.ValueChanged += SaveVariableState;
+            numud_P0Y.ValueChanged += SaveVariableState;
             numud_C0X.ValueChanged += SaveVariableState;
             numud_C0Y.ValueChanged += SaveVariableState;
             numud_C1X.ValueChanged += SaveVariableState;
@@ -82,7 +92,90 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             txt_Keypresses.LostFocus += SaveVariableState;
             txt_WindowTarget.LostFocus += SaveVariableState;
 
+            trk_Time.ValueChanged += UpdateTime;
+
+            numud_SurroundingWaypoints.ValueChanged += delegate { UpdatePreview(); };
+
             previewBitmap = new Bitmap(pb_Preview.Width, pb_Preview.Height);
+
+            btn_TestWaypoints.Click += TestElement;
+
+            ConfigureTooltips();
+        }
+
+        private void ConfigureTooltips()
+        {
+            General.ConfigureToolTip(lbl_WaypointDuration, "The total time that your Waypoints will run for.");
+
+            General.ConfigureToolTip(new List<Control>() { lbl_InitialAngle, numud_InitialAngle, lbl_AngleDegrees }, "The initial angle for this element.");
+            General.ConfigureToolTip(new List<Control>() { lbl_InitialMagnification, numud_InitialMagnification, lbl_InitialMagnificationX }, "The initial magnification for this element.");
+            General.ConfigureToolTip(new List<Control>() { lbl_InitialOpacity, numud_InitialOpacity, lbl_InitialOpacityPercent }, "The initial opacity for this element.");
+
+            General.ConfigureToolTip(btn_ImportWaypointsFrom, "Overwrite your Waypoint table with Waypoints from another item in this Alert.");
+            General.ConfigureToolTip(cmb_ImportWaypoints, "Choose from the other items in this Alert to use as this item's Waypoints.");
+
+            General.ConfigureToolTip(btn_CopySelected, "Copy the selected rows in the order that they were selected.  This will copy all of the associated Waypoint data.");
+            General.ConfigureToolTip(btn_ShiftSelected, "Shift the selected rows in the horizontal and vertical directions as specified.  This will NOT affect control points.");
+            General.ConfigureToolTip(numud_ShiftX, "The horizontal shift to be applied to all selected Waypoints once the Shift Selected Waypoints button is pressed.");
+            General.ConfigureToolTip(numud_ShiftY, "The vertical shift to be applied to all selected Waypoints once the Shift Selected Waypoints button is pressed.");
+
+            General.ConfigureToolTip(new List<Control>() { tab_AdvancedWaypointControls, tab_Advanced }, "Advanced controls for the selected Waypoint.");
+
+            General.ConfigureToolTip(tab_Path, "Controls for drawing a curved path for your element.");
+            General.ConfigureToolTip(radio_Curve, "Select this if you want your object to take a curved path instead of a straight one to the current Waypoint.");
+            General.ConfigureToolTip(radio_Line, "Select this if you want your object to take a straight path instead of a curved one to the current Waypoint.");
+
+            General.ConfigureToolTip(new List<Control>() { lbl_P0, numud_P0X, numud_P0Y }, "The coordinates of the previous Waypoint (or the current Waypoint if this is the first Waypoint).");
+            General.ConfigureToolTip(new List<Control>() { lbl_P1, numud_P1X, numud_P1Y }, "The coordinates of the destination for this item.");
+            General.ConfigureToolTip(new List<Control>() { lbl_C0, numud_C0X, numud_C0Y }, "The coordinates of the first control point defining the curve.");
+            General.ConfigureToolTip(new List<Control>() { lbl_C1, numud_C1X, numud_C1Y }, "The coordinates of the second control point defining the curve.");
+
+            General.ConfigureToolTip(tab_AngleAndMagnification, "Controls for adjusting your element's angle and magnification.  Video files cannot currently be rotated.");
+            General.ConfigureToolTip(chk_Angle, "If checked, this Waypoint includes an angle change.");
+            General.ConfigureToolTip(new List<Control>() { lbl_DesiredAngle, numud_DesiredAngle }, "The desired angle for the element to reach.  On reaching the target, the item's angle will be redefined to 0 <= angle < 360.");
+            General.ConfigureToolTip(new List<Control>() { lbl_AngleFrames, numud_AngleFrames }, "The number of animation frames to take to rotate the element.");
+            General.ConfigureToolTip(new List<Control>() { lbl_AngleDuration, numud_AngleDuration }, "How much time, in seconds, to complete this rotation.");
+
+            General.ConfigureToolTip(chk_Magnification, "If checked, this Waypoint includes a change in magnification.");
+            General.ConfigureToolTip(new List<Control>() { lbl_DesiredMagnification, numud_DesiredMagnification }, "The desired magnification for the element to reach.");
+            General.ConfigureToolTip(new List<Control>() { lbl_MagnificationFrames, numud_MagnificationFrames }, "The number of animation frames to take to magnify the element.");
+            General.ConfigureToolTip(new List<Control>() { lbl_MagnificationDuration, numud_MagnificationDuration }, "How much time, in seconds, to complete this magnification.");
+
+            General.ConfigureToolTip(tab_Opacity, "Controls for changing your element's opacity.  Opacity cannot currently be changed on video files.");
+            General.ConfigureToolTip(chk_Opacity, "If checked, this Waypoint includes a change in opacity.");
+            General.ConfigureToolTip(new List<Control>() { lbl_DesiredOpacity, numud_DesiredOpacity }, "The desired opacity for the element to reach.");
+            General.ConfigureToolTip(new List<Control>() { lbl_OpacityFrames, numud_OpacityFrames }, "The number of animation frames to take to fade the element.");
+            General.ConfigureToolTip(new List<Control>() { lbl_OpacityDuration, numud_OpacityDuration }, "How much time, in seconds, to complete this fade.");
+
+            General.ConfigureToolTip(tab_Sound, "Controls for adjustinug your element's sound balance and volume over the course of play.");
+            General.ConfigureToolTip(chk_Balance, "If checked, this Waypoint includes a change in audio balance.");
+            General.ConfigureToolTip(new List<Control>() { lbl_DesiredBalance, numud_DesiredBalance }, "The desired audio balance for the audio to play at, -1.0 for left, 1.0 for right.");
+            General.ConfigureToolTip(new List<Control>() { lbl_BalanceFrames, numud_BalanceFrames }, "How many times the audio balance changes to reach the final balance value.");
+            General.ConfigureToolTip(new List<Control>() { lbl_BalanceDuration, numud_BalanceDuration }, "How quickly to reach the desired balance, in seconds.");
+
+            General.ConfigureToolTip(chk_Volume, "If checked, this Waypoint includes a change in audio volume.");
+            General.ConfigureToolTip(new List<Control>() { lbl_DesiredVolume, numud_DesiredVolume }, "The desired volume for the audio to reach.");
+            General.ConfigureToolTip(new List<Control>() { lbl_VolumeFrames, numud_VolumeFrames }, "How many times the volume changes to reach the final value.");
+            General.ConfigureToolTip(new List<Control>() { lbl_VolumeDuration, numud_VolumeDuration }, "How quickly to reach the desired volume, in seconds.");
+
+            General.ConfigureToolTip(tab_Macro, "Controls for directing keypresses at a given application at the end of this Waypoint.");
+            General.ConfigureToolTip(new List<Control>() { lbl_WindowTarget, txt_WindowTarget }, "The exact name of the window to direct the keypress combination to.");
+            General.ConfigureToolTip(new List<Control>() { lbl_Keypresses, txt_Keypresses }, "The combination of keys to send to the selected window.");
+
+            General.ConfigureToolTip(new List<Control>() { grp_Preview, pb_Preview }, "The path that your element will take as it traverses its Waypoints.");
+            General.ConfigureToolTip(new List<Control>() { trk_Time, lbl_Time }, "Step through your element's path.");
+            General.ConfigureToolTip(new List<Control>() { lbl_ShowSurrounding, lbl_WaypointNumbers, numud_SurroundingWaypoints }, "How many adjacent Waypoints around the selected Waypoint to display on the preview window.");
+
+            General.ConfigureToolTip(btn_TestWaypoints, "Test your element with this set of Waypoints.");
+            General.ConfigureToolTip(btn_Complete, "Done editing this element.");
+        }
+
+        private void ToggleCurve (object sender, EventArgs e)
+        {
+            numud_C0X.Enabled = radio_Curve.Checked;
+            numud_C0Y.Enabled = radio_Curve.Checked;
+            numud_C1X.Enabled = radio_Curve.Checked;
+            numud_C1Y.Enabled = radio_Curve.Checked;
         }
 
         private void AddWaypointFromImage (object sender, MouseEventArgs e)
@@ -115,6 +208,17 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                         waypointBindingSource.Insert(dg_Waypoints.SelectedRows[0].Index, newWaypoint);
                     }
                 }
+
+                RenumberDataGrid();
+                UpdatePreview();
+            }
+        }
+
+        private void RenumberDataGrid ()
+        {
+            foreach (DataGridViewRow row in dg_Waypoints.Rows)
+            {
+                row.HeaderCell.Value = (row.Index + 1).ToString();
             }
         }
 
@@ -261,7 +365,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_AngleFrames.Value = Convert.ToInt32(w.Angle.frames);
             numud_AngleDuration.Value = Convert.ToDecimal(w.Angle.duration);
             radio_FromCenter.Checked = w.Angle.aroundCenter;
-            radio_FromTopRight.Checked = !w.Angle.aroundCenter;
+            radio_FromTopLeft.Checked = !w.Angle.aroundCenter;
 
             chk_Magnification.Checked = w.Magnification.change;
             numud_DesiredMagnification.Value = Convert.ToDecimal(w.Magnification.target);
@@ -287,9 +391,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             txt_Keypresses.Text = w.Keypresses;
 
             SumWaypoints();
-
             UpdatePreview();
-
             CheckChecked();
 
             disableUpdates = false;
@@ -315,6 +417,22 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             if (!disableUpdates)
             {
                 Waypoint currentWaypoint = waypointBindingSource.Current as Waypoint;
+
+                if (waypointBindingSource.Position == 0)
+                {
+                    currentWaypoint.X = (float)numud_P0X.Value;
+                    currentWaypoint.Y = (float)numud_P0Y.Value;
+                }
+                else
+                {
+                    currentWaypoint.X = (float)numud_P1X.Value;
+                    currentWaypoint.Y = (float)numud_P1Y.Value;
+                }
+
+                currentWaypoint.C0 = new PointF((float)numud_C0X.Value, (float)numud_C0Y.Value);
+                currentWaypoint.C1 = new PointF((float)numud_C1X.Value, (float)numud_C1Y.Value);
+
+                currentWaypoint.IsCurve = radio_Curve.Checked;
 
                 currentWaypoint.Angle.aroundCenter = radio_FromCenter.Checked;
                 currentWaypoint.Angle.change = chk_Angle.Checked;
@@ -374,52 +492,88 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_VolumeDuration.Enabled = chk_Volume.Checked;
         }
 
+        protected void CompressPoint (ref PointF point, float widthRatio, float heightRatio)
+        {
+            point.X = point.X * widthRatio;
+            point.Y = point.Y * heightRatio;
+        }
+
         protected void UpdatePreview()
         {
-            if (waypointBindingSource.Count <= 0)
+            Graphics previewGraphics = Graphics.FromImage(previewBitmap);
+            previewGraphics.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), new Size(pb_Preview.Width, pb_Preview.Height)));
+
+            if (waypointBindingSource.Count > 0)
             {
-                return;
-            }
+                PointF translatePosition = new PointF(0, 0);
+                PointF drawPosition = new PointF(0, 0);
 
-            float widthRatio = pb_Preview.Width / MainTADAForm.mainTADAForm.AnimationWindow.Width;
-            float heightRatio = pb_Preview.Height / MainTADAForm.mainTADAForm.AnimationWindow.Height;
+                float widthRatio = (float)pb_Preview.Width / MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Width;
+                float heightRatio = (float)pb_Preview.Height / MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Height;
 
-            PointF P0 = (waypointBindingSource[0] as Waypoint).P1;
-            P0.X *= widthRatio;
-            P0.Y *= heightRatio;
+                PointF _P0 = (waypointBindingSource[0] as Waypoint).P1; // The actual, uncompressed P0.
 
-            Graphics graphics = Graphics.FromImage(previewBitmap);
-            graphics.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), new Size(pb_Preview.Width, pb_Preview.Height)));
-
-            for (int i = 0; i < waypointBindingSource.Count; ++i)
-            {
-                Waypoint w = waypointBindingSource[i] as Waypoint;
-                PointF C0, C1, P1;
-
-                P1 = w.P1;
-                P1.X *= widthRatio;
-                P1.Y *= heightRatio;
-
-                if (w.IsCurve)
+                for (int i = 0; i < waypointBindingSource.Count; ++ i)
                 {
-                    C0 = w.C0;
-                    C1 = w.C1;
+                    Waypoint waypoint = waypointBindingSource[i] as Waypoint;
+                    PointF _P1; // The actual, uncompressed P1.
+                    PointF P0, C0, C1, P1;  // The compressed versions of P0, P1, C0, C1 that are used in the preview window.
 
-                    C0.X *= widthRatio;
-                    C0.Y *= heightRatio;
-                    C1.X *= widthRatio;
-                    C1.Y *= heightRatio;
+                    P0 = _P0;
+
+                    P1 = waypoint.P1;
+                    _P1 = waypoint.P1;
+
+                    if (waypoint.IsCurve)
+                    {
+                        C0 = waypoint.C0;
+                        C1 = waypoint.C1;
+                    }
+                    else
+                    {
+                        Bezier.CalculateLinearControlPoints(_P0, P1, out C0, out C1);
+                    }
+
+                    // If the current timestamp is within the bounds of this Waypoint, calculate the position of the preview box.
+                    if (i == drawWaypoint)
+                    {
+                        double t = waypoint.TransitionTime == 0 ? 1 : Math.Min(1, drawTime / waypoint.TransitionTime);
+
+                        float bezierX = Bezier.CalculateBezierCoordinate(P0.X, C0.X, C1.X, P1.X, (float)t);
+                        float bezierY = Bezier.CalculateBezierCoordinate(P0.Y, C0.Y, C1.Y, P1.Y, (float)t);
+                        translatePosition = new PointF(bezierX, bezierY);
+
+                        if (waypoint.Angle.aroundCenter || waypoint.Magnification.aroundCenter)
+                        {
+                            translatePosition.X += itemSize.Width / 2;
+                            translatePosition.Y += itemSize.Height / 2;
+                        }
+
+                        if (waypoint.Angle.aroundCenter || waypoint.Magnification.aroundCenter)
+                        {
+                            drawPosition.X -= itemSize.Width / 2;
+                            drawPosition.Y -= itemSize.Height / 2;
+                        }
+                    }
+
+                    CompressPoint(ref P0, widthRatio, heightRatio);
+                    CompressPoint(ref P1, widthRatio, heightRatio);
+                    CompressPoint(ref C0, widthRatio, heightRatio);
+                    CompressPoint(ref C1, widthRatio, heightRatio);
+
+                    previewGraphics.DrawBezier(Pens.White, P0, C0, C1, P1);
+                    previewGraphics.DrawRectangle(Pens.Red, new Rectangle(Convert.ToInt32(Math.Floor(Convert.ToDouble(P1.X) - 2)), Convert.ToInt32(Math.Floor(Convert.ToDouble(P1.Y) - 2)), 5, 5));
+
+                    _P0 = _P1;
                 }
-                else
-                {
-                    Bezier.CalculateLinearControlPoints(P0, P1, out C0, out C1);
-                }
 
-                graphics.DrawBezier(Pens.White, P0, C0, C1, P1);
-                graphics.DrawRectangle(Pens.Red, new Rectangle(Convert.ToInt32(Math.Floor(Convert.ToDouble(P0.X) - 2)), Convert.ToInt32(Math.Floor(Convert.ToDouble(P0.Y) - 2)), 5, 5));
-                graphics.DrawRectangle(Pens.Red, new Rectangle(Convert.ToInt32(Math.Floor(Convert.ToDouble(P1.X) - 2)), Convert.ToInt32(Math.Floor(Convert.ToDouble(P1.Y) - 2)), 5, 5));
+                CompressPoint(ref translatePosition, widthRatio, heightRatio);
+                CompressPoint(ref drawPosition, widthRatio, heightRatio);
 
-                if (i == drawWaypoint)
+                previewGraphics.TranslateTransform(translatePosition.X, translatePosition.Y);
+                previewGraphics.RotateTransform(drawAngle);
+
+                if (thumbnail == null)
                 {
                     PointF[] rectanglePoints = new PointF[] {
                         new PointF(0, 0),
@@ -429,59 +583,270 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                         new PointF(0, 0)
                     };
 
-                    double t;
-                    if (w.TransitionTime == 0)
-                    {
-                        t = 1;
-                    }
-                    else
-                    {
-                        t = Math.Min(1, drawTime / w.TransitionTime);
-                    }
-
-                    float bezierX = Bezier.CalculateBezierCoordinate(P0.X, C0.X, C1.X, P1.X, (float)t);
-                    float bezierY = Bezier.CalculateBezierCoordinate(P0.Y, C0.Y, C1.Y, P1.Y, (float)t);
-
                     Matrix m = new Matrix();
-                    m.RotateAt(drawAngle, w.Angle.aroundCenter ? new PointF(itemSize.Width * widthRatio / 2.0f, itemSize.Height * heightRatio / 2.0f) : new PointF(0, 0));
-                    m.Scale(drawMagnification, drawMagnification);
-                    m.TransformPoints(rectanglePoints);
-                    m.Reset();
-
-                    m.Translate(bezierX, bezierY);
+                    m.Translate(drawPosition.X, drawPosition.Y);
                     m.TransformPoints(rectanglePoints);
 
                     Color c = Color.FromArgb(Convert.ToInt32(Math.Floor(drawOpacity * 255 / 100)), Color.Green);
-                    graphics.DrawLines(new Pen(c), rectanglePoints);
+                    previewGraphics.DrawLines(new Pen(c), rectanglePoints);
                 }
-                P0 = P1;
-            }
-
-            for (int i = 0; i < dg_Waypoints.Rows.Count; ++i)
-            {
-                if (!dg_Waypoints.Rows[i].IsNewRow)
+                else
                 {
-                    foreach (DataGridViewCell c in dg_Waypoints.SelectedCells)
+                    if (drawOpacity == 1)
                     {
-                        if (Math.Abs(i - c.RowIndex) <= numud_SurroundingWaypoints.Value)
+                        previewGraphics.DrawImage(thumbnail, drawPosition);
+                    }
+                    else
+                    {
+                        System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix()
                         {
-                            Waypoint waypoint = waypointBindingSource[i] as Waypoint;
-                            PointF P1 = waypoint.P1;
-                            P1.X *= widthRatio;
-                            P1.Y *= heightRatio;
+                            Matrix33 = (float)(this.drawOpacity / 100.0)
+                        };
 
-                            int offsetX = (P1.X > pb_Preview.Width / 2 ? -10 : 5);
-                            int offsetY = (P1.Y > pb_Preview.Height / 2 ? -10 : 5);
-                            graphics.DrawString((i + 1).ToString(), new Font("Arial", 8.0f, FontStyle.Regular, GraphicsUnit.Point), Brushes.White, new PointF(P1.X + offsetX, P1.Y + offsetY));
+                        System.Drawing.Imaging.ImageAttributes imageAttributes = new System.Drawing.Imaging.ImageAttributes();
+                        imageAttributes.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
 
-                            break;
-                        }
+                        int adjustedWidth = Convert.ToInt32(this.thumbnail.Width * widthRatio);
+                        int adjustedHeight = Convert.ToInt32(this.thumbnail.Height * heightRatio);
+
+                        previewGraphics.DrawImage(this.thumbnail,
+                                                  new Rectangle(Convert.ToInt32(Math.Floor(drawPosition.X)),
+                                                                Convert.ToInt32(Math.Floor(drawPosition.Y)),
+                                                                adjustedWidth,
+                                                                adjustedHeight),
+                                                  0,
+                                                  0,
+                                                  adjustedWidth,
+                                                  adjustedHeight,
+                                                  GraphicsUnit.Pixel,
+                                                  imageAttributes);
                     }
                 }
+
+                previewGraphics.TranslateTransform(-translatePosition.X, -translatePosition.Y);
+                previewGraphics.RotateTransform(-drawAngle);
             }
 
             pb_Preview.Image = previewBitmap;
             pb_Preview.Update();
+        }
+
+        private void UpdateTime(object sender, EventArgs e)
+        {
+            BindingSource bindingSource = dg_Waypoints.DataSource as BindingSource;
+
+            double currentTime = trk_Time.Value / 1000.0 * totalTime;
+
+            double summedTime = 0;
+
+            double prevAngle = Convert.ToDouble(numud_InitialAngle.Value);
+            double nextAngle = prevAngle;
+            double elapsedAngle = 0;
+            double durationAngle = 0;
+
+            double prevMagnification = Convert.ToDouble(numud_InitialMagnification.Value);
+            double nextMagnification = prevMagnification;
+            double elapsedMagnification = 0;
+            double durationMagnification = 0;
+
+            double prevOpacity = Convert.ToDouble(numud_InitialOpacity.Value);
+            double nextOpacity = prevOpacity;
+            double elapsedOpacity = 0;
+            double durationOpacity = 0;
+
+            drawAngle = (float)numud_InitialAngle.Value;
+            drawMagnification = (float)numud_InitialMagnification.Value;
+            drawOpacity = (float)numud_InitialOpacity.Value;
+
+            // Update the label.
+            lbl_Time.Text = String.Format("{0:F2} s", currentTime);
+
+            drawWaypoint = -1;
+
+            // Do the heavy lifting to figure out which Waypoint this is in, and update the previous values accordingly.
+            foreach (Waypoint w in bindingSource)
+            {
+                if (summedTime < currentTime)
+                {
+                    ++drawWaypoint;
+
+                    double waypointDuration = Math.Min(w.TransitionTime + w.PersistTime, currentTime - summedTime);
+                    summedTime += waypointDuration;
+
+                    if (elapsedAngle < durationAngle)
+                    {
+                        if (!w.Angle.change) { elapsedAngle = Math.Min(elapsedAngle + waypointDuration, durationAngle); }
+                        else
+                        {
+                            if (waypointDuration >= w.Angle.duration) { prevAngle = NormalizeAngle(w.Angle.target); nextAngle = prevAngle; elapsedAngle = 0; durationAngle = 0; }
+                            else { prevAngle = NormalizeAngle(drawAngle); nextAngle = w.Angle.target; elapsedAngle = waypointDuration; durationAngle = w.Angle.duration; }
+                        }
+                    }
+                    else if (w.Angle.change)
+                    {
+                        prevAngle = NormalizeAngle(drawAngle);
+                        nextAngle = w.Angle.target;
+                        durationAngle = w.Angle.duration;
+                        elapsedAngle = Math.Min(durationAngle, waypointDuration);
+                    }
+
+                    if (elapsedMagnification < durationMagnification)
+                    {
+                        if (!w.Magnification.change) { elapsedMagnification = Math.Min(elapsedMagnification + waypointDuration, durationMagnification); }
+                        else
+                        {
+                            if (waypointDuration >= w.Magnification.duration) { prevMagnification = w.Magnification.target; nextMagnification = prevMagnification; elapsedMagnification = 0; durationMagnification = 0; }
+                            else { prevMagnification = drawMagnification; nextMagnification = w.Magnification.target; elapsedMagnification = waypointDuration; durationMagnification = w.Magnification.duration; }
+                        }
+                    }
+                    else if (w.Magnification.change)
+                    {
+                        prevMagnification = drawMagnification;
+                        nextMagnification = w.Magnification.target;
+                        durationMagnification = w.Magnification.duration;
+                        elapsedMagnification = Math.Min(durationMagnification, waypointDuration);
+                    }
+
+                    if (elapsedOpacity < durationOpacity)
+                    {
+                        if (!w.Opacity.change) { elapsedOpacity = Math.Min(elapsedOpacity + waypointDuration, durationOpacity); }
+                        else
+                        {
+                            if (waypointDuration >= w.Opacity.duration) { prevOpacity = w.Opacity.target; nextOpacity = prevOpacity; elapsedOpacity = 0; durationOpacity = 0; }
+                            else { prevOpacity = drawOpacity; nextOpacity = w.Opacity.target; elapsedOpacity = waypointDuration; durationOpacity = w.Opacity.duration; }
+                        }
+                    }
+                    else if (w.Opacity.change)
+                    {
+                        prevOpacity = drawOpacity;
+                        nextOpacity = w.Opacity.target;
+                        durationOpacity = w.Opacity.duration;
+                        elapsedOpacity = Math.Min(durationOpacity, waypointDuration);
+                    }
+
+                    drawAngle = (durationAngle <= 0 ? (float)prevAngle : (float)(elapsedAngle / durationAngle * (nextAngle - prevAngle) + prevAngle));
+                    drawMagnification = (durationMagnification <= 0 ? (float)prevMagnification : (float)(elapsedMagnification / durationMagnification * (nextMagnification - prevMagnification) + prevMagnification));
+                    drawOpacity = (durationOpacity <= 0 ? (float)prevOpacity : (float)(elapsedOpacity / durationOpacity * (nextOpacity - prevOpacity) + prevOpacity));
+
+                    drawTime = waypointDuration;
+
+                    if (w.TransitionTime + w.PersistTime > 0)
+                    {
+                        double t = waypointDuration / (w.TransitionTime + w.PersistTime);
+
+                        drawPosition = Bezier.CalculateBezierPosition(drawPosition, w.C0, w.C1, w.P1, t);
+                    }
+                    else
+                    {
+                        drawPosition = w.P1;
+                    }
+                }
+            }
+
+            if (drawWaypoint == -1)
+            {
+                drawWaypoint = 0;
+            }
+
+            // Update the preview.
+            UpdatePreview();
+        }
+
+        private double NormalizeAngle(double currentAngle)
+        {
+            while (currentAngle < 0)
+            {
+                currentAngle += 360;
+            }
+
+            return currentAngle % 360;
+        }
+
+        protected void SetItemSize(float width = 0, float height = 0)
+        {
+            if (width == 0 && height == 0)
+            {
+                itemSize.Width = 200;
+                itemSize.Height = 150;
+            }
+            else
+            {
+                itemSize.Width = width;
+                itemSize.Height = height;
+            }
+        }
+
+        private void btn_CopySelected_Click(object sender, EventArgs e)
+        {
+            if (dg_Waypoints.SelectedRows.Count > 0)
+            {
+                var rows = dg_Waypoints.SelectedRows;
+
+                for (int r = rows.Count - 1; r >= 0; --r)
+                {
+                    Waypoint existingWaypoint = rows[r].DataBoundItem as Waypoint;
+                    Waypoint newWaypoint = (dg_Waypoints.DataSource as BindingSource).AddNew() as Waypoint;
+
+                    newWaypoint.P1 = existingWaypoint.P1;
+                    newWaypoint.C0 = existingWaypoint.C0;
+                    newWaypoint.C1 = existingWaypoint.C1;
+                    newWaypoint.TransitionTime = existingWaypoint.TransitionTime;
+                    newWaypoint.PersistTime = existingWaypoint.PersistTime;
+                    newWaypoint.LeaveScreen = existingWaypoint.LeaveScreen;
+                    newWaypoint.BehindImage = existingWaypoint.BehindImage;
+                    newWaypoint.ReadMessage = existingWaypoint.ReadMessage;
+
+                    newWaypoint.Angle.change = existingWaypoint.Angle.change;
+                    newWaypoint.Angle.duration = existingWaypoint.Angle.duration;
+                    newWaypoint.Angle.frames = existingWaypoint.Angle.frames;
+                    newWaypoint.Angle.target = existingWaypoint.Angle.target;
+
+                    newWaypoint.Magnification.change = existingWaypoint.Magnification.change;
+                    newWaypoint.Magnification.duration = existingWaypoint.Magnification.duration;
+                    newWaypoint.Magnification.frames = existingWaypoint.Magnification.frames;
+                    newWaypoint.Magnification.target = existingWaypoint.Magnification.target;
+
+                    newWaypoint.Opacity.change = existingWaypoint.Opacity.change;
+                    newWaypoint.Opacity.duration = existingWaypoint.Opacity.duration;
+                    newWaypoint.Opacity.frames = existingWaypoint.Opacity.frames;
+                    newWaypoint.Opacity.target = existingWaypoint.Opacity.target;
+
+                    newWaypoint.WindowTarget = existingWaypoint.WindowTarget;
+                    newWaypoint.Keypresses = existingWaypoint.Keypresses;
+                }
+
+                SumWaypoints();
+            }
+
+            for (int r = 0; r < dg_Waypoints.Rows.Count; ++r)
+            {
+                if (!dg_Waypoints.Rows[r].IsNewRow)
+                {
+                    dg_Waypoints.Rows[r].HeaderCell.Value = (r + 1).ToString();
+                }
+            }
+
+            dg_Waypoints.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+        }
+
+        private void btn_ShiftSelected_Click(object sender, EventArgs e)
+        {
+            if (dg_Waypoints.SelectedRows.Count > 0)
+            {
+                var rows = dg_Waypoints.SelectedRows;
+
+                for (int row = rows.Count - 1; row >= 0; --row)
+                {
+                    Waypoint r = rows[row].DataBoundItem as Waypoint;
+                    float x = (float)numud_ShiftX.Value;
+                    float y = (float)numud_ShiftY.Value;
+
+                    r.X += (float)numud_ShiftX.Value;
+                    r.Y += (float)numud_ShiftY.Value;
+                }
+
+                UpdatePreview();
+            }
         }
 
         protected internal Boolean CheckEffectFPS ()
@@ -520,6 +885,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
 */
             return alerted;
+        }
+
+        protected virtual void TestElement(object sender, EventArgs e)
+        {
+            // Does not actually declare any functionality.
         }
     }
 }
