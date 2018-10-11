@@ -12,6 +12,23 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     class XmlHelper
     {
+        public static void Read<T>(XmlReader reader, String elementTag, String collectionTag, List<T> listT) where T : IXmlSerializable, new()
+        {
+            while (reader.Read())
+            {
+                if (reader.IsStartElement(elementTag))
+                {
+                    T newItem = new T();
+                    newItem.ReadXml(reader);
+                    listT.Add(newItem);
+                }
+                else if (!reader.IsStartElement() && reader.Name == collectionTag)
+                {
+                    break;
+                }
+            }
+        }
+
         public static void ReadColor(XmlReader reader, out Color color, out String name)
         {
             if (reader.Name == "Color" || reader.Name == "Colour")
@@ -92,20 +109,22 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        // Deprecated with AlertClasses2.
         public static void ReadWaypoints(XmlReader reader, WaypointContainer waypoints)
         {
-            while (reader.Read())
+            if (reader.IsStartElement("Waypoints"))
             {
-                if (reader.IsStartElement("Waypoint"))
-                {
-                    Waypoint w = new Waypoint();
-                    w.ReadXml(reader);
-                    waypoints.AddWaypoint(w);
-                }
-                else if (!reader.IsStartElement() && reader.Name == "Waypoints")
-                {
-                    break;
-                }
+                XmlHelper.Read<Waypoint>(reader, "Waypoint", "Waypoints", waypoints.Waypoints);
+            }
+        }
+
+        public static void Write<T>(XmlWriter writer, String tag, List<T> elements) where T : IXmlSerializable
+        {
+            if (elements.Count > 0)
+            {
+                writer.WriteStartElement(tag);
+                foreach (T element in elements) { element.WriteXml(writer); }
+                writer.WriteEndElement();
             }
         }
 

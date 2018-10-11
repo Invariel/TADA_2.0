@@ -1,0 +1,1368 @@
+﻿namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
+{
+    partial class AlertCreationForm3
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlertCreationForm3));
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.ts_NewImageVideo = new System.Windows.Forms.ToolStripMenuItem();
+            this.ts_NewStreamerAudio = new System.Windows.Forms.ToolStripMenuItem();
+            this.ts_NewStreamerText = new System.Windows.Forms.ToolStripMenuItem();
+            this.ts_NewViewerText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.ts_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.grp_AlertSettings = new System.Windows.Forms.GroupBox();
+            this.txt_AlertName = new System.Windows.Forms.TextBox();
+            this.lbl_AlertName = new System.Windows.Forms.Label();
+            this.grp_Macro = new System.Windows.Forms.GroupBox();
+            this.cmb_MacroKey = new System.Windows.Forms.ComboBox();
+            this.chk_MacroCtrl = new System.Windows.Forms.CheckBox();
+            this.cml_MacroKey = new System.Windows.Forms.Label();
+            this.chk_MacroAlt = new System.Windows.Forms.CheckBox();
+            this.chk_MacroShift = new System.Windows.Forms.CheckBox();
+            this.lbl_AlertType = new System.Windows.Forms.Label();
+            this.cmb_AlertType = new System.Windows.Forms.ComboBox();
+            this.grp_Preview = new System.Windows.Forms.GroupBox();
+            this.grp_PreviewControls = new System.Windows.Forms.GroupBox();
+            this.cmb_PreviewViewerText = new System.Windows.Forms.ComboBox();
+            this.cmb_PreviewStreamerText = new System.Windows.Forms.ComboBox();
+            this.cmb_PreviewImage = new System.Windows.Forms.ComboBox();
+            this.chk_PreviewViewerText = new System.Windows.Forms.CheckBox();
+            this.chk_PreviewStreamerText = new System.Windows.Forms.CheckBox();
+            this.chk_PreviewImage = new System.Windows.Forms.CheckBox();
+            this.lbl_HighlightSurrounding = new System.Windows.Forms.Label();
+            this.numud_SurroundingWaypoints = new System.Windows.Forms.NumericUpDown();
+            this.lbl_WaypointNumbers = new System.Windows.Forms.Label();
+            this.lbl_Time = new System.Windows.Forms.Label();
+            this.trk_Time = new System.Windows.Forms.TrackBar();
+            this.pb_Preview = new System.Windows.Forms.PictureBox();
+            this.tab_AlertPieces = new System.Windows.Forms.TabControl();
+            this.tab_Image = new System.Windows.Forms.TabPage();
+            this.dg_Images = new System.Windows.Forms.DataGridView();
+            this.Images_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Images_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.tab_Audio = new System.Windows.Forms.TabPage();
+            this.dg_Audio = new System.Windows.Forms.DataGridView();
+            this.Audio_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Audio_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.tab_Streamer = new System.Windows.Forms.TabPage();
+            this.dg_StreamerMessages = new System.Windows.Forms.DataGridView();
+            this.Your_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Your_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.tab_Viewer = new System.Windows.Forms.TabPage();
+            this.dg_ViewerMessages = new System.Windows.Forms.DataGridView();
+            this.Viewer_Chance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Viewer_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.tab_Conditions = new System.Windows.Forms.TabPage();
+            this.dg_Conditions = new System.Windows.Forms.DataGridView();
+            this.tab_PreviewControls = new System.Windows.Forms.TabPage();
+            this.txt_ViewerMessage = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numud_Amount = new System.Windows.Forms.NumericUpDown();
+            this.dom_SubTier = new System.Windows.Forms.DomainUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txt_SubTierName = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txt_RecipientName = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txt_ViewerName = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btn_TestAlert = new System.Windows.Forms.Button();
+            this.numud_TestViewerMessage = new System.Windows.Forms.NumericUpDown();
+            this.numud_TestImage = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numud_TestStreamerMessage = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numud_TestAudio = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tab_ChildMDIForms = new System.Windows.Forms.TabControl();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dimensionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.alertImageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertAudioBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.streamerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.viewerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewCheckBoxColumn2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewCheckBoxColumn3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewCheckBoxColumn4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewCheckBoxColumn5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewCheckBoxColumn6 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.menuStrip.SuspendLayout();
+            this.statusStrip.SuspendLayout();
+            this.grp_AlertSettings.SuspendLayout();
+            this.grp_Macro.SuspendLayout();
+            this.grp_Preview.SuspendLayout();
+            this.grp_PreviewControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_SurroundingWaypoints)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trk_Time)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Preview)).BeginInit();
+            this.tab_AlertPieces.SuspendLayout();
+            this.tab_Image.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_Images)).BeginInit();
+            this.tab_Audio.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_Audio)).BeginInit();
+            this.tab_Streamer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_StreamerMessages)).BeginInit();
+            this.tab_Viewer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_ViewerMessages)).BeginInit();
+            this.tab_Conditions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_Conditions)).BeginInit();
+            this.tab_PreviewControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_Amount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestViewerMessage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestStreamerMessage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestAudio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertImageBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertAudioBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.streamerAlertTextBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewerAlertTextBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertConditionBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileMenu,
+            this.helpMenu});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(766, 24);
+            this.menuStrip.TabIndex = 0;
+            this.menuStrip.Text = "MenuStrip";
+            // 
+            // fileMenu
+            // 
+            this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ts_NewImageVideo,
+            this.ts_NewStreamerAudio,
+            this.ts_NewStreamerText,
+            this.ts_NewViewerText,
+            this.toolStripSeparator5,
+            this.ts_Exit});
+            this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
+            this.fileMenu.Name = "fileMenu";
+            this.fileMenu.Size = new System.Drawing.Size(37, 20);
+            this.fileMenu.Text = "&File";
+            // 
+            // ts_NewImageVideo
+            // 
+            this.ts_NewImageVideo.Image = ((System.Drawing.Image)(resources.GetObject("ts_NewImageVideo.Image")));
+            this.ts_NewImageVideo.ImageTransparentColor = System.Drawing.Color.Black;
+            this.ts_NewImageVideo.Name = "ts_NewImageVideo";
+            this.ts_NewImageVideo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.ts_NewImageVideo.Size = new System.Drawing.Size(212, 22);
+            this.ts_NewImageVideo.Text = "New &Image/Video";
+            // 
+            // ts_NewStreamerAudio
+            // 
+            this.ts_NewStreamerAudio.Name = "ts_NewStreamerAudio";
+            this.ts_NewStreamerAudio.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.ts_NewStreamerAudio.Size = new System.Drawing.Size(212, 22);
+            this.ts_NewStreamerAudio.Text = "New &Audio";
+            // 
+            // ts_NewStreamerText
+            // 
+            this.ts_NewStreamerText.Name = "ts_NewStreamerText";
+            this.ts_NewStreamerText.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.ts_NewStreamerText.Size = new System.Drawing.Size(212, 22);
+            this.ts_NewStreamerText.Text = "New &Streamer Text";
+            // 
+            // ts_NewViewerText
+            // 
+            this.ts_NewViewerText.Name = "ts_NewViewerText";
+            this.ts_NewViewerText.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.ts_NewViewerText.Size = new System.Drawing.Size(212, 22);
+            this.ts_NewViewerText.Text = "New Vi&ewer Text";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(209, 6);
+            // 
+            // ts_Exit
+            // 
+            this.ts_Exit.Name = "ts_Exit";
+            this.ts_Exit.Size = new System.Drawing.Size(212, 22);
+            this.ts_Exit.Text = "E&xit";
+            this.ts_Exit.Click += new System.EventHandler(this.ExitToolsStripMenuItem_Click);
+            // 
+            // helpMenu
+            // 
+            this.helpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contentsToolStripMenuItem,
+            this.indexToolStripMenuItem,
+            this.searchToolStripMenuItem,
+            this.toolStripSeparator8,
+            this.aboutToolStripMenuItem});
+            this.helpMenu.Name = "helpMenu";
+            this.helpMenu.Size = new System.Drawing.Size(44, 20);
+            this.helpMenu.Text = "&Help";
+            // 
+            // contentsToolStripMenuItem
+            // 
+            this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
+            this.contentsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F1)));
+            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.contentsToolStripMenuItem.Text = "&Contents";
+            // 
+            // indexToolStripMenuItem
+            // 
+            this.indexToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("indexToolStripMenuItem.Image")));
+            this.indexToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
+            this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.indexToolStripMenuItem.Text = "&Index";
+            // 
+            // searchToolStripMenuItem
+            // 
+            this.searchToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("searchToolStripMenuItem.Image")));
+            this.searchToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
+            this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.searchToolStripMenuItem.Text = "&Search";
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(165, 6);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.aboutToolStripMenuItem.Text = "&About ... ...";
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 659);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(766, 22);
+            this.statusStrip.TabIndex = 2;
+            this.statusStrip.Text = "StatusStrip";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(39, 17);
+            this.toolStripStatusLabel.Text = "Status";
+            // 
+            // grp_AlertSettings
+            // 
+            this.grp_AlertSettings.Controls.Add(this.txt_AlertName);
+            this.grp_AlertSettings.Controls.Add(this.lbl_AlertName);
+            this.grp_AlertSettings.Controls.Add(this.grp_Macro);
+            this.grp_AlertSettings.Controls.Add(this.lbl_AlertType);
+            this.grp_AlertSettings.Controls.Add(this.cmb_AlertType);
+            this.grp_AlertSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grp_AlertSettings.Location = new System.Drawing.Point(0, 24);
+            this.grp_AlertSettings.Name = "grp_AlertSettings";
+            this.grp_AlertSettings.Size = new System.Drawing.Size(766, 55);
+            this.grp_AlertSettings.TabIndex = 1;
+            this.grp_AlertSettings.TabStop = false;
+            this.grp_AlertSettings.Text = "Alert Settings";
+            // 
+            // txt_AlertName
+            // 
+            this.txt_AlertName.Location = new System.Drawing.Point(273, 18);
+            this.txt_AlertName.Name = "txt_AlertName";
+            this.txt_AlertName.Size = new System.Drawing.Size(166, 20);
+            this.txt_AlertName.TabIndex = 14;
+            // 
+            // lbl_AlertName
+            // 
+            this.lbl_AlertName.AutoSize = true;
+            this.lbl_AlertName.Location = new System.Drawing.Point(207, 22);
+            this.lbl_AlertName.Name = "lbl_AlertName";
+            this.lbl_AlertName.Size = new System.Drawing.Size(59, 13);
+            this.lbl_AlertName.TabIndex = 13;
+            this.lbl_AlertName.Text = "Alert Name";
+            // 
+            // grp_Macro
+            // 
+            this.grp_Macro.Controls.Add(this.cmb_MacroKey);
+            this.grp_Macro.Controls.Add(this.chk_MacroCtrl);
+            this.grp_Macro.Controls.Add(this.cml_MacroKey);
+            this.grp_Macro.Controls.Add(this.chk_MacroAlt);
+            this.grp_Macro.Controls.Add(this.chk_MacroShift);
+            this.grp_Macro.Location = new System.Drawing.Point(477, 7);
+            this.grp_Macro.Name = "grp_Macro";
+            this.grp_Macro.Padding = new System.Windows.Forms.Padding(0);
+            this.grp_Macro.Size = new System.Drawing.Size(273, 42);
+            this.grp_Macro.TabIndex = 15;
+            this.grp_Macro.TabStop = false;
+            this.grp_Macro.Text = "Macro Settings";
+            // 
+            // cmb_MacroKey
+            // 
+            this.cmb_MacroKey.FormattingEnabled = true;
+            this.cmb_MacroKey.Location = new System.Drawing.Point(197, 11);
+            this.cmb_MacroKey.Name = "cmb_MacroKey";
+            this.cmb_MacroKey.Size = new System.Drawing.Size(66, 21);
+            this.cmb_MacroKey.TabIndex = 9;
+            // 
+            // chk_MacroCtrl
+            // 
+            this.chk_MacroCtrl.AutoSize = true;
+            this.chk_MacroCtrl.Location = new System.Drawing.Point(12, 14);
+            this.chk_MacroCtrl.Name = "chk_MacroCtrl";
+            this.chk_MacroCtrl.Size = new System.Drawing.Size(41, 17);
+            this.chk_MacroCtrl.TabIndex = 5;
+            this.chk_MacroCtrl.Text = "Ctrl";
+            this.chk_MacroCtrl.UseVisualStyleBackColor = true;
+            // 
+            // cml_MacroKey
+            // 
+            this.cml_MacroKey.AutoSize = true;
+            this.cml_MacroKey.Location = new System.Drawing.Point(169, 15);
+            this.cml_MacroKey.Name = "cml_MacroKey";
+            this.cml_MacroKey.Size = new System.Drawing.Size(25, 13);
+            this.cml_MacroKey.TabIndex = 8;
+            this.cml_MacroKey.Text = "Key";
+            // 
+            // chk_MacroAlt
+            // 
+            this.chk_MacroAlt.AutoSize = true;
+            this.chk_MacroAlt.Location = new System.Drawing.Point(64, 14);
+            this.chk_MacroAlt.Name = "chk_MacroAlt";
+            this.chk_MacroAlt.Size = new System.Drawing.Size(38, 17);
+            this.chk_MacroAlt.TabIndex = 6;
+            this.chk_MacroAlt.Text = "Alt";
+            this.chk_MacroAlt.UseVisualStyleBackColor = true;
+            // 
+            // chk_MacroShift
+            // 
+            this.chk_MacroShift.AutoSize = true;
+            this.chk_MacroShift.Location = new System.Drawing.Point(113, 14);
+            this.chk_MacroShift.Name = "chk_MacroShift";
+            this.chk_MacroShift.Size = new System.Drawing.Size(47, 17);
+            this.chk_MacroShift.TabIndex = 7;
+            this.chk_MacroShift.Text = "Shift";
+            this.chk_MacroShift.UseVisualStyleBackColor = true;
+            // 
+            // lbl_AlertType
+            // 
+            this.lbl_AlertType.AutoSize = true;
+            this.lbl_AlertType.Location = new System.Drawing.Point(6, 22);
+            this.lbl_AlertType.Name = "lbl_AlertType";
+            this.lbl_AlertType.Size = new System.Drawing.Size(55, 13);
+            this.lbl_AlertType.TabIndex = 11;
+            this.lbl_AlertType.Text = "Alert Type";
+            // 
+            // cmb_AlertType
+            // 
+            this.cmb_AlertType.FormattingEnabled = true;
+            this.cmb_AlertType.Location = new System.Drawing.Point(68, 18);
+            this.cmb_AlertType.Name = "cmb_AlertType";
+            this.cmb_AlertType.Size = new System.Drawing.Size(106, 21);
+            this.cmb_AlertType.TabIndex = 12;
+            // 
+            // grp_Preview
+            // 
+            this.grp_Preview.Controls.Add(this.grp_PreviewControls);
+            this.grp_Preview.Controls.Add(this.lbl_Time);
+            this.grp_Preview.Controls.Add(this.trk_Time);
+            this.grp_Preview.Controls.Add(this.pb_Preview);
+            this.grp_Preview.Dock = System.Windows.Forms.DockStyle.Right;
+            this.grp_Preview.Location = new System.Drawing.Point(766, 0);
+            this.grp_Preview.Name = "grp_Preview";
+            this.grp_Preview.Size = new System.Drawing.Size(523, 681);
+            this.grp_Preview.TabIndex = 220;
+            this.grp_Preview.TabStop = false;
+            this.grp_Preview.Text = "Path Preview";
+            // 
+            // grp_PreviewControls
+            // 
+            this.grp_PreviewControls.Controls.Add(this.cmb_PreviewViewerText);
+            this.grp_PreviewControls.Controls.Add(this.cmb_PreviewStreamerText);
+            this.grp_PreviewControls.Controls.Add(this.cmb_PreviewImage);
+            this.grp_PreviewControls.Controls.Add(this.chk_PreviewViewerText);
+            this.grp_PreviewControls.Controls.Add(this.chk_PreviewStreamerText);
+            this.grp_PreviewControls.Controls.Add(this.chk_PreviewImage);
+            this.grp_PreviewControls.Controls.Add(this.lbl_HighlightSurrounding);
+            this.grp_PreviewControls.Controls.Add(this.numud_SurroundingWaypoints);
+            this.grp_PreviewControls.Controls.Add(this.lbl_WaypointNumbers);
+            this.grp_PreviewControls.Location = new System.Drawing.Point(6, 355);
+            this.grp_PreviewControls.Name = "grp_PreviewControls";
+            this.grp_PreviewControls.Size = new System.Drawing.Size(511, 143);
+            this.grp_PreviewControls.TabIndex = 217;
+            this.grp_PreviewControls.TabStop = false;
+            this.grp_PreviewControls.Text = "Preview Controls";
+            // 
+            // cmb_PreviewViewerText
+            // 
+            this.cmb_PreviewViewerText.FormattingEnabled = true;
+            this.cmb_PreviewViewerText.Location = new System.Drawing.Point(101, 76);
+            this.cmb_PreviewViewerText.Name = "cmb_PreviewViewerText";
+            this.cmb_PreviewViewerText.Size = new System.Drawing.Size(404, 21);
+            this.cmb_PreviewViewerText.TabIndex = 222;
+            // 
+            // cmb_PreviewStreamerText
+            // 
+            this.cmb_PreviewStreamerText.FormattingEnabled = true;
+            this.cmb_PreviewStreamerText.Location = new System.Drawing.Point(101, 48);
+            this.cmb_PreviewStreamerText.Name = "cmb_PreviewStreamerText";
+            this.cmb_PreviewStreamerText.Size = new System.Drawing.Size(404, 21);
+            this.cmb_PreviewStreamerText.TabIndex = 221;
+            // 
+            // cmb_PreviewImage
+            // 
+            this.cmb_PreviewImage.FormattingEnabled = true;
+            this.cmb_PreviewImage.Location = new System.Drawing.Point(101, 18);
+            this.cmb_PreviewImage.Name = "cmb_PreviewImage";
+            this.cmb_PreviewImage.Size = new System.Drawing.Size(404, 21);
+            this.cmb_PreviewImage.TabIndex = 220;
+            // 
+            // chk_PreviewViewerText
+            // 
+            this.chk_PreviewViewerText.AutoSize = true;
+            this.chk_PreviewViewerText.Location = new System.Drawing.Point(7, 80);
+            this.chk_PreviewViewerText.Name = "chk_PreviewViewerText";
+            this.chk_PreviewViewerText.Size = new System.Drawing.Size(82, 17);
+            this.chk_PreviewViewerText.TabIndex = 219;
+            this.chk_PreviewViewerText.Text = "Viewer Text";
+            this.chk_PreviewViewerText.UseVisualStyleBackColor = true;
+            // 
+            // chk_PreviewStreamerText
+            // 
+            this.chk_PreviewStreamerText.AutoSize = true;
+            this.chk_PreviewStreamerText.Location = new System.Drawing.Point(7, 52);
+            this.chk_PreviewStreamerText.Name = "chk_PreviewStreamerText";
+            this.chk_PreviewStreamerText.Size = new System.Drawing.Size(92, 17);
+            this.chk_PreviewStreamerText.TabIndex = 218;
+            this.chk_PreviewStreamerText.Text = "Streamer Text";
+            this.chk_PreviewStreamerText.UseVisualStyleBackColor = true;
+            // 
+            // chk_PreviewImage
+            // 
+            this.chk_PreviewImage.AutoSize = true;
+            this.chk_PreviewImage.Location = new System.Drawing.Point(7, 22);
+            this.chk_PreviewImage.Name = "chk_PreviewImage";
+            this.chk_PreviewImage.Size = new System.Drawing.Size(55, 17);
+            this.chk_PreviewImage.TabIndex = 217;
+            this.chk_PreviewImage.Text = "Image";
+            this.chk_PreviewImage.UseVisualStyleBackColor = true;
+            // 
+            // lbl_HighlightSurrounding
+            // 
+            this.lbl_HighlightSurrounding.AutoSize = true;
+            this.lbl_HighlightSurrounding.Location = new System.Drawing.Point(127, 121);
+            this.lbl_HighlightSurrounding.Name = "lbl_HighlightSurrounding";
+            this.lbl_HighlightSurrounding.Size = new System.Drawing.Size(108, 13);
+            this.lbl_HighlightSurrounding.TabIndex = 214;
+            this.lbl_HighlightSurrounding.Text = "Highlight Surrounding";
+            // 
+            // numud_SurroundingWaypoints
+            // 
+            this.numud_SurroundingWaypoints.Location = new System.Drawing.Point(237, 117);
+            this.numud_SurroundingWaypoints.Name = "numud_SurroundingWaypoints";
+            this.numud_SurroundingWaypoints.Size = new System.Drawing.Size(51, 20);
+            this.numud_SurroundingWaypoints.TabIndex = 215;
+            // 
+            // lbl_WaypointNumbers
+            // 
+            this.lbl_WaypointNumbers.AutoSize = true;
+            this.lbl_WaypointNumbers.Location = new System.Drawing.Point(290, 121);
+            this.lbl_WaypointNumbers.Name = "lbl_WaypointNumbers";
+            this.lbl_WaypointNumbers.Size = new System.Drawing.Size(97, 13);
+            this.lbl_WaypointNumbers.TabIndex = 216;
+            this.lbl_WaypointNumbers.Text = "Waypoint Numbers";
+            // 
+            // lbl_Time
+            // 
+            this.lbl_Time.AutoSize = true;
+            this.lbl_Time.Location = new System.Drawing.Point(478, 320);
+            this.lbl_Time.Name = "lbl_Time";
+            this.lbl_Time.Size = new System.Drawing.Size(18, 13);
+            this.lbl_Time.TabIndex = 213;
+            this.lbl_Time.Text = "0s";
+            // 
+            // trk_Time
+            // 
+            this.trk_Time.LargeChange = 50;
+            this.trk_Time.Location = new System.Drawing.Point(8, 304);
+            this.trk_Time.Maximum = 1000;
+            this.trk_Time.Name = "trk_Time";
+            this.trk_Time.Size = new System.Drawing.Size(458, 45);
+            this.trk_Time.TabIndex = 212;
+            this.trk_Time.TickFrequency = 25;
+            // 
+            // pb_Preview
+            // 
+            this.pb_Preview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pb_Preview.Location = new System.Drawing.Point(6, 15);
+            this.pb_Preview.Name = "pb_Preview";
+            this.pb_Preview.Size = new System.Drawing.Size(512, 288);
+            this.pb_Preview.TabIndex = 3;
+            this.pb_Preview.TabStop = false;
+            // 
+            // tab_AlertPieces
+            // 
+            this.tab_AlertPieces.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+            this.tab_AlertPieces.Controls.Add(this.tab_Image);
+            this.tab_AlertPieces.Controls.Add(this.tab_Audio);
+            this.tab_AlertPieces.Controls.Add(this.tab_Streamer);
+            this.tab_AlertPieces.Controls.Add(this.tab_Viewer);
+            this.tab_AlertPieces.Controls.Add(this.tab_Conditions);
+            this.tab_AlertPieces.Controls.Add(this.tab_PreviewControls);
+            this.tab_AlertPieces.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tab_AlertPieces.Location = new System.Drawing.Point(0, 79);
+            this.tab_AlertPieces.Margin = new System.Windows.Forms.Padding(0);
+            this.tab_AlertPieces.Name = "tab_AlertPieces";
+            this.tab_AlertPieces.Padding = new System.Drawing.Point(0, 0);
+            this.tab_AlertPieces.SelectedIndex = 0;
+            this.tab_AlertPieces.Size = new System.Drawing.Size(766, 146);
+            this.tab_AlertPieces.TabIndex = 222;
+            // 
+            // tab_Image
+            // 
+            this.tab_Image.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Image.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.tab_Image.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tab_Image.Controls.Add(this.dg_Images);
+            this.tab_Image.Location = new System.Drawing.Point(4, 25);
+            this.tab_Image.Margin = new System.Windows.Forms.Padding(0);
+            this.tab_Image.Name = "tab_Image";
+            this.tab_Image.Size = new System.Drawing.Size(758, 117);
+            this.tab_Image.TabIndex = 0;
+            this.tab_Image.Text = "Images and Video";
+            // 
+            // dg_Images
+            // 
+            this.dg_Images.AutoGenerateColumns = false;
+            this.dg_Images.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dg_Images.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_Images.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dimensionsDataGridViewTextBoxColumn,
+            this.dataGridViewCheckBoxColumn1,
+            this.Images_Chance,
+            this.Images_Edit});
+            this.dg_Images.DataSource = this.alertImageBindingSource;
+            this.dg_Images.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_Images.Location = new System.Drawing.Point(0, 0);
+            this.dg_Images.MultiSelect = false;
+            this.dg_Images.Name = "dg_Images";
+            this.dg_Images.ReadOnly = true;
+            this.dg_Images.Size = new System.Drawing.Size(756, 115);
+            this.dg_Images.TabIndex = 0;
+            // 
+            // Images_Chance
+            // 
+            this.Images_Chance.HeaderText = "Chance";
+            this.Images_Chance.MinimumWidth = 50;
+            this.Images_Chance.Name = "Images_Chance";
+            this.Images_Chance.ReadOnly = true;
+            this.Images_Chance.Width = 50;
+            // 
+            // Images_Edit
+            // 
+            this.Images_Edit.HeaderText = "New / Edit";
+            this.Images_Edit.MinimumWidth = 75;
+            this.Images_Edit.Name = "Images_Edit";
+            this.Images_Edit.ReadOnly = true;
+            this.Images_Edit.Text = "Edit";
+            this.Images_Edit.ToolTipText = "Create a new image/video alert piece, or edit an existing one.";
+            this.Images_Edit.UseColumnTextForButtonValue = true;
+            this.Images_Edit.Width = 75;
+            // 
+            // tab_Audio
+            // 
+            this.tab_Audio.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Audio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tab_Audio.Controls.Add(this.dg_Audio);
+            this.tab_Audio.Location = new System.Drawing.Point(4, 25);
+            this.tab_Audio.Margin = new System.Windows.Forms.Padding(0);
+            this.tab_Audio.Name = "tab_Audio";
+            this.tab_Audio.Size = new System.Drawing.Size(758, 117);
+            this.tab_Audio.TabIndex = 1;
+            this.tab_Audio.Text = "Audio";
+            // 
+            // dg_Audio
+            // 
+            this.dg_Audio.AutoGenerateColumns = false;
+            this.dg_Audio.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dg_Audio.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_Audio.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn2,
+            this.Audio_Chance,
+            this.Audio_Edit});
+            this.dg_Audio.DataSource = this.alertAudioBindingSource;
+            this.dg_Audio.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_Audio.Location = new System.Drawing.Point(0, 0);
+            this.dg_Audio.Name = "dg_Audio";
+            this.dg_Audio.Size = new System.Drawing.Size(756, 115);
+            this.dg_Audio.TabIndex = 0;
+            // 
+            // Audio_Chance
+            // 
+            this.Audio_Chance.HeaderText = "Chance";
+            this.Audio_Chance.MinimumWidth = 50;
+            this.Audio_Chance.Name = "Audio_Chance";
+            this.Audio_Chance.Width = 50;
+            // 
+            // Audio_Edit
+            // 
+            this.Audio_Edit.HeaderText = "New / Edit";
+            this.Audio_Edit.MinimumWidth = 75;
+            this.Audio_Edit.Name = "Audio_Edit";
+            this.Audio_Edit.Text = "Edit";
+            this.Audio_Edit.ToolTipText = "Create a new audio piece or edit an existing one.";
+            this.Audio_Edit.UseColumnTextForButtonValue = true;
+            this.Audio_Edit.Width = 75;
+            // 
+            // tab_Streamer
+            // 
+            this.tab_Streamer.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Streamer.Controls.Add(this.dg_StreamerMessages);
+            this.tab_Streamer.Location = new System.Drawing.Point(4, 25);
+            this.tab_Streamer.Margin = new System.Windows.Forms.Padding(0);
+            this.tab_Streamer.Name = "tab_Streamer";
+            this.tab_Streamer.Size = new System.Drawing.Size(758, 117);
+            this.tab_Streamer.TabIndex = 2;
+            this.tab_Streamer.Text = "Streamer\'s Text";
+            // 
+            // dg_StreamerMessages
+            // 
+            this.dg_StreamerMessages.AutoGenerateColumns = false;
+            this.dg_StreamerMessages.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dg_StreamerMessages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_StreamerMessages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.Your_Chance,
+            this.Your_Edit});
+            this.dg_StreamerMessages.DataSource = this.streamerAlertTextBindingSource;
+            this.dg_StreamerMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_StreamerMessages.Location = new System.Drawing.Point(0, 0);
+            this.dg_StreamerMessages.Name = "dg_StreamerMessages";
+            this.dg_StreamerMessages.Size = new System.Drawing.Size(758, 117);
+            this.dg_StreamerMessages.TabIndex = 0;
+            // 
+            // Your_Chance
+            // 
+            this.Your_Chance.HeaderText = "Chance";
+            this.Your_Chance.MinimumWidth = 50;
+            this.Your_Chance.Name = "Your_Chance";
+            this.Your_Chance.Width = 50;
+            // 
+            // Your_Edit
+            // 
+            this.Your_Edit.HeaderText = "New / Edit";
+            this.Your_Edit.MinimumWidth = 75;
+            this.Your_Edit.Name = "Your_Edit";
+            this.Your_Edit.Text = "Edit";
+            this.Your_Edit.ToolTipText = "Create a new piece of displayed text, or edit an existing one.";
+            this.Your_Edit.UseColumnTextForButtonValue = true;
+            this.Your_Edit.Width = 75;
+            // 
+            // tab_Viewer
+            // 
+            this.tab_Viewer.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Viewer.Controls.Add(this.dg_ViewerMessages);
+            this.tab_Viewer.Location = new System.Drawing.Point(4, 25);
+            this.tab_Viewer.Margin = new System.Windows.Forms.Padding(0);
+            this.tab_Viewer.Name = "tab_Viewer";
+            this.tab_Viewer.Size = new System.Drawing.Size(758, 117);
+            this.tab_Viewer.TabIndex = 3;
+            this.tab_Viewer.Text = "Viewer\'s Text";
+            // 
+            // dg_ViewerMessages
+            // 
+            this.dg_ViewerMessages.AutoGenerateColumns = false;
+            this.dg_ViewerMessages.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dg_ViewerMessages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_ViewerMessages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
+            this.Viewer_Chance,
+            this.Viewer_Edit});
+            this.dg_ViewerMessages.DataSource = this.viewerAlertTextBindingSource;
+            this.dg_ViewerMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_ViewerMessages.Location = new System.Drawing.Point(0, 0);
+            this.dg_ViewerMessages.Name = "dg_ViewerMessages";
+            this.dg_ViewerMessages.Size = new System.Drawing.Size(758, 117);
+            this.dg_ViewerMessages.TabIndex = 0;
+            // 
+            // Viewer_Chance
+            // 
+            this.Viewer_Chance.DataPropertyName = "Message";
+            this.Viewer_Chance.HeaderText = "Chance";
+            this.Viewer_Chance.MinimumWidth = 50;
+            this.Viewer_Chance.Name = "Viewer_Chance";
+            this.Viewer_Chance.Width = 50;
+            // 
+            // Viewer_Edit
+            // 
+            this.Viewer_Edit.HeaderText = "New / Edit";
+            this.Viewer_Edit.MinimumWidth = 75;
+            this.Viewer_Edit.Name = "Viewer_Edit";
+            this.Viewer_Edit.Text = "Edit";
+            this.Viewer_Edit.ToolTipText = "Create a new style for a viewer\'s text, or edit an existing one.";
+            this.Viewer_Edit.UseColumnTextForButtonValue = true;
+            this.Viewer_Edit.Width = 75;
+            // 
+            // tab_Conditions
+            // 
+            this.tab_Conditions.Controls.Add(this.dg_Conditions);
+            this.tab_Conditions.Location = new System.Drawing.Point(4, 25);
+            this.tab_Conditions.Name = "tab_Conditions";
+            this.tab_Conditions.Size = new System.Drawing.Size(758, 117);
+            this.tab_Conditions.TabIndex = 5;
+            this.tab_Conditions.Text = "Trigger Conditions";
+            this.tab_Conditions.UseVisualStyleBackColor = true;
+            // 
+            // dg_Conditions
+            // 
+            this.dg_Conditions.AutoGenerateColumns = false;
+            this.dg_Conditions.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dg_Conditions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_Conditions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewCheckBoxColumn2,
+            this.dataGridViewCheckBoxColumn3,
+            this.dataGridViewCheckBoxColumn4,
+            this.dataGridViewCheckBoxColumn5,
+            this.dataGridViewCheckBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.dataGridViewTextBoxColumn9,
+            this.dataGridViewTextBoxColumn10});
+            this.dg_Conditions.DataSource = this.alertConditionBindingSource;
+            this.dg_Conditions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dg_Conditions.Location = new System.Drawing.Point(0, 0);
+            this.dg_Conditions.Name = "dg_Conditions";
+            this.dg_Conditions.Size = new System.Drawing.Size(758, 117);
+            this.dg_Conditions.TabIndex = 1;
+            // 
+            // tab_PreviewControls
+            // 
+            this.tab_PreviewControls.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_PreviewControls.Controls.Add(this.txt_ViewerMessage);
+            this.tab_PreviewControls.Controls.Add(this.label12);
+            this.tab_PreviewControls.Controls.Add(this.numud_Amount);
+            this.tab_PreviewControls.Controls.Add(this.dom_SubTier);
+            this.tab_PreviewControls.Controls.Add(this.label11);
+            this.tab_PreviewControls.Controls.Add(this.label10);
+            this.tab_PreviewControls.Controls.Add(this.txt_SubTierName);
+            this.tab_PreviewControls.Controls.Add(this.label9);
+            this.tab_PreviewControls.Controls.Add(this.txt_RecipientName);
+            this.tab_PreviewControls.Controls.Add(this.label8);
+            this.tab_PreviewControls.Controls.Add(this.txt_ViewerName);
+            this.tab_PreviewControls.Controls.Add(this.label7);
+            this.tab_PreviewControls.Controls.Add(this.btn_TestAlert);
+            this.tab_PreviewControls.Controls.Add(this.numud_TestViewerMessage);
+            this.tab_PreviewControls.Controls.Add(this.numud_TestImage);
+            this.tab_PreviewControls.Controls.Add(this.label6);
+            this.tab_PreviewControls.Controls.Add(this.numud_TestStreamerMessage);
+            this.tab_PreviewControls.Controls.Add(this.label3);
+            this.tab_PreviewControls.Controls.Add(this.numud_TestAudio);
+            this.tab_PreviewControls.Controls.Add(this.label5);
+            this.tab_PreviewControls.Controls.Add(this.label4);
+            this.tab_PreviewControls.Location = new System.Drawing.Point(4, 25);
+            this.tab_PreviewControls.Name = "tab_PreviewControls";
+            this.tab_PreviewControls.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_PreviewControls.Size = new System.Drawing.Size(758, 117);
+            this.tab_PreviewControls.TabIndex = 4;
+            this.tab_PreviewControls.Text = "Preview Controls";
+            // 
+            // txt_ViewerMessage
+            // 
+            this.txt_ViewerMessage.Location = new System.Drawing.Point(310, 84);
+            this.txt_ViewerMessage.Name = "txt_ViewerMessage";
+            this.txt_ViewerMessage.Size = new System.Drawing.Size(333, 20);
+            this.txt_ViewerMessage.TabIndex = 90;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(218, 88);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(85, 13);
+            this.label12.TabIndex = 89;
+            this.label12.Text = "Viewer Message";
+            // 
+            // numud_Amount
+            // 
+            this.numud_Amount.Location = new System.Drawing.Point(562, 32);
+            this.numud_Amount.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numud_Amount.Name = "numud_Amount";
+            this.numud_Amount.Size = new System.Drawing.Size(120, 20);
+            this.numud_Amount.TabIndex = 94;
+            // 
+            // dom_SubTier
+            // 
+            this.dom_SubTier.Items.Add("None");
+            this.dom_SubTier.Items.Add("Twitch Prime");
+            this.dom_SubTier.Items.Add("Tier One");
+            this.dom_SubTier.Items.Add("Tier Two");
+            this.dom_SubTier.Items.Add("Tier Three");
+            this.dom_SubTier.Location = new System.Drawing.Point(562, 8);
+            this.dom_SubTier.Name = "dom_SubTier";
+            this.dom_SubTier.Size = new System.Drawing.Size(120, 20);
+            this.dom_SubTier.TabIndex = 92;
+            this.dom_SubTier.Text = "None";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(466, 36);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(89, 13);
+            this.label11.TabIndex = 93;
+            this.label11.Text = "Relevant Amount";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(466, 12);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(89, 13);
+            this.label10.TabIndex = 91;
+            this.label10.Text = "Viewer\'s Sub Tier";
+            // 
+            // txt_SubTierName
+            // 
+            this.txt_SubTierName.Location = new System.Drawing.Point(310, 58);
+            this.txt_SubTierName.Name = "txt_SubTierName";
+            this.txt_SubTierName.Size = new System.Drawing.Size(127, 20);
+            this.txt_SubTierName.TabIndex = 88;
+            this.txt_SubTierName.Text = "Tier Awesome";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(225, 62);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(78, 13);
+            this.label9.TabIndex = 87;
+            this.label9.Text = "Sub Tier Name";
+            // 
+            // txt_RecipientName
+            // 
+            this.txt_RecipientName.Location = new System.Drawing.Point(310, 32);
+            this.txt_RecipientName.Name = "txt_RecipientName";
+            this.txt_RecipientName.Size = new System.Drawing.Size(127, 20);
+            this.txt_RecipientName.TabIndex = 86;
+            this.txt_RecipientName.Text = "Leiravni";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(210, 36);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(93, 13);
+            this.label8.TabIndex = 85;
+            this.label8.Text = "Sub Gift Recipient";
+            // 
+            // txt_ViewerName
+            // 
+            this.txt_ViewerName.Location = new System.Drawing.Point(310, 6);
+            this.txt_ViewerName.Name = "txt_ViewerName";
+            this.txt_ViewerName.Size = new System.Drawing.Size(127, 20);
+            this.txt_ViewerName.TabIndex = 84;
+            this.txt_ViewerName.Text = "Invariel";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(233, 10);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(70, 13);
+            this.label7.TabIndex = 83;
+            this.label7.Text = "Viewer Name";
+            // 
+            // btn_TestAlert
+            // 
+            this.btn_TestAlert.Location = new System.Drawing.Point(664, 82);
+            this.btn_TestAlert.Name = "btn_TestAlert";
+            this.btn_TestAlert.Size = new System.Drawing.Size(82, 23);
+            this.btn_TestAlert.TabIndex = 110;
+            this.btn_TestAlert.Text = "Test Alert";
+            this.btn_TestAlert.UseVisualStyleBackColor = true;
+            // 
+            // numud_TestViewerMessage
+            // 
+            this.numud_TestViewerMessage.Location = new System.Drawing.Point(107, 84);
+            this.numud_TestViewerMessage.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numud_TestViewerMessage.Name = "numud_TestViewerMessage";
+            this.numud_TestViewerMessage.Size = new System.Drawing.Size(82, 20);
+            this.numud_TestViewerMessage.TabIndex = 82;
+            // 
+            // numud_TestImage
+            // 
+            this.numud_TestImage.Location = new System.Drawing.Point(107, 6);
+            this.numud_TestImage.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numud_TestImage.Name = "numud_TestImage";
+            this.numud_TestImage.Size = new System.Drawing.Size(82, 20);
+            this.numud_TestImage.TabIndex = 76;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 88);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(85, 13);
+            this.label6.TabIndex = 81;
+            this.label6.Text = "Viewer Message";
+            // 
+            // numud_TestStreamerMessage
+            // 
+            this.numud_TestStreamerMessage.Location = new System.Drawing.Point(106, 58);
+            this.numud_TestStreamerMessage.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numud_TestStreamerMessage.Name = "numud_TestStreamerMessage";
+            this.numud_TestStreamerMessage.Size = new System.Drawing.Size(82, 20);
+            this.numud_TestStreamerMessage.TabIndex = 80;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(64, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 13);
+            this.label3.TabIndex = 75;
+            this.label3.Text = "Image";
+            // 
+            // numud_TestAudio
+            // 
+            this.numud_TestAudio.Location = new System.Drawing.Point(107, 32);
+            this.numud_TestAudio.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numud_TestAudio.Name = "numud_TestAudio";
+            this.numud_TestAudio.Size = new System.Drawing.Size(82, 20);
+            this.numud_TestAudio.TabIndex = 78;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(5, 62);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(95, 13);
+            this.label5.TabIndex = 79;
+            this.label5.Text = "Streamer Message";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(66, 36);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(34, 13);
+            this.label4.TabIndex = 77;
+            this.label4.Text = "Audio";
+            // 
+            // tab_ChildMDIForms
+            // 
+            this.tab_ChildMDIForms.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tab_ChildMDIForms.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tab_ChildMDIForms.Location = new System.Drawing.Point(0, 225);
+            this.tab_ChildMDIForms.Name = "tab_ChildMDIForms";
+            this.tab_ChildMDIForms.SelectedIndex = 0;
+            this.tab_ChildMDIForms.Size = new System.Drawing.Size(766, 25);
+            this.tab_ChildMDIForms.TabIndex = 224;
+            this.tab_ChildMDIForms.Visible = false;
+            this.tab_ChildMDIForms.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tab_ChildMDIForms_DrawItem);
+            this.tab_ChildMDIForms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tab_ChildMDIForms_MouseUp);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Filename";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Filename";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dimensionsDataGridViewTextBoxColumn
+            // 
+            this.dimensionsDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dimensionsDataGridViewTextBoxColumn.DataPropertyName = "Dimensions";
+            this.dimensionsDataGridViewTextBoxColumn.HeaderText = "Size";
+            this.dimensionsDataGridViewTextBoxColumn.MinimumWidth = 75;
+            this.dimensionsDataGridViewTextBoxColumn.Name = "dimensionsDataGridViewTextBoxColumn";
+            this.dimensionsDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dimensionsDataGridViewTextBoxColumn.Width = 75;
+            // 
+            // dataGridViewCheckBoxColumn1
+            // 
+            this.dataGridViewCheckBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewCheckBoxColumn1.DataPropertyName = "IsVideo";
+            this.dataGridViewCheckBoxColumn1.HeaderText = "Video ?";
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.dataGridViewCheckBoxColumn1.ReadOnly = true;
+            this.dataGridViewCheckBoxColumn1.Width = 49;
+            // 
+            // alertImageBindingSource
+            // 
+            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertImage);
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Filename";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Filename";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // alertAudioBindingSource
+            // 
+            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertAudio);
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "Message";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Displayed Message";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "ReadMessage";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Narrated Message";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            // 
+            // streamerAlertTextBindingSource
+            // 
+            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn5.DataPropertyName = "Message";
+            this.dataGridViewTextBoxColumn5.HeaderText = "Displayed Message";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "ReadMessage";
+            this.dataGridViewTextBoxColumn6.HeaderText = "Narrated Message";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // viewerAlertTextBindingSource
+            // 
+            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
+            // 
+            // dataGridViewCheckBoxColumn2
+            // 
+            this.dataGridViewCheckBoxColumn2.DataPropertyName = "NoTier";
+            this.dataGridViewCheckBoxColumn2.HeaderText = "No Tier";
+            this.dataGridViewCheckBoxColumn2.MinimumWidth = 45;
+            this.dataGridViewCheckBoxColumn2.Name = "dataGridViewCheckBoxColumn2";
+            this.dataGridViewCheckBoxColumn2.Width = 45;
+            // 
+            // dataGridViewCheckBoxColumn3
+            // 
+            this.dataGridViewCheckBoxColumn3.DataPropertyName = "TwitchPrime";
+            this.dataGridViewCheckBoxColumn3.HeaderText = "Twitch Prime";
+            this.dataGridViewCheckBoxColumn3.MinimumWidth = 45;
+            this.dataGridViewCheckBoxColumn3.Name = "dataGridViewCheckBoxColumn3";
+            this.dataGridViewCheckBoxColumn3.Width = 45;
+            // 
+            // dataGridViewCheckBoxColumn4
+            // 
+            this.dataGridViewCheckBoxColumn4.DataPropertyName = "TierOne";
+            this.dataGridViewCheckBoxColumn4.HeaderText = "Tier One";
+            this.dataGridViewCheckBoxColumn4.MinimumWidth = 45;
+            this.dataGridViewCheckBoxColumn4.Name = "dataGridViewCheckBoxColumn4";
+            this.dataGridViewCheckBoxColumn4.Width = 45;
+            // 
+            // dataGridViewCheckBoxColumn5
+            // 
+            this.dataGridViewCheckBoxColumn5.DataPropertyName = "TierTwo";
+            this.dataGridViewCheckBoxColumn5.HeaderText = "Tier Two";
+            this.dataGridViewCheckBoxColumn5.MinimumWidth = 45;
+            this.dataGridViewCheckBoxColumn5.Name = "dataGridViewCheckBoxColumn5";
+            this.dataGridViewCheckBoxColumn5.Width = 45;
+            // 
+            // dataGridViewCheckBoxColumn6
+            // 
+            this.dataGridViewCheckBoxColumn6.DataPropertyName = "TierThree";
+            this.dataGridViewCheckBoxColumn6.HeaderText = "Tier Three";
+            this.dataGridViewCheckBoxColumn6.MinimumWidth = 45;
+            this.dataGridViewCheckBoxColumn6.Name = "dataGridViewCheckBoxColumn6";
+            this.dataGridViewCheckBoxColumn6.Width = 45;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn7.DataPropertyName = "Usernames";
+            this.dataGridViewTextBoxColumn7.HeaderText = "Usernames";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn8.DataPropertyName = "Keywords";
+            this.dataGridViewTextBoxColumn8.HeaderText = "Keywords";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.DataPropertyName = "Minimum";
+            this.dataGridViewTextBoxColumn9.HeaderText = "Minimum";
+            this.dataGridViewTextBoxColumn9.MinimumWidth = 60;
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.Width = 60;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.DataPropertyName = "Maximum";
+            this.dataGridViewTextBoxColumn10.HeaderText = "Maximum";
+            this.dataGridViewTextBoxColumn10.MinimumWidth = 60;
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.Width = 60;
+            // 
+            // alertConditionBindingSource
+            // 
+            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertCondition);
+            // 
+            // waypointBindingSource
+            // 
+            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
+            // 
+            // AlertCreationForm3
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1289, 681);
+            this.Controls.Add(this.tab_ChildMDIForms);
+            this.Controls.Add(this.tab_AlertPieces);
+            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.grp_AlertSettings);
+            this.Controls.Add(this.menuStrip);
+            this.Controls.Add(this.grp_Preview);
+            this.IsMdiContainer = true;
+            this.MainMenuStrip = this.menuStrip;
+            this.MaximumSize = new System.Drawing.Size(1305, 720);
+            this.MinimumSize = new System.Drawing.Size(1305, 720);
+            this.Name = "AlertCreationForm3";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.Text = "Alert_Designer_MDI";
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
+            this.grp_AlertSettings.ResumeLayout(false);
+            this.grp_AlertSettings.PerformLayout();
+            this.grp_Macro.ResumeLayout(false);
+            this.grp_Macro.PerformLayout();
+            this.grp_Preview.ResumeLayout(false);
+            this.grp_Preview.PerformLayout();
+            this.grp_PreviewControls.ResumeLayout(false);
+            this.grp_PreviewControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_SurroundingWaypoints)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trk_Time)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Preview)).EndInit();
+            this.tab_AlertPieces.ResumeLayout(false);
+            this.tab_Image.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dg_Images)).EndInit();
+            this.tab_Audio.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dg_Audio)).EndInit();
+            this.tab_Streamer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dg_StreamerMessages)).EndInit();
+            this.tab_Viewer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dg_ViewerMessages)).EndInit();
+            this.tab_Conditions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dg_Conditions)).EndInit();
+            this.tab_PreviewControls.ResumeLayout(false);
+            this.tab_PreviewControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_Amount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestViewerMessage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestStreamerMessage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TestAudio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertImageBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertAudioBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.streamerAlertTextBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewerAlertTextBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertConditionBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+        #endregion
+
+
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileMenu;
+        private System.Windows.Forms.ToolStripMenuItem ts_NewImageVideo;
+        private System.Windows.Forms.ToolStripMenuItem ts_Exit;
+        private System.Windows.Forms.ToolStripMenuItem helpMenu;
+        private System.Windows.Forms.ToolStripMenuItem contentsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ToolStripMenuItem ts_NewStreamerAudio;
+        private System.Windows.Forms.ToolStripMenuItem ts_NewStreamerText;
+        private System.Windows.Forms.ToolStripMenuItem ts_NewViewerText;
+        private System.Windows.Forms.GroupBox grp_AlertSettings;
+        private System.Windows.Forms.TextBox txt_AlertName;
+        private System.Windows.Forms.Label lbl_AlertName;
+        private System.Windows.Forms.GroupBox grp_Macro;
+        private System.Windows.Forms.ComboBox cmb_MacroKey;
+        private System.Windows.Forms.CheckBox chk_MacroCtrl;
+        private System.Windows.Forms.Label cml_MacroKey;
+        private System.Windows.Forms.CheckBox chk_MacroAlt;
+        private System.Windows.Forms.CheckBox chk_MacroShift;
+        private System.Windows.Forms.Label lbl_AlertType;
+        private System.Windows.Forms.ComboBox cmb_AlertType;
+        protected internal System.Windows.Forms.GroupBox grp_Preview;
+        private System.Windows.Forms.GroupBox grp_PreviewControls;
+        private System.Windows.Forms.ComboBox cmb_PreviewViewerText;
+        private System.Windows.Forms.ComboBox cmb_PreviewStreamerText;
+        private System.Windows.Forms.ComboBox cmb_PreviewImage;
+        private System.Windows.Forms.CheckBox chk_PreviewViewerText;
+        private System.Windows.Forms.CheckBox chk_PreviewStreamerText;
+        private System.Windows.Forms.CheckBox chk_PreviewImage;
+        protected internal System.Windows.Forms.Label lbl_HighlightSurrounding;
+        protected internal System.Windows.Forms.NumericUpDown numud_SurroundingWaypoints;
+        protected internal System.Windows.Forms.Label lbl_WaypointNumbers;
+        protected internal System.Windows.Forms.Label lbl_Time;
+        protected internal System.Windows.Forms.TrackBar trk_Time;
+        protected internal System.Windows.Forms.PictureBox pb_Preview;
+        private System.Windows.Forms.BindingSource alertAudioBindingSource;
+        private System.Windows.Forms.BindingSource streamerAlertTextBindingSource;
+        private System.Windows.Forms.BindingSource viewerAlertTextBindingSource;
+        private System.Windows.Forms.BindingSource alertConditionBindingSource;
+        private System.Windows.Forms.BindingSource alertImageBindingSource;
+        private System.Windows.Forms.BindingSource waypointBindingSource;
+        private System.Windows.Forms.TabControl tab_AlertPieces;
+        private System.Windows.Forms.TabPage tab_Image;
+        private System.Windows.Forms.DataGridView dg_Images;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dimensionsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Images_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Images_Edit;
+        private System.Windows.Forms.TabPage tab_Audio;
+        private System.Windows.Forms.DataGridView dg_Audio;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Audio_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Audio_Edit;
+        private System.Windows.Forms.TabPage tab_Streamer;
+        private System.Windows.Forms.DataGridView dg_StreamerMessages;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Your_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Your_Edit;
+        private System.Windows.Forms.TabPage tab_Viewer;
+        private System.Windows.Forms.DataGridView dg_ViewerMessages;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Viewer_Chance;
+        private System.Windows.Forms.DataGridViewButtonColumn Viewer_Edit;
+        private System.Windows.Forms.TabPage tab_Conditions;
+        private System.Windows.Forms.DataGridView dg_Conditions;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn4;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn5;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.TabPage tab_PreviewControls;
+        private System.Windows.Forms.TextBox txt_ViewerMessage;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numud_Amount;
+        private System.Windows.Forms.DomainUpDown dom_SubTier;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txt_SubTierName;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txt_RecipientName;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txt_ViewerName;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btn_TestAlert;
+        private System.Windows.Forms.NumericUpDown numud_TestViewerMessage;
+        private System.Windows.Forms.NumericUpDown numud_TestImage;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numud_TestStreamerMessage;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numud_TestAudio;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TabControl tab_ChildMDIForms;
+    }
+}
+
+
+

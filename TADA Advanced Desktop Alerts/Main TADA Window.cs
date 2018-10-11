@@ -124,11 +124,10 @@ namespace TADA_Advanced_Desktop_Alerts
             _mainTADAForm = this;
             webSocketServer = new WebSocketServer(21573);
 
-            Creation_Forms.Waypoint_Designer_2 w2 = new Creation_Forms.Waypoint_Designer_2();
-            w2.Show();
+            Creation_Forms.AlertCreationForm3 ad3 = new Creation_Forms.AlertCreationForm3();
+            ad3.Show();
 
             // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php
-
         }
 
         private void OpenDownloadPage(object sender, EventArgs e)

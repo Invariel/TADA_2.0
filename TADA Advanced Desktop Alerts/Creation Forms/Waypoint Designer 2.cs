@@ -33,7 +33,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         protected double totalTime = 0;
 
-        public Waypoint_Designer_2()
+        public Waypoint_Designer_2(TADAAlert parentAlert = null)
         {
             InitializeComponent();
 
@@ -99,6 +99,16 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             previewBitmap = new Bitmap(pb_Preview.Width, pb_Preview.Height);
 
             btn_TestWaypoints.Click += TestElement;
+
+            if (parentAlert != null)
+            {
+                // Then populate cmb_ImportWaypoints with the other alert names and types.
+                // One of the alerts is this one.  Need to figure out which.
+
+                cmb_ImportWaypoints.DisplayMember = "Text";
+                cmb_ImportWaypoints.ValueMember = "Waypoints";
+
+            }
 
             ConfigureTooltips();
         }
@@ -170,14 +180,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             General.ConfigureToolTip(btn_Complete, "Done editing this element.");
         }
 
-        private void ToggleCurve (object sender, EventArgs e)
-        {
-            numud_C0X.Enabled = radio_Curve.Checked;
-            numud_C0Y.Enabled = radio_Curve.Checked;
-            numud_C1X.Enabled = radio_Curve.Checked;
-            numud_C1Y.Enabled = radio_Curve.Checked;
-        }
-
         private void AddWaypointFromImage (object sender, MouseEventArgs e)
         {
             if (!System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Shift) &&
@@ -214,12 +216,106 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
-        private void RenumberDataGrid ()
+        private void btn_CopySelected_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow row in dg_Waypoints.Rows)
+            if (dg_Waypoints.SelectedRows.Count > 0)
             {
-                row.HeaderCell.Value = (row.Index + 1).ToString();
+                var rows = dg_Waypoints.SelectedRows;
+
+                for (int r = rows.Count - 1; r >= 0; --r)
+                {
+                    Waypoint existingWaypoint = rows[r].DataBoundItem as Waypoint;
+                    Waypoint newWaypoint = (dg_Waypoints.DataSource as BindingSource).AddNew() as Waypoint;
+
+                    newWaypoint.P1 = existingWaypoint.P1;
+                    newWaypoint.C0 = existingWaypoint.C0;
+                    newWaypoint.C1 = existingWaypoint.C1;
+                    newWaypoint.TransitionTime = existingWaypoint.TransitionTime;
+                    newWaypoint.PersistTime = existingWaypoint.PersistTime;
+                    newWaypoint.LeaveScreen = existingWaypoint.LeaveScreen;
+                    newWaypoint.BehindImage = existingWaypoint.BehindImage;
+                    newWaypoint.ReadMessage = existingWaypoint.ReadMessage;
+
+                    newWaypoint.Angle.change = existingWaypoint.Angle.change;
+                    newWaypoint.Angle.duration = existingWaypoint.Angle.duration;
+                    newWaypoint.Angle.frames = existingWaypoint.Angle.frames;
+                    newWaypoint.Angle.target = existingWaypoint.Angle.target;
+
+                    newWaypoint.Magnification.change = existingWaypoint.Magnification.change;
+                    newWaypoint.Magnification.duration = existingWaypoint.Magnification.duration;
+                    newWaypoint.Magnification.frames = existingWaypoint.Magnification.frames;
+                    newWaypoint.Magnification.target = existingWaypoint.Magnification.target;
+
+                    newWaypoint.Opacity.change = existingWaypoint.Opacity.change;
+                    newWaypoint.Opacity.duration = existingWaypoint.Opacity.duration;
+                    newWaypoint.Opacity.frames = existingWaypoint.Opacity.frames;
+                    newWaypoint.Opacity.target = existingWaypoint.Opacity.target;
+
+                    newWaypoint.WindowTarget = existingWaypoint.WindowTarget;
+                    newWaypoint.Keypresses = existingWaypoint.Keypresses;
+                }
+
+                SumWaypoints();
             }
+
+            for (int r = 0; r < dg_Waypoints.Rows.Count; ++r)
+            {
+                if (!dg_Waypoints.Rows[r].IsNewRow)
+                {
+                    dg_Waypoints.Rows[r].HeaderCell.Value = (r + 1).ToString();
+                }
+            }
+
+            dg_Waypoints.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+        }
+
+        private void btn_ShiftSelected_Click(object sender, EventArgs e)
+        {
+            if (dg_Waypoints.SelectedRows.Count > 0)
+            {
+                var rows = dg_Waypoints.SelectedRows;
+
+                for (int row = rows.Count - 1; row >= 0; --row)
+                {
+                    Waypoint r = rows[row].DataBoundItem as Waypoint;
+                    float x = (float)numud_ShiftX.Value;
+                    float y = (float)numud_ShiftY.Value;
+
+                    r.X += (float)numud_ShiftX.Value;
+                    r.Y += (float)numud_ShiftY.Value;
+                }
+
+                UpdatePreview();
+            }
+        }
+
+        private void CheckChecked()
+        {
+            numud_DesiredAngle.Enabled = chk_Angle.Checked;
+            numud_AngleFrames.Enabled = chk_Angle.Checked;
+            numud_AngleDuration.Enabled = chk_Angle.Checked;
+
+            numud_DesiredMagnification.Enabled = chk_Magnification.Checked;
+            numud_MagnificationFrames.Enabled = chk_Magnification.Checked;
+            numud_MagnificationDuration.Enabled = chk_Magnification.Checked;
+
+            numud_DesiredOpacity.Enabled = chk_Opacity.Checked;
+            numud_OpacityFrames.Enabled = chk_Opacity.Checked;
+            numud_OpacityDuration.Enabled = chk_Opacity.Checked;
+
+            numud_DesiredBalance.Enabled = chk_Balance.Checked;
+            numud_BalanceFrames.Enabled = chk_Balance.Checked;
+            numud_BalanceDuration.Enabled = chk_Balance.Checked;
+
+            numud_DesiredVolume.Enabled = chk_Volume.Checked;
+            numud_VolumeFrames.Enabled = chk_Volume.Checked;
+            numud_VolumeDuration.Enabled = chk_Volume.Checked;
+        }
+
+        protected void CompressPoint(ref PointF point, float widthRatio, float heightRatio)
+        {
+            point.X = point.X * widthRatio;
+            point.Y = point.Y * heightRatio;
         }
 
         private void DefaultRowValues(object sender, DataGridViewRowEventArgs e)
@@ -232,6 +328,16 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             e.Row.Cells["readMessageDataGridViewCheckBoxColumn"].Value = false;
             e.Row.HeaderCell.Value = (e.Row.Index + 1).ToString();
             dg_Waypoints.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+        }
+
+        private double NormalizeAngle(double currentAngle)
+        {
+            while (currentAngle < 0)
+            {
+                currentAngle += 360;
+            }
+
+            return currentAngle % 360;
         }
 
         private void NumericInputsOnly(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -291,6 +397,113 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 e.Handled = (!char.IsControl(e.KeyChar));
             }
+        }
+
+        private void RenumberDataGrid ()
+        {
+            foreach (DataGridViewRow row in dg_Waypoints.Rows)
+            {
+                row.HeaderCell.Value = (row.Index + 1).ToString();
+            }
+        }
+
+        private void SaveVariableState(object sender, EventArgs e)
+        {
+            // Save all of the advanced waypoint information to the current Waypoint.
+            if (!disableUpdates)
+            {
+                Waypoint currentWaypoint = waypointBindingSource.Current as Waypoint;
+
+                if (waypointBindingSource.Position == 0)
+                {
+                    currentWaypoint.X = (float)numud_P0X.Value;
+                    currentWaypoint.Y = (float)numud_P0Y.Value;
+                }
+                else
+                {
+                    currentWaypoint.X = (float)numud_P1X.Value;
+                    currentWaypoint.Y = (float)numud_P1Y.Value;
+                }
+
+                currentWaypoint.C0 = new PointF((float)numud_C0X.Value, (float)numud_C0Y.Value);
+                currentWaypoint.C1 = new PointF((float)numud_C1X.Value, (float)numud_C1Y.Value);
+
+                currentWaypoint.IsCurve = radio_Curve.Checked;
+
+                currentWaypoint.Angle.aroundCenter = radio_FromCenter.Checked;
+                currentWaypoint.Angle.change = chk_Angle.Checked;
+                currentWaypoint.Angle.duration = Convert.ToDouble(numud_AngleDuration.Value);
+                currentWaypoint.Angle.frames = Convert.ToInt32(numud_AngleFrames.Value);
+                currentWaypoint.Angle.target = Convert.ToDouble(numud_DesiredAngle.Value);
+
+                currentWaypoint.Magnification.aroundCenter = radio_FromCenter.Checked;
+                currentWaypoint.Magnification.change = chk_Magnification.Checked;
+                currentWaypoint.Magnification.duration = Convert.ToDouble(numud_MagnificationDuration.Value);
+                currentWaypoint.Magnification.frames = Convert.ToInt32(numud_MagnificationFrames.Value);
+                currentWaypoint.Magnification.target = Convert.ToDouble(numud_DesiredMagnification.Value);
+
+                currentWaypoint.Opacity.aroundCenter = radio_FromCenter.Checked;
+                currentWaypoint.Opacity.change = chk_Opacity.Checked;
+                currentWaypoint.Opacity.duration = Convert.ToDouble(numud_OpacityDuration.Value);
+                currentWaypoint.Opacity.frames = Convert.ToInt32(numud_OpacityFrames.Value);
+                currentWaypoint.Opacity.target = Convert.ToDouble(numud_DesiredOpacity.Value);
+
+                currentWaypoint.Balance.aroundCenter = radio_FromCenter.Checked;
+                currentWaypoint.Balance.change = chk_Balance.Checked;
+                currentWaypoint.Balance.duration = Convert.ToDouble(numud_BalanceDuration.Value);
+                currentWaypoint.Balance.frames = Convert.ToInt32(numud_BalanceFrames.Value);
+                currentWaypoint.Balance.target = Convert.ToDouble(numud_DesiredBalance.Value);
+
+                currentWaypoint.Volume.aroundCenter = radio_FromCenter.Checked;
+                currentWaypoint.Volume.change = chk_Volume.Checked;
+                currentWaypoint.Volume.duration = Convert.ToDouble(numud_VolumeDuration.Value);
+                currentWaypoint.Volume.frames = Convert.ToInt32(numud_VolumeFrames.Value);
+                currentWaypoint.Volume.target = Convert.ToDouble(numud_DesiredVolume.Value);
+
+                UpdatePreview();
+                CheckChecked();
+            }
+        }
+
+        protected void SetItemSize(float width = 0, float height = 0)
+        {
+            if (width == 0 && height == 0)
+            {
+                itemSize.Width = 200;
+                itemSize.Height = 150;
+            }
+            else
+            {
+                itemSize.Width = width;
+                itemSize.Height = height;
+            }
+        }
+
+        protected void SetThumbnail(Bitmap thumbnail)
+        {
+            this.thumbnail = thumbnail;
+        }
+
+        private void SumWaypoints()
+        {
+            totalTime = 0;
+
+            foreach (Waypoint w in waypointBindingSource)
+            {
+                totalTime += w.TransitionTime;
+                totalTime += w.PersistTime;
+            }
+
+            lbl_Time.Text = (trk_Time.Value / 1000.0 * totalTime).ToString();
+            lbl_WaypointDuration.Text = String.Format("Total Alert Duration: {0:F2}s", totalTime);
+        }
+
+        private void ToggleCurve(object sender, EventArgs e)
+        {
+            numud_C0X.Enabled = radio_Curve.Checked;
+            numud_C0Y.Enabled = radio_Curve.Checked;
+            numud_C1X.Enabled = radio_Curve.Checked;
+            numud_C1Y.Enabled = radio_Curve.Checked;
         }
 
         private void UpdateAdvancedWaypoint(object sender, EventArgs e)
@@ -395,107 +608,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             CheckChecked();
 
             disableUpdates = false;
-        }
-
-        private void SumWaypoints()
-        {
-            totalTime = 0;
-
-            foreach (Waypoint w in waypointBindingSource)
-            {
-                totalTime += w.TransitionTime;
-                totalTime += w.PersistTime;
-            }
-
-            lbl_Time.Text = (trk_Time.Value / 1000.0 * totalTime).ToString();
-            lbl_WaypointDuration.Text = String.Format("Total Alert Duration: {0:F2}s", totalTime);
-        }
-
-        private void SaveVariableState (object sender, EventArgs e)
-        {
-            // Save all of the advanced waypoint information to the current Waypoint.
-            if (!disableUpdates)
-            {
-                Waypoint currentWaypoint = waypointBindingSource.Current as Waypoint;
-
-                if (waypointBindingSource.Position == 0)
-                {
-                    currentWaypoint.X = (float)numud_P0X.Value;
-                    currentWaypoint.Y = (float)numud_P0Y.Value;
-                }
-                else
-                {
-                    currentWaypoint.X = (float)numud_P1X.Value;
-                    currentWaypoint.Y = (float)numud_P1Y.Value;
-                }
-
-                currentWaypoint.C0 = new PointF((float)numud_C0X.Value, (float)numud_C0Y.Value);
-                currentWaypoint.C1 = new PointF((float)numud_C1X.Value, (float)numud_C1Y.Value);
-
-                currentWaypoint.IsCurve = radio_Curve.Checked;
-
-                currentWaypoint.Angle.aroundCenter = radio_FromCenter.Checked;
-                currentWaypoint.Angle.change = chk_Angle.Checked;
-                currentWaypoint.Angle.duration = Convert.ToDouble(numud_AngleDuration.Value);
-                currentWaypoint.Angle.frames = Convert.ToInt32(numud_AngleFrames.Value);
-                currentWaypoint.Angle.target = Convert.ToDouble(numud_DesiredAngle.Value);
-
-                currentWaypoint.Magnification.aroundCenter = radio_FromCenter.Checked;
-                currentWaypoint.Magnification.change = chk_Magnification.Checked;
-                currentWaypoint.Magnification.duration = Convert.ToDouble(numud_MagnificationDuration.Value);
-                currentWaypoint.Magnification.frames = Convert.ToInt32(numud_MagnificationFrames.Value);
-                currentWaypoint.Magnification.target = Convert.ToDouble(numud_DesiredMagnification.Value);
-
-                currentWaypoint.Opacity.aroundCenter = radio_FromCenter.Checked;
-                currentWaypoint.Opacity.change = chk_Opacity.Checked;
-                currentWaypoint.Opacity.duration = Convert.ToDouble(numud_OpacityDuration.Value);
-                currentWaypoint.Opacity.frames = Convert.ToInt32(numud_OpacityFrames.Value);
-                currentWaypoint.Opacity.target = Convert.ToDouble(numud_DesiredOpacity.Value);
-
-                currentWaypoint.Balance.aroundCenter = radio_FromCenter.Checked;
-                currentWaypoint.Balance.change = chk_Balance.Checked;
-                currentWaypoint.Balance.duration = Convert.ToDouble(numud_BalanceDuration.Value);
-                currentWaypoint.Balance.frames = Convert.ToInt32(numud_BalanceFrames.Value);
-                currentWaypoint.Balance.target = Convert.ToDouble(numud_DesiredBalance.Value);
-
-                currentWaypoint.Volume.aroundCenter = radio_FromCenter.Checked;
-                currentWaypoint.Volume.change = chk_Volume.Checked;
-                currentWaypoint.Volume.duration = Convert.ToDouble(numud_VolumeDuration.Value);
-                currentWaypoint.Volume.frames = Convert.ToInt32(numud_VolumeFrames.Value);
-                currentWaypoint.Volume.target = Convert.ToDouble(numud_DesiredVolume.Value);
-
-                UpdatePreview();
-                CheckChecked();
-            }
-        }
-
-        private void CheckChecked()
-        {
-            numud_DesiredAngle.Enabled = chk_Angle.Checked;
-            numud_AngleFrames.Enabled = chk_Angle.Checked;
-            numud_AngleDuration.Enabled = chk_Angle.Checked;
-
-            numud_DesiredMagnification.Enabled = chk_Magnification.Checked;
-            numud_MagnificationFrames.Enabled = chk_Magnification.Checked;
-            numud_MagnificationDuration.Enabled = chk_Magnification.Checked;
-
-            numud_DesiredOpacity.Enabled = chk_Opacity.Checked;
-            numud_OpacityFrames.Enabled = chk_Opacity.Checked;
-            numud_OpacityDuration.Enabled = chk_Opacity.Checked;
-
-            numud_DesiredBalance.Enabled = chk_Balance.Checked;
-            numud_BalanceFrames.Enabled = chk_Balance.Checked;
-            numud_BalanceDuration.Enabled = chk_Balance.Checked;
-
-            numud_DesiredVolume.Enabled = chk_Volume.Checked;
-            numud_VolumeFrames.Enabled = chk_Volume.Checked;
-            numud_VolumeDuration.Enabled = chk_Volume.Checked;
-        }
-
-        protected void CompressPoint (ref PointF point, float widthRatio, float heightRatio)
-        {
-            point.X = point.X * widthRatio;
-            point.Y = point.Y * heightRatio;
         }
 
         protected void UpdatePreview()
@@ -750,103 +862,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             // Update the preview.
             UpdatePreview();
-        }
-
-        private double NormalizeAngle(double currentAngle)
-        {
-            while (currentAngle < 0)
-            {
-                currentAngle += 360;
-            }
-
-            return currentAngle % 360;
-        }
-
-        protected void SetItemSize(float width = 0, float height = 0)
-        {
-            if (width == 0 && height == 0)
-            {
-                itemSize.Width = 200;
-                itemSize.Height = 150;
-            }
-            else
-            {
-                itemSize.Width = width;
-                itemSize.Height = height;
-            }
-        }
-
-        private void btn_CopySelected_Click(object sender, EventArgs e)
-        {
-            if (dg_Waypoints.SelectedRows.Count > 0)
-            {
-                var rows = dg_Waypoints.SelectedRows;
-
-                for (int r = rows.Count - 1; r >= 0; --r)
-                {
-                    Waypoint existingWaypoint = rows[r].DataBoundItem as Waypoint;
-                    Waypoint newWaypoint = (dg_Waypoints.DataSource as BindingSource).AddNew() as Waypoint;
-
-                    newWaypoint.P1 = existingWaypoint.P1;
-                    newWaypoint.C0 = existingWaypoint.C0;
-                    newWaypoint.C1 = existingWaypoint.C1;
-                    newWaypoint.TransitionTime = existingWaypoint.TransitionTime;
-                    newWaypoint.PersistTime = existingWaypoint.PersistTime;
-                    newWaypoint.LeaveScreen = existingWaypoint.LeaveScreen;
-                    newWaypoint.BehindImage = existingWaypoint.BehindImage;
-                    newWaypoint.ReadMessage = existingWaypoint.ReadMessage;
-
-                    newWaypoint.Angle.change = existingWaypoint.Angle.change;
-                    newWaypoint.Angle.duration = existingWaypoint.Angle.duration;
-                    newWaypoint.Angle.frames = existingWaypoint.Angle.frames;
-                    newWaypoint.Angle.target = existingWaypoint.Angle.target;
-
-                    newWaypoint.Magnification.change = existingWaypoint.Magnification.change;
-                    newWaypoint.Magnification.duration = existingWaypoint.Magnification.duration;
-                    newWaypoint.Magnification.frames = existingWaypoint.Magnification.frames;
-                    newWaypoint.Magnification.target = existingWaypoint.Magnification.target;
-
-                    newWaypoint.Opacity.change = existingWaypoint.Opacity.change;
-                    newWaypoint.Opacity.duration = existingWaypoint.Opacity.duration;
-                    newWaypoint.Opacity.frames = existingWaypoint.Opacity.frames;
-                    newWaypoint.Opacity.target = existingWaypoint.Opacity.target;
-
-                    newWaypoint.WindowTarget = existingWaypoint.WindowTarget;
-                    newWaypoint.Keypresses = existingWaypoint.Keypresses;
-                }
-
-                SumWaypoints();
-            }
-
-            for (int r = 0; r < dg_Waypoints.Rows.Count; ++r)
-            {
-                if (!dg_Waypoints.Rows[r].IsNewRow)
-                {
-                    dg_Waypoints.Rows[r].HeaderCell.Value = (r + 1).ToString();
-                }
-            }
-
-            dg_Waypoints.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
-        }
-
-        private void btn_ShiftSelected_Click(object sender, EventArgs e)
-        {
-            if (dg_Waypoints.SelectedRows.Count > 0)
-            {
-                var rows = dg_Waypoints.SelectedRows;
-
-                for (int row = rows.Count - 1; row >= 0; --row)
-                {
-                    Waypoint r = rows[row].DataBoundItem as Waypoint;
-                    float x = (float)numud_ShiftX.Value;
-                    float y = (float)numud_ShiftY.Value;
-
-                    r.X += (float)numud_ShiftX.Value;
-                    r.Y += (float)numud_ShiftY.Value;
-                }
-
-                UpdatePreview();
-            }
         }
 
         protected internal Boolean CheckEffectFPS ()
