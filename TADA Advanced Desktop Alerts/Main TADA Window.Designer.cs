@@ -325,7 +325,7 @@
             // 
             // alertBindingSource
             // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlert);
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 

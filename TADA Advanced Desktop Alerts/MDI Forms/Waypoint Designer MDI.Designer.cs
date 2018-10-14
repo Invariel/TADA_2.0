@@ -228,9 +228,9 @@
             this.grp_InitialConditions.Controls.Add(this.lbl_Separator3);
             this.grp_InitialConditions.Controls.Add(this.lbl_InitialAngle);
             this.grp_InitialConditions.Controls.Add(this.lbl_InitialMagnificationX);
-            this.grp_InitialConditions.Location = new System.Drawing.Point(7, 232);
+            this.grp_InitialConditions.Location = new System.Drawing.Point(7, 224);
             this.grp_InitialConditions.Name = "grp_InitialConditions";
-            this.grp_InitialConditions.Size = new System.Drawing.Size(744, 38);
+            this.grp_InitialConditions.Size = new System.Drawing.Size(744, 46);
             this.grp_InitialConditions.TabIndex = 139;
             this.grp_InitialConditions.TabStop = false;
             this.grp_InitialConditions.Text = "Initial Conditions";
@@ -238,7 +238,7 @@
             // lbl_InitialOpacityPercent
             // 
             this.lbl_InitialOpacityPercent.AutoSize = true;
-            this.lbl_InitialOpacityPercent.Location = new System.Drawing.Point(662, 16);
+            this.lbl_InitialOpacityPercent.Location = new System.Drawing.Point(662, 22);
             this.lbl_InitialOpacityPercent.Name = "lbl_InitialOpacityPercent";
             this.lbl_InitialOpacityPercent.Size = new System.Drawing.Size(15, 13);
             this.lbl_InitialOpacityPercent.TabIndex = 150;
@@ -247,7 +247,7 @@
             // lbl_InitialMagnification
             // 
             this.lbl_InitialMagnification.AutoSize = true;
-            this.lbl_InitialMagnification.Location = new System.Drawing.Point(280, 16);
+            this.lbl_InitialMagnification.Location = new System.Drawing.Point(280, 22);
             this.lbl_InitialMagnification.Name = "lbl_InitialMagnification";
             this.lbl_InitialMagnification.Size = new System.Drawing.Size(97, 13);
             this.lbl_InitialMagnification.TabIndex = 144;
@@ -259,7 +259,7 @@
             this.lbl_Separator2.Enabled = false;
             this.lbl_Separator2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Separator2.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.lbl_Separator2.Location = new System.Drawing.Point(248, 6);
+            this.lbl_Separator2.Location = new System.Drawing.Point(248, 12);
             this.lbl_Separator2.Name = "lbl_Separator2";
             this.lbl_Separator2.Size = new System.Drawing.Size(17, 25);
             this.lbl_Separator2.TabIndex = 143;
@@ -268,7 +268,7 @@
             // numud_InitialOpacity
             // 
             this.numud_InitialOpacity.DecimalPlaces = 2;
-            this.numud_InitialOpacity.Location = new System.Drawing.Point(603, 12);
+            this.numud_InitialOpacity.Location = new System.Drawing.Point(603, 18);
             this.numud_InitialOpacity.Name = "numud_InitialOpacity";
             this.numud_InitialOpacity.Size = new System.Drawing.Size(59, 20);
             this.numud_InitialOpacity.TabIndex = 149;
@@ -281,7 +281,7 @@
             // numud_InitialMagnification
             // 
             this.numud_InitialMagnification.DecimalPlaces = 2;
-            this.numud_InitialMagnification.Location = new System.Drawing.Point(382, 12);
+            this.numud_InitialMagnification.Location = new System.Drawing.Point(382, 18);
             this.numud_InitialMagnification.Minimum = new decimal(new int[] {
             1,
             0,
@@ -299,7 +299,7 @@
             // lbl_InitialOpacity
             // 
             this.lbl_InitialOpacity.AutoSize = true;
-            this.lbl_InitialOpacity.Location = new System.Drawing.Point(528, 16);
+            this.lbl_InitialOpacity.Location = new System.Drawing.Point(528, 22);
             this.lbl_InitialOpacity.Name = "lbl_InitialOpacity";
             this.lbl_InitialOpacity.Size = new System.Drawing.Size(70, 13);
             this.lbl_InitialOpacity.TabIndex = 148;
@@ -309,7 +309,7 @@
             // 
             this.lbl_AngleDegrees.AutoSize = true;
             this.lbl_AngleDegrees.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_AngleDegrees.Location = new System.Drawing.Point(138, 8);
+            this.lbl_AngleDegrees.Location = new System.Drawing.Point(138, 14);
             this.lbl_AngleDegrees.Name = "lbl_AngleDegrees";
             this.lbl_AngleDegrees.Size = new System.Drawing.Size(16, 24);
             this.lbl_AngleDegrees.TabIndex = 142;
@@ -318,7 +318,7 @@
             // numud_InitialAngle
             // 
             this.numud_InitialAngle.DecimalPlaces = 2;
-            this.numud_InitialAngle.Location = new System.Drawing.Point(81, 12);
+            this.numud_InitialAngle.Location = new System.Drawing.Point(81, 18);
             this.numud_InitialAngle.Maximum = new decimal(new int[] {
             360,
             0,
@@ -334,7 +334,7 @@
             this.lbl_Separator3.Enabled = false;
             this.lbl_Separator3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Separator3.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.lbl_Separator3.Location = new System.Drawing.Point(496, 6);
+            this.lbl_Separator3.Location = new System.Drawing.Point(496, 12);
             this.lbl_Separator3.Name = "lbl_Separator3";
             this.lbl_Separator3.Size = new System.Drawing.Size(17, 25);
             this.lbl_Separator3.TabIndex = 147;
@@ -343,7 +343,7 @@
             // lbl_InitialAngle
             // 
             this.lbl_InitialAngle.AutoSize = true;
-            this.lbl_InitialAngle.Location = new System.Drawing.Point(15, 16);
+            this.lbl_InitialAngle.Location = new System.Drawing.Point(15, 22);
             this.lbl_InitialAngle.Margin = new System.Windows.Forms.Padding(0);
             this.lbl_InitialAngle.Name = "lbl_InitialAngle";
             this.lbl_InitialAngle.Size = new System.Drawing.Size(61, 13);
@@ -353,7 +353,7 @@
             // lbl_InitialMagnificationX
             // 
             this.lbl_InitialMagnificationX.AutoSize = true;
-            this.lbl_InitialMagnificationX.Location = new System.Drawing.Point(441, 16);
+            this.lbl_InitialMagnificationX.Location = new System.Drawing.Point(441, 22);
             this.lbl_InitialMagnificationX.Name = "lbl_InitialMagnificationX";
             this.lbl_InitialMagnificationX.Size = new System.Drawing.Size(12, 13);
             this.lbl_InitialMagnificationX.TabIndex = 146;
@@ -1205,7 +1205,7 @@
             // lbl_WaypointDuration
             // 
             this.lbl_WaypointDuration.AutoSize = true;
-            this.lbl_WaypointDuration.Location = new System.Drawing.Point(229, 216);
+            this.lbl_WaypointDuration.Location = new System.Drawing.Point(229, 209);
             this.lbl_WaypointDuration.Name = "lbl_WaypointDuration";
             this.lbl_WaypointDuration.Size = new System.Drawing.Size(139, 13);
             this.lbl_WaypointDuration.TabIndex = 138;
@@ -1214,7 +1214,7 @@
             // lbl_ShiftWaypointsX
             // 
             this.lbl_ShiftWaypointsX.AutoSize = true;
-            this.lbl_ShiftWaypointsX.Location = new System.Drawing.Point(670, 197);
+            this.lbl_ShiftWaypointsX.Location = new System.Drawing.Point(670, 187);
             this.lbl_ShiftWaypointsX.Name = "lbl_ShiftWaypointsX";
             this.lbl_ShiftWaypointsX.Size = new System.Drawing.Size(12, 13);
             this.lbl_ShiftWaypointsX.TabIndex = 136;
@@ -1223,7 +1223,7 @@
             // numud_ShiftY
             // 
             this.numud_ShiftY.DecimalPlaces = 2;
-            this.numud_ShiftY.Location = new System.Drawing.Point(684, 193);
+            this.numud_ShiftY.Location = new System.Drawing.Point(684, 183);
             this.numud_ShiftY.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -1241,7 +1241,7 @@
             // numud_ShiftX
             // 
             this.numud_ShiftX.DecimalPlaces = 2;
-            this.numud_ShiftX.Location = new System.Drawing.Point(606, 193);
+            this.numud_ShiftX.Location = new System.Drawing.Point(606, 183);
             this.numud_ShiftX.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -1275,7 +1275,7 @@
             // 
             // btn_ShiftSelected
             // 
-            this.btn_ShiftSelected.Location = new System.Drawing.Point(606, 164);
+            this.btn_ShiftSelected.Location = new System.Drawing.Point(606, 154);
             this.btn_ShiftSelected.Name = "btn_ShiftSelected";
             this.btn_ShiftSelected.Size = new System.Drawing.Size(140, 23);
             this.btn_ShiftSelected.TabIndex = 134;
@@ -1284,7 +1284,7 @@
             // 
             // btn_CopySelected
             // 
-            this.btn_CopySelected.Location = new System.Drawing.Point(606, 125);
+            this.btn_CopySelected.Location = new System.Drawing.Point(606, 102);
             this.btn_CopySelected.Name = "btn_CopySelected";
             this.btn_CopySelected.Size = new System.Drawing.Size(140, 23);
             this.btn_CopySelected.TabIndex = 133;
@@ -1296,7 +1296,7 @@
             this.grp_Waypoints.Controls.Add(this.dg_Waypoints);
             this.grp_Waypoints.Location = new System.Drawing.Point(7, 5);
             this.grp_Waypoints.Name = "grp_Waypoints";
-            this.grp_Waypoints.Size = new System.Drawing.Size(596, 208);
+            this.grp_Waypoints.Size = new System.Drawing.Size(596, 201);
             this.grp_Waypoints.TabIndex = 129;
             this.grp_Waypoints.TabStop = false;
             this.grp_Waypoints.Text = "Waypoints";
@@ -1316,7 +1316,7 @@
             this.dg_Waypoints.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_Waypoints.Location = new System.Drawing.Point(3, 16);
             this.dg_Waypoints.Name = "dg_Waypoints";
-            this.dg_Waypoints.Size = new System.Drawing.Size(590, 189);
+            this.dg_Waypoints.Size = new System.Drawing.Size(590, 182);
             this.dg_Waypoints.TabIndex = 130;
             // 
             // xDataGridViewTextBoxColumn
@@ -1382,6 +1382,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 405);
             this.Controls.Add(this.tab_Focus);
+            this.MaximumSize = new System.Drawing.Size(777, 777);
+            this.MinimumSize = new System.Drawing.Size(777, 444);
             this.Name = "Waypoint_Designer_MDI";
             this.Text = "Waypoint_Designer_MDI";
             this.tab_Focus.ResumeLayout(false);
@@ -1458,70 +1460,13 @@
         protected internal System.Windows.Forms.TabPage tab_Advanced;
         protected internal System.Windows.Forms.Label lbl_AdvancedControls;
         protected internal System.Windows.Forms.TabPage tab_Path;
-        private System.Windows.Forms.Label lbl_C1Comma;
-        private System.Windows.Forms.Label lbl_P1Comma;
-        private System.Windows.Forms.Label lbl_C0Comma;
-        private System.Windows.Forms.Label lbl_P0Comma;
-        private System.Windows.Forms.NumericUpDown numud_C1Y;
-        private System.Windows.Forms.NumericUpDown numud_P1Y;
-        private System.Windows.Forms.NumericUpDown numud_C1X;
-        private System.Windows.Forms.NumericUpDown numud_P1X;
-        private System.Windows.Forms.NumericUpDown numud_C0Y;
-        private System.Windows.Forms.NumericUpDown numud_P0Y;
-        private System.Windows.Forms.NumericUpDown numud_C0X;
-        private System.Windows.Forms.NumericUpDown numud_P0X;
-        private System.Windows.Forms.Label lbl_C1;
-        private System.Windows.Forms.Label lbl_P1;
-        private System.Windows.Forms.Label lbl_C0;
-        private System.Windows.Forms.Label lbl_P0;
         protected internal System.Windows.Forms.RadioButton radio_Curve;
         protected internal System.Windows.Forms.RadioButton radio_Line;
         protected internal System.Windows.Forms.TabPage tab_AngleAndMagnification;
-        private System.Windows.Forms.RadioButton radio_FromTopLeft;
-        private System.Windows.Forms.Label lbl_MagnificationDuration;
-        private System.Windows.Forms.Label lbl_AngleDuration;
-        private System.Windows.Forms.RadioButton radio_FromCenter;
-        private System.Windows.Forms.Label lbl_MagnificationFrames;
-        private System.Windows.Forms.Label lbl_AngleFrames;
-        private System.Windows.Forms.NumericUpDown numud_MagnificationDuration;
-        private System.Windows.Forms.NumericUpDown numud_MagnificationFrames;
-        private System.Windows.Forms.NumericUpDown numud_DesiredMagnification;
-        private System.Windows.Forms.NumericUpDown numud_AngleDuration;
-        private System.Windows.Forms.NumericUpDown numud_AngleFrames;
-        private System.Windows.Forms.NumericUpDown numud_DesiredAngle;
-        private System.Windows.Forms.Label lbl_DesiredMagnification;
-        private System.Windows.Forms.Label lbl_DesiredAngle;
-        private System.Windows.Forms.CheckBox chk_Magnification;
-        private System.Windows.Forms.CheckBox chk_Angle;
         protected internal System.Windows.Forms.TabPage tab_Opacity;
-        private System.Windows.Forms.Label lbl_OpacityDuration;
-        private System.Windows.Forms.Label lbl_OpacityFrames;
-        private System.Windows.Forms.NumericUpDown numud_OpacityDuration;
-        private System.Windows.Forms.NumericUpDown numud_OpacityFrames;
-        private System.Windows.Forms.NumericUpDown numud_DesiredOpacity;
-        private System.Windows.Forms.Label lbl_DesiredOpacity;
-        private System.Windows.Forms.CheckBox chk_Opacity;
         protected internal System.Windows.Forms.TabPage tab_Sound;
-        private System.Windows.Forms.Label lbl_VolumeDuration;
-        private System.Windows.Forms.Label lbl_BalanceDuration;
-        private System.Windows.Forms.Label lbl_VolumeFrames;
-        private System.Windows.Forms.Label lbl_BalanceFrames;
-        private System.Windows.Forms.NumericUpDown numud_VolumeDuration;
-        private System.Windows.Forms.NumericUpDown numud_VolumeFrames;
-        private System.Windows.Forms.NumericUpDown numud_DesiredVolume;
-        private System.Windows.Forms.NumericUpDown numud_BalanceDuration;
-        private System.Windows.Forms.NumericUpDown numud_BalanceFrames;
-        private System.Windows.Forms.NumericUpDown numud_DesiredBalance;
-        private System.Windows.Forms.Label lbl_DesiredVolume;
-        private System.Windows.Forms.Label lbl_DesiredBalance;
-        private System.Windows.Forms.CheckBox chk_Volume;
-        private System.Windows.Forms.CheckBox chk_Balance;
         protected internal System.Windows.Forms.TabPage tab_Macro;
         protected internal System.Windows.Forms.Button btn_TextMacroCheatsheet;
-        private System.Windows.Forms.TextBox txt_Keypresses;
-        private System.Windows.Forms.TextBox txt_WindowTarget;
-        private System.Windows.Forms.Label lbl_Keypresses;
-        private System.Windows.Forms.Label lbl_WindowTarget;
         protected internal System.Windows.Forms.Label lbl_WaypointDuration;
         protected internal System.Windows.Forms.Label lbl_ShiftWaypointsX;
         protected internal System.Windows.Forms.NumericUpDown numud_ShiftY;
@@ -1538,5 +1483,62 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn persistTimeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn behindImageDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn readMessageDataGridViewCheckBoxColumn;
+        protected internal System.Windows.Forms.Label lbl_C1Comma;
+        protected internal System.Windows.Forms.Label lbl_P1Comma;
+        protected internal System.Windows.Forms.Label lbl_C0Comma;
+        protected internal System.Windows.Forms.Label lbl_P0Comma;
+        protected internal System.Windows.Forms.NumericUpDown numud_C1Y;
+        protected internal System.Windows.Forms.NumericUpDown numud_P1Y;
+        protected internal System.Windows.Forms.NumericUpDown numud_C1X;
+        protected internal System.Windows.Forms.NumericUpDown numud_P1X;
+        protected internal System.Windows.Forms.NumericUpDown numud_C0Y;
+        protected internal System.Windows.Forms.NumericUpDown numud_P0Y;
+        protected internal System.Windows.Forms.NumericUpDown numud_C0X;
+        protected internal System.Windows.Forms.NumericUpDown numud_P0X;
+        protected internal System.Windows.Forms.Label lbl_C1;
+        protected internal System.Windows.Forms.Label lbl_P1;
+        protected internal System.Windows.Forms.Label lbl_C0;
+        protected internal System.Windows.Forms.Label lbl_P0;
+        protected internal System.Windows.Forms.RadioButton radio_FromTopLeft;
+        protected internal System.Windows.Forms.Label lbl_MagnificationDuration;
+        protected internal System.Windows.Forms.Label lbl_AngleDuration;
+        protected internal System.Windows.Forms.RadioButton radio_FromCenter;
+        protected internal System.Windows.Forms.Label lbl_MagnificationFrames;
+        protected internal System.Windows.Forms.Label lbl_AngleFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_MagnificationDuration;
+        protected internal System.Windows.Forms.NumericUpDown numud_MagnificationFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_DesiredMagnification;
+        protected internal System.Windows.Forms.NumericUpDown numud_AngleDuration;
+        protected internal System.Windows.Forms.NumericUpDown numud_AngleFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_DesiredAngle;
+        protected internal System.Windows.Forms.Label lbl_DesiredMagnification;
+        protected internal System.Windows.Forms.Label lbl_DesiredAngle;
+        protected internal System.Windows.Forms.CheckBox chk_Magnification;
+        protected internal System.Windows.Forms.CheckBox chk_Angle;
+        protected internal System.Windows.Forms.Label lbl_OpacityDuration;
+        protected internal System.Windows.Forms.Label lbl_OpacityFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_OpacityDuration;
+        protected internal System.Windows.Forms.NumericUpDown numud_OpacityFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_DesiredOpacity;
+        protected internal System.Windows.Forms.Label lbl_DesiredOpacity;
+        protected internal System.Windows.Forms.CheckBox chk_Opacity;
+        protected internal System.Windows.Forms.Label lbl_VolumeDuration;
+        protected internal System.Windows.Forms.Label lbl_BalanceDuration;
+        protected internal System.Windows.Forms.Label lbl_VolumeFrames;
+        protected internal System.Windows.Forms.Label lbl_BalanceFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_VolumeDuration;
+        protected internal System.Windows.Forms.NumericUpDown numud_VolumeFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_DesiredVolume;
+        protected internal System.Windows.Forms.NumericUpDown numud_BalanceDuration;
+        protected internal System.Windows.Forms.NumericUpDown numud_BalanceFrames;
+        protected internal System.Windows.Forms.NumericUpDown numud_DesiredBalance;
+        protected internal System.Windows.Forms.Label lbl_DesiredVolume;
+        protected internal System.Windows.Forms.Label lbl_DesiredBalance;
+        protected internal System.Windows.Forms.CheckBox chk_Volume;
+        protected internal System.Windows.Forms.CheckBox chk_Balance;
+        protected internal System.Windows.Forms.TextBox txt_Keypresses;
+        protected internal System.Windows.Forms.TextBox txt_WindowTarget;
+        protected internal System.Windows.Forms.Label lbl_Keypresses;
+        protected internal System.Windows.Forms.Label lbl_WindowTarget;
     }
 }

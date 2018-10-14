@@ -10,9 +10,11 @@ using System.Windows.Forms;
 
 namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
-    public partial class AlertCreationForm3 : Form
+    public partial class Alert_Designer_MDI : Form
     {
-        public AlertCreationForm3()
+        Bitmap previewImage;
+
+        public Alert_Designer_MDI()
         {
             InitializeComponent();
 
@@ -20,6 +22,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.tab_ChildMDIForms.SelectedIndexChanged += SwitchTabPage;
 
             this.ts_NewImageVideo.Click += NewImageVideoForm;
+
+            previewImage = new Bitmap(pb_Preview.Width, pb_Preview.Height);
+            Graphics previewGraphics = Graphics.FromImage(previewImage);
+            previewGraphics.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), previewImage.Size));
+            pb_Preview.Image = previewImage;
+            pb_Preview.Update();
+
             ConfigureMenuItems();
         }
 
@@ -71,7 +80,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         //private void NewAlertItem ()
         private void NewImageVideoForm(object sender, EventArgs e)
         {
-            Form newImageForm = new MDI_Forms.Waypoint_Designer_MDI();
+            _TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as _TADAAlertImage;
+
+            Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, true, null);
             newImageForm.MdiParent = this;
             newImageForm.Text = "Image/Video      ";
             newImageForm.Show();
@@ -164,6 +175,81 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 this.tab_ChildMDIForms.Visible = false;
             }
+        }
+
+        protected void CompressPoint(ref PointF point, float widthRatio, float heightRatio)
+        {
+            point.X = point.X * widthRatio;
+            point.Y = point.Y * heightRatio;
+        }
+
+        private void CompressPoints(List<PointF> points, float widthRatio, float heightRatio)
+        {
+            for (int i = 0; i < points.Count; ++i)
+            {
+                PointF point = points[i];
+                CompressPoint(ref point, widthRatio, heightRatio);
+                points[i] = point;
+            }
+        }
+
+        // The expectation here is that DrawWaypoints() is called from the time tracker-being-moved code, which first draws a black background rectangle.
+        // The expectation is also that the images are drawn in the order "image, streamer text, viewer text".
+        private void DrawWaypoints (WaypointContainer waypoints, PointF unmodifiedLocation, SizeF unmodifiedSize, float currentAngle, float currentMagnification, float currentOpacity, Boolean aroundCenter, Bitmap itemToDraw)
+        {
+            if (waypoints.Waypoints.Count > 0)
+            {
+                float widthRatio = pb_Preview.Image.Width * 1.0f / MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Width;
+                float heightRatio = pb_Preview.Image.Height * 1.0f / MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Height;
+
+                PointF currentPosition = waypoints.Waypoints[0].P1;
+
+                Graphics imageGraphics = Graphics.FromImage(previewImage);
+
+                for (int currentWaypoint = 1; currentWaypoint < waypoints.Waypoints.Count; ++ currentWaypoint)
+                {
+                    Waypoint waypoint = waypoints.Waypoints[currentWaypoint];
+
+                    // Every iteration we want a fresh P0 and P1 because they aren't compressed yet to fit our screen.
+                    PointF P0, P1, C0, C1;
+
+                    P0 = currentPosition;
+                    P1 = waypoint.P1;
+
+                    if (waypoint.IsCurve)
+                    {
+                        C0 = waypoint.C0;
+                        C1 = waypoint.C1;
+                    }
+                    else
+                    {
+                        Bezier.CalculateLinearControlPoints(P0, P1, out C0, out C1);
+                    }
+
+                    // Interestingly, compressing points like this does still give the same shape of Bezier curve.
+                    CompressPoints(new List<PointF>() { P0, P1, C0, C1 }, widthRatio, heightRatio);
+
+                    imageGraphics.DrawBezier(Pens.White, P0, C0, C1, P1);
+                }
+
+                if (unmodifiedLocation != null && itemToDraw != null)
+                {
+                    CompressPoint(ref unmodifiedLocation, widthRatio, heightRatio);
+                    unmodifiedSize.Width *= widthRatio;
+                    unmodifiedSize.Height *= heightRatio;
+
+                    imageGraphics.TranslateTransform(unmodifiedLocation.X + (aroundCenter ? unmodifiedSize.Width / 2 : 0.0f), unmodifiedLocation.Y + (aroundCenter ? unmodifiedSize.Height / 2 : 0.0f));
+                    imageGraphics.RotateTransform(currentAngle);
+                    imageGraphics.DrawImage(itemToDraw, Point.Empty);
+                    imageGraphics.RotateTransform(-currentAngle);
+                    imageGraphics.TranslateTransform(-unmodifiedLocation.X - (aroundCenter ? unmodifiedSize.Width / 2 : 0.0f), -unmodifiedLocation.Y - (aroundCenter ? unmodifiedSize.Height / 2 : 0.0f));
+                }
+            }
+        }
+
+        public void UpdatePreview ()
+        {
+            // Update the preview image based on the child MDI forms that are being monitored.
         }
     }
 }

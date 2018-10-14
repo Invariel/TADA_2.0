@@ -294,7 +294,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public int AnimationLoops { get; set; }
 
-        public TimeSpan Delay { get; set; }
         public TimeSpan Duration { get; set; }
         public TimeSpan EndingPosition { get; set; }
         public TimeSpan StartingPosition { get; set; }
@@ -321,13 +320,12 @@ namespace TADA_Advanced_Desktop_Alerts
         }
 
         // Constructor for Video
-        public _TADAAlertImage(String filename, Size dimensions, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, double angle, double magnification, double opacity, double balance, double volume, WaypointContainer waypoints)
+        public _TADAAlertImage(String filename, Size dimensions, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, double angle, double magnification, double opacity, double balance, double volume, WaypointContainer waypoints)
         {
             this.isVideo = true;
 
             this.filename = filename;
             this.dimensions = dimensions;
-            this.Delay = delay;
             this.Duration = duration;
             this.StartingPosition = startingPosition;
             this.EndingPosition = endingPosition;
@@ -361,9 +359,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         switch (name)
                         {
-                            case "Delay":
-                                this.Delay = timeSpan;
-                                break;
                             case "Duration":
                                 this.Duration = timeSpan;
                                 break;
@@ -415,7 +410,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (this.isVideo)
             {
-                XmlHelper.WriteTimeSpan(writer, this.Delay, "Delay");
                 XmlHelper.WriteTimeSpan(writer, this.Duration, "Duration");
                 XmlHelper.WriteTimeSpan(writer, this.StartingPosition, "StartAt");
                 XmlHelper.WriteTimeSpan(writer, this.EndingPosition, "LoopAt");

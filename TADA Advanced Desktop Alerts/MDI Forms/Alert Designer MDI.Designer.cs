@@ -1,6 +1,6 @@
 ﻿namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
-    partial class AlertCreationForm3
+    partial class Alert_Designer_MDI
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlertCreationForm3));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Alert_Designer_MDI));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.ts_NewImageVideo = new System.Windows.Forms.ToolStripMenuItem();
@@ -1063,7 +1063,7 @@
             // 
             // alertImageBindingSource
             // 
-            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertImage);
+            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertImage);
             // 
             // dataGridViewTextBoxColumn2
             // 

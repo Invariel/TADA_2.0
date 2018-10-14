@@ -14,7 +14,15 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
     {
         protected internal bool disableUpdates = false;
 
-        public Waypoint_Designer_MDI(TADAAlert parentAlert = null)
+        private SizeF itemSize;
+
+        [Obsolete("Designer only", true)]
+        public Waypoint_Designer_MDI()
+        {
+            InitializeComponent();
+        }
+
+        internal Waypoint_Designer_MDI(_TADAAlert parentAlert = null)
         {
             InitializeComponent();
 
@@ -232,6 +240,111 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
+        // Each form will need to call this on its own, because that form will have to supply its own balance and volume values.
+        /**
+        <returns>Tuple(PointF destination, double angle, double magnification, double opacity, double balance, double volume, boolean actuallyOnScreen)</returns>
+        */
+        internal virtual Tuple<PointF, double, double, double, double, double, Boolean> CalculatePositionFromTime(double time, double initialBalance = 0.0, double initialVolume = 0.0)
+        {
+            // Walk through the waypoints to figure out exactly where the object should be displayed, and with what values.
+            PointF position;
+            Boolean actuallyOnScreen = false;
+
+            double currentTime = 0.0;
+
+            WaypointContainer w = GetWaypoints();
+            Waypoint currentWaypoint = w.Waypoints[0];
+
+            double prevAngle = Convert.ToDouble(numud_InitialAngle.Value);
+            double nextAngle = prevAngle;
+            double currentAngle = prevAngle;
+            double elapsedAngle = 0;
+            double durationAngle = 0;
+
+            double prevMagnification = Convert.ToDouble(numud_InitialMagnification.Value);
+            double nextMagnification = prevMagnification;
+            double currentMagnification = prevMagnification;
+            double elapsedMagnification = 0;
+            double durationMagnification = 0;
+
+            double prevOpacity = Convert.ToDouble(numud_InitialOpacity.Value);
+            double nextOpacity = prevOpacity;
+            double currentOpacity = prevOpacity;
+            double elapsedOpacity = 0;
+            double durationOpacity = 0;
+
+            double prevBalance = initialBalance;
+            double nextBalance = prevBalance;
+            double currentBalance = prevBalance;
+            double elapsedBalance = 0;
+            double durationBalance = 0;
+
+            double prevVolume = initialVolume;
+            double nextVolume = prevVolume;
+            double currentVolume = prevVolume;
+            double elapsedVolume = 0;
+            double durationVolume = 0;
+
+            position = currentWaypoint.P1;
+
+            // Starting at waypoint 0 (initial conditions), start counting time and tracking position and variables.
+            if (time < currentWaypoint.TransitionTime)
+            {
+                actuallyOnScreen = false;
+            }
+            else
+            {
+                for (int i = 0; i < w.Waypoints.Count && time < currentTime; ++ i)
+                {
+                    currentWaypoint = w.Waypoints[i];
+                    double waypointDuration = currentWaypoint.TransitionTime + currentWaypoint.PersistTime;
+
+                    CalculateEffectChange(currentWaypoint.Angle, true, ref currentAngle, prevAngle, nextAngle, ref elapsedAngle, durationAngle, waypointDuration);
+                    CalculateEffectChange(currentWaypoint.Magnification, false, ref currentMagnification, prevMagnification, nextMagnification, ref elapsedMagnification, durationMagnification, waypointDuration);
+                    CalculateEffectChange(currentWaypoint.Opacity, false, ref currentOpacity, prevOpacity, nextOpacity, ref elapsedOpacity, durationOpacity, waypointDuration);
+                    CalculateEffectChange(currentWaypoint.Balance, false, ref currentBalance, prevBalance, nextBalance, ref elapsedBalance, durationBalance, waypointDuration);
+                    CalculateEffectChange(currentWaypoint.Volume, false, ref currentVolume, prevVolume, nextVolume, ref elapsedVolume, durationVolume, waypointDuration);
+
+                    currentTime += currentWaypoint.TransitionTime + currentWaypoint.PersistTime;
+                }
+            }
+
+            return new Tuple<PointF, double, double, double, double, double, Boolean>(position, currentAngle, currentMagnification, currentOpacity, currentBalance, currentVolume, actuallyOnScreen);
+        }
+
+        private void CalculateEffectChange(Effect effect, Boolean isAngle, ref double currentEffect, double prevEffect, double nextEffect, ref double elapsedEffect, double durationEffect, double timeAdjustment)
+        {
+            if (effect.change)
+            {
+                elapsedEffect = 0;
+                durationEffect = effect.duration;
+                prevEffect = currentEffect;
+                nextEffect = effect.target;
+
+                if (isAngle)
+                {
+                    while (prevEffect < 0)
+                    {
+                        prevEffect += 360;
+                    }
+                    prevEffect %= 360;
+                }
+            }
+
+            elapsedEffect = Math.Min(durationEffect, elapsedEffect + timeAdjustment);
+
+            if (elapsedEffect == durationEffect)
+            {
+                currentEffect = nextEffect;
+                elapsedEffect = 0;
+                durationEffect = 0;
+            }
+            else
+            {
+                currentEffect = elapsedEffect / durationEffect * (nextEffect - prevEffect) + prevEffect;
+            }
+        }
+
         private void CheckChecked()
         {
             numud_DesiredAngle.Enabled = chk_Angle.Checked;
@@ -391,6 +504,25 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
+        protected internal void SetItemSize(float width = 0, float height = 0)
+        {
+            if (width == 0 && height == 0)
+            {
+                itemSize.Width = 200;
+                itemSize.Height = 150;
+            }
+            else
+            {
+                itemSize.Width = width;
+                itemSize.Height = height;
+            }
+        }
+
+        protected internal void SetItemSize(SizeF size)
+        {
+            itemSize = size;
+        }
+
         private void SumWaypoints()
         {
             double totalTime = 0;
@@ -513,6 +645,32 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             CheckChecked();
 
             disableUpdates = false;
+        }
+
+        protected WaypointContainer GetWaypoints()
+        {
+            var tempWaypoints = (dg_Waypoints.DataSource as BindingSource);
+
+            WaypointContainer waypointContainer = new WaypointContainer();
+
+            foreach (Waypoint w in tempWaypoints)
+            {
+                waypointContainer.AddWaypoint(w);
+            }
+
+            return waypointContainer;
+        }
+
+        protected void SetWaypoints(WaypointContainer waypointContainer)
+        {
+            if (waypointContainer != null)
+            {
+                BindingSource bindingSource = dg_Waypoints.DataSource as BindingSource;
+                foreach (Waypoint waypoint in waypointContainer.Waypoints)
+                {
+                    bindingSource.Add(waypoint);
+                }
+            }
         }
     }
 }

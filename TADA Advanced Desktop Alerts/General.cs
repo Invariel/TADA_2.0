@@ -28,6 +28,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public const String DEFAULT_OAUTH = @"oauth.cfg";
         public const String DEFAULT_ALERTS = @"default.tada";
 
+        public const String MASKED_TEXTBOX_MASK = "{0,3}:{1,2}:{2,2}.{3,3}";
+
         public static Random rng = new Random();
 
         public static Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String> TwitchLibSubPlanToString = new Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String>() {
