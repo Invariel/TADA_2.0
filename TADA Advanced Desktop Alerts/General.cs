@@ -270,12 +270,13 @@ namespace TADA_Advanced_Desktop_Alerts
         public static TimeSpan TimeSpanFromDecimals(Decimal milliseconds, Decimal seconds = 0, Decimal minutes = 0, Decimal hours = 0, Decimal days = 0)
         {
             return new TimeSpan(Convert.ToInt32(days),
-                                 Convert.ToInt32(hours),
-                                 Convert.ToInt32(minutes),
-                                 Convert.ToInt32(seconds),
-                                 Convert.ToInt32(milliseconds));
+                                Convert.ToInt32(hours),
+                                Convert.ToInt32(minutes),
+                                Convert.ToInt32(seconds),
+                                Convert.ToInt32(milliseconds));
         }
 
+        // The difference between this and DurationFromTimeSpan is that Duration... is trimmed.  This needs every value because of the masked text box class these items fill.
         public static TimeSpan TimeSpanFromString(String text)
         {
             var explode = text.Split(':');
@@ -292,6 +293,11 @@ namespace TADA_Advanced_Desktop_Alerts
             if (explode.Length >= 3) { Int32.TryParse(explode[explode.Length - 3], out hours); }
 
             return new TimeSpan(0, hours, minutes, seconds, milliseconds);
+        }
+
+        public static String StringFromTimeSpan(TimeSpan span)
+        {
+            return String.Format(General.MASKED_TEXTBOX_MASK, span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
         }
 
         public static void FillNumudsFromTimeSpan(TimeSpan time, NumericUpDown hours, NumericUpDown minutes, NumericUpDown seconds, NumericUpDown milliseconds)
@@ -509,5 +515,17 @@ namespace TADA_Advanced_Desktop_Alerts
 
             internal int wPeriodMax;
         }
+    }
+
+    class CurrentPosition
+    {
+        public PointF location;
+        public float angle;
+        public float magnification;
+        public float opacity;
+        public float balance;
+        public float volume;
+        public bool aroundCenter;
+        public bool actuallyDraw;
     }
 }

@@ -19,24 +19,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private _TADAAlertImage alertImage;
 
-        private Bitmap previewBitmap;
-
-        public Bitmap PreviewBitmap
-        {
-            get { return this.previewBitmap; }
-        }
-
-        public SizeF BitmapSize
-        {
-            get { return new SizeF((float)numud_DesiredDimensionsX.Value, (float)numud_DesiredDimensionsY.Value); }
-        }
-
-        private void UpdatePreview ()
-        {
-            // Call up to the parent and let it know.
-            (this.MdiParent as Creation_Forms.Alert_Designer_MDI).UpdatePreview();
-        }
-
         internal Image_Designer_MDI(_TADAAlertImage alertImage, bool isNew, _TADAAlert parentAlert = null) : base (parentAlert)
         {
             InitializeComponent();
@@ -71,6 +53,54 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             trk_Position.ValueChanged += UpdatePosition;
             mtxt_PreviewPosition.LostFocus += UpdatePositionTracker;
+
+            trk_StartAt.ValueChanged += UpdateTimestamps;
+            mtxt_StartAt.LostFocus += UpdateTimestamps;
+            trk_LoopAt.ValueChanged += UpdateTimestamps;
+            mtxt_LoopAt.LostFocus += UpdateTimestamps;
+
+            mtxt_PlayFor.LostFocus += UpdateTimestamps;
+        }
+
+        private void UpdateTimestamps(object sender, EventArgs e)
+        {
+            // Make sure that the start_at timestamp is before the loop_at timestamp, update mtxt_ and trk_ at the same time.
+            if (!blocked)
+            {
+                blocked = true;
+                bool updateScreenshot = (sender == mtxt_StartAt || sender == trk_StartAt);
+
+                if (sender == trk_StartAt)
+                {
+                    mtxt_StartAt.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trk_StartAt.Value));
+                }
+                else if (sender == trk_LoopAt)
+                {
+                    mtxt_LoopAt.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trk_LoopAt.Value));
+                }
+                if (sender == mtxt_StartAt)
+                {
+                    trk_StartAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_StartAt.Text).TotalMilliseconds);
+                }
+                else if (sender == mtxt_LoopAt)
+                {
+                    trk_LoopAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_LoopAt.Text).TotalMilliseconds);
+                }
+
+                if (trk_LoopAt.Value < trk_StartAt.Value)
+                {
+                    mtxt_LoopAt.Text = mtxt_StartAt.Text;
+                    trk_LoopAt.Value = trk_StartAt.Value;
+                    updateScreenshot |= (sender == mtxt_LoopAt || sender == trk_LoopAt);
+                }
+
+                if (updateScreenshot)
+                {
+                    GenerateFreezeFrame();
+                }
+
+                blocked = false;
+            }
         }
 
         private void UpdatePosition(object sender, EventArgs e)
@@ -124,16 +154,20 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             pb_ImagePreview.Visible = !isVideo && showControls;
 
-
-
             lbl_PlayFor.Visible = isVideo && showControls;
             mtxt_PlayFor.Visible = isVideo && showControls;
 
             lbl_StartAt.Visible = isVideo && showControls;
+            trk_StartAt.Visible = isVideo && showControls;
             mtxt_StartAt.Visible = isVideo && showControls;
 
             lbl_LoopAt.Visible = isVideo && showControls;
+            trk_LoopAt.Visible = isVideo && showControls;
             mtxt_LoopAt.Visible = isVideo && showControls;
+            if (trk_LoopAt.Visible)
+            {
+                trk_LoopAt.BringToFront();
+            }
 
             mtxt_PreviewPosition.Visible = isVideo && showControls;
 
@@ -171,6 +205,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             if (mediaElement.HasVideo)
             {
+                blocked = true;
                 int width = mediaElement.NaturalVideoWidth;
                 int height = mediaElement.NaturalVideoHeight;
 
@@ -179,7 +214,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 if (!justLoaded)
                 {
-                    mtxt_PlayFor.Text = String.Format(General.MASKED_TEXTBOX_MASK, actualDuration.Hours, actualDuration.Minutes, actualDuration.Seconds, actualDuration.Milliseconds);
+                    mtxt_PlayFor.Text = General.StringFromTimeSpan(actualDuration);
                 }
 
                 mtxt_PreviewPosition.Text = String.Format(General.MASKED_TEXTBOX_MASK, 0, 0, 0, 0);
@@ -194,13 +229,27 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 }
 
                 SetItemSize(width, height);
-
+                GenerateFreezeFrame();
+              
                 trk_Volume.Maximum = (mediaElement.HasAudio ? 1000 : 0);
                 trk_Position.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
                 trk_Position.Value = 0;
 
+                trk_StartAt.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
+                trk_StartAt.TickFrequency = 60;
+                trk_StartAt.SmallChange = 1000;
+                trk_StartAt.LargeChange = 60000;
+
+                trk_LoopAt.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
+                trk_LoopAt.TickFrequency = 60;
+                trk_LoopAt.SmallChange = 1000;
+                trk_LoopAt.LargeChange = 60000;
+
                 playing = false;
                 justLoaded = false;
+
+                blocked = false;
+                UpdatePreview();
             }
             else
             {
@@ -219,6 +268,51 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 blocked = false;
             }
+        }
+
+        private void GenerateFreezeFrame ()
+        {
+            TimeSpan currentTime = mediaElement.Position;
+            TimeSpan tempTime = TimeSpan.Parse(mtxt_StartAt.Text);
+
+            bool wasPlaying = playing;
+            if (wasPlaying)
+            {
+                mediaElement.Pause();
+            }
+
+            mediaElement.Position = tempTime;
+            mediaElement.Play();
+            System.Threading.Thread.Sleep(500);
+            mediaElement.Pause();
+
+            System.Windows.Media.Imaging.RenderTargetBitmap renderTarget = new System.Windows.Media.Imaging.RenderTargetBitmap(pb_ImagePreview.Width, pb_ImagePreview.Height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+            renderTarget.Render(mediaElement);
+            System.IO.MemoryStream bitmapStream = new System.IO.MemoryStream();
+            System.Windows.Media.Imaging.BitmapEncoder bitmapEncoder = new System.Windows.Media.Imaging.BmpBitmapEncoder();
+            bitmapEncoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(renderTarget));
+            bitmapEncoder.Save(bitmapStream);
+
+            mediaElement.Position = currentTime;
+            mediaElement.Play();
+            System.Threading.Thread.Sleep(1);
+            mediaElement.Pause();
+
+            if (wasPlaying)
+            {
+                mediaElement.Play();
+            }
+
+            if (previewBitmap != null)
+            {
+                previewBitmap.Dispose();
+            }
+
+            Bitmap tempBitmap = new Bitmap(bitmapStream, true);
+            previewBitmap = new Bitmap(tempBitmap, new Size(Convert.ToInt32(numud_DesiredDimensionsX.Value), Convert.ToInt32(numud_DesiredDimensionsY.Value)));
+            tempBitmap.Dispose();
+
+            UpdatePreview();
         }
 
         private void FailedMediaFile(object sender, EventArgs e)
@@ -365,6 +459,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 mediaElement.Play();
                 mediaElement.Pause();
                 mediaElement.Position = TimeSpan.Parse(mtxt_PreviewPosition.Text);
+                mediaElement.Volume = trk_Volume.Value / 10.0;
+                mediaElement.Balance = trk_Balance.Value / 100.0;
                 mediaElement.Play();
                 playing = true;
             }
@@ -385,8 +481,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             if (this.alertImage == null)
             {
-                _TADAAlertImage thisAlertImage;
-
                 if (isVideo)
                 {
                     this.alertImage = new _TADAAlertImage(filename,

@@ -14,6 +14,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
     {
         Bitmap previewImage;
 
+        Color COLOR_TAB = Color.White;
+        Color COLOR_IMAGE = Color.Yellow;
+        Color COLOR_STREAMER_TEXT = Color.Green;
+        Color COLOR_VIEWER_TEXT = Color.OrangeRed;
+
         public Alert_Designer_MDI()
         {
             InitializeComponent();
@@ -21,20 +26,23 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.MdiChildActivate += ManageChildFormTabPages;
             this.tab_ChildMDIForms.SelectedIndexChanged += SwitchTabPage;
 
-            this.ts_NewImageVideo.Click += NewImageVideoForm;
-
             previewImage = new Bitmap(pb_Preview.Width, pb_Preview.Height);
             Graphics previewGraphics = Graphics.FromImage(previewImage);
             previewGraphics.FillRectangle(Brushes.Black, new Rectangle(new Point(0, 0), previewImage.Size));
             pb_Preview.Image = previewImage;
             pb_Preview.Update();
 
+            pb_Preview.MouseUp += SendCoordinatesToChildForm;
+
             ConfigureMenuItems();
         }
 
         private void ConfigureMenuItems ()
         {
-            //ts_NewImageVideo.Click += delegate { NewAlertPiece(new TADAAlertImage()); };
+            this.ts_NewImageVideo.Click += NewImageVideoForm;
+//            this.ts_NewStreamerAudio.Click += NewAudioForm;
+//            this.ts_NewStreamerText.Click += NewStreamerTextForm;
+//            this.ts_NewViewerText.Click += NewViewerTextForm;
         }
 
         private void ManageChildFormTabPages (object sender, EventArgs e)
@@ -45,19 +53,24 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
             else
             {
-                this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
-                if (this.ActiveMdiChild.Tag == null)
-                {
-                    // Add a tabPage to the tabControl (tab_ChildMDIForms) with an appropriate caption.
-                    TabPage newTabPage = new TabPage(this.ActiveMdiChild.Text); // Note: Add a listener to update this tab's name by the child.
-                    newTabPage.Tag = this.ActiveMdiChild;
-                    newTabPage.Parent = tab_ChildMDIForms;
-                    tab_ChildMDIForms.SelectedTab = newTabPage;
-                    this.ActiveMdiChild.Tag = newTabPage;
-                    this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ChildFormClosed);
-                }
+                AssignTags();
             }
+        }
 
+        private void AssignTags ()
+        {
+            this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
+
+            if (this.ActiveMdiChild.Tag == null)
+            {
+                // Add a tabPage to the tabControl (tab_ChildMDIForms) with an appropriate caption.
+                TabPage newTabPage = new TabPage(this.ActiveMdiChild.Text); // Note: Add a listener to update this tab's name by the child.
+                newTabPage.Tag = this.ActiveMdiChild;
+                newTabPage.Parent = tab_ChildMDIForms;
+                tab_ChildMDIForms.SelectedTab = newTabPage;
+                this.ActiveMdiChild.Tag = newTabPage;
+                this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ChildFormClosed);
+            }
             if (!tab_ChildMDIForms.Visible)
             {
                 tab_ChildMDIForms.Visible = true;
@@ -86,6 +99,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             newImageForm.MdiParent = this;
             newImageForm.Text = "Image/Video      ";
             newImageForm.Show();
+
+            AssignTags();
         }
 
         private void OpenFile(object sender, EventArgs e)
@@ -183,26 +198,16 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             point.Y = point.Y * heightRatio;
         }
 
-        private void CompressPoints(List<PointF> points, float widthRatio, float heightRatio)
-        {
-            for (int i = 0; i < points.Count; ++i)
-            {
-                PointF point = points[i];
-                CompressPoint(ref point, widthRatio, heightRatio);
-                points[i] = point;
-            }
-        }
-
         // The expectation here is that DrawWaypoints() is called from the time tracker-being-moved code, which first draws a black background rectangle.
         // The expectation is also that the images are drawn in the order "image, streamer text, viewer text".
-        private void DrawWaypoints (WaypointContainer waypoints, PointF unmodifiedLocation, SizeF unmodifiedSize, float currentAngle, float currentMagnification, float currentOpacity, Boolean aroundCenter, Bitmap itemToDraw)
+        private void DrawWaypoints (WaypointContainer waypoints, SizeF unmodifiedSize, Bitmap itemToDraw, CurrentPosition currentPosition, Color lineColour)
         {
             if (waypoints.Waypoints.Count > 0)
             {
                 float widthRatio = pb_Preview.Image.Width * 1.0f / MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Width;
                 float heightRatio = pb_Preview.Image.Height * 1.0f / MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Height;
 
-                PointF currentPosition = waypoints.Waypoints[0].P1;
+                PointF currentEndpoint = waypoints.Waypoints[0].P1;
 
                 Graphics imageGraphics = Graphics.FromImage(previewImage);
 
@@ -213,8 +218,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     // Every iteration we want a fresh P0 and P1 because they aren't compressed yet to fit our screen.
                     PointF P0, P1, C0, C1;
 
-                    P0 = currentPosition;
+                    P0 = currentEndpoint;
                     P1 = waypoint.P1;
+                    currentEndpoint = P1;
 
                     if (waypoint.IsCurve)
                     {
@@ -227,29 +233,99 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     }
 
                     // Interestingly, compressing points like this does still give the same shape of Bezier curve.
-                    CompressPoints(new List<PointF>() { P0, P1, C0, C1 }, widthRatio, heightRatio);
+                    CompressPoint(ref P0, widthRatio, heightRatio);
+                    CompressPoint(ref P1, widthRatio, heightRatio);
+                    CompressPoint(ref C0, widthRatio, heightRatio);
+                    CompressPoint(ref C1, widthRatio, heightRatio);
 
-                    imageGraphics.DrawBezier(Pens.White, P0, C0, C1, P1);
+                    using (Pen p = new Pen(lineColour))
+                    {
+                        imageGraphics.DrawBezier(p, P0, C0, C1, P1);
+                    }
                 }
 
-                if (unmodifiedLocation != null && itemToDraw != null)
+                if (currentPosition.actuallyDraw &&
+                    itemToDraw != null)
                 {
-                    CompressPoint(ref unmodifiedLocation, widthRatio, heightRatio);
-                    unmodifiedSize.Width *= widthRatio;
-                    unmodifiedSize.Height *= heightRatio;
+                    PointF modifiedLocation = currentPosition.location;
 
-                    imageGraphics.TranslateTransform(unmodifiedLocation.X + (aroundCenter ? unmodifiedSize.Width / 2 : 0.0f), unmodifiedLocation.Y + (aroundCenter ? unmodifiedSize.Height / 2 : 0.0f));
-                    imageGraphics.RotateTransform(currentAngle);
-                    imageGraphics.DrawImage(itemToDraw, Point.Empty);
-                    imageGraphics.RotateTransform(-currentAngle);
-                    imageGraphics.TranslateTransform(-unmodifiedLocation.X - (aroundCenter ? unmodifiedSize.Width / 2 : 0.0f), -unmodifiedLocation.Y - (aroundCenter ? unmodifiedSize.Height / 2 : 0.0f));
+                    CompressPoint(ref modifiedLocation, widthRatio, heightRatio);
+
+                    SizeF modifiedSize = new SizeF(unmodifiedSize.Width * widthRatio * currentPosition.magnification, unmodifiedSize.Height * heightRatio * currentPosition.magnification);
+
+                    // Opacity stuff.  Technically doesn't need to be done if opacity == 100, but whatever.
+                    System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix()
+                    {
+                        Matrix33 = (float)(currentPosition.opacity / 100.0)
+                    };
+
+                    System.Drawing.Imaging.ImageAttributes imageAttributes = new System.Drawing.Imaging.ImageAttributes();
+                    imageAttributes.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
+
+                    imageGraphics.TranslateTransform(modifiedLocation.X + (currentPosition.aroundCenter ? modifiedSize.Width / 2 : 0.0f), modifiedLocation.Y + (currentPosition.aroundCenter ? modifiedSize.Height / 2 : 0.0f));
+                    imageGraphics.RotateTransform(currentPosition.angle);
+                    imageGraphics.DrawImage(itemToDraw,
+                                            new Rectangle(0, 0, Convert.ToInt32(modifiedSize.Width), Convert.ToInt32(modifiedSize.Height)),
+                                            0,
+                                            0,
+                                            itemToDraw.Width,
+                                            itemToDraw.Height,
+                                            GraphicsUnit.Pixel,
+                                            imageAttributes);
+
+                    imageGraphics.RotateTransform(-currentPosition.angle);
+                    imageGraphics.TranslateTransform(-modifiedLocation.X - (currentPosition.aroundCenter ? modifiedSize.Width / 2 : 0.0f), -modifiedLocation.Y - (currentPosition.aroundCenter ? modifiedSize.Height / 2 : 0.0f));
                 }
+
+                pb_Preview.Image = previewImage;
+                pb_Preview.Update();
+            }
+        }
+
+        private void SendCoordinatesToChildForm(object sender, MouseEventArgs e)
+        {
+            if (this.ActiveMdiChild == null ||
+                (!System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Shift) &&
+                 !System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Control) ) )
+            {
+                // Then do nothing and bow out gracefully.
+            }
+            else
+            {
+                // Calculate position of e.Location (or of Control.PointToClient(Cursor.Position) multiplied by the X/Y ratios to get the point.
+                float ratioX = MainTADAForm.mainTADAForm.AnimationWindow.Width / (float)pb_Preview.Width;
+                float ratioY = MainTADAForm.mainTADAForm.AnimationWindow.Height / (float)pb_Preview.Height;
+
+                PointF modifiedLocation = new PointF((float)(Math.Round(e.Location.X * ratioX, 2)), (float)(Math.Round(e.Location.Y * ratioY, 2)));
+                
+                (this.ActiveMdiChild as MDI_Forms.Waypoint_Designer_MDI).AddWaypointFromImage(modifiedLocation, System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Control));
             }
         }
 
         public void UpdatePreview ()
         {
             // Update the preview image based on the child MDI forms that are being monitored.
+
+            Graphics imageGraphics = Graphics.FromImage(previewImage);
+            imageGraphics.FillRectangle(Brushes.Black, 0, 0, previewImage.Width, previewImage.Height);
+            
+            MDI_Forms.Waypoint_Designer_MDI activeTab = this.ActiveMdiChild as MDI_Forms.Waypoint_Designer_MDI;
+
+            // Always monitor the active tab.  And know what type of tab is active.
+            if (activeTab != null)
+            {
+                CurrentPosition currentValues = activeTab.CalculatePositionFromTime(trk_Time.Value, 0, 0);
+                if (currentValues != null)
+                {
+                    DrawWaypoints(activeTab.GetWaypoints(), activeTab.PreviewItemSize, activeTab.PreviewBitmap, currentValues, COLOR_TAB);
+                }
+            }
+
+            // Then, if not active, draw the selected image
+
+            // Then, if not active, draw the selected Streamer Text
+
+            // Then, if not active, draw the selected Viewer Text
         }
     }
 }

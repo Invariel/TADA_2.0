@@ -63,7 +63,7 @@
             this.mtxt_StartAt = new System.Windows.Forms.MaskedTextBox();
             this.mtxt_LoopAt = new System.Windows.Forms.MaskedTextBox();
             this.trk_StartAt = new System.Windows.Forms.TrackBar();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.trk_LoopAt = new System.Windows.Forms.TrackBar();
             this.tab_Focus.SuspendLayout();
             this.tab_Element.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
@@ -73,9 +73,35 @@
             this.tab_AdvancedWaypointControls.SuspendLayout();
             this.tab_Advanced.SuspendLayout();
             this.tab_Path.SuspendLayout();
+            this.tab_AngleAndMagnification.SuspendLayout();
+            this.tab_Opacity.SuspendLayout();
+            this.tab_Sound.SuspendLayout();
             this.tab_Macro.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C1Y)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P1Y)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C1X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P1X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C0Y)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P0Y)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C0X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P0X)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_MagnificationDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_MagnificationFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredMagnification)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_AngleDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_AngleFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredAngle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_OpacityDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_OpacityFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredOpacity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).BeginInit();
             this.grp_ImagePreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Position)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredDimensionsY)).BeginInit();
@@ -87,12 +113,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.trk_Volume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Balance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_StartAt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trk_LoopAt)).BeginInit();
             this.SuspendLayout();
             // 
             // tab_Element
             // 
-            this.tab_Element.Controls.Add(this.trackBar1);
+            this.tab_Element.Controls.Add(this.trk_LoopAt);
             this.tab_Element.Controls.Add(this.trk_StartAt);
             this.tab_Element.Controls.Add(this.mtxt_LoopAt);
             this.tab_Element.Controls.Add(this.mtxt_StartAt);
@@ -129,7 +155,7 @@
             // lbl_Balance
             // 
             this.lbl_Balance.AutoSize = true;
-            this.lbl_Balance.Location = new System.Drawing.Point(285, 241);
+            this.lbl_Balance.Location = new System.Drawing.Point(261, 241);
             this.lbl_Balance.Name = "lbl_Balance";
             this.lbl_Balance.Size = new System.Drawing.Size(58, 13);
             this.lbl_Balance.TabIndex = 121;
@@ -277,7 +303,7 @@
             // lbl_Volume
             // 
             this.lbl_Volume.AutoSize = true;
-            this.lbl_Volume.Location = new System.Drawing.Point(289, 290);
+            this.lbl_Volume.Location = new System.Drawing.Point(265, 290);
             this.lbl_Volume.Name = "lbl_Volume";
             this.lbl_Volume.Size = new System.Drawing.Size(54, 13);
             this.lbl_Volume.TabIndex = 120;
@@ -290,7 +316,7 @@
             this.trk_Volume.Location = new System.Drawing.Point(6, 283);
             this.trk_Volume.Maximum = 1000;
             this.trk_Volume.Name = "trk_Volume";
-            this.trk_Volume.Size = new System.Drawing.Size(277, 45);
+            this.trk_Volume.Size = new System.Drawing.Size(248, 45);
             this.trk_Volume.TabIndex = 118;
             this.trk_Volume.TickFrequency = 50;
             this.trk_Volume.Visible = false;
@@ -429,7 +455,7 @@
             this.trk_Balance.Maximum = 100;
             this.trk_Balance.Minimum = -100;
             this.trk_Balance.Name = "trk_Balance";
-            this.trk_Balance.Size = new System.Drawing.Size(277, 45);
+            this.trk_Balance.Size = new System.Drawing.Size(248, 45);
             this.trk_Balance.TabIndex = 119;
             this.trk_Balance.TickFrequency = 10;
             this.trk_Balance.Visible = false;
@@ -475,14 +501,14 @@
             this.trk_StartAt.TabIndex = 123;
             this.trk_StartAt.Visible = false;
             // 
-            // trackBar1
+            // trk_LoopAt
             // 
-            this.trackBar1.Location = new System.Drawing.Point(60, 159);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(166, 45);
-            this.trackBar1.TabIndex = 124;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBar1.Visible = false;
+            this.trk_LoopAt.Location = new System.Drawing.Point(60, 159);
+            this.trk_LoopAt.Name = "trk_LoopAt";
+            this.trk_LoopAt.Size = new System.Drawing.Size(166, 45);
+            this.trk_LoopAt.TabIndex = 124;
+            this.trk_LoopAt.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.trk_LoopAt.Visible = false;
             // 
             // Image_Designer_MDI
             // 
@@ -501,10 +527,39 @@
             this.tab_Advanced.ResumeLayout(false);
             this.tab_Path.ResumeLayout(false);
             this.tab_Path.PerformLayout();
+            this.tab_AngleAndMagnification.ResumeLayout(false);
+            this.tab_AngleAndMagnification.PerformLayout();
+            this.tab_Opacity.ResumeLayout(false);
+            this.tab_Opacity.PerformLayout();
+            this.tab_Sound.ResumeLayout(false);
+            this.tab_Sound.PerformLayout();
             this.tab_Macro.ResumeLayout(false);
             this.tab_Macro.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_ShiftX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C1Y)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P1Y)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C1X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P1X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C0Y)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P0Y)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_C0X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_P0X)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_MagnificationDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_MagnificationFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredMagnification)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_AngleDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_AngleFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredAngle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_OpacityDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_OpacityFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredOpacity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_VolumeFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).EndInit();
             this.grp_ImagePreview.ResumeLayout(false);
             this.grp_ImagePreview.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Position)).EndInit();
@@ -517,7 +572,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trk_Volume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Balance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_StartAt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trk_LoopAt)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -557,7 +612,7 @@
         private System.Windows.Forms.MaskedTextBox mtxt_LoopAt;
         private System.Windows.Forms.MaskedTextBox mtxt_StartAt;
         private System.Windows.Forms.MaskedTextBox mtxt_PlayFor;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar trk_LoopAt;
         private System.Windows.Forms.TrackBar trk_StartAt;
         private System.Windows.Forms.MaskedTextBox mtxt_PreviewPosition;
     }
