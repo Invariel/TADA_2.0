@@ -19,6 +19,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         Color COLOR_STREAMER_TEXT = Color.Green;
         Color COLOR_VIEWER_TEXT = Color.OrangeRed;
 
+        private double MaximumTime;
+
         public Alert_Designer_MDI()
         {
             InitializeComponent();
@@ -33,6 +35,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             pb_Preview.Update();
 
             pb_Preview.MouseUp += SendCoordinatesToChildForm;
+
+            trk_Time.ValueChanged += TrackbarPositionChanged;
 
             ConfigureMenuItems();
         }
@@ -302,10 +306,53 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
+        private void TrackbarPositionChanged (object sender, EventArgs e)
+        {
+            lbl_Time.Text = (trk_Time.Value / 1000.0 * this.MaximumTime).ToString();
+            this.UpdatePreview();
+        }
+
+        public void UpdateTrackbar ()
+        {
+            double timestamp = (trk_Time.Value / 1000.0 * this.MaximumTime);
+            double maximumTime = 0;
+
+            foreach (_TADAAlertImage image in alertImageBindingSource)
+            {
+                maximumTime = Math.Max(maximumTime, image.Waypoints.TotalDuration);
+            }
+
+            foreach (_TADAAlertAudio audio in alertAudioBindingSource)
+            {
+                maximumTime = Math.Max(maximumTime, audio.Waypoints.TotalDuration);
+                maximumTime = Math.Max(maximumTime, audio.Duration.TotalSeconds + audio.Delay.TotalSeconds);
+            }
+
+            foreach (_TADAAlertText text in streamerAlertTextBindingSource)
+            {
+                maximumTime = Math.Max(maximumTime, text.Waypoints.TotalDuration);
+            }
+
+            foreach (_TADAAlertText text in viewerAlertTextBindingSource)
+            {
+                maximumTime = Math.Max(maximumTime, text.Waypoints.TotalDuration);
+            }
+
+            this.MaximumTime = maximumTime;
+
+            // And then set the tracker to that spot if possible.
+            if (maximumTime > 0)
+            {
+                trk_Time.Value = Convert.ToInt32(Math.Min(trk_Time.Maximum, timestamp / maximumTime * 1000.0));
+                lbl_Time.Text = (trk_Time.Value / 1000.0 * this.MaximumTime).ToString();
+            }
+        }
+
         public void UpdatePreview ()
         {
-            // Update the preview image based on the child MDI forms that are being monitored.
+            UpdateTrackbar();
 
+            // Update the preview image based on the child MDI forms that are being monitored.
             Graphics imageGraphics = Graphics.FromImage(previewImage);
             imageGraphics.FillRectangle(Brushes.Black, 0, 0, previewImage.Width, previewImage.Height);
             
@@ -314,7 +361,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             // Always monitor the active tab.  And know what type of tab is active.
             if (activeTab != null)
             {
-                CurrentPosition currentValues = activeTab.CalculatePositionFromTime(trk_Time.Value, 0, 0);
+                CurrentPosition currentValues = activeTab.CalculatePositionFromTime(trk_Time.Value / 1000.0 * this.MaximumTime, 0, 0);
                 if (currentValues != null)
                 {
                     DrawWaypoints(activeTab.GetWaypoints(), activeTab.PreviewItemSize, activeTab.PreviewBitmap, currentValues, COLOR_TAB);
@@ -326,6 +373,26 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             // Then, if not active, draw the selected Streamer Text
 
             // Then, if not active, draw the selected Viewer Text
+        }
+
+        private void btn_Test_Click(object sender, EventArgs e)
+        {
+            System.Xml.XmlWriterSettings xmlWriterSettings = new System.Xml.XmlWriterSettings
+            {
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                NewLineOnAttributes = false
+            };
+
+            using (System.IO.FileStream fileStream = new System.IO.FileStream(@"D:\Temp\xmlfile.xml", System.IO.FileMode.Create))
+            {
+                System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(fileStream, xmlWriterSettings);
+                xmlWriter.WriteStartDocument();
+                foreach (_TADAAlertImage image in alertImageBindingSource) { image.WriteXml(xmlWriter); }
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Flush();
+                xmlWriter.Close();
+            }
         }
     }
 }

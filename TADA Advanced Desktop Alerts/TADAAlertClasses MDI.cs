@@ -13,11 +13,11 @@ using System.Xml.Serialization;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
-    internal abstract class PropertyAndXML : INotifyPropertyChanged, IXmlSerializable
+    public abstract class PropertyAndXML : INotifyPropertyChanged, IXmlSerializable
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -220,7 +220,7 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    internal abstract partial class InitialConditions : PropertyAndXML
+    public abstract partial class InitialConditions : PropertyAndXML
     {
         public double InitialAngle { get; set; } = 0;
         public double InitialMagnification { get; set; } = 0;
@@ -231,25 +231,26 @@ namespace TADA_Advanced_Desktop_Alerts
         public override void ReadXml(XmlReader reader)
         {
             // Don't move the cursor, because it's ONLY reading properties of a tag, not reading other tags.
+            // Also, I should normalize all of this across displays, so that it's consistent for someone editing the file.
             this.InitialAngle = Double.Parse(reader.GetAttribute("Angle") ?? "0.0");
             this.InitialMagnification = Double.Parse(reader.GetAttribute("Magnification") ?? "1.0");
             this.InitialOpacity = Double.Parse(reader.GetAttribute("Opacity") ?? "100.0");
             this.InitialBalance = Double.Parse(reader.GetAttribute("Balance") ?? "0.0");
-            this.InitialVolume = Double.Parse(reader.GetAttribute("Volume") ?? "100.0");
+            this.InitialVolume = Double.Parse(reader.GetAttribute("Volume") ?? "0.0");
         }
 
         public override void WriteXml(XmlWriter writer)
         {
             // Again, don't move the cursor, since this is ONLY writing properties of a tag.
-            writer.WriteAttributeString("Angle", this.InitialAngle.ToString());
-            writer.WriteAttributeString("Magnification", this.InitialMagnification.ToString());
-            writer.WriteAttributeString("Opacity", this.InitialOpacity.ToString());
-            writer.WriteAttributeString("Balance", this.InitialBalance.ToString());
-            writer.WriteAttributeString("Volume", this.InitialVolume.ToString());
+            if (this.InitialAngle != 0) { writer.WriteAttributeString("Angle", this.InitialAngle.ToString()); }
+            if (this.InitialMagnification != 1) { writer.WriteAttributeString("Magnification", this.InitialMagnification.ToString()); }
+            if (this.InitialOpacity != 100) { writer.WriteAttributeString("Opacity", this.InitialOpacity.ToString()); }
+            if (this.InitialBalance != 0) { writer.WriteAttributeString("Balance", this.InitialBalance.ToString()); }
+            if (this.InitialVolume != 0) { writer.WriteAttributeString("Volume", this.InitialVolume.ToString()); }
         }
     }
 
-    internal class _TADAAlertImage : InitialConditions
+    internal class _TADAAlertImage : PropertyAndXML
     {
         private String filename;
         private Size dimensions;
@@ -305,22 +306,19 @@ namespace TADA_Advanced_Desktop_Alerts
         }
 
         // Constructor for Image
-        public _TADAAlertImage(String filename, int animationLoops, Size dimensions, double angle, double magnification, double opacity, WaypointContainer waypoints)
+        public _TADAAlertImage(String filename, int animationLoops, Size dimensions, WaypointContainer waypoints)
         {
             this.isVideo = false;
 
             this.filename = filename;
             this.AnimationLoops = animationLoops;
             this.dimensions = dimensions;
-            this.InitialAngle = angle;
-            this.InitialMagnification = magnification;
-            this.InitialOpacity = opacity;
 
             this.Waypoints = waypoints;
         }
 
         // Constructor for Video
-        public _TADAAlertImage(String filename, Size dimensions, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, double angle, double magnification, double opacity, double balance, double volume, WaypointContainer waypoints)
+        public _TADAAlertImage(String filename, Size dimensions, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, WaypointContainer waypoints)
         {
             this.isVideo = true;
 
@@ -329,11 +327,6 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Duration = duration;
             this.StartingPosition = startingPosition;
             this.EndingPosition = endingPosition;
-            this.InitialAngle = angle;
-            this.InitialMagnification = magnification;
-            this.InitialOpacity = opacity;
-            this.InitialBalance = balance;
-            this.InitialVolume = volume;
             this.Waypoints = waypoints;
         }
 
@@ -348,8 +341,6 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.Filename = reader.GetAttribute("Filename");
                 this.IsVideo = Boolean.Parse(reader.GetAttribute("IsVideo"));
                 this.AnimationLoops = Int32.Parse(reader.GetAttribute("Loops") ?? "0.0");
-
-                base.ReadXml(reader);
 
                 while (reader.Read())
                 {
@@ -406,8 +397,6 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteAttributeString("Filename", this.filename);
             writer.WriteAttributeString("IsVideo", this.isVideo.ToString());
 
-            base.WriteXml(writer);
-
             if (this.isVideo)
             {
                 XmlHelper.WriteTimeSpan(writer, this.Duration, "Duration");
@@ -423,7 +412,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (this.Waypoints.Waypoints.Count > 0)
             {
-                XmlHelper.Write<Waypoint>(writer, "Waypoints", this.Waypoints.Waypoints);
+                this.Waypoints.WriteXml(writer);
             }
 
             writer.WriteEndElement();
@@ -431,7 +420,7 @@ namespace TADA_Advanced_Desktop_Alerts
         #endregion XML
     }
 
-    internal class _TADAAlertAudio : InitialConditions
+    internal class _TADAAlertAudio : PropertyAndXML
     {
         private String filename;
 
@@ -484,11 +473,9 @@ namespace TADA_Advanced_Desktop_Alerts
         }
 
         // Constructor for Alert Designer.
-        public _TADAAlertAudio (String filename, double volume, double balance, TimeSpan delay, TimeSpan duration, TimeSpan startAt, TimeSpan endAt, WaypointContainer waypoints)
+        public _TADAAlertAudio (String filename, TimeSpan delay, TimeSpan duration, TimeSpan startAt, TimeSpan endAt, WaypointContainer waypoints)
         {
             this.filename = filename;
-            this.Balance = balance;
-            this.Volume = volume;
             this.Delay = delay;
             this.Duration = duration;
             this.StartingPosition = startAt;
@@ -504,7 +491,6 @@ namespace TADA_Advanced_Desktop_Alerts
             if (reader.IsStartElement("Audio"))
             {
                 this.Filename = reader.GetAttribute("Filename");
-                base.ReadXml(reader);
 
                 while (reader.Read())
                 {
@@ -530,7 +516,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else if (reader.IsStartElement("Waypoints"))
                     {
-                        XmlHelper.Read(reader, "Waypoint", "Waypoints", this.Waypoints.Waypoints);
+                        this.Waypoints.ReadXml(reader);
                     }
                     else if (!reader.IsStartElement() && reader.Name == "Audio")
                     {
@@ -555,8 +541,6 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteStartElement("Audio");
             writer.WriteAttributeString("Filename", this.filename);
 
-            base.WriteXml(writer);
-
             XmlHelper.WriteTimeSpan(writer, this.Delay, "Delay");
             XmlHelper.WriteTimeSpan(writer, this.Duration, "Duration");
             XmlHelper.WriteTimeSpan(writer, this.StartingPosition, "StartAt");
@@ -564,7 +548,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (this.Waypoints.Waypoints.Count > 0)
             {
-                XmlHelper.Write(writer, "Waypoints", this.Waypoints.Waypoints);
+                this.Waypoints.WriteXml(writer);
             }
 
             writer.WriteEndElement();
@@ -572,7 +556,7 @@ namespace TADA_Advanced_Desktop_Alerts
         #endregion XML
     }
 
-    internal class _TADAAlertText : InitialConditions
+    internal class _TADAAlertText : PropertyAndXML
     {
         private String message;
         private String readMessage;
@@ -624,12 +608,11 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = new WaypointContainer ();
         }
 
-        public _TADAAlertText(String message, String readMessage, String ttsVoice, int volume, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
+        public _TADAAlertText(String message, String readMessage, String ttsVoice, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
         {
             this.Message = message;
             this.ReadMessage = readMessage;
             this.TTSVoice = ttsVoice;
-            this.InitialVolume = volume;
 
             this.ChosenFont = font;
             this.OutlineWidth = outlineWidth;
@@ -676,8 +659,6 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.ReadMessage = reader.GetAttribute("Read");
                 this.TTSVoice = reader.GetAttribute("Voice");
                 
-                base.ReadXml(reader);
-
                 while (reader.Read())
                 {
                     // Version 2.0 of the file writes Message and ReadMessage as elements with String content.
@@ -729,7 +710,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else if (reader.IsStartElement("Waypoints"))
                     {
-                        XmlHelper.Read(reader, "Waypoint", "Waypoints", this.Waypoints.Waypoints);
+                        this.Waypoints.ReadXml(reader);
                     }
                     else if (!reader.IsStartElement() && reader.Name == "Text")
                     {
@@ -754,8 +735,6 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteStartElement("Text");
             writer.WriteAttributeString("Voice", this.TTSVoice);
 
-            base.WriteXml(writer);
-
             writer.WriteElementString("Message", this.Message);
             writer.WriteElementString("Read", this.ReadMessage);
 
@@ -772,7 +751,7 @@ namespace TADA_Advanced_Desktop_Alerts
             XmlHelper.WriteSize(writer, this.Dimensions, "Dimensions");
             XmlHelper.WriteSize(writer, this.Padding, "Padding");
 
-            XmlHelper.Write(writer, "Waypoints", this.Waypoints.Waypoints);
+            this.Waypoints.WriteXml(writer);
 
             writer.WriteEndElement();
         }

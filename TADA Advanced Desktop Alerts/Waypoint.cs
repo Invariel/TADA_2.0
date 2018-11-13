@@ -413,11 +413,16 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public class WaypointContainer
+    public class WaypointContainer : InitialConditions
     {
         private int currentWaypoint = 0;
 
         protected List<Waypoint> waypoints;
+
+        public double TotalDuration
+        {
+            get { return this.Waypoints.Sum(waypoint => waypoint.TransitionTime + waypoint.PersistTime); }
+        }
 
         public List<Waypoint> Waypoints
         {
@@ -468,6 +473,24 @@ namespace TADA_Advanced_Desktop_Alerts
         public WaypointContainer(List<Waypoint> waypointList)
         {
             this.waypoints = waypointList;
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            // Read that it's a Waypoints tag, then...
+            if (reader.Name == "Waypoints")
+            {
+                base.ReadXml(reader);
+
+                XmlHelper.Read(reader, "Waypoint", "Waypoints", this.waypoints);
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Waypoints");
+            base.WriteXml(writer);
+            XmlHelper.Write(writer, "Waypoint", this.waypoints, false);
         }
     }
 }

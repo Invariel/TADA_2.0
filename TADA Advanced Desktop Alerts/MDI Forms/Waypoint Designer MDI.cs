@@ -15,6 +15,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         protected internal bool disableUpdates = false;
 
         private SizeF itemSize = new SizeF();
+        protected internal WaypointContainer _waypointContainer;
 
         protected Bitmap previewBitmap;
 
@@ -26,6 +27,16 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         public SizeF PreviewItemSize
         {
             get { return this.itemSize; }
+        }
+
+        public WaypointContainer waypointContainer
+        {
+            get { return this._waypointContainer; }
+            set
+            {
+                this._waypointContainer = value;
+                this.SetWaypoints(this._waypointContainer);
+            }
         }
 
         [Obsolete("Designer only", true)]
@@ -41,6 +52,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             dg_Waypoints.SelectionChanged += UpdateAdvancedWaypoint;
             dg_Waypoints.DefaultValuesNeeded += DefaultRowValues;
             dg_Waypoints.EditingControlShowing += NumericInputsOnly;
+            dg_Waypoints.CellValueChanged += WaypointContainerUpdateValues;
+            dg_Waypoints.RowsAdded += WaypointContainerAddRows;
+            dg_Waypoints.RowsRemoved += WaypointContainerRemoveRows;
 
             btn_CopySelected.Click += btn_CopySelected_Click;
             btn_ShiftSelected.Click += btn_ShiftSelected_Click;
@@ -90,6 +104,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             txt_Keypresses.LostFocus += SaveVariableState;
             txt_WindowTarget.LostFocus += SaveVariableState;
 
+            numud_InitialAngle.ValueChanged += UpdateInitialAngle;
+            numud_InitialMagnification.ValueChanged += UpdateInitialMagnification;
+            numud_InitialOpacity.ValueChanged += UpdateInitialOpacity;
+
             if (parentAlert != null)
             {
                 // Then populate cmb_ImportWaypoints with the other alert names and types.
@@ -97,7 +115,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 cmb_ImportWaypoints.DisplayMember = "Text";
                 cmb_ImportWaypoints.ValueMember = "Waypoints";
-
             }
 
             ConfigureTooltips();
@@ -161,6 +178,31 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             General.ConfigureToolTip(tab_Macro, "Controls for directing keypresses at a given application at the end of this Waypoint.");
             General.ConfigureToolTip(new List<Control>() { lbl_WindowTarget, txt_WindowTarget }, "The exact name of the window to direct the keypress combination to.");
             General.ConfigureToolTip(new List<Control>() { lbl_Keypresses, txt_Keypresses }, "The combination of keys to send to the selected window.");
+        }
+
+        public void UpdateInitialAngle(object sender, EventArgs e)
+        {
+            this._waypointContainer.InitialAngle = Convert.ToDouble((sender as NumericUpDown).Value);
+        }
+
+        public void UpdateInitialMagnification(object sender, EventArgs e)
+        {
+            this._waypointContainer.InitialMagnification = Convert.ToDouble((sender as NumericUpDown).Value);
+        }
+
+        public void UpdateInitialOpacity(object sender, EventArgs e)
+        {
+            this._waypointContainer.InitialOpacity = Convert.ToDouble((sender as NumericUpDown).Value);
+        }
+
+        public void UpdateInitialBalance(object sender, EventArgs e)
+        {
+            this._waypointContainer.InitialBalance = Convert.ToDouble((sender as TrackBar).Value);
+        }
+
+        public void UpdateInitialVolume(object sender, EventArgs e)
+        {
+            this._waypointContainer.InitialVolume = Convert.ToDouble((sender as TrackBar).Value) / 10;
         }
 
         public void AddWaypointFromImage (PointF position, bool insertBefore)
@@ -233,6 +275,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
 
             dg_Waypoints.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+            UpdatePreview();
         }
 
         private void btn_ShiftSelected_Click(object sender, EventArgs e)
@@ -310,7 +353,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 }
                 else
                 {
-                    actuallyOnScreen = true;
                     for (int i = 0; i < w.Waypoints.Count && time < currentTime; ++i)
                     {
                         currentWaypoint = w.Waypoints[i];
@@ -334,6 +376,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                         }
 
                         currentTime += currentWaypoint.TransitionTime + currentWaypoint.PersistTime;
+                    }
+                    if (time < currentTime)
+                    {
+                        actuallyOnScreen = true;
                     }
                 }
 
@@ -543,6 +589,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 CheckChecked();
             }
+
+            UpdatePreview();
         }
 
         protected internal void SetItemSize(float width = 0, float height = 0)
@@ -690,17 +738,17 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         public WaypointContainer GetWaypoints()
         {
-            WaypointContainer waypointContainer = new WaypointContainer();
+            this._waypointContainer.Waypoints.Clear();
 
             foreach (Object w in waypointBindingSource)
             {
-                waypointContainer.AddWaypoint(w as Waypoint);
+                this._waypointContainer.AddWaypoint(w as Waypoint);
             }
 
-            return waypointContainer;
+            return this._waypointContainer;
         }
 
-        protected void SetWaypoints(WaypointContainer waypointContainer)
+        internal void SetWaypoints(WaypointContainer waypointContainer)
         {
             if (waypointContainer != null)
             {
@@ -716,6 +764,35 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             // Call up to the parent and let it know.
             (this.MdiParent as Creation_Forms.Alert_Designer_MDI).UpdatePreview();
+        }
+
+        protected void WaypointContainerAddRows(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            for (int i = 0; i < e.RowCount; ++ i)
+            {
+                this._waypointContainer.Waypoints.Add(new Waypoint());
+            }
+        }
+
+        protected void WaypointContainerUpdateValues(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!dg_Waypoints.Rows[e.RowIndex].IsNewRow)
+            {
+                this._waypointContainer.Waypoints[e.RowIndex] = waypointBindingSource[e.RowIndex] as Waypoint;
+            }
+        }
+
+        protected void WaypointContainerRemoveRows(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            if (e.RowCount == 1 && this._waypointContainer.Waypoints.Count > e.RowIndex)
+            {
+                this._waypointContainer.Waypoints.RemoveAt(e.RowIndex);
+            }
+            else
+            {
+                this._waypointContainer.Waypoints.Clear();
+                GetWaypoints();
+            }
         }
     }
 }

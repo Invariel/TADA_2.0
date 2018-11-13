@@ -19,7 +19,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private _TADAAlertImage alertImage;
 
-        internal Image_Designer_MDI(_TADAAlertImage alertImage, bool isNew, _TADAAlert parentAlert = null) : base (parentAlert)
+        internal Image_Designer_MDI(_TADAAlertImage alertImage, bool isNew, _TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
 
@@ -35,6 +35,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 LoadExisting(this.alertImage);
             }
+
+            this.alertImage = alertImage;
+            this.waypointContainer = alertImage.Waypoints;
         }
 
         private void InitializeCallbacks()
@@ -47,8 +50,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_DesiredDimensionsX.ValueChanged += UpdateDesiredSize;
             numud_DesiredDimensionsY.ValueChanged += UpdateDesiredSize;
 
-            trk_Volume.ValueChanged += new EventHandler((sender, e) => { mediaElement.Volume = trk_Volume.Value / 1000.0; lbl_Volume.Text = String.Format("Volume: {0,2}", trk_Volume.Value / 10.0); });
             trk_Balance.ValueChanged += new EventHandler((sender, e) => { mediaElement.Balance = trk_Balance.Value / 100.0; lbl_Balance.Text = String.Format("Balance: {0,2}", trk_Balance.Value / 100.0); });
+            trk_Balance.ValueChanged += UpdateInitialBalance;
+
+            trk_Volume.ValueChanged += new EventHandler((sender, e) => { mediaElement.Volume = trk_Volume.Value / 1000.0; lbl_Volume.Text = String.Format("Volume: {0,2}", trk_Volume.Value / 10.0); });
+            trk_Volume.ValueChanged += UpdateInitialVolume;
+
             btn_PlayPause.Click += btn_PlayPause_Click;
 
             trk_Position.ValueChanged += UpdatePosition;
@@ -60,6 +67,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             mtxt_LoopAt.LostFocus += UpdateTimestamps;
 
             mtxt_PlayFor.LostFocus += UpdateTimestamps;
+
+            dg_Waypoints.CellValueChanged += delegate { UpdatePreview(); };
         }
 
         private void UpdateTimestamps(object sender, EventArgs e)
@@ -89,9 +98,17 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 if (trk_LoopAt.Value < trk_StartAt.Value)
                 {
-                    mtxt_LoopAt.Text = mtxt_StartAt.Text;
-                    trk_LoopAt.Value = trk_StartAt.Value;
-                    updateScreenshot |= (sender == mtxt_LoopAt || sender == trk_LoopAt);
+                    if (sender == mtxt_LoopAt || sender == trk_LoopAt)
+                    {
+                        mtxt_StartAt.Text = mtxt_LoopAt.Text;
+                        trk_StartAt.Value = trk_LoopAt.Value;
+                    }
+                    else if (sender == mtxt_StartAt || sender == trk_StartAt)
+                    {
+                        mtxt_LoopAt.Text = mtxt_StartAt.Text;
+                        trk_LoopAt.Value = trk_StartAt.Value;
+                    }
+                    updateScreenshot = true;
                 }
 
                 if (updateScreenshot)
@@ -230,7 +247,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 SetItemSize(width, height);
                 GenerateFreezeFrame();
-              
+
                 trk_Volume.Maximum = (mediaElement.HasAudio ? 1000 : 0);
                 trk_Position.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
                 trk_Position.Value = 0;
@@ -270,7 +287,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
-        private void GenerateFreezeFrame ()
+        private void GenerateFreezeFrame()
         {
             TimeSpan currentTime = mediaElement.Position;
             TimeSpan tempTime = TimeSpan.Parse(mtxt_StartAt.Text);
@@ -401,6 +418,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 txt_Duration.Text = General.DurationFromTimeSpan(new TimeSpan(0, 0, 0, 0, duration));
 
+                if (!String.IsNullOrEmpty(txt_Filename.Text))
+                {
+                    this.alertImage.Filename = txt_Filename.Text;
+                }
+
                 DisplayVideoControls(isVideo);
             }
         }
@@ -431,6 +453,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
 
             SetItemSize((float)numud_DesiredDimensionsX.Value, (float)numud_DesiredDimensionsY.Value);
+            this.alertImage.Dimensions = new Size(Convert.ToInt32(numud_DesiredDimensionsX.Value), Convert.ToInt32(numud_DesiredDimensionsY.Value));
             UpdatePreview();
         }
 
@@ -469,6 +492,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private void GenerateAlertImage()
         {
             WaypointContainer waypointContainer = GetWaypoints();
+
             String filename = txt_Filename.Text;
             bool isVideo = this.isVideo;
             int animationLoops = Convert.ToInt32(this.numud_AnimatedGifLoop.Value);
@@ -476,8 +500,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             TimeSpan duration = (this.isVideo ? TimeSpan.Parse(mtxt_PlayFor.Text) : new TimeSpan(0));
             TimeSpan startingPosition = (this.isVideo ? TimeSpan.Parse(mtxt_StartAt.Text) : new TimeSpan(0));
             TimeSpan endingPosition = (this.isVideo ? TimeSpan.Parse(mtxt_LoopAt.Text) : new TimeSpan(0));
-            double balance = (this.isVideo ? trk_Balance.Value / 100.0 : 0);
-            double volume = (this.isVideo ? trk_Volume.Value / 10 : 0);
 
             if (this.alertImage == null)
             {
@@ -488,11 +510,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                                                           TimeSpan.Parse(mtxt_PlayFor.Text),
                                                           TimeSpan.Parse(mtxt_StartAt.Text),
                                                           TimeSpan.Parse(mtxt_LoopAt.Text),
-                                                          Convert.ToDouble(numud_InitialAngle.Value),
-                                                          Convert.ToDouble(numud_InitialMagnification.Value),
-                                                          Convert.ToDouble(numud_InitialOpacity.Value),
-                                                          trk_Balance.Value / 100.0,
-                                                          trk_Volume.Value / 10.0,
                                                           waypointContainer);
                 }
                 else
@@ -500,9 +517,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     this.alertImage = new _TADAAlertImage(filename,
                                                           Convert.ToInt32(this.numud_AnimatedGifLoop.Value),
                                                           dimensions,
-                                                          Convert.ToDouble(numud_InitialAngle.Value),
-                                                          Convert.ToDouble(numud_InitialMagnification.Value),
-                                                          Convert.ToDouble(numud_InitialOpacity.Value),
                                                           waypointContainer);
                 }
 
@@ -517,8 +531,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 this.alertImage.Duration = duration;
                 this.alertImage.StartingPosition = startingPosition;
                 this.alertImage.EndingPosition = endingPosition;
-                this.alertImage.InitialBalance = balance;
-                this.alertImage.InitialVolume = volume;
                 this.alertImage.Waypoints = waypointContainer;
             }
         }
@@ -539,10 +551,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_DesiredDimensionsX.Value = alertImage.Dimensions.Width;
             numud_DesiredDimensionsY.Value = alertImage.Dimensions.Height;
 
-            trk_Balance.Value = Convert.ToInt32(alertImage.InitialBalance * 100.0);
-            trk_Volume.Value = Convert.ToInt32(alertImage.InitialVolume * 10.0);
-
-            this.SetWaypoints(alertImage.Waypoints);
+            trk_Balance.Value = Convert.ToInt32(alertImage.Waypoints.InitialBalance * 100.0);
+            trk_Volume.Value = Convert.ToInt32(alertImage.Waypoints.InitialVolume * 10.0);
         }
 
         private void TestImage(object sender, EventArgs e)

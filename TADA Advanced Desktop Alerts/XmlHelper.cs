@@ -118,11 +118,11 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public static void Write<T>(XmlWriter writer, String tag, List<T> elements) where T : IXmlSerializable
+        public static void Write<T>(XmlWriter writer, String tag, List<T> elements, bool writeContainerElement = true) where T : IXmlSerializable
         {
             if (elements.Count > 0)
             {
-                writer.WriteStartElement(tag);
+                if (writeContainerElement) { writer.WriteStartElement(tag); }
                 foreach (T element in elements) { element.WriteXml(writer); }
                 writer.WriteEndElement();
             }

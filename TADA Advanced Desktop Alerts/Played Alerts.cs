@@ -40,6 +40,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private Dictionary<String, User> viewers = new Dictionary<String, User>();
 
+        // Need a thing for storing community gift subs that are being compiled.
+        private List<CommunityGiftSub> communityGiftSubs = new List<CommunityGiftSub>();
+
         private List<String> cheermotes = new List<String>();
 
         private Image redLight = Properties.Resources.circle_red;
@@ -95,7 +98,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async void Connect()
         {
-            var result = await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { channelName }, twitchAPI.Settings.AccessToken);
+            var result = await twitchAPI.Helix.Users.GetUsersAsync(null, new List<string> { channelName }, twitchAPI.Settings.AccessToken);
             channelID = result.Users[0].Id;
 
             pubSub = new TwitchPubSub();
@@ -205,14 +208,16 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnBeingHosted += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.HOST, e);
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
             twitchClient.OnRaidNotification += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.RAID, e);
+            twitchClient.OnCommunitySubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.COMMUNITY, e);
 
             GetAllFollowers();
 
             pubSub.Connect();
             twitchClient.Connect();
 
-            TwitchLib.Api.Models.v5.Bits.Cheermotes requestedCheermotes = await twitchAPI.Bits.v5.GetCheermotesAsync(channelID);
-            foreach (TwitchLib.Api.Models.v5.Bits.Action action in requestedCheermotes.Actions)
+            TwitchLib.Api.V5.Models.Bits.Cheermotes requestedCheermotes = await twitchAPI.V5.Bits.GetCheermotesAsync(channelID);
+
+            foreach (TwitchLib.Api.V5.Models.Bits.Action action in requestedCheermotes.Actions)
             {
                 this.cheermotes.Add(action.Prefix.ToLower());
             }
@@ -300,11 +305,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task GetFollowers(String after)
         {
-            TwitchLib.Api.Models.Helix.Users.GetUsersFollows.GetUsersFollowsResponse followers = await twitchAPI.Users.helix.GetUsersFollowsAsync(after, null, 100, null, channelID);
+            TwitchLib.Api.Helix.Models.Users.GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, channelID);
             if (followers.Follows.Length > 0)
             {
                 List<String> followerList = new List<String>();
-                foreach (TwitchLib.Api.Models.Helix.Users.GetUsersFollows.Follow follower in followers.Follows)
+                foreach (TwitchLib.Api.Helix.Models.Users.Follow follower in followers.Follows)
                 {
                     followerList.Add(follower.FromUserId);
                 }
@@ -353,6 +358,33 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     user = await GetUser(eCommerce.UserId);
                     break;
+                case General.ALERTTYPES.COMMUNITY:
+                    /*
+                     * Entirely guessing, because thanks undocumented everything.
+                     * But, the guess is that MassGiftCount is the number of gift subs for this event.
+                     * Then, parcel up the next <count> subs --from this person-- and turn them into a mass alert.
+                     * Which means grabbing gift sub events and applying them to an internal variable.
+                     * When that variable has enough names, it's ready and so play it.
+                     */
+
+                    OnCommunitySubscriptionArgs eCommunity = eventDetails as OnCommunitySubscriptionArgs;
+
+                    int giftCount = eCommunity.GiftedSubscription.MsgParamMassGiftCount;
+                    user = await GetUser(eCommunity.GiftedSubscription.UserId);
+
+                    subObject.AlertType = General.alertTypes[General.ALERTTYPES.COMMUNITY];
+                    subObject.Amount = giftCount;
+                    subObject.Tier = General.stringToTwitchLibSubPlan[user.SubscriptionTier()];
+                    subObject.TierName = user.SubscriptionTierName();
+                    subObject.ViewerName = user.user.DisplayName;
+
+                    // Only configure a community gift object if a community sub gift that matches these qualities has been configured.
+                    if (FindSuitableAlert(General.ALERTTYPES.COMMUNITY, subObject) != null)
+                    {
+                        CommunityGiftSub communityGiftSub = new CommunityGiftSub(user, giftCount, subObject);
+                    }
+
+                    return;
                 case General.ALERTTYPES.FIRSTMESSAGE:
                 case General.ALERTTYPES.MESSAGE:
                     OnMessageReceivedArgs eMessage = eventDetails as OnMessageReceivedArgs;
@@ -426,6 +458,19 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     user = await GetUser(eSubscription.Subscription.UserId);
 
+                    foreach (CommunityGiftSub comgift in communityGiftSubs)
+                    {
+                        if (comgift.communityGifter.UserID() == user.UserID() && !comgift.Ready())
+                        {
+                            comgift.giftees.Add(eSubscription.Subscription.Username);
+
+                            if (comgift.Ready())
+                            {
+                                alertType = General.ALERTTYPES.COMMUNITY;
+                            }
+                            break;  // Only add this name to one outstanding community gift.
+                        }
+                    }
                     break;
                 default:
                     return;
@@ -544,8 +589,8 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                TwitchLib.Api.Models.Helix.Users.GetUsers.User twitchUser = (await twitchAPI.Users.helix.GetUsersAsync(new List<String> { userId }, null, accessToken)).Users[0];
-                TwitchLib.Api.Models.v5.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
+                TwitchLib.Api.Helix.Models.Users.User twitchUser = (await twitchAPI.Helix.Users.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0];
+                TwitchLib.Api.V5.Models.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
 
                 // Not setting lastSpoke because this isn't a guarantee.
                 user = new User()
@@ -585,15 +630,15 @@ namespace TADA_Advanced_Desktop_Alerts
         }
         #endregion
 
-        private async Task<TwitchLib.Api.Models.v5.Subscriptions.Subscription> GetUserSubscription(String userId)
+        private async Task<TwitchLib.Api.V5.Models.Subscriptions.Subscription> GetUserSubscription(String userId)
         {
-            TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription = null;
+            TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription = null;
 
             try
             {
-                subscription = await twitchAPI.Channels.v5.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+                subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
             }
-            catch (TwitchLib.Api.Exceptions.BadResourceException)
+            catch (/* TwitchLib.Api.Exceptions.BadResourceException */ Exception e)
             {
                 // Then this 404'd or something and we don't have a subscribed user.
             }
@@ -603,7 +648,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task<string> GetUserIdFromUsername(String username)
         {
-            return (await twitchAPI.Users.helix.GetUsersAsync(null, new List<string> { username }, accessToken)).Users[0].Id;
+            return (await twitchAPI.Helix.Users.GetUsersAsync(null, new List<String> { username }, accessToken)).Users[0].Id;
         }
 
         private void AddSubscriptionDetailsToSubstitutionObject(User user, SubstitutionObject subObject)
@@ -789,8 +834,8 @@ namespace TADA_Advanced_Desktop_Alerts
         // Eg. Everyone say thanks to {user} for {poss} {amount} month{s} of support
         // => Everyone say thanks to Invariel for his 3 months of support
         // => Everyone say thanks to RedDempshun for her 1 month of support
-        public TwitchLib.Api.Models.Helix.Users.GetUsers.User user;
-        public TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription;
+        public TwitchLib.Api.Helix.Models.Users.User user;
+        public TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription;
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
         public DateTime lastSpoke;                  // Is this necessary?  Maybe not...
         public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
@@ -815,7 +860,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.lastSpoke = DateTime.Now;
         }
 
-        public void UpdateSubscription(TwitchLib.Api.Models.v5.Subscriptions.Subscription subscription)
+        public void UpdateSubscription(TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription)
         {
             this.subscription = subscription;
             this.subscriptionLastUpdated = DateTime.Now;
@@ -824,6 +869,39 @@ namespace TADA_Advanced_Desktop_Alerts
         public override string ToString()
         {
             return String.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.SubPlan);
+        }
+    }
+
+    public class CommunityGiftSub
+    {
+        public User communityGifter;
+        public int numberOfSubs;
+        public List<String> giftees;
+        public SubstitutionObject subObject;
+
+        public CommunityGiftSub(User gifter, int subs, SubstitutionObject subObject)
+        {
+            this.communityGifter = gifter;
+            this.numberOfSubs = subs;
+            this.subObject = subObject;
+            this.giftees = new List<string>();
+        }
+
+        public bool Ready () { return giftees.Count == numberOfSubs; }
+        public override string ToString()
+        {
+            if (numberOfSubs == 1)
+            {
+                return giftees[0];
+            }
+            else if (numberOfSubs == 2)
+            {
+                return String.Join(" and ", giftees);
+            }
+            else
+            {
+                return String.Format("{0} and {1}", String.Join(", ", giftees.GetRange(0, giftees.Count - 1)), giftees.Last());
+            }
         }
     }
 
