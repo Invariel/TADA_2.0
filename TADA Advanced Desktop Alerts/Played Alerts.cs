@@ -887,7 +887,16 @@ namespace TADA_Advanced_Desktop_Alerts
             this.giftees = new List<string>();
         }
 
-        public bool Ready () { return giftees.Count == numberOfSubs; }
+        public bool Ready ()
+        {
+            if (giftees.Count == numberOfSubs)
+            {
+                subObject.RecipientName = this.ToString();
+            }
+            
+            return giftees.Count == numberOfSubs;
+        }
+
         public override string ToString()
         {
             if (numberOfSubs == 1)

@@ -306,15 +306,20 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
+        private double TrackbarTime()
+        {
+            return trk_Time.Value / 1000.0 * this.MaximumTime;
+        }
+
         private void TrackbarPositionChanged (object sender, EventArgs e)
         {
-            lbl_Time.Text = (trk_Time.Value / 1000.0 * this.MaximumTime).ToString();
+            lbl_Time.Text = TrackbarTime().ToString();
             this.UpdatePreview();
         }
 
         public void UpdateTrackbar ()
         {
-            double timestamp = (trk_Time.Value / 1000.0 * this.MaximumTime);
+            double timestamp = TrackbarTime();
             double maximumTime = 0;
 
             foreach (_TADAAlertImage image in alertImageBindingSource)
@@ -344,7 +349,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             if (maximumTime > 0)
             {
                 trk_Time.Value = Convert.ToInt32(Math.Min(trk_Time.Maximum, timestamp / maximumTime * 1000.0));
-                lbl_Time.Text = (trk_Time.Value / 1000.0 * this.MaximumTime).ToString();
+                lbl_Time.Text = TrackbarTime().ToString();
             }
         }
 
@@ -361,7 +366,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             // Always monitor the active tab.  And know what type of tab is active.
             if (activeTab != null)
             {
-                CurrentPosition currentValues = activeTab.CalculatePositionFromTime(trk_Time.Value / 1000.0 * this.MaximumTime, 0, 0);
+                CurrentPosition currentValues = activeTab.CalculatePositionFromTime(TrackbarTime(), 0, 0);
                 if (currentValues != null)
                 {
                     DrawWaypoints(activeTab.GetWaypoints(), activeTab.PreviewItemSize, activeTab.PreviewBitmap, currentValues, COLOR_TAB);

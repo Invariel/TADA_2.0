@@ -413,9 +413,15 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public class WaypointContainer : InitialConditions
+    public class WaypointContainer
     {
         private int currentWaypoint = 0;
+
+        public double InitialAngle { get; set; } = 0;
+        public double InitialMagnification { get; set; } = 1.0;
+        public double InitialOpacity { get; set; } = 100;
+        public double InitialBalance { get; set; } = 0;
+        public double InitialVolume { get; set; } = 0;
 
         protected List<Waypoint> waypoints;
 
@@ -475,21 +481,31 @@ namespace TADA_Advanced_Desktop_Alerts
             this.waypoints = waypointList;
         }
 
-        public override void ReadXml(XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
             // Read that it's a Waypoints tag, then...
             if (reader.Name == "Waypoints")
             {
-                base.ReadXml(reader);
+                this.InitialAngle = Double.Parse(reader.GetAttribute("Angle") ?? General.INITIAL_ANGLE.ToString());
+                this.InitialMagnification = Double.Parse(reader.GetAttribute("Magnification") ?? General.INITIAL_MAGNIFICATION.ToString());
+                this.InitialOpacity = Double.Parse(reader.GetAttribute("Opacity") ?? General.INITIAL_OPACITY.ToString());
+                this.InitialBalance = Double.Parse(reader.GetAttribute("Balance") ?? General.INITIAL_BALANCE.ToString());
+                this.InitialVolume = Double.Parse(reader.GetAttribute("Volume") ?? General.INITIAL_VOLUME.ToString());
 
                 XmlHelper.Read(reader, "Waypoint", "Waypoints", this.waypoints);
             }
         }
 
-        public override void WriteXml(XmlWriter writer)
+        public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("Waypoints");
-            base.WriteXml(writer);
+
+            if (this.InitialAngle != 0) { writer.WriteAttributeString("Angle", this.InitialAngle.ToString()); }
+            if (this.InitialMagnification != 1) { writer.WriteAttributeString("Magnification", this.InitialMagnification.ToString()); }
+            if (this.InitialOpacity != 100) { writer.WriteAttributeString("Opacity", this.InitialOpacity.ToString()); }
+            if (this.InitialBalance != 0) { writer.WriteAttributeString("Balance", this.InitialBalance.ToString()); }
+            if (this.InitialVolume != 0) { writer.WriteAttributeString("Volume", this.InitialVolume.ToString()); }
+
             XmlHelper.Write(writer, "Waypoint", this.waypoints, false);
         }
     }

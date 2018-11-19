@@ -30,6 +30,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public const String MASKED_TEXTBOX_MASK = "{0,3}:{1,2}:{2,2}.{3,3}";
 
+        public const double INITIAL_ANGLE = 0;
+        public const double INITIAL_MAGNIFICATION = 1;
+        public const double INITIAL_OPACITY = 100;
+        public const double INITIAL_BALANCE = 0;
+        public const double INITIAL_VOLUME = 0;
+
         public static Random rng = new Random();
 
         public static Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String> TwitchLibSubPlanToString = new Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String>() {

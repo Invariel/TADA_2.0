@@ -220,36 +220,6 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public abstract partial class InitialConditions : PropertyAndXML
-    {
-        public double InitialAngle { get; set; } = 0;
-        public double InitialMagnification { get; set; } = 0;
-        public double InitialOpacity { get; set; } = 0;
-        public double InitialBalance { get; set; } = 0;
-        public double InitialVolume { get; set; } = 0;
-
-        public override void ReadXml(XmlReader reader)
-        {
-            // Don't move the cursor, because it's ONLY reading properties of a tag, not reading other tags.
-            // Also, I should normalize all of this across displays, so that it's consistent for someone editing the file.
-            this.InitialAngle = Double.Parse(reader.GetAttribute("Angle") ?? "0.0");
-            this.InitialMagnification = Double.Parse(reader.GetAttribute("Magnification") ?? "1.0");
-            this.InitialOpacity = Double.Parse(reader.GetAttribute("Opacity") ?? "100.0");
-            this.InitialBalance = Double.Parse(reader.GetAttribute("Balance") ?? "0.0");
-            this.InitialVolume = Double.Parse(reader.GetAttribute("Volume") ?? "0.0");
-        }
-
-        public override void WriteXml(XmlWriter writer)
-        {
-            // Again, don't move the cursor, since this is ONLY writing properties of a tag.
-            if (this.InitialAngle != 0) { writer.WriteAttributeString("Angle", this.InitialAngle.ToString()); }
-            if (this.InitialMagnification != 1) { writer.WriteAttributeString("Magnification", this.InitialMagnification.ToString()); }
-            if (this.InitialOpacity != 100) { writer.WriteAttributeString("Opacity", this.InitialOpacity.ToString()); }
-            if (this.InitialBalance != 0) { writer.WriteAttributeString("Balance", this.InitialBalance.ToString()); }
-            if (this.InitialVolume != 0) { writer.WriteAttributeString("Volume", this.InitialVolume.ToString()); }
-        }
-    }
-
     internal class _TADAAlertImage : PropertyAndXML
     {
         private String filename;
