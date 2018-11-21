@@ -39,6 +39,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             trk_Time.ValueChanged += TrackbarPositionChanged;
 
             ConfigureMenuItems();
+
+            FillAlertTypeComboBox();
         }
 
         private void ConfigureMenuItems ()
@@ -47,6 +49,20 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 //            this.ts_NewStreamerAudio.Click += NewAudioForm;
 //            this.ts_NewStreamerText.Click += NewStreamerTextForm;
 //            this.ts_NewViewerText.Click += NewViewerTextForm;
+        }
+
+        private void FillAlertTypeComboBox()
+        {
+            foreach (String alertType in General.alertTypes.Values)
+            {
+                if (General.alertStrings[alertType] != General.ALERTTYPES.NONE)
+                {
+                    cmb_AlertType.Items.Add(alertType);
+                }
+            }
+
+            cmb_AlertType.DropDownWidth = cmb_AlertType.Items.Cast<string>().Max(x => TextRenderer.MeasureText(x, cmb_AlertType.Font).Width);
+            cmb_AlertType.SelectedIndex = 0;
         }
 
         private void ManageChildFormTabPages (object sender, EventArgs e)
@@ -75,6 +91,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 this.ActiveMdiChild.Tag = newTabPage;
                 this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ChildFormClosed);
             }
+
             if (!tab_ChildMDIForms.Visible)
             {
                 tab_ChildMDIForms.Visible = true;

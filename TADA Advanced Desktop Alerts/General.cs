@@ -74,6 +74,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public enum ALERTTYPES
         {
             NONE,   // Used when, for whatever reason, an alert needs to not play.
+            ANONYMOUS,
+            ANONYMOUS_COMMUNITY,
             AUTOHOST,
             BITS,
             COMMERCE,
@@ -92,6 +94,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public static Dictionary<ALERTTYPES, String> alertTypes = new Dictionary<ALERTTYPES, String>()
         {
             { ALERTTYPES.NONE, "No alert." },
+            { ALERTTYPES.ANONYMOUS, "Anonymous Gift Subs" },
+            { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
             { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
             { ALERTTYPES.COMMERCE, "Game Purchase" },
@@ -151,8 +155,11 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             { "No alert.", ALERTTYPES.NONE },
             { "Auto-Host", ALERTTYPES.AUTOHOST },
+            { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS },
+            { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
             { "Bits", ALERTTYPES.BITS },
             { "Game Purchase", ALERTTYPES.COMMERCE },
+            { "Community Gift Subs", ALERTTYPES.COMMUNITY },
             { "First Message", ALERTTYPES.FIRSTMESSAGE },
             { "Follow", ALERTTYPES.FOLLOW },
             { "Host", ALERTTYPES.HOST },

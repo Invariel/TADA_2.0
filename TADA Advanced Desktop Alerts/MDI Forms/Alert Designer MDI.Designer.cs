@@ -59,6 +59,7 @@
             this.lbl_AlertType = new System.Windows.Forms.Label();
             this.cmb_AlertType = new System.Windows.Forms.ComboBox();
             this.grp_Preview = new System.Windows.Forms.GroupBox();
+            this.btn_Test = new System.Windows.Forms.Button();
             this.grp_PreviewControls = new System.Windows.Forms.GroupBox();
             this.cmb_PreviewViewerText = new System.Windows.Forms.ComboBox();
             this.cmb_PreviewStreamerText = new System.Windows.Forms.ComboBox();
@@ -137,7 +138,6 @@
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.btn_Test = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.grp_AlertSettings.SuspendLayout();
@@ -318,15 +318,15 @@
             // 
             // txt_AlertName
             // 
-            this.txt_AlertName.Location = new System.Drawing.Point(273, 18);
+            this.txt_AlertName.Location = new System.Drawing.Point(328, 18);
             this.txt_AlertName.Name = "txt_AlertName";
-            this.txt_AlertName.Size = new System.Drawing.Size(166, 20);
+            this.txt_AlertName.Size = new System.Drawing.Size(134, 20);
             this.txt_AlertName.TabIndex = 14;
             // 
             // lbl_AlertName
             // 
             this.lbl_AlertName.AutoSize = true;
-            this.lbl_AlertName.Location = new System.Drawing.Point(207, 22);
+            this.lbl_AlertName.Location = new System.Drawing.Point(266, 22);
             this.lbl_AlertName.Name = "lbl_AlertName";
             this.lbl_AlertName.Size = new System.Drawing.Size(59, 13);
             this.lbl_AlertName.TabIndex = 13;
@@ -405,10 +405,11 @@
             // 
             // cmb_AlertType
             // 
+            this.cmb_AlertType.DropDownWidth = 225;
             this.cmb_AlertType.FormattingEnabled = true;
             this.cmb_AlertType.Location = new System.Drawing.Point(68, 18);
             this.cmb_AlertType.Name = "cmb_AlertType";
-            this.cmb_AlertType.Size = new System.Drawing.Size(106, 21);
+            this.cmb_AlertType.Size = new System.Drawing.Size(178, 21);
             this.cmb_AlertType.TabIndex = 12;
             // 
             // grp_Preview
@@ -425,6 +426,16 @@
             this.grp_Preview.TabIndex = 220;
             this.grp_Preview.TabStop = false;
             this.grp_Preview.Text = "Path Preview";
+            // 
+            // btn_Test
+            // 
+            this.btn_Test.Location = new System.Drawing.Point(13, 558);
+            this.btn_Test.Name = "btn_Test";
+            this.btn_Test.Size = new System.Drawing.Size(118, 23);
+            this.btn_Test.TabIndex = 218;
+            this.btn_Test.Text = "Write Out Xml";
+            this.btn_Test.UseVisualStyleBackColor = true;
+            this.btn_Test.Click += new System.EventHandler(this.btn_Test_Click);
             // 
             // grp_PreviewControls
             // 
@@ -1191,16 +1202,6 @@
             // waypointBindingSource
             // 
             this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
-            // 
-            // btn_Test
-            // 
-            this.btn_Test.Location = new System.Drawing.Point(13, 558);
-            this.btn_Test.Name = "btn_Test";
-            this.btn_Test.Size = new System.Drawing.Size(118, 23);
-            this.btn_Test.TabIndex = 218;
-            this.btn_Test.Text = "Write Out Xml";
-            this.btn_Test.UseVisualStyleBackColor = true;
-            this.btn_Test.Click += new System.EventHandler(this.btn_Test_Click);
             // 
             // Alert_Designer_MDI
             // 
