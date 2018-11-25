@@ -36,6 +36,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public const double INITIAL_BALANCE = 0;
         public const double INITIAL_VOLUME = 0;
 
+        public const String ANONYMOUS_SUB_GIFT_NAME = "An Anonymous Gifter";
+
         public static Random rng = new Random();
 
         public static Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String> TwitchLibSubPlanToString = new Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String>() {

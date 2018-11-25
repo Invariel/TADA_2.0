@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -326,105 +323,153 @@ namespace TADA_Advanced_Desktop_Alerts
         public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
         {
             SubstitutionObject subObject = new SubstitutionObject();
-            User user;
+            User user = null;
 
             switch (alertType)
             {
                 case General.ALERTTYPES.AUTOHOST:
                 case General.ALERTTYPES.HOST:
-                    OnBeingHostedArgs eHost = eventDetails as OnBeingHostedArgs;
+                    {
+                        OnBeingHostedArgs eHost = eventDetails as OnBeingHostedArgs;
 
-                    subObject.Amount = eHost.BeingHostedNotification.Viewers;
-                    subObject.ViewerName = eHost.BeingHostedNotification.HostedByChannel;
+                        subObject.Amount = eHost.BeingHostedNotification.Viewers;
+                        subObject.ViewerName = eHost.BeingHostedNotification.HostedByChannel;
 
-                    user = await GetUser(await GetUserIdFromUsername(eHost.BeingHostedNotification.HostedByChannel));
+                        user = await GetUser(await GetUserIdFromUsername(eHost.BeingHostedNotification.HostedByChannel));
 
-                    alertType = eHost.BeingHostedNotification.IsAutoHosted ? General.ALERTTYPES.AUTOHOST : General.ALERTTYPES.HOST;
+                        alertType = eHost.BeingHostedNotification.IsAutoHosted ? General.ALERTTYPES.AUTOHOST : General.ALERTTYPES.HOST;
+                    }
                     break;
                 case General.ALERTTYPES.BITS:
-                    OnBitsReceivedArgs eBits = eventDetails as OnBitsReceivedArgs;
+                    {
+                        OnBitsReceivedArgs eBits = eventDetails as OnBitsReceivedArgs;
 
-                    subObject.Amount = eBits.BitsUsed;
-                    subObject.Message = eBits.ChatMessage;
-                    subObject.ViewerName = eBits.Username;
+                        subObject.Amount = eBits.BitsUsed;
+                        subObject.Message = eBits.ChatMessage;
+                        subObject.ViewerName = eBits.Username;
 
-                    user = await GetUser(eBits.UserId);
+                        user = await GetUser(eBits.UserId);
+                    }
                     break;
                 case General.ALERTTYPES.COMMERCE:
-                    OnChannelCommerceReceivedArgs eCommerce = eventDetails as OnChannelCommerceReceivedArgs;
+                    {
+                        OnChannelCommerceReceivedArgs eCommerce = eventDetails as OnChannelCommerceReceivedArgs;
 
-                    subObject.Message = eCommerce.PurchaseMessage;
-                    subObject.ViewerName = eCommerce.Username;
+                        subObject.Message = eCommerce.PurchaseMessage;
+                        subObject.ViewerName = eCommerce.Username;
 
-                    user = await GetUser(eCommerce.UserId);
+                        user = await GetUser(eCommerce.UserId);
+                    }
                     break;
                 case General.ALERTTYPES.COMMUNITY:
-                    /*
-                     * Entirely guessing, because thanks undocumented everything.
-                     * But, the guess is that MassGiftCount is the number of gift subs for this event.
-                     * Then, parcel up the next <count> subs --from this person-- and turn them into a mass alert.
-                     * Which means grabbing gift sub events and applying them to an internal variable.
-                     * When that variable has enough names, it's ready and so play it.
-                     */
-
-                    OnCommunitySubscriptionArgs eCommunity = eventDetails as OnCommunitySubscriptionArgs;
-
-                    int giftCount = eCommunity.GiftedSubscription.MsgParamMassGiftCount;
-                    user = await GetUser(eCommunity.GiftedSubscription.UserId);
-
-                    subObject.AlertType = General.alertTypes[General.ALERTTYPES.COMMUNITY];
-                    subObject.Amount = giftCount;
-                    subObject.Tier = General.stringToTwitchLibSubPlan[user.SubscriptionTier()];
-                    subObject.TierName = user.SubscriptionTierName();
-                    subObject.ViewerName = user.user.DisplayName;
-
-                    // Only configure a community gift object if a community sub gift that matches these qualities has been configured.
-                    if (FindSuitableAlert(General.ALERTTYPES.COMMUNITY, subObject) != null)
                     {
-                        CommunityGiftSub communityGiftSub = new CommunityGiftSub(user, giftCount, subObject);
+                        /*
+                         * Entirely guessing, because thanks undocumented everything.
+                         * But, the guess is that MassGiftCount is the number of gift subs for this event.
+                         * Then, parcel up the next <count> subs --from this person-- and turn them into a mass alert.
+                         * Which means grabbing gift sub events and applying them to an internal variable.
+                         * When that variable has enough names, it's ready and so play it.
+                         */
+
+                        // This also needs to check for anonymous community gift subs.  Hurrah.
+                        OnCommunitySubscriptionArgs eCommunity = eventDetails as OnCommunitySubscriptionArgs;
+
+                        bool anonymous = eCommunity.GiftedSubscription.UserId == null;
+                        int giftCount = eCommunity.GiftedSubscription.MsgParamMassGiftCount;
+
+                        if (!anonymous)
+                        {
+                            user = await GetUser(eCommunity.GiftedSubscription.UserId);
+                        }
+                        else
+                        {
+                            user = null;
+                        }
+
+                        // Fill in Tier and Tier Name from the SubGift / AnonSubGift messages that come in.
+                        subObject.AlertType = General.alertTypes[anonymous ? General.ALERTTYPES.ANONYMOUS_COMMUNITY : General.ALERTTYPES.COMMUNITY];
+                        subObject.Amount = giftCount;
+                        subObject.Tier = (TwitchLib.PubSub.Enums.SubscriptionPlan)eCommunity.GiftedSubscription.MsgParamSubPlan;
+                        subObject.ViewerName = anonymous ? General.ANONYMOUS_SUB_GIFT_NAME : user?.user.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
+
+                        CommunityGiftSub communityGiftSub = null;
+
+                        if (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS_COMMUNITY, subObject) != null)
+                        {
+                            communityGiftSub = new CommunityGiftSub(subObject);
+                            communityGiftSub.use_anonymous_alert = true;
+                        }
+                        else if (FindSuitableAlert (General.ALERTTYPES.COMMUNITY, subObject) != null)
+                        {
+                            if (user != null)
+                            {
+                                communityGiftSub = new CommunityGiftSub(user, subObject);
+                            }
+                            else
+                            {
+                                communityGiftSub = new CommunityGiftSub(subObject);
+                            }
+                        }
+
+                        if (communityGiftSub != null)
+                        {
+                            communityGiftSubs.Add(communityGiftSub);
+                        }
                     }
 
                     return;
                 case General.ALERTTYPES.FIRSTMESSAGE:
                 case General.ALERTTYPES.MESSAGE:
-                    OnMessageReceivedArgs eMessage = eventDetails as OnMessageReceivedArgs;
-
-                    // If the message has bits in it, this should be handled by PubSub instead.
-                    if (eMessage.ChatMessage.Bits > 0) return;
-
-                    subObject.Message = eMessage.ChatMessage.Message;
-                    subObject.ViewerName = eMessage.ChatMessage.Username;
-
-                    var f = eMessage.ChatMessage.EmoteSet;
-
-                    user = await GetUser(eMessage.ChatMessage.UserId);
-                    break;
-                case General.ALERTTYPES.FOLLOW:
-                    OnFollowArgs eFollow = eventDetails as OnFollowArgs;
-
-                    subObject.ViewerName = eFollow.DisplayName;
-                    user = await GetUser(eFollow.UserId);
-
-                    if (FindFollower(eFollow.UserId))
                     {
-                        alertType = General.ALERTTYPES.NONE;
-                    }
-                    else
-                    {
-                        AddFollowers(new List<String> { eFollow.UserId });
+                        OnMessageReceivedArgs eMessage = eventDetails as OnMessageReceivedArgs;
 
-                        // And then add them to the followers file.
-                        this.missingFollowers += eFollow.UserId + " ";
-                        if (this.followerFileWritten)
+                        // If the message has bits in it, this should be handled by PubSub instead.
+                        if (eMessage.ChatMessage.Bits > 0) return;
+
+                        subObject.Message = eMessage.ChatMessage.Message;
+                        subObject.ViewerName = eMessage.ChatMessage.Username;
+
+                        var f = eMessage.ChatMessage.EmoteSet;
+
+                        user = await GetUser(eMessage.ChatMessage.UserId);
+
+                        // A FIRSTMESSAGE can't possibly come through Twitch channels.  It doesn't know.
+                        if (alertType == General.ALERTTYPES.MESSAGE)
                         {
-                            using (System.IO.StreamWriter writer = new System.IO.StreamWriter("followers.txt", true))
+                            if (!user.firstMessage && FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) != null)
                             {
-                                writer.Write(missingFollowers);
+                                alertType = General.ALERTTYPES.FIRSTMESSAGE;
                             }
-                            this.missingFollowers = "";
                         }
                     }
+                    break;
+                case General.ALERTTYPES.FOLLOW:
+                    {
+                        OnFollowArgs eFollow = eventDetails as OnFollowArgs;
 
+                        subObject.ViewerName = eFollow.DisplayName;
+                        user = await GetUser(eFollow.UserId);
+
+                        if (FindFollower(eFollow.UserId))
+                        {
+                            alertType = General.ALERTTYPES.NONE;
+                        }
+                        else
+                        {
+                            AddFollowers(new List<String> { eFollow.UserId });
+
+                            // And then add them to the followers file.
+                            this.missingFollowers += eFollow.UserId + " ";
+                            if (this.followerFileWritten)
+                            {
+                                using (System.IO.StreamWriter writer = new System.IO.StreamWriter("followers.txt", true))
+                                {
+                                    writer.Write(missingFollowers);
+                                }
+                                this.missingFollowers = "";
+                            }
+                        }
+                    }
                     break;
                 /*
                                 case General.ALERTTYPES.MACRO:
@@ -433,42 +478,70 @@ namespace TADA_Advanced_Desktop_Alerts
                                     return;
                 */
                 case General.ALERTTYPES.RAID:
-                    OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
+                    {
+                        OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
 
-                    subObject.Amount = Int32.Parse(eRaid.RaidNotificaiton.MsgParamViewerCount);
-                    subObject.ViewerName = eRaid.RaidNotificaiton.DisplayName;
+                        subObject.Amount = Int32.Parse(eRaid.RaidNotificaiton.MsgParamViewerCount);
+                        subObject.ViewerName = eRaid.RaidNotificaiton.DisplayName;
 
-                    user = await GetUser(eRaid.RaidNotificaiton.UserId);
+                        user = await GetUser(eRaid.RaidNotificaiton.UserId);
+                    }
                     break;
                 case General.ALERTTYPES.SUBGIFT:
                 case General.ALERTTYPES.SUBSCRIPTION:
-                    OnChannelSubscriptionArgs eSubscription = eventDetails as OnChannelSubscriptionArgs;
-
-                    subObject.Amount = eSubscription.Subscription.Months;
-                    subObject.Message = eSubscription.Subscription.SubMessage.Message;
-                    subObject.RecipientName = eSubscription.Subscription.RecipientName;
-                    subObject.ViewerName = eSubscription.Subscription.Username;
-
-                    if (!String.IsNullOrEmpty(eSubscription.Subscription.RecipientName))
                     {
-                        alertType = General.ALERTTYPES.SUBGIFT;
-                    }
+                        // Thanks to anonymous sub gifting (and community gifting), this entire section needs to be reorganized and rewritten.
+                        // Thanks, Twitch!
+                        OnChannelSubscriptionArgs eSubscription = eventDetails as OnChannelSubscriptionArgs;
 
-                    UpdateUserSubscription(await GetUser(alertType == General.ALERTTYPES.SUBGIFT ? eSubscription.Subscription.RecipientId : eSubscription.Subscription.UserId));
+                        subObject.Amount = eSubscription.Subscription.Months;
+                        subObject.Message = eSubscription.Subscription.SubMessage.Message ?? "";
+                        subObject.RecipientName = eSubscription.Subscription.RecipientName ?? "";
+                        subObject.Tier = eSubscription.Subscription.SubscriptionPlan;
+                        subObject.TierName = eSubscription.Subscription.SubscriptionPlanName;
+                        subObject.ViewerName = eSubscription.Subscription.Username ?? General.ANONYMOUS_SUB_GIFT_NAME;
 
-                    user = await GetUser(eSubscription.Subscription.UserId);
-
-                    foreach (CommunityGiftSub comgift in communityGiftSubs)
-                    {
-                        if (comgift.communityGifter.UserID() == user.UserID() && !comgift.Ready())
+                        switch (eSubscription.Subscription.Context)
                         {
-                            comgift.giftees.Add(eSubscription.Subscription.Username);
+                            case "sub":
+                            case "resub":
+                                UpdateUserSubscription(await GetUser(eSubscription.Subscription.Username));
+                                user = await GetUser(eSubscription.Subscription.UserId);
+                                break;
+                            case "anonsubgift":
+                            case "subgift":
+                                bool anonymous = eSubscription.Subscription.Context.Equals("anonsubgift");
+                                bool community = communityGiftSubs.Exists(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
 
-                            if (comgift.Ready())
-                            {
-                                alertType = General.ALERTTYPES.COMMUNITY;
-                            }
-                            break;  // Only add this name to one outstanding community gift.
+                                user = (anonymous ? null : await GetUser(eSubscription.Subscription.UserId));
+                                UpdateUserSubscription(await GetUser(eSubscription.Subscription.RecipientName));
+
+                                if (community)
+                                {
+                                    // Have to use Exists above and Find now because Find returns an empty object if it doesn't Find anything.
+                                    CommunityGiftSub comGift = communityGiftSubs.Find(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
+                                    comGift.giftees.Add(eSubscription.Subscription.RecipientName);
+                                    comGift.subObject.Tier = eSubscription.Subscription.SubscriptionPlan;   // Overwriting from the Client version.
+                                    comGift.subObject.TierName = eSubscription.Subscription.SubscriptionPlanName;
+                                    if (comGift.Ready())
+                                    {
+                                        // We know that there is a valid alert AND whether it's anonymous or not.
+                                        alertType = comGift.use_anonymous_alert ? General.ALERTTYPES.ANONYMOUS_COMMUNITY : General.ALERTTYPES.COMMUNITY;
+                                        subObject = comGift.subObject;
+                                    }
+                                    else
+                                    {
+                                        // The community gift sub hasn't been fully compiled yet, so exit out.
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+                                    // It's potentially an anonymous sub gift.  If anonymous is set, see if there's an anonymous sub alert set up.
+                                    alertType = (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS, subObject) != null) ? General.ALERTTYPES.ANONYMOUS : General.ALERTTYPES.SUBGIFT;
+                                }
+
+                                break;
                         }
                     }
                     break;
@@ -476,21 +549,9 @@ namespace TADA_Advanced_Desktop_Alerts
                     return;
             }
 
-            if (DateTime.Now.Subtract(user.subscriptionLastUpdated).Hours >= 2)
-            {
+            if (user != null && DateTime.Now.Subtract(user.subscriptionLastUpdated).Hours >= 2)
+            { 
                 UpdateUserSubscription(user);
-            }
-
-            subObject.Tier = General.stringToTwitchLibSubPlan[user.SubscriptionTier()];
-            subObject.TierName = user.SubscriptionTierName();
-
-            // A FIRSTMESSAGE can't possibly come through Twitch channels.  It doesn't know.
-            if (alertType == General.ALERTTYPES.MESSAGE)
-            {
-                if (!user.firstMessage && FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) != null)
-                {
-                    alertType = General.ALERTTYPES.FIRSTMESSAGE;
-                }
             }
 
             subObject.AlertType = General.alertTypes[alertType];
@@ -512,13 +573,6 @@ namespace TADA_Advanced_Desktop_Alerts
                 PrepareAndPlayAlert(alertToUse, subObject, alertType);
                 MainTADAForm.mainTADAForm.webSocketServer.TellConnectedSockets(subObject);
             }
-            /*
-             * On receiving an event
-             * - Figure out what type of event it actually is
-             * - Fill a SubstitutionObject with relevant data
-             * - Figure out which alert to play
-             * - Play the alert
-             */
         }
 
         private void PrepareAndPlayAlert (TADAAlert alertToUse, SubstitutionObject subObject, General.ALERTTYPES alertType)
@@ -627,6 +681,20 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 UpdateUserSubscription(user);
             }
+        }
+
+        private bool IsVIP (TwitchLib.Client.Models.UserState userState)
+        {
+            bool retval = false;
+            foreach (KeyValuePair<String, String> kvp in userState.Badges)
+            {
+                if (kvp.Key.ToLower() == "vip")
+                {
+                    retval = true;
+                    break;
+                }
+            }
+            return retval;
         }
         #endregion
 
@@ -878,13 +946,27 @@ namespace TADA_Advanced_Desktop_Alerts
         public int numberOfSubs;
         public List<String> giftees;
         public SubstitutionObject subObject;
+        public bool is_anonymous;
+        public bool use_anonymous_alert = false;
 
-        public CommunityGiftSub(User gifter, int subs, SubstitutionObject subObject)
+        public CommunityGiftSub(User gifter, SubstitutionObject subObject)
         {
             this.communityGifter = gifter;
-            this.numberOfSubs = subs;
+            this.CombinedSetup(subObject);
+            this.is_anonymous = false;
+        }
+
+        public CommunityGiftSub (SubstitutionObject subObject)
+        {
+            this.CombinedSetup(subObject);
+            this.is_anonymous = true;
+        }
+
+        private void CombinedSetup (SubstitutionObject subObject)
+        {
+            this.numberOfSubs = subObject.Amount;
             this.subObject = subObject;
-            this.giftees = new List<string>();
+            this.giftees = new List<String>();
         }
 
         public bool Ready ()

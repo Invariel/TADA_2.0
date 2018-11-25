@@ -12,6 +12,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
     public partial class Alert_Designer_MDI : Form
     {
+        _TADAAlert mainAlert;
+
         Bitmap previewImage;
 
         Color COLOR_TAB = Color.White;
@@ -21,11 +23,15 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private double MaximumTime;
 
-        public Alert_Designer_MDI()
+        private List <Tuple <_TADAAlertImage, TabPage>> imageTabPages = new List<Tuple<_TADAAlertImage, TabPage>>();
+        private List <Tuple <_TADAAlertAudio, TabPage>> audioTabPages = new List<Tuple<_TADAAlertAudio, TabPage>>();
+        private List <Tuple <_TADAAlertText, TabPage>> textTabPages = new List<Tuple<_TADAAlertText, TabPage>>();
+
+        internal Alert_Designer_MDI(_TADAAlert originalAlert = null)
         {
             InitializeComponent();
 
-            this.MdiChildActivate += ManageChildFormTabPages;
+            this.MdiChildActivate += ShowOrHideMdiTabs;
             this.tab_ChildMDIForms.SelectedIndexChanged += SwitchTabPage;
 
             previewImage = new Bitmap(pb_Preview.Width, pb_Preview.Height);
@@ -41,6 +47,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             ConfigureMenuItems();
 
             FillAlertTypeComboBox();
+
+            this.mainAlert = originalAlert;
+            if (originalAlert != null)
+            {
+                // Then fill the four alert types, and conditions.
+            }
         }
 
         private void ConfigureMenuItems ()
@@ -65,16 +77,126 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             cmb_AlertType.SelectedIndex = 0;
         }
 
-        private void ManageChildFormTabPages (object sender, EventArgs e)
+        private String GetCaption(String type, int number)
         {
-            if (this.ActiveMdiChild == null)
+            return String.Format("{0} {1}     ", type, number);
+        }
+
+        private void AddTab(_TADAAlertImage alertImage, TabPage newTab)
+        {
+            imageTabPages.Add(new Tuple<_TADAAlertImage, TabPage>(alertImage, newTab));
+        }
+
+        private void AddTab(_TADAAlertAudio alertAudio, TabPage newTab)
+        {
+            audioTabPages.Add(new Tuple<_TADAAlertAudio, TabPage>(alertAudio, newTab));
+        }
+
+        private void AddTab(_TADAAlertText alertText, TabPage newTab)
+        {
+            textTabPages.Add(new Tuple<_TADAAlertText, TabPage>(alertText, newTab));
+        }
+
+        private TabPage TabExists(_TADAAlertImage alertImage)
+        {
+            Tuple<_TADAAlertImage, TabPage> tuple = imageTabPages.Find(tp => tp.Item1 == alertImage);
+            return tuple?.Item2 ?? null;
+        }
+
+        private TabPage TabExists(_TADAAlertAudio alertAudio)
+        {
+            Tuple<_TADAAlertAudio, TabPage> tuple = audioTabPages.Find(tp => tp.Item1 == alertAudio);
+            return tuple?.Item2 ?? null;
+        }
+
+        private TabPage TabExists(_TADAAlertText alertText)
+        {
+            Tuple<_TADAAlertText, TabPage> tuple = textTabPages.Find(tp => tp.Item1 == alertText);
+            return tuple?.Item2 ?? null;
+        }
+
+        /*
+         * What am I trying to do?
+         * 
+         * When a user clicks 'New <whatever>', it needs to create a new instance in the appropriate BindingSource.
+         * Then that new instance gets embedded in a TabPage and that TabPage gets added to the appropriate List<>.
+         * 
+         * When a user clicks 'Edit', it has to look for that item in the appropriate TabPage list.
+         * If there, make that TabPage active.
+         * If not, make a new instance and such.
+         */
+        private void CellEditClicked(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && (sender as DataGridView).Columns[e.ColumnIndex] is DataGridViewButtonColumn)
             {
-                tab_ChildMDIForms.Visible = false;
+                DataGridView dataGrid = (sender as DataGridView);
+                BindingSource bindingSource = dataGrid.DataSource as BindingSource;
+
+                bool isNewObject = false;
+                object editObject;
+
+                TabPage existingTabPage = null;
+
+                DataGridView dgView = (sender as DataGridView);
+                if (dataGrid.Rows[e.RowIndex].IsNewRow)
+                {
+                    bindingSource.CancelEdit();
+                    editObject = bindingSource.AddNew();
+                    isNewObject = true;
+                }
+                else
+                {
+                    editObject = bindingSource.Current;
+                }
+
+                if (dataGrid == dg_Images)
+                {
+                    if (!isNewObject)
+                    {
+                        existingTabPage = TabExists(editObject as _TADAAlertImage);
+                    }
+
+                    if (existingTabPage == null || isNewObject)
+                    {
+                        // Make a new tab page.
+                    }
+                    else
+                    {
+                        (existingTabPage.Tag as Form).Select();
+                    }
+                }
+/*
+                else if (dataGrid == dg_Audio)
+                {
+                    if (this.currentAudioForm == null || this.currentAudioForm.IsDisposed)
+                    {
+                        this.currentAudioForm = new AudioCreationForm(editObject as TADAAlertAudio, isNewObject);
+                    }
+                    this.currentAudioForm.Show();
+                }
+                else if (dataGrid == dg_StreamerMessages)
+                {
+                    if (this.currentStreamerForm == null || this.currentStreamerForm.IsDisposed)
+                    {
+                        this.currentStreamerForm = new TextCreationForm(editObject as TADAAlertText, true, isNewObject);
+                    }
+                    this.currentStreamerForm.Show();
+                }
+                else if (dataGrid == dg_ViewerMessages)
+                {
+                    if (this.currentViewerForm == null || this.currentViewerForm.IsDisposed)
+                    {
+                        this.currentViewerForm = new TextCreationForm(editObject as TADAAlertText, false, isNewObject);
+                    }
+                    this.currentViewerForm.Show();
+                }
+*/
             }
-            else
-            {
-                AssignTags();
-            }
+        }
+
+        private void ShowOrHideMdiTabs (object sender = null, EventArgs e = null)
+        {
+            tab_ChildMDIForms.Visible = (this.ActiveMdiChild == null);
         }
 
         private void AssignTags ()
@@ -98,6 +220,25 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
+        //private void NewAlertItem ()
+        private void NewImageVideoForm(object sender, EventArgs e)
+        {
+            _TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as _TADAAlertImage;
+
+            Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, true, null);
+            newImageForm.MdiParent = this;
+            newImageForm.Text = GetCaption("Image", alertImageBindingSource.Count - 1);
+            newImageForm.Show();
+
+            AssignTags();
+        }
+
+        private void EncapsulateWithTab(_TADAAlertImage alertImage, String caption, bool isNew)
+        {
+            //thisAlert;
+            Form newImageForm = new MDI_Forms.Image_Designer_MDI(alertImage, isNew, this.mainAlert);
+        }
+
         private void ChildFormClosed (object sender, FormClosedEventArgs e)
         {
             ((sender as Form).Tag as TabPage).Dispose();
@@ -111,17 +252,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
-        //private void NewAlertItem ()
-        private void NewImageVideoForm(object sender, EventArgs e)
+        private void SwitchTabPage (TabPage tabpage)
         {
-            _TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as _TADAAlertImage;
-
-            Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, true, null);
-            newImageForm.MdiParent = this;
-            newImageForm.Text = "Image/Video      ";
-            newImageForm.Show();
-
-            AssignTags();
+            (tabpage.Tag as Form).Select();
         }
 
         private void OpenFile(object sender, EventArgs e)

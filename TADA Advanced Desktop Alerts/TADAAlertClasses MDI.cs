@@ -746,6 +746,9 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Tier Three")]
         public bool TierThree { get; set; }
 
+        [DisplayName("VIP")]
+        public bool VIP { get; set; }
+
         [DisplayName("Usernames")]
         public String Usernames { get; set; }
 
@@ -773,6 +776,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 TierTwo = Boolean.Parse(reader.GetAttribute("TierTwo"));
                 TierThree = Boolean.Parse(reader.GetAttribute("TierThree"));
 
+                VIP = Boolean.Parse(reader.GetAttribute("VIP"));
+
                 Usernames = (String.IsNullOrEmpty(reader.GetAttribute("Usernames")) ? "" : reader.GetAttribute("Usernames"));
                 Keywords = (String.IsNullOrEmpty(reader.GetAttribute("Keywords")) ? "" : reader.GetAttribute("Keywords"));
                 Keypress = (String.IsNullOrEmpty(reader.GetAttribute("Keypress")) ? "" : reader.GetAttribute("Keypress"));
@@ -794,7 +799,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 new Tuple<Boolean, String>(this.TwitchPrime, "TwitchPrime"),
                 new Tuple<Boolean, String>(this.TierOne, "TierOne"),
                 new Tuple<Boolean, String>(this.TierTwo, "TierTwo"),
-                new Tuple<Boolean, String>(this.TierThree, "TierThree")
+                new Tuple<Boolean, String>(this.TierThree, "TierThree"),
+                new Tuple<Boolean, String>(this.VIP, "VIP")
             };
 
             writer.WriteStartElement("Condition");

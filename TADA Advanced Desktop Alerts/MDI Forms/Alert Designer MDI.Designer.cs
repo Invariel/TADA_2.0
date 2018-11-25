@@ -127,17 +127,18 @@
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewCheckBoxColumn2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn6 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.VIP = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.grp_AlertSettings.SuspendLayout();
@@ -789,6 +790,7 @@
             this.dataGridViewCheckBoxColumn4,
             this.dataGridViewCheckBoxColumn5,
             this.dataGridViewCheckBoxColumn6,
+            this.VIP,
             this.dataGridViewTextBoxColumn7,
             this.dataGridViewTextBoxColumn8,
             this.dataGridViewTextBoxColumn9,
@@ -1087,7 +1089,7 @@
             // 
             // alertAudioBindingSource
             // 
-            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertAudio);
+            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertAudio);
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -1105,7 +1107,7 @@
             // 
             // streamerAlertTextBindingSource
             // 
-            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
+            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertText);
             // 
             // dataGridViewTextBoxColumn5
             // 
@@ -1123,7 +1125,15 @@
             // 
             // viewerAlertTextBindingSource
             // 
-            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
+            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertText);
+            // 
+            // alertConditionBindingSource
+            // 
+            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertCondition);
+            // 
+            // waypointBindingSource
+            // 
+            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
             // 
             // dataGridViewCheckBoxColumn2
             // 
@@ -1165,6 +1175,14 @@
             this.dataGridViewCheckBoxColumn6.Name = "dataGridViewCheckBoxColumn6";
             this.dataGridViewCheckBoxColumn6.Width = 45;
             // 
+            // VIP
+            // 
+            this.VIP.DataPropertyName = "VIP";
+            this.VIP.HeaderText = "VIP";
+            this.VIP.MinimumWidth = 30;
+            this.VIP.Name = "VIP";
+            this.VIP.Width = 30;
+            // 
             // dataGridViewTextBoxColumn7
             // 
             this.dataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -1194,14 +1212,6 @@
             this.dataGridViewTextBoxColumn10.MinimumWidth = 60;
             this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
             this.dataGridViewTextBoxColumn10.Width = 60;
-            // 
-            // alertConditionBindingSource
-            // 
-            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertCondition);
-            // 
-            // waypointBindingSource
-            // 
-            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
             // 
             // Alert_Designer_MDI
             // 
@@ -1318,9 +1328,6 @@
         private System.Windows.Forms.TabControl tab_AlertPieces;
         private System.Windows.Forms.TabPage tab_Image;
         private System.Windows.Forms.DataGridView dg_Images;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dimensionsDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Images_Chance;
         private System.Windows.Forms.DataGridViewButtonColumn Images_Edit;
         private System.Windows.Forms.TabPage tab_Audio;
@@ -1342,15 +1349,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn Viewer_Edit;
         private System.Windows.Forms.TabPage tab_Conditions;
         private System.Windows.Forms.DataGridView dg_Conditions;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn4;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn5;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.TabPage tab_PreviewControls;
         private System.Windows.Forms.TextBox txt_ViewerMessage;
         private System.Windows.Forms.Label label12;
@@ -1375,6 +1373,19 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabControl tab_ChildMDIForms;
         private System.Windows.Forms.Button btn_Test;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dimensionsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn4;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn5;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn6;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn VIP;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
     }
 }
 

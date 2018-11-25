@@ -313,6 +313,12 @@
       <DependentUpon>Main TADA Window.cs</DependentUpon>
     </Compile>
     <Compile Include="General.cs" />
+    <Compile Include="MDI Forms\Audio Designer MDI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MDI Forms\Audio Designer MDI.Designer.cs">
+      <DependentUpon>Audio Designer MDI.cs</DependentUpon>
+    </Compile>
     <Compile Include="MDI Forms\Image Designer MDI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -369,6 +375,9 @@
     <EmbeddedResource Include="Main TADA Window.resx">
       <DependentUpon>Main TADA Window.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MDI Forms\Audio Designer MDI.resx">
+      <DependentUpon>Audio Designer MDI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MDI Forms\Image Designer MDI.resx">
       <DependentUpon>Image Designer MDI.cs</DependentUpon>
     </EmbeddedResource>
@@ -396,6 +405,9 @@
     <None Include="Properties\DataSources\TADAAlertImage.datasource" />
     <None Include="Properties\DataSources\TADAAlertText.datasource" />
     <None Include="Properties\DataSources\TADA_Advanced_Desktop_Alerts.Waypoints.Waypoint.datasource" />
+    <None Include="Properties\DataSources\_TADAAlertAudio.datasource" />
+    <None Include="Properties\DataSources\_TADAAlertCondition.datasource" />
+    <None Include="Properties\DataSources\_TADAAlertText.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
