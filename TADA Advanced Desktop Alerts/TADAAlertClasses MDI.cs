@@ -11,6 +11,15 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+/**********************************************************************************************
+ * WARNING!
+ * 
+ * Because of changes made to the objects here, nothing is null.
+ * As a result, pay VERY CLOSE ATTENTION when setting up the alert to check for IsNullOrEmpty
+ * and not just null.  This might already be done, idk, but that's what this warning is for.
+ */
+
+
 namespace TADA_Advanced_Desktop_Alerts
 {
     public abstract class PropertyAndXML : INotifyPropertyChanged, IXmlSerializable
@@ -222,9 +231,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
     internal class _TADAAlertImage : PropertyAndXML
     {
-        private String filename;
-        private Size dimensions;
-        private Boolean isVideo;
+        private String filename = "";
+        private Size dimensions = new Size(0, 0);
+        private Boolean isVideo = false;
 
         #region Properties
         [DisplayName("Filename")]
@@ -261,19 +270,16 @@ namespace TADA_Advanced_Desktop_Alerts
         }
         #endregion Properties
 
-        public WaypointContainer Waypoints { get; set; }
+        public WaypointContainer Waypoints { get; set; } = new WaypointContainer();
 
-        public int AnimationLoops { get; set; }
+        public int AnimationLoops { get; set; } = 0;
 
-        public TimeSpan Duration { get; set; }
-        public TimeSpan EndingPosition { get; set; }
-        public TimeSpan StartingPosition { get; set; }
+        public TimeSpan Duration { get; set; } = new TimeSpan(0);
+        public TimeSpan EndingPosition { get; set; } = new TimeSpan(0);
+        public TimeSpan StartingPosition { get; set; } = new TimeSpan(0);
 
         // Constructor for XmlReader
-        public _TADAAlertImage ()
-        {
-            this.Waypoints = new WaypointContainer();
-        }
+        public _TADAAlertImage () { }
 
         // Constructor for Image
         public _TADAAlertImage(String filename, int animationLoops, Size dimensions, WaypointContainer waypoints)
@@ -283,7 +289,6 @@ namespace TADA_Advanced_Desktop_Alerts
             this.filename = filename;
             this.AnimationLoops = animationLoops;
             this.dimensions = dimensions;
-
             this.Waypoints = waypoints;
         }
 
@@ -392,7 +397,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
     internal class _TADAAlertAudio : PropertyAndXML
     {
-        private String filename;
+        private String filename = "";
 
         #region Properties
         [DisplayName("Filename")]
@@ -409,10 +414,10 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Balance")]
         public double Balance
         {
-            get { return this.Balance; }
+            get { return this.Waypoints.InitialBalance; }
             set
             {
-                this.Balance = value;
+                this.Waypoints.InitialBalance = value;
                 NotifyPropertyChanged();
             }
         }
@@ -420,27 +425,24 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Volume")]
         public double Volume
         {
-            get { return this.Volume; }
+            get { return this.Waypoints.InitialVolume; }
             set
             {
-                this.Volume = value;
+                this.Waypoints.InitialVolume = value;
                 NotifyPropertyChanged();
             }
         }
         #endregion Properties
 
-        public TimeSpan Delay { get; set; }
-        public TimeSpan Duration { get; set; }
-        public TimeSpan StartingPosition { get; set; }
-        public TimeSpan EndingPosition { get; set; }
+        public TimeSpan Delay { get; set; } = new TimeSpan(0);
+        public TimeSpan Duration { get; set; } = new TimeSpan(0);
+        public TimeSpan StartingPosition { get; set; } = new TimeSpan(0);
+        public TimeSpan EndingPosition { get; set; } = new TimeSpan(0);
 
-        public WaypointContainer Waypoints { get; set; }
+        public WaypointContainer Waypoints { get; set; } = new WaypointContainer();
 
         // Constructor for XMLReader
-        public _TADAAlertAudio ()
-        {
-            this.Waypoints = new WaypointContainer();
-        }
+        public _TADAAlertAudio () { }
 
         // Constructor for Alert Designer.
         public _TADAAlertAudio (String filename, TimeSpan delay, TimeSpan duration, TimeSpan startAt, TimeSpan endAt, WaypointContainer waypoints)
@@ -528,11 +530,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
     internal class _TADAAlertText : PropertyAndXML
     {
-        private String message;
-        private String readMessage;
+        private String message = "";
+        private String readMessage = "";
 
-        private String substitutedMessage;
-        private String substitutedReadMessage;
+        private String substitutedMessage = "";
+        private String substitutedReadMessage = "";
 
         #region Properties
         [DisplayName("Displayed Message")]
@@ -558,25 +560,22 @@ namespace TADA_Advanced_Desktop_Alerts
         }
         #endregion Properties
 
-        public String TTSVoice { get; set; }
+        public String TTSVoice { get; set; } = "";
 
-        public Font ChosenFont { get; set; }
+        public Font ChosenFont { get; set; } = new Font(FontFamily.GenericSerif, 10);
 
-        public float OutlineWidth { get; set; }
+        public float OutlineWidth { get; set; } = 0;
 
-        public Color Foreground { get; set; }
-        public Color Background { get; set; }
-        public Color Outline { get; set; }
+        public Color Foreground { get; set; } = Color.Black;
+        public Color Background { get; set; } = Color.White;
+        public Color Outline { get; set; } = Color.Black;
 
-        public Size Dimensions { get; set; }
-        public Size Padding { get; set; }
+        public Size Dimensions { get; set; } = new Size(0, 0);
+        public Size Padding { get; set; } = new Size(0, 0);
 
-        public WaypointContainer Waypoints { get; set; }
+        public WaypointContainer Waypoints { get; set; } = new WaypointContainer();
 
-        public _TADAAlertText ()
-        {
-            this.Waypoints = new WaypointContainer ();
-        }
+        public _TADAAlertText () { }
 
         public _TADAAlertText(String message, String readMessage, String ttsVoice, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
         {

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
-    public partial class Waypoint_Designer_MDI : Form
+    public partial class Waypoint_Designer_MDI : Form, IDisposable
     {
         protected internal bool disableUpdates = false;
 
@@ -118,6 +118,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
 
             ConfigureTooltips();
+        }
+
+        ~Waypoint_Designer_MDI()
+        {
+            if (previewBitmap != null)
+            {
+                previewBitmap.Dispose();
+            }
         }
 
         private void ConfigureTooltips()
@@ -625,6 +633,20 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
+        protected internal void SetItemSize(decimal width = 0, decimal height = 0)
+        {
+            if (width == 0 && height == 0)
+            {
+                itemSize.Width = 200;
+                itemSize.Height = 150;
+            }
+            else
+            {
+                itemSize.Width = (float)width;
+                itemSize.Height = (float)height;
+            }
+        }
+
         protected internal void SetItemSize(SizeF size)
         {
             itemSize = size;
@@ -781,7 +803,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         protected void UpdatePreview()
         {
             // Call up to the parent and let it know.
-            (this.MdiParent as Creation_Forms.Alert_Designer_MDI).UpdatePreview();
+            if (this.MdiParent != null)
+            {
+                (this.MdiParent as Creation_Forms.Alert_Designer_MDI).UpdatePreview();
+            }
         }
 
         protected void WaypointContainerAddRows(object sender, DataGridViewRowsAddedEventArgs e)
@@ -794,7 +819,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         protected void WaypointContainerUpdateValues(object sender, DataGridViewCellEventArgs e)
         {
-            if (!dg_Waypoints.Rows[e.RowIndex].IsNewRow)
+            if (e.RowIndex >= 0 && !dg_Waypoints.Rows[e.RowIndex].IsNewRow)
             {
                 this._waypointContainer.Waypoints[e.RowIndex] = waypointBindingSource[e.RowIndex] as Waypoint;
             }

@@ -123,6 +123,7 @@
             this.btn_CopySelected = new System.Windows.Forms.Button();
             this.grp_Waypoints = new System.Windows.Forms.GroupBox();
             this.dg_Waypoints = new System.Windows.Forms.DataGridView();
+            this.col_Presets = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.transitionTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1306,6 +1307,7 @@
             this.dg_Waypoints.AutoGenerateColumns = false;
             this.dg_Waypoints.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_Waypoints.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.col_Presets,
             this.xDataGridViewTextBoxColumn,
             this.yDataGridViewTextBoxColumn,
             this.transitionTimeDataGridViewTextBoxColumn,
@@ -1319,21 +1321,28 @@
             this.dg_Waypoints.Size = new System.Drawing.Size(590, 182);
             this.dg_Waypoints.TabIndex = 130;
             // 
+            // col_Presets
+            // 
+            this.col_Presets.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_Presets.FillWeight = 20F;
+            this.col_Presets.HeaderText = "Presets";
+            this.col_Presets.MinimumWidth = 90;
+            this.col_Presets.Name = "col_Presets";
+            // 
             // xDataGridViewTextBoxColumn
             // 
-            this.xDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.xDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.xDataGridViewTextBoxColumn.DataPropertyName = "X";
-            this.xDataGridViewTextBoxColumn.FillWeight = 25F;
+            this.xDataGridViewTextBoxColumn.FillWeight = 30F;
             this.xDataGridViewTextBoxColumn.HeaderText = "X";
             this.xDataGridViewTextBoxColumn.MinimumWidth = 50;
             this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
-            this.xDataGridViewTextBoxColumn.Width = 50;
             // 
             // yDataGridViewTextBoxColumn
             // 
             this.yDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.yDataGridViewTextBoxColumn.DataPropertyName = "Y";
-            this.yDataGridViewTextBoxColumn.FillWeight = 25F;
+            this.yDataGridViewTextBoxColumn.FillWeight = 30F;
             this.yDataGridViewTextBoxColumn.HeaderText = "Y";
             this.yDataGridViewTextBoxColumn.MinimumWidth = 50;
             this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
@@ -1342,35 +1351,37 @@
             // 
             this.transitionTimeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.transitionTimeDataGridViewTextBoxColumn.DataPropertyName = "TransitionTime";
-            this.transitionTimeDataGridViewTextBoxColumn.HeaderText = "Transition Time (s)";
-            this.transitionTimeDataGridViewTextBoxColumn.MinimumWidth = 125;
+            this.transitionTimeDataGridViewTextBoxColumn.FillWeight = 10F;
+            this.transitionTimeDataGridViewTextBoxColumn.HeaderText = "Travel Time (s)";
+            this.transitionTimeDataGridViewTextBoxColumn.MinimumWidth = 95;
             this.transitionTimeDataGridViewTextBoxColumn.Name = "transitionTimeDataGridViewTextBoxColumn";
             // 
             // persistTimeDataGridViewTextBoxColumn
             // 
             this.persistTimeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.persistTimeDataGridViewTextBoxColumn.DataPropertyName = "PersistTime";
+            this.persistTimeDataGridViewTextBoxColumn.FillWeight = 10F;
             this.persistTimeDataGridViewTextBoxColumn.HeaderText = "Stick Around (s)";
-            this.persistTimeDataGridViewTextBoxColumn.MinimumWidth = 125;
+            this.persistTimeDataGridViewTextBoxColumn.MinimumWidth = 95;
             this.persistTimeDataGridViewTextBoxColumn.Name = "persistTimeDataGridViewTextBoxColumn";
             // 
             // behindImageDataGridViewCheckBoxColumn
             // 
-            this.behindImageDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.behindImageDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.behindImageDataGridViewCheckBoxColumn.DataPropertyName = "BehindImage";
+            this.behindImageDataGridViewCheckBoxColumn.FillWeight = 10F;
             this.behindImageDataGridViewCheckBoxColumn.HeaderText = "Behind Image?";
-            this.behindImageDataGridViewCheckBoxColumn.MinimumWidth = 95;
+            this.behindImageDataGridViewCheckBoxColumn.MinimumWidth = 85;
             this.behindImageDataGridViewCheckBoxColumn.Name = "behindImageDataGridViewCheckBoxColumn";
-            this.behindImageDataGridViewCheckBoxColumn.Width = 95;
             // 
             // readMessageDataGridViewCheckBoxColumn
             // 
-            this.readMessageDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.readMessageDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.readMessageDataGridViewCheckBoxColumn.DataPropertyName = "ReadMessage";
+            this.readMessageDataGridViewCheckBoxColumn.FillWeight = 10F;
             this.readMessageDataGridViewCheckBoxColumn.HeaderText = "Read Message?";
-            this.readMessageDataGridViewCheckBoxColumn.MinimumWidth = 95;
+            this.readMessageDataGridViewCheckBoxColumn.MinimumWidth = 85;
             this.readMessageDataGridViewCheckBoxColumn.Name = "readMessageDataGridViewCheckBoxColumn";
-            this.readMessageDataGridViewCheckBoxColumn.Width = 95;
             // 
             // waypointBindingSource
             // 
@@ -1381,10 +1392,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 405);
+            this.ControlBox = false;
             this.Controls.Add(this.tab_Focus);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximumSize = new System.Drawing.Size(777, 777);
             this.MinimumSize = new System.Drawing.Size(777, 444);
             this.Name = "Waypoint_Designer_MDI";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Waypoint_Designer_MDI";
             this.tab_Focus.ResumeLayout(false);
             this.tab_Waypoints.ResumeLayout(false);
@@ -1439,8 +1454,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.BindingSource waypointBindingSource;
         protected internal System.Windows.Forms.TabControl tab_Focus;
         protected internal System.Windows.Forms.TabPage tab_Element;
         protected internal System.Windows.Forms.TabPage tab_Waypoints;
@@ -1477,12 +1490,6 @@
         protected internal System.Windows.Forms.Button btn_CopySelected;
         protected internal System.Windows.Forms.GroupBox grp_Waypoints;
         protected internal System.Windows.Forms.DataGridView dg_Waypoints;
-        private System.Windows.Forms.DataGridViewTextBoxColumn xDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn yDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn transitionTimeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn persistTimeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn behindImageDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn readMessageDataGridViewCheckBoxColumn;
         protected internal System.Windows.Forms.Label lbl_C1Comma;
         protected internal System.Windows.Forms.Label lbl_P1Comma;
         protected internal System.Windows.Forms.Label lbl_C0Comma;
@@ -1540,5 +1547,13 @@
         protected internal System.Windows.Forms.TextBox txt_WindowTarget;
         protected internal System.Windows.Forms.Label lbl_Keypresses;
         protected internal System.Windows.Forms.Label lbl_WindowTarget;
+        protected internal System.Windows.Forms.BindingSource waypointBindingSource;
+        private System.Windows.Forms.DataGridViewComboBoxColumn col_Presets;
+        private System.Windows.Forms.DataGridViewTextBoxColumn xDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn yDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn transitionTimeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn persistTimeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn behindImageDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn readMessageDataGridViewCheckBoxColumn;
     }
 }

@@ -19,7 +19,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private _TADAAlertImage alertImage;
 
-        internal Image_Designer_MDI(_TADAAlertImage alertImage, bool isNew, _TADAAlert parentAlert = null) : base(parentAlert)
+        internal Image_Designer_MDI(_TADAAlertImage alertImage, _TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
 
@@ -31,13 +31,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             InitializeCallbacks();
             DisplayVideoControls(false, false);
 
-            if (!isNew)
-            {
-                LoadExisting(this.alertImage);
-            }
-
             this.alertImage = alertImage;
             this.waypointContainer = alertImage.Waypoints;
+
+            // Even if alertImage is new, things should be initialized inside it.
+            LoadExisting(this.alertImage);
         }
 
         private void InitializeCallbacks()
@@ -245,8 +243,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     numud_DesiredDimensionsY.Value = height;
                 }
 
-                SetItemSize(width, height);
-                GenerateFreezeFrame();
+                SetItemSize(numud_DesiredDimensionsX.Value, numud_DesiredDimensionsY.Value);
 
                 trk_Volume.Maximum = (mediaElement.HasAudio ? 1000 : 0);
                 trk_Position.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
@@ -265,7 +262,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 playing = false;
                 justLoaded = false;
 
+                this.isVideo = true;
+                this.alertImage.IsVideo = true;
+
                 blocked = false;
+
+                GenerateFreezeFrame();
                 UpdatePreview();
             }
             else
@@ -280,9 +282,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 numud_DesiredDimensionsX.Value = 0;
                 numud_DesiredDimensionsY.Value = 0;
 
-                SetItemSize();
+                SetItemSize(0f, 0f);
                 DisplayVideoControls(false, false);
 
+                this.isVideo = false;
+                this.alertImage.IsVideo = false;
                 blocked = false;
             }
         }
@@ -344,9 +348,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_DesiredDimensionsX.Value = 0;
             numud_DesiredDimensionsY.Value = 0;
 
-            SetItemSize();
+            SetItemSize(0f, 0f);
             DisplayVideoControls(false, false);
 
+            this.alertImage.IsVideo = false;
             blocked = false;
         }
 
@@ -437,24 +442,27 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateDesiredSize(object sender, EventArgs e)
         {
-            if (chk_AspectRatio.Checked)
+            if (!blocked)
             {
-                // Then, sender matters as the other value has to be calculated.
-                Decimal ratio = numud_ActualDimensionsX.Value / numud_ActualDimensionsY.Value;
+                if (chk_AspectRatio.Checked)
+                {
+                    // Then, sender matters as the other value has to be calculated.
+                    Decimal ratio = numud_ActualDimensionsX.Value / numud_ActualDimensionsY.Value;
 
-                if (sender == numud_DesiredDimensionsX)
-                {
-                    numud_DesiredDimensionsY.Value = numud_DesiredDimensionsX.Value / ratio;
+                    if (sender == numud_DesiredDimensionsX)
+                    {
+                        numud_DesiredDimensionsY.Value = numud_DesiredDimensionsX.Value / ratio;
+                    }
+                    else
+                    {
+                        numud_DesiredDimensionsX.Value = numud_DesiredDimensionsY.Value * ratio;
+                    }
                 }
-                else
-                {
-                    numud_DesiredDimensionsX.Value = numud_DesiredDimensionsY.Value * ratio;
-                }
+
+                SetItemSize((float)numud_DesiredDimensionsX.Value, (float)numud_DesiredDimensionsY.Value);
+                this.alertImage.Dimensions = new Size(Convert.ToInt32(numud_DesiredDimensionsX.Value), Convert.ToInt32(numud_DesiredDimensionsY.Value));
+                UpdatePreview();
             }
-
-            SetItemSize((float)numud_DesiredDimensionsX.Value, (float)numud_DesiredDimensionsY.Value);
-            this.alertImage.Dimensions = new Size(Convert.ToInt32(numud_DesiredDimensionsX.Value), Convert.ToInt32(numud_DesiredDimensionsY.Value));
-            UpdatePreview();
         }
 
         private void btn_FilenameBrowse_Click(object sender, EventArgs e)
@@ -540,19 +548,19 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             txt_Filename.Text = alertImage.Filename;
             justLoaded = !String.IsNullOrEmpty(txt_Filename.Text);
 
-            this.isVideo = alertImage.IsVideo;
-
             numud_AnimatedGifLoop.Value = alertImage.AnimationLoops;
 
             mtxt_PlayFor.Text = String.Format("{0,3}:{1,2}:{2,2}.{3,3}", alertImage.Duration.Hours, alertImage.Duration.Minutes, alertImage.Duration.Seconds, alertImage.Duration.Milliseconds);
             mtxt_StartAt.Text = String.Format("{0,3}:{1,2}:{2,2}.{3,3}", alertImage.StartingPosition.Hours, alertImage.StartingPosition.Minutes, alertImage.StartingPosition.Seconds, alertImage.StartingPosition.Milliseconds);
             mtxt_LoopAt.Text = String.Format("{0,3}:{1,2}:{2,2}.{3,3}", alertImage.EndingPosition.Hours, alertImage.EndingPosition.Minutes, alertImage.EndingPosition.Seconds, alertImage.EndingPosition.Milliseconds);
 
+            this.blocked = true;
             numud_DesiredDimensionsX.Value = alertImage.Dimensions.Width;
             numud_DesiredDimensionsY.Value = alertImage.Dimensions.Height;
 
             trk_Balance.Value = Convert.ToInt32(alertImage.Waypoints.InitialBalance * 100.0);
             trk_Volume.Value = Convert.ToInt32(alertImage.Waypoints.InitialVolume * 10.0);
+            this.blocked = false;
         }
 
         private void TestImage(object sender, EventArgs e)

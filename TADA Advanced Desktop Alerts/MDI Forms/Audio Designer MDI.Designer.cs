@@ -49,6 +49,9 @@
             this.lbl_PlayFor = new System.Windows.Forms.Label();
             this.lbl_StartAt = new System.Windows.Forms.Label();
             this.trk_Balance = new System.Windows.Forms.TrackBar();
+            this.eh_1 = new System.Windows.Forms.Integration.ElementHost();
+            this.mtxt_Delay = new System.Windows.Forms.MaskedTextBox();
+            this.lbl_Delay = new System.Windows.Forms.Label();
             this.tab_Focus.SuspendLayout();
             this.tab_Element.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
@@ -87,6 +90,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_LoopAt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_StartAt)).BeginInit();
             this.grp_ImagePreview.SuspendLayout();
@@ -98,7 +102,9 @@
             // tab_Element
             // 
             this.tab_Element.Controls.Add(this.trk_LoopAt);
-            this.tab_Element.Controls.Add(this.trk_StartAt);
+            this.tab_Element.Controls.Add(this.mtxt_Delay);
+            this.tab_Element.Controls.Add(this.lbl_Delay);
+            this.tab_Element.Controls.Add(this.eh_1);
             this.tab_Element.Controls.Add(this.mtxt_LoopAt);
             this.tab_Element.Controls.Add(this.mtxt_StartAt);
             this.tab_Element.Controls.Add(this.mtxt_PlayFor);
@@ -115,6 +121,7 @@
             this.tab_Element.Controls.Add(this.txt_Filename);
             this.tab_Element.Controls.Add(this.txt_Duration);
             this.tab_Element.Controls.Add(this.lbl_Duration);
+            this.tab_Element.Controls.Add(this.trk_StartAt);
             // 
             // lbl_Filename
             // 
@@ -199,7 +206,7 @@
             // 
             // mtxt_PlayFor
             // 
-            this.mtxt_PlayFor.Location = new System.Drawing.Point(636, 65);
+            this.mtxt_PlayFor.Location = new System.Drawing.Point(636, 61);
             this.mtxt_PlayFor.Mask = "###:##:##.###";
             this.mtxt_PlayFor.Name = "mtxt_PlayFor";
             this.mtxt_PlayFor.PromptChar = '0';
@@ -243,7 +250,7 @@
             // trk_Position
             // 
             this.trk_Position.LargeChange = 50;
-            this.trk_Position.Location = new System.Drawing.Point(68, 28);
+            this.trk_Position.Location = new System.Drawing.Point(64, 28);
             this.trk_Position.Name = "trk_Position";
             this.trk_Position.Size = new System.Drawing.Size(565, 45);
             this.trk_Position.TabIndex = 52;
@@ -293,7 +300,7 @@
             // lbl_PlayFor
             // 
             this.lbl_PlayFor.AutoSize = true;
-            this.lbl_PlayFor.Location = new System.Drawing.Point(585, 68);
+            this.lbl_PlayFor.Location = new System.Drawing.Point(585, 64);
             this.lbl_PlayFor.Name = "lbl_PlayFor";
             this.lbl_PlayFor.Size = new System.Drawing.Size(45, 13);
             this.lbl_PlayFor.TabIndex = 229;
@@ -321,6 +328,36 @@
             this.trk_Balance.TabIndex = 234;
             this.trk_Balance.TickFrequency = 10;
             this.trk_Balance.Visible = false;
+            // 
+            // eh_1
+            // 
+            this.eh_1.Location = new System.Drawing.Point(744, 286);
+            this.eh_1.Name = "eh_1";
+            this.eh_1.Size = new System.Drawing.Size(1, 1);
+            this.eh_1.TabIndex = 242;
+            this.eh_1.Text = "elementHost1";
+            this.eh_1.Child = null;
+            // 
+            // mtxt_Delay
+            // 
+            this.mtxt_Delay.Location = new System.Drawing.Point(636, 35);
+            this.mtxt_Delay.Mask = "###:##:##.###";
+            this.mtxt_Delay.Name = "mtxt_Delay";
+            this.mtxt_Delay.PromptChar = '0';
+            this.mtxt_Delay.Size = new System.Drawing.Size(111, 20);
+            this.mtxt_Delay.TabIndex = 244;
+            this.mtxt_Delay.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            this.mtxt_Delay.Visible = false;
+            // 
+            // lbl_Delay
+            // 
+            this.lbl_Delay.AutoSize = true;
+            this.lbl_Delay.Location = new System.Drawing.Point(585, 38);
+            this.lbl_Delay.Name = "lbl_Delay";
+            this.lbl_Delay.Size = new System.Drawing.Size(47, 13);
+            this.lbl_Delay.TabIndex = 243;
+            this.lbl_Delay.Text = "Wait For";
+            this.lbl_Delay.Visible = false;
             // 
             // Audio_Designer_MDI
             // 
@@ -373,6 +410,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_LoopAt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_StartAt)).EndInit();
             this.grp_ImagePreview.ResumeLayout(false);
@@ -407,5 +445,8 @@
         private System.Windows.Forms.Label lbl_PlayFor;
         private System.Windows.Forms.Label lbl_StartAt;
         private System.Windows.Forms.TrackBar trk_Balance;
+        private System.Windows.Forms.Integration.ElementHost eh_1;
+        private System.Windows.Forms.MaskedTextBox mtxt_Delay;
+        private System.Windows.Forms.Label lbl_Delay;
     }
 }

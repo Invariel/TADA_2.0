@@ -44,6 +44,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             trk_Time.ValueChanged += TrackbarPositionChanged;
 
+            dg_Images.CellContentClick += CellEditClicked;
+            dg_Audio.CellContentClick += CellEditClicked;
+//            dg_StreamerMessages.CellContentClick += CellEditClicked;
+//            dg_ViewerMessages.CellContentClick += CellEditClicked;
+
             ConfigureMenuItems();
 
             FillAlertTypeComboBox();
@@ -58,7 +63,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private void ConfigureMenuItems ()
         {
             this.ts_NewImageVideo.Click += NewImageVideoForm;
-//            this.ts_NewStreamerAudio.Click += NewAudioForm;
+            this.ts_NewStreamerAudio.Click += NewAudioForm;
 //            this.ts_NewStreamerText.Click += NewStreamerTextForm;
 //            this.ts_NewViewerText.Click += NewViewerTextForm;
         }
@@ -79,7 +84,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private String GetCaption(String type, int number)
         {
-            return String.Format("{0} {1}     ", type, number);
+            return String.Format("{0} {1}        ", type, number);
         }
 
         private void AddTab(_TADAAlertImage alertImage, TabPage newTab)
@@ -158,45 +163,60 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                     if (existingTabPage == null || isNewObject)
                     {
-                        // Make a new tab page.
-                    }
-                    else
-                    {
-                        (existingTabPage.Tag as Form).Select();
+                        CreateMDIForm(editObject as _TADAAlertImage, GetCaption("Image", e.RowIndex));
                     }
                 }
-/*
                 else if (dataGrid == dg_Audio)
                 {
-                    if (this.currentAudioForm == null || this.currentAudioForm.IsDisposed)
+                    if (!isNewObject)
                     {
-                        this.currentAudioForm = new AudioCreationForm(editObject as TADAAlertAudio, isNewObject);
+                        existingTabPage = TabExists(editObject as _TADAAlertAudio);
                     }
-                    this.currentAudioForm.Show();
+
+                    if (existingTabPage == null || isNewObject)
+                    {
+                        CreateMDIForm(editObject as _TADAAlertAudio, GetCaption("Audio", e.RowIndex));
+                    }
                 }
                 else if (dataGrid == dg_StreamerMessages)
                 {
-                    if (this.currentStreamerForm == null || this.currentStreamerForm.IsDisposed)
+/*
+                    if (!isNewObject)
                     {
-                        this.currentStreamerForm = new TextCreationForm(editObject as TADAAlertText, true, isNewObject);
+                        existingTabPage = TabExists(editObject as _TADAAlertText);
                     }
-                    this.currentStreamerForm.Show();
+
+                    if (existingTabPage == null || isNewObject)
+                    {
+                        CreateMDIForm(editObject as _TADAAlertText, GetCaption("Streamer", e.RowIndex), "Streamer");
+                    }
+*/
                 }
                 else if (dataGrid == dg_ViewerMessages)
                 {
-                    if (this.currentViewerForm == null || this.currentViewerForm.IsDisposed)
+/*
+                    if (!isNewObject)
                     {
-                        this.currentViewerForm = new TextCreationForm(editObject as TADAAlertText, false, isNewObject);
+                        existingTabPage = TabExists(editObject as _TADAAlertText);
                     }
-                    this.currentViewerForm.Show();
-                }
+
+                    if (existingTabPage == null || isNewObject)
+                    {
+                        CreateMDIForm(editObject as _TADAAlertText, GetCaption("Streamer", e.RowIndex), "Viewer");
+                    }
 */
+                }
+
+                if (existingTabPage != null)
+                {
+                    SwitchTabPage(existingTabPage);
+                }
             }
         }
 
         private void ShowOrHideMdiTabs (object sender = null, EventArgs e = null)
         {
-            tab_ChildMDIForms.Visible = (this.ActiveMdiChild == null);
+            tab_ChildMDIForms.Visible = !(this.ActiveMdiChild == null);
         }
 
         private void AssignTags ()
@@ -220,27 +240,65 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
-        //private void NewAlertItem ()
-        private void NewImageVideoForm(object sender, EventArgs e)
+        private TabPage EncapsulateWithTab(Form contents, String caption)
         {
-            _TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as _TADAAlertImage;
+            contents.MdiParent = this;
+            contents.Text = caption;
+            contents.Show();
 
-            Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, true, null);
-            newImageForm.MdiParent = this;
-            newImageForm.Text = GetCaption("Image", alertImageBindingSource.Count - 1);
-            newImageForm.Show();
+            this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
+            TabPage newTabPage = new TabPage(caption);
+            newTabPage.Tag = contents;
+            newTabPage.Parent = tab_ChildMDIForms;
+            tab_ChildMDIForms.SelectedTab = newTabPage;
+            this.ActiveMdiChild.Tag = newTabPage;
+            this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ChildFormClosed);
 
-            AssignTags();
+            tab_ChildMDIForms.Visible = true;
+            return newTabPage;
         }
 
-        private void EncapsulateWithTab(_TADAAlertImage alertImage, String caption, bool isNew)
+        private void NewImageVideoForm(object sender = null, EventArgs e = null)
         {
-            //thisAlert;
-            Form newImageForm = new MDI_Forms.Image_Designer_MDI(alertImage, isNew, this.mainAlert);
+            _TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as _TADAAlertImage;
+            CreateMDIForm(newAlertImage, GetCaption("Image", alertImageBindingSource.Count - 1));
+        }
+
+        private void NewAudioForm(object sender = null, EventArgs e = null)
+        {
+            _TADAAlertAudio newAlertAudio = alertAudioBindingSource.AddNew() as _TADAAlertAudio;
+            CreateMDIForm(newAlertAudio, GetCaption("Audio", alertAudioBindingSource.Count - 1));
+        }
+
+        private void CreateMDIForm (_TADAAlertImage newAlertImage, String caption)
+        {
+            Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, this.mainAlert);
+            TabPage surroundingTabPage = EncapsulateWithTab(newImageForm, caption);
+            imageTabPages.Add(new Tuple<_TADAAlertImage, TabPage>(newAlertImage, surroundingTabPage));
+        }
+
+        private void CreateMDIForm (_TADAAlertAudio newAlertAudio, String caption)
+        {
+            Form newAudioForm = new MDI_Forms.Audio_Designer_MDI(newAlertAudio, this.mainAlert);
+            TabPage surroundingTabPage = EncapsulateWithTab(newAudioForm, caption);
+            audioTabPages.Add(new Tuple<_TADAAlertAudio, TabPage>(newAlertAudio, surroundingTabPage));
         }
 
         private void ChildFormClosed (object sender, FormClosedEventArgs e)
         {
+            if (sender is MDI_Forms.Image_Designer_MDI)
+            {
+                imageTabPages.Remove(imageTabPages.Find(itp => itp.Item2 == (sender as Form).Tag as TabPage));
+            }
+            else if (sender is MDI_Forms.Audio_Designer_MDI)
+            {
+                audioTabPages.Remove(audioTabPages.Find(itp => itp.Item2 == (sender as Form).Tag as TabPage));
+            }
+            else
+            {
+                textTabPages.Remove(textTabPages.Find(itp => itp.Item2 == (sender as Form).Tag as TabPage));
+            }
+
             ((sender as Form).Tag as TabPage).Dispose();
         }
 
@@ -335,6 +393,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         {
             Rectangle r = tab_ChildMDIForms.GetTabRect(this.tab_ChildMDIForms.SelectedIndex);
             Rectangle closeButton = new Rectangle(r.Right - 15, r.Top + 4, 9, 7);
+
+            // Need to check to see if this is the active tab or not.
+
             if (closeButton.Contains(e.Location))
             {
                 (this.tab_ChildMDIForms.SelectedTab.Tag as Form).Close();   // This raises the form's Closed event, which, in turn, deletes the tab.
