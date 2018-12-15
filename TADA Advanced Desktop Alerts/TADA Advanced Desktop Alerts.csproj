@@ -325,6 +325,12 @@
     <Compile Include="MDI Forms\Image Designer MDI.Designer.cs">
       <DependentUpon>Image Designer MDI.cs</DependentUpon>
     </Compile>
+    <Compile Include="MDI Forms\Text Designer MDI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MDI Forms\Text Designer MDI.Designer.cs">
+      <DependentUpon>Text Designer MDI.cs</DependentUpon>
+    </Compile>
     <Compile Include="MDI Forms\Waypoint Designer MDI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -380,6 +386,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MDI Forms\Image Designer MDI.resx">
       <DependentUpon>Image Designer MDI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MDI Forms\Text Designer MDI.resx">
+      <DependentUpon>Text Designer MDI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MDI Forms\Waypoint Designer MDI.resx">
       <DependentUpon>Waypoint Designer MDI.cs</DependentUpon>

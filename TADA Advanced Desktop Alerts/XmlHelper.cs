@@ -29,6 +29,19 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public static Boolean ReadBooleanAttribute(XmlReader reader, String propertyName)
+        {
+            Boolean retVal = false;
+            String value = reader.GetAttribute(propertyName);
+
+            if (value != null)
+            {
+                retVal = Boolean.Parse(value);
+            }
+
+            return retVal;
+        }
+
         public static void ReadColor(XmlReader reader, out Color color, out String name)
         {
             if (reader.Name == "Color" || reader.Name == "Colour")

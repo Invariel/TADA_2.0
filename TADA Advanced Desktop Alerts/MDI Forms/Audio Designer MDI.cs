@@ -23,7 +23,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             this.alertAudio = alertAudio;
 
             // Remove the Angle, Magnification, and Opacity tabs from ...
-
             tab_AdvancedWaypointControls.TabPages.Remove(tab_AngleAndMagnification);
             tab_AdvancedWaypointControls.TabPages.Remove(tab_Opacity);
             tab_AdvancedWaypointControls.TabPages.Remove(tab_Path);
@@ -45,8 +44,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             dg_Waypoints.Columns["xDataGridViewTextBoxColumn"].Visible = false;
             dg_Waypoints.Columns["yDataGridViewTextBoxColumn"].Visible = false;
             dg_Waypoints.Columns["transitionTimeDataGridViewTextBoxColumn"].Visible = false;
+            dg_Waypoints.Columns["behindImageDataGridViewCheckBoxColumn"].Visible = false;
+            dg_Waypoints.Columns["readMessageDataGridViewCheckBoxColumn"].Visible = false;
             dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].HeaderText = "Waypoint Duration";
-            dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].ToolTipText = "How long, in seconds, before the next volume or balance or macro begins.";
+            dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].ToolTipText = "How long, in seconds, before the next volume change, balance change, or macro begins.";
 
             eh_1.Child = me;
             me.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
@@ -110,6 +111,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             trk_Position.Maximum = Convert.ToInt32(Math.Round(mediaDuration.TotalMilliseconds));
             trk_Position.TickFrequency = trk_Position.Maximum / 25;
+
+            this.alertAudio.Filename = txt_Filename.Text;
 
             DisplayControls(true);
         }

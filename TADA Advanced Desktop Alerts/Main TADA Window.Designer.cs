@@ -60,21 +60,28 @@
             this.txt_ChannelName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btn_Connect = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tab_Main = new System.Windows.Forms.TabControl();
             this.tab_Manifest = new System.Windows.Forms.TabPage();
-            this.tab_Other = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btn_ColourPicker = new System.Windows.Forms.Button();
             this.tab_Banned = new System.Windows.Forms.TabPage();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.rad_30FPS = new System.Windows.Forms.RadioButton();
             this.rad_60FPS = new System.Windows.Forms.RadioButton();
             this.btn_Update = new System.Windows.Forms.Button();
+            this.tab_AlertSettings = new System.Windows.Forms.TabPage();
+            this.tab_Configuration = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.mtxt_TimeBetweenTTS = new System.Windows.Forms.MaskedTextBox();
+            this.lbl_MuteTTS1 = new System.Windows.Forms.Label();
+            this.chk_TimeBetweenTTS = new System.Windows.Forms.CheckBox();
+            this.chk_FollowCalloutLurkers = new System.Windows.Forms.CheckBox();
+            this.mtxt_FollowCalloutLurkers = new System.Windows.Forms.MaskedTextBox();
+            this.chk_DontReadGlobalEmotes = new System.Windows.Forms.CheckBox();
+            this.chk_DontReadGlobalCheermotes = new System.Windows.Forms.CheckBox();
+            this.chk_DoReadMyCheermote = new System.Windows.Forms.CheckBox();
+            this.chk_DoReadMyEmotes = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lbl_MuteTTS2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
@@ -83,11 +90,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.tab_Main.SuspendLayout();
             this.tab_Manifest.SuspendLayout();
-            this.tab_Other.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tab_Banned.SuspendLayout();
+            this.tab_AlertSettings.SuspendLayout();
+            this.tab_Configuration.SuspendLayout();
             this.SuspendLayout();
             // 
             // numud_bgB
@@ -336,7 +344,7 @@
             this.groupBox2.Controls.Add(this.btn_GetAccessToken);
             this.groupBox2.Controls.Add(this.txt_ChannelName);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Location = new System.Drawing.Point(7, 95);
+            this.groupBox2.Location = new System.Drawing.Point(8, 98);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(493, 127);
             this.groupBox2.TabIndex = 16;
@@ -412,16 +420,17 @@
             this.btn_Connect.Text = "Connect!";
             this.btn_Connect.UseVisualStyleBackColor = true;
             // 
-            // tabControl1
+            // tab_Main
             // 
-            this.tabControl1.Controls.Add(this.tab_Manifest);
-            this.tabControl1.Controls.Add(this.tab_Other);
-            this.tabControl1.Controls.Add(this.tab_Banned);
-            this.tabControl1.Location = new System.Drawing.Point(13, 13);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(516, 254);
-            this.tabControl1.TabIndex = 19;
+            this.tab_Main.Controls.Add(this.tab_Manifest);
+            this.tab_Main.Controls.Add(this.tab_Banned);
+            this.tab_Main.Controls.Add(this.tab_AlertSettings);
+            this.tab_Main.Controls.Add(this.tab_Configuration);
+            this.tab_Main.Location = new System.Drawing.Point(13, 13);
+            this.tab_Main.Name = "tab_Main";
+            this.tab_Main.SelectedIndex = 0;
+            this.tab_Main.Size = new System.Drawing.Size(516, 254);
+            this.tab_Main.TabIndex = 19;
             // 
             // tab_Manifest
             // 
@@ -437,18 +446,6 @@
             this.tab_Manifest.Size = new System.Drawing.Size(508, 228);
             this.tab_Manifest.TabIndex = 0;
             this.tab_Manifest.Text = "Alert Manifest";
-            // 
-            // tab_Other
-            // 
-            this.tab_Other.Controls.Add(this.groupBox1);
-            this.tab_Other.Controls.Add(this.groupBox2);
-            this.tab_Other.Location = new System.Drawing.Point(4, 22);
-            this.tab_Other.Name = "tab_Other";
-            this.tab_Other.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Other.Size = new System.Drawing.Size(508, 228);
-            this.tab_Other.TabIndex = 1;
-            this.tab_Other.Text = "Animation Window and Twitch Settings";
-            this.tab_Other.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -466,7 +463,7 @@
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.txt_BackgroundARGB);
             this.groupBox1.Controls.Add(this.numud_bgG);
-            this.groupBox1.Location = new System.Drawing.Point(7, 7);
+            this.groupBox1.Location = new System.Drawing.Point(8, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(493, 82);
             this.groupBox1.TabIndex = 16;
@@ -484,82 +481,14 @@
             // 
             // tab_Banned
             // 
-            this.tab_Banned.Controls.Add(this.checkBox3);
-            this.tab_Banned.Controls.Add(this.checkBox2);
-            this.tab_Banned.Controls.Add(this.checkBox1);
-            this.tab_Banned.Controls.Add(this.textBox1);
+            this.tab_Banned.BackColor = System.Drawing.SystemColors.Control;
             this.tab_Banned.Controls.Add(this.label9);
-            this.tab_Banned.Controls.Add(this.label8);
             this.tab_Banned.Location = new System.Drawing.Point(4, 22);
             this.tab_Banned.Name = "tab_Banned";
             this.tab_Banned.Padding = new System.Windows.Forms.Padding(3);
             this.tab_Banned.Size = new System.Drawing.Size(508, 228);
             this.tab_Banned.TabIndex = 2;
             this.tab_Banned.Text = "Banned Words";
-            this.tab_Banned.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Enabled = false;
-            this.checkBox3.Location = new System.Drawing.Point(119, 159);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(118, 17);
-            this.checkBox3.TabIndex = 5;
-            this.checkBox3.Text = "Don\'t Read Emotes";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(119, 205);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(193, 17);
-            this.checkBox2.TabIndex = 4;
-            this.checkBox2.Text = "Block my Cheermote (Partners only)";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(119, 182);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(112, 17);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Block Cheermotes";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(119, 25);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(367, 59);
-            this.textBox1.TabIndex = 2;
-            // 
-            // label9
-            // 
-            this.label9.Enabled = false;
-            this.label9.Location = new System.Drawing.Point(6, 38);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(97, 32);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Banned Terms (comma separated)";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Enabled = false;
-            this.label8.Location = new System.Drawing.Point(47, 3);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(401, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Banned words will be removed from all viewer messages, and will not be read aloud" +
-    ".";
             // 
             // rad_30FPS
             // 
@@ -593,15 +522,163 @@
             this.btn_Update.UseVisualStyleBackColor = true;
             this.btn_Update.Visible = false;
             // 
+            // tab_AlertSettings
+            // 
+            this.tab_AlertSettings.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_AlertSettings.Controls.Add(this.mtxt_TimeBetweenTTS);
+            this.tab_AlertSettings.Controls.Add(this.lbl_MuteTTS2);
+            this.tab_AlertSettings.Controls.Add(this.label8);
+            this.tab_AlertSettings.Controls.Add(this.chk_DoReadMyEmotes);
+            this.tab_AlertSettings.Controls.Add(this.chk_DoReadMyCheermote);
+            this.tab_AlertSettings.Controls.Add(this.chk_DontReadGlobalCheermotes);
+            this.tab_AlertSettings.Controls.Add(this.chk_DontReadGlobalEmotes);
+            this.tab_AlertSettings.Controls.Add(this.mtxt_FollowCalloutLurkers);
+            this.tab_AlertSettings.Controls.Add(this.chk_FollowCalloutLurkers);
+            this.tab_AlertSettings.Controls.Add(this.chk_TimeBetweenTTS);
+            this.tab_AlertSettings.Controls.Add(this.lbl_MuteTTS1);
+            this.tab_AlertSettings.Location = new System.Drawing.Point(4, 22);
+            this.tab_AlertSettings.Name = "tab_AlertSettings";
+            this.tab_AlertSettings.Size = new System.Drawing.Size(508, 228);
+            this.tab_AlertSettings.TabIndex = 3;
+            this.tab_AlertSettings.Text = "Alert Settings";
+            // 
+            // tab_Configuration
+            // 
+            this.tab_Configuration.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Configuration.Controls.Add(this.groupBox1);
+            this.tab_Configuration.Controls.Add(this.groupBox2);
+            this.tab_Configuration.Location = new System.Drawing.Point(4, 22);
+            this.tab_Configuration.Name = "tab_Configuration";
+            this.tab_Configuration.Size = new System.Drawing.Size(508, 228);
+            this.tab_Configuration.TabIndex = 4;
+            this.tab_Configuration.Text = "TADA Configuration";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 7);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(328, 13);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Banned words stuff.  Maybe a table?  Idk how to best represent this.";
+            // 
+            // mtxt_TimeBetweenTTS
+            // 
+            this.mtxt_TimeBetweenTTS.Location = new System.Drawing.Point(100, 126);
+            this.mtxt_TimeBetweenTTS.Mask = "###:##.##";
+            this.mtxt_TimeBetweenTTS.Name = "mtxt_TimeBetweenTTS";
+            this.mtxt_TimeBetweenTTS.PromptChar = '0';
+            this.mtxt_TimeBetweenTTS.Size = new System.Drawing.Size(60, 20);
+            this.mtxt_TimeBetweenTTS.TabIndex = 2;
+            this.mtxt_TimeBetweenTTS.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            // 
+            // lbl_MuteTTS1
+            // 
+            this.lbl_MuteTTS1.AutoSize = true;
+            this.lbl_MuteTTS1.Location = new System.Drawing.Point(161, 130);
+            this.lbl_MuteTTS1.Name = "lbl_MuteTTS1";
+            this.lbl_MuteTTS1.Size = new System.Drawing.Size(217, 13);
+            this.lbl_MuteTTS1.TabIndex = 3;
+            this.lbl_MuteTTS1.Text = "between TTS messages from the same user.";
+            // 
+            // chk_TimeBetweenTTS
+            // 
+            this.chk_TimeBetweenTTS.AutoSize = true;
+            this.chk_TimeBetweenTTS.Location = new System.Drawing.Point(8, 128);
+            this.chk_TimeBetweenTTS.Name = "chk_TimeBetweenTTS";
+            this.chk_TimeBetweenTTS.Size = new System.Drawing.Size(96, 17);
+            this.chk_TimeBetweenTTS.TabIndex = 4;
+            this.chk_TimeBetweenTTS.Text = "Ensure at least";
+            this.chk_TimeBetweenTTS.UseVisualStyleBackColor = true;
+            // 
+            // chk_FollowCalloutLurkers
+            // 
+            this.chk_FollowCalloutLurkers.AutoSize = true;
+            this.chk_FollowCalloutLurkers.Location = new System.Drawing.Point(8, 105);
+            this.chk_FollowCalloutLurkers.Name = "chk_FollowCalloutLurkers";
+            this.chk_FollowCalloutLurkers.Size = new System.Drawing.Size(344, 17);
+            this.chk_FollowCalloutLurkers.TabIndex = 5;
+            this.chk_FollowCalloutLurkers.Text = "Don\'t play Follow alerts for users that have been silent for more than";
+            this.chk_FollowCalloutLurkers.UseVisualStyleBackColor = true;
+            // 
+            // mtxt_FollowCalloutLurkers
+            // 
+            this.mtxt_FollowCalloutLurkers.Location = new System.Drawing.Point(348, 103);
+            this.mtxt_FollowCalloutLurkers.Mask = "###:##.##";
+            this.mtxt_FollowCalloutLurkers.Name = "mtxt_FollowCalloutLurkers";
+            this.mtxt_FollowCalloutLurkers.PromptChar = '0';
+            this.mtxt_FollowCalloutLurkers.Size = new System.Drawing.Size(60, 20);
+            this.mtxt_FollowCalloutLurkers.TabIndex = 6;
+            this.mtxt_FollowCalloutLurkers.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            // 
+            // chk_DontReadGlobalEmotes
+            // 
+            this.chk_DontReadGlobalEmotes.AutoSize = true;
+            this.chk_DontReadGlobalEmotes.Location = new System.Drawing.Point(8, 13);
+            this.chk_DontReadGlobalEmotes.Name = "chk_DontReadGlobalEmotes";
+            this.chk_DontReadGlobalEmotes.Size = new System.Drawing.Size(115, 17);
+            this.chk_DontReadGlobalEmotes.TabIndex = 7;
+            this.chk_DontReadGlobalEmotes.Text = "Don\'t read emotes.";
+            this.chk_DontReadGlobalEmotes.UseVisualStyleBackColor = true;
+            // 
+            // chk_DontReadGlobalCheermotes
+            // 
+            this.chk_DontReadGlobalCheermotes.AutoSize = true;
+            this.chk_DontReadGlobalCheermotes.Location = new System.Drawing.Point(8, 59);
+            this.chk_DontReadGlobalCheermotes.Name = "chk_DontReadGlobalCheermotes";
+            this.chk_DontReadGlobalCheermotes.Size = new System.Drawing.Size(113, 17);
+            this.chk_DontReadGlobalCheermotes.TabIndex = 8;
+            this.chk_DontReadGlobalCheermotes.Text = "Don\'t read cheers.";
+            this.chk_DontReadGlobalCheermotes.UseVisualStyleBackColor = true;
+            // 
+            // chk_DoReadMyCheermote
+            // 
+            this.chk_DoReadMyCheermote.AutoSize = true;
+            this.chk_DoReadMyCheermote.Location = new System.Drawing.Point(28, 82);
+            this.chk_DoReadMyCheermote.Name = "chk_DoReadMyCheermote";
+            this.chk_DoReadMyCheermote.Size = new System.Drawing.Size(240, 17);
+            this.chk_DoReadMyCheermote.TabIndex = 9;
+            this.chk_DoReadMyCheermote.Text = "Except my Cheermote. (Twitch Partners only.)";
+            this.chk_DoReadMyCheermote.UseVisualStyleBackColor = true;
+            // 
+            // chk_DoReadMyEmotes
+            // 
+            this.chk_DoReadMyEmotes.AutoSize = true;
+            this.chk_DoReadMyEmotes.Location = new System.Drawing.Point(28, 36);
+            this.chk_DoReadMyEmotes.Name = "chk_DoReadMyEmotes";
+            this.chk_DoReadMyEmotes.Size = new System.Drawing.Size(163, 17);
+            this.chk_DoReadMyEmotes.TabIndex = 10;
+            this.chk_DoReadMyEmotes.Text = "Except my channel\'s emotes.";
+            this.chk_DoReadMyEmotes.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(202, 13);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(300, 40);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "While these settings will prevent Twitch emotes from being read by the text-to-sp" +
+    "eech voice, it will not catch third party emotes. (Better Twitch TV, FrankerFace" +
+    "Z, etc.)";
+            // 
+            // lbl_MuteTTS2
+            // 
+            this.lbl_MuteTTS2.AutoSize = true;
+            this.lbl_MuteTTS2.Location = new System.Drawing.Point(28, 152);
+            this.lbl_MuteTTS2.Name = "lbl_MuteTTS2";
+            this.lbl_MuteTTS2.Size = new System.Drawing.Size(365, 13);
+            this.lbl_MuteTTS2.TabIndex = 12;
+            this.lbl_MuteTTS2.Text = "Messages received before this time will be displayed on screen but not read.";
+            // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 295);
+            this.ClientSize = new System.Drawing.Size(536, 298);
             this.Controls.Add(this.btn_Update);
             this.Controls.Add(this.rad_60FPS);
             this.Controls.Add(this.rad_30FPS);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tab_Main);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainTADAForm";
             this.Text = "TADA Advanced Desktop Alerts";
@@ -614,13 +691,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.tab_Main.ResumeLayout(false);
             this.tab_Manifest.ResumeLayout(false);
-            this.tab_Other.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tab_Banned.ResumeLayout(false);
             this.tab_Banned.PerformLayout();
+            this.tab_AlertSettings.ResumeLayout(false);
+            this.tab_AlertSettings.PerformLayout();
+            this.tab_Configuration.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -657,21 +736,28 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn alertNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertTypeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tab_Main;
         private System.Windows.Forms.TabPage tab_Manifest;
-        private System.Windows.Forms.TabPage tab_Other;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btn_ColourPicker;
         private System.Windows.Forms.TabPage tab_Banned;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.CheckBox checkBox3;
         internal System.Windows.Forms.RadioButton rad_30FPS;
         internal System.Windows.Forms.RadioButton rad_60FPS;
         private System.Windows.Forms.Button btn_Update;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TabPage tab_AlertSettings;
+        private System.Windows.Forms.TabPage tab_Configuration;
+        private System.Windows.Forms.MaskedTextBox mtxt_TimeBetweenTTS;
+        private System.Windows.Forms.Label lbl_MuteTTS2;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox chk_DoReadMyEmotes;
+        private System.Windows.Forms.CheckBox chk_DoReadMyCheermote;
+        private System.Windows.Forms.CheckBox chk_DontReadGlobalCheermotes;
+        private System.Windows.Forms.CheckBox chk_DontReadGlobalEmotes;
+        private System.Windows.Forms.MaskedTextBox mtxt_FollowCalloutLurkers;
+        private System.Windows.Forms.CheckBox chk_FollowCalloutLurkers;
+        private System.Windows.Forms.CheckBox chk_TimeBetweenTTS;
+        private System.Windows.Forms.Label lbl_MuteTTS1;
     }
 }
 

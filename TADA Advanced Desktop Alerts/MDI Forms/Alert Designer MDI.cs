@@ -27,7 +27,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private List <Tuple <_TADAAlertAudio, TabPage>> audioTabPages = new List<Tuple<_TADAAlertAudio, TabPage>>();
         private List <Tuple <_TADAAlertText, TabPage>> textTabPages = new List<Tuple<_TADAAlertText, TabPage>>();
 
-        internal Alert_Designer_MDI(_TADAAlert originalAlert = null)
+        internal Alert_Designer_MDI(_TADAAlert originalAlert)
         {
             InitializeComponent();
 
@@ -46,18 +46,41 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             dg_Images.CellContentClick += CellEditClicked;
             dg_Audio.CellContentClick += CellEditClicked;
-//            dg_StreamerMessages.CellContentClick += CellEditClicked;
-//            dg_ViewerMessages.CellContentClick += CellEditClicked;
+            //            dg_StreamerMessages.CellContentClick += CellEditClicked;
+            //            dg_ViewerMessages.CellContentClick += CellEditClicked;
 
             ConfigureMenuItems();
 
             FillAlertTypeComboBox();
 
             this.mainAlert = originalAlert;
-            if (originalAlert != null)
+
+            foreach (_TADAAlertImage image in this.mainAlert.Images)
             {
-                // Then fill the four alert types, and conditions.
+                this.alertImageBindingSource.Add(image);
             }
+
+            foreach (_TADAAlertAudio audio in this.mainAlert.Audios)
+            {
+                this.alertAudioBindingSource.Add(audio);
+            }
+
+            foreach (_TADAAlertText text in this.mainAlert.StreamerTexts)
+            {
+                this.streamerAlertTextBindingSource.Add(text);
+            }
+
+            foreach (_TADAAlertText text in this.mainAlert.ViewerTexts)
+            {
+                this.viewerAlertTextBindingSource.Add(text);
+            }
+
+            foreach (_TADAAlertCondition condition in this.mainAlert.Conditions)
+            {
+                this.alertConditionBindingSource.Add(condition);
+            }
+
+            // Then fill the four alert types, and conditions, because mainAlert is NEVER null.
         }
 
         private void ConfigureMenuItems ()
@@ -120,16 +143,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             return tuple?.Item2 ?? null;
         }
 
-        /*
-         * What am I trying to do?
-         * 
-         * When a user clicks 'New <whatever>', it needs to create a new instance in the appropriate BindingSource.
-         * Then that new instance gets embedded in a TabPage and that TabPage gets added to the appropriate List<>.
-         * 
-         * When a user clicks 'Edit', it has to look for that item in the appropriate TabPage list.
-         * If there, make that TabPage active.
-         * If not, make a new instance and such.
-         */
         private void CellEditClicked(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex >= 0 && e.RowIndex >= 0 && (sender as DataGridView).Columns[e.ColumnIndex] is DataGridViewButtonColumn)
@@ -156,7 +169,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                 if (dataGrid == dg_Images)
                 {
-                    if (!isNewObject)
+                    if (isNewObject)
+                    {
+                        this.mainAlert.Images.Add(editObject as _TADAAlertImage);
+                    }
+                    else
                     {
                         existingTabPage = TabExists(editObject as _TADAAlertImage);
                     }
@@ -170,6 +187,10 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (!isNewObject)
                     {
+                        this.mainAlert.Audios.Add(editObject as _TADAAlertAudio);
+                    }
+                    else
+                    {
                         existingTabPage = TabExists(editObject as _TADAAlertAudio);
                     }
 
@@ -181,7 +202,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 else if (dataGrid == dg_StreamerMessages)
                 {
 /*
-                    if (!isNewObject)
+                    if (isNewObject)
+                    {
+                        this.mainAlert.StreamerTexts.Add(editObject as _TADAAlertText);
+                    }
+                    else
                     {
                         existingTabPage = TabExists(editObject as _TADAAlertText);
                     }
@@ -195,7 +220,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 else if (dataGrid == dg_ViewerMessages)
                 {
 /*
-                    if (!isNewObject)
+                    if (isNewObject)
+                    {
+                        this.mainAlert.ViewerTexts.Add(editObject as _TADAAlertText);
+                    }
+                    else
                     {
                         existingTabPage = TabExists(editObject as _TADAAlertText);
                     }

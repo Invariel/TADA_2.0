@@ -19,7 +19,6 @@ using System.Xml.Serialization;
  * and not just null.  This might already be done, idk, but that's what this warning is for.
  */
 
-
 namespace TADA_Advanced_Desktop_Alerts
 {
     public abstract class PropertyAndXML : INotifyPropertyChanged, IXmlSerializable

@@ -29,6 +29,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public const String DEFAULT_ALERTS = @"default.tada";
 
         public const String MASKED_TEXTBOX_MASK = "{0,3}:{1,2}:{2,2}.{3,3}";
+        public const String COLOR_FORMAT = "#{0:X2}{1:X2}{2:X2}{3:X2}";
 
         public const double INITIAL_ANGLE = 0;
         public const double INITIAL_MAGNIFICATION = 1;
@@ -113,46 +114,6 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.SUBSCRIPTION, "Subscription" },
         };
 
-        internal static void ColourPicker(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
-        {
-            ColorDialog colorDialog = new ColorDialog()
-            {
-                Color = Color.FromArgb(
-                    Convert.ToInt32(alpha?.Value ?? 0),
-                    Convert.ToInt32(red?.Value ?? 0),
-                    Convert.ToInt32(green?.Value ?? 0),
-                    Convert.ToInt32(blue?.Value ?? 0)),
-                FullOpen = true
-            };
-
-            DialogResult result = colorDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                Color color = colorDialog.Color;
-
-                // Only need to set RGBA because the RGBA numuds will call their OnValueChanged code that will then update the textbox.
-                if (red != null)
-                {
-                    red.Value = color.R;
-                }
-
-                if (green != null)
-                {
-                    green.Value = color.G;
-                }
-
-                if (blue != null)
-                {
-                    blue.Value = color.B;
-                }
-
-                if (alpha != null)
-                {
-                    alpha.Value = color.A;
-                }
-            }
-        }
-
         public static Dictionary<String, ALERTTYPES> alertStrings = new Dictionary<string, ALERTTYPES>()
         {
             { "No alert.", ALERTTYPES.NONE },
@@ -226,6 +187,97 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 destination.Text = fileDialog.FileName;
             }
+        }
+
+        internal static void ParseHexColor(string hex, out int r, out int g, out int b, out int a)
+        {
+            if (String.IsNullOrEmpty(hex))
+            {
+                hex = "#00000000";
+            }
+
+            while (hex.Length < 9)
+            {
+                hex += "0";
+            }
+
+            r = Convert.ToInt32(hex.Substring(1, 2), 16);
+            g = Convert.ToInt32(hex.Substring(3, 2), 16);
+            b = Convert.ToInt32(hex.Substring(5, 2), 16);
+            a = Convert.ToInt32(hex.Substring(7, 2), 16);
+        }
+
+        internal static void ColourPicker(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        {
+            ColorDialog colorDialog = new ColorDialog()
+            {
+                Color = Color.FromArgb(
+                    Convert.ToInt32(alpha?.Value ?? 0),
+                    Convert.ToInt32(red?.Value ?? 0),
+                    Convert.ToInt32(green?.Value ?? 0),
+                    Convert.ToInt32(blue?.Value ?? 0)),
+                FullOpen = true
+            };
+
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Color color = colorDialog.Color;
+                General.FillNumudsFromColor(color, red, green, blue, alpha);
+            }
+        }
+
+        internal static void _ColorPicker(ComboBox comboBox, TextBox hexBox, NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        {
+            ColorDialog colorDialog = new ColorDialog()
+            {
+                Color = Color.FromArgb(
+                    Convert.ToInt32(alpha?.Value ?? 0),
+                    Convert.ToInt32(red?.Value ?? 0),
+                    Convert.ToInt32(green?.Value ?? 0),
+                    Convert.ToInt32(blue?.Value ?? 0)),
+                FullOpen = true
+            };
+
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Color color = colorDialog.Color;
+
+                comboBox.Text = color.IsNamedColor ? color.Name : "Custom";
+                hexBox.Text = String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
+                General.FillNumudsFromColor(color, red, green, blue, alpha);
+            }
+        }
+
+        internal static void FillNumudsFromColor(Color c, NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        {
+            red.Value = c.R;
+            green.Value = c.G;
+            blue.Value = c.B;
+            alpha.Value = c.A;
+        }
+
+        internal static Color ColorFromNumuds(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        {
+            return Color.FromArgb(Convert.ToInt32(alpha.Value), Convert.ToInt32(red.Value), Convert.ToInt32(green.Value), Convert.ToInt32(blue.Value));
+        }
+
+        internal static String GetKnownColorString(Color color)
+        {
+            String returnColor = "Custom";
+
+            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
+            {
+                Color testColor = Color.FromKnownColor(knownColor);
+                if (color.ToArgb() == testColor.ToArgb())
+                {
+                    returnColor = Enum.GetName(typeof(KnownColor), knownColor);
+                    break;
+                }
+            }
+
+            return returnColor;
         }
 
         public static void ExtractAllFrames(Bitmap bitmap, Size newSize, out Bitmap[] frames, out int[] timing, out int totalDuration)

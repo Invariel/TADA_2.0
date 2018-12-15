@@ -167,18 +167,18 @@
             // 
             // trk_LoopAt
             // 
-            this.trk_LoopAt.Location = new System.Drawing.Point(68, 124);
+            this.trk_LoopAt.Location = new System.Drawing.Point(82, 124);
             this.trk_LoopAt.Name = "trk_LoopAt";
-            this.trk_LoopAt.Size = new System.Drawing.Size(565, 45);
+            this.trk_LoopAt.Size = new System.Drawing.Size(551, 45);
             this.trk_LoopAt.TabIndex = 241;
             this.trk_LoopAt.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.trk_LoopAt.Visible = false;
             // 
             // trk_StartAt
             // 
-            this.trk_StartAt.Location = new System.Drawing.Point(68, 104);
+            this.trk_StartAt.Location = new System.Drawing.Point(82, 104);
             this.trk_StartAt.Name = "trk_StartAt";
-            this.trk_StartAt.Size = new System.Drawing.Size(565, 45);
+            this.trk_StartAt.Size = new System.Drawing.Size(551, 45);
             this.trk_StartAt.TabIndex = 240;
             this.trk_StartAt.Visible = false;
             // 
@@ -250,9 +250,9 @@
             // trk_Position
             // 
             this.trk_Position.LargeChange = 50;
-            this.trk_Position.Location = new System.Drawing.Point(64, 28);
+            this.trk_Position.Location = new System.Drawing.Point(78, 28);
             this.trk_Position.Name = "trk_Position";
-            this.trk_Position.Size = new System.Drawing.Size(565, 45);
+            this.trk_Position.Size = new System.Drawing.Size(551, 45);
             this.trk_Position.TabIndex = 52;
             this.trk_Position.TickFrequency = 1000;
             this.trk_Position.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
@@ -279,10 +279,10 @@
             // trk_Volume
             // 
             this.trk_Volume.LargeChange = 50;
-            this.trk_Volume.Location = new System.Drawing.Point(68, 237);
+            this.trk_Volume.Location = new System.Drawing.Point(82, 237);
             this.trk_Volume.Maximum = 1000;
             this.trk_Volume.Name = "trk_Volume";
-            this.trk_Volume.Size = new System.Drawing.Size(565, 45);
+            this.trk_Volume.Size = new System.Drawing.Size(551, 45);
             this.trk_Volume.TabIndex = 233;
             this.trk_Volume.TickFrequency = 50;
             this.trk_Volume.Visible = false;
@@ -290,7 +290,7 @@
             // lbl_LoopAt
             // 
             this.lbl_LoopAt.AutoSize = true;
-            this.lbl_LoopAt.Location = new System.Drawing.Point(18, 136);
+            this.lbl_LoopAt.Location = new System.Drawing.Point(18, 140);
             this.lbl_LoopAt.Name = "lbl_LoopAt";
             this.lbl_LoopAt.Size = new System.Drawing.Size(44, 13);
             this.lbl_LoopAt.TabIndex = 231;
@@ -310,7 +310,7 @@
             // lbl_StartAt
             // 
             this.lbl_StartAt.AutoSize = true;
-            this.lbl_StartAt.Location = new System.Drawing.Point(20, 107);
+            this.lbl_StartAt.Location = new System.Drawing.Point(20, 109);
             this.lbl_StartAt.Name = "lbl_StartAt";
             this.lbl_StartAt.Size = new System.Drawing.Size(42, 13);
             this.lbl_StartAt.TabIndex = 230;
@@ -320,11 +320,11 @@
             // trk_Balance
             // 
             this.trk_Balance.LargeChange = 20;
-            this.trk_Balance.Location = new System.Drawing.Point(68, 175);
+            this.trk_Balance.Location = new System.Drawing.Point(82, 175);
             this.trk_Balance.Maximum = 100;
             this.trk_Balance.Minimum = -100;
             this.trk_Balance.Name = "trk_Balance";
-            this.trk_Balance.Size = new System.Drawing.Size(565, 45);
+            this.trk_Balance.Size = new System.Drawing.Size(551, 45);
             this.trk_Balance.TabIndex = 234;
             this.trk_Balance.TickFrequency = 10;
             this.trk_Balance.Visible = false;

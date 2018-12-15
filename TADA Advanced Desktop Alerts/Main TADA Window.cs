@@ -122,9 +122,9 @@ namespace TADA_Advanced_Desktop_Alerts
             new TimePeriod(1);
 
             _mainTADAForm = this;
-            webSocketServer = new WebSocketServer(21573);
+            webSocketServer = new WebSocketServer(21573);   // Let the user set this, and then auto-increment if the port is unavailable, maybe?
 
-            Creation_Forms.Alert_Designer_MDI ad3 = new Creation_Forms.Alert_Designer_MDI();
+            Creation_Forms.Alert_Designer_MDI ad3 = new Creation_Forms.Alert_Designer_MDI(new _TADAAlert());
             ad3.Show();
 
             // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php
@@ -360,6 +360,36 @@ namespace TADA_Advanced_Desktop_Alerts
                     xmlWriter.WriteAttributeString("Value", (rad_60FPS.Checked ? "60" : "30"));
                     xmlWriter.WriteEndElement();
 
+                    xmlWriter.WriteStartElement("Options");
+                    if (chk_DontReadGlobalEmotes.Checked)
+                    {
+                        xmlWriter.WriteAttributeString("DontReadGlobalEmotes", "true");
+                        if (chk_DoReadMyEmotes.Checked)
+                        {
+                            xmlWriter.WriteAttributeString("DoReadMyEmotes", "true");
+                        }
+                    }
+
+                    if (chk_DontReadGlobalCheermotes.Checked)
+                    {
+                        xmlWriter.WriteAttributeString("DontReadGlobalCheermotes", "true");
+                        if (chk_DoReadMyCheermote.Checked)
+                        {
+                            xmlWriter.WriteAttributeString("DoReadMyCheermote", "true");
+                        }
+                    }
+
+                    if (chk_FollowCalloutLurkers.Checked)
+                    {
+                        xmlWriter.WriteAttributeString("LurkerTime", mtxt_FollowCalloutLurkers.Text);
+                    }
+
+                    if (chk_TimeBetweenTTS.Checked)
+                    {
+                        xmlWriter.WriteAttributeString("TTSTime", mtxt_TimeBetweenTTS.Text);
+                    }
+                    xmlWriter.WriteEndElement();
+                    
                     BindingSource b = dg_Alerts.DataSource as BindingSource;
 
                     foreach (TADAAlert a in b)
@@ -441,23 +471,53 @@ namespace TADA_Advanced_Desktop_Alerts
                                     this.animationWindow.Location = point;
                                 }
                             }
-                            else if (xmlReader.IsStartElement("FPS"))
-                            {
-                                switch (xmlReader.GetAttribute("Value").ToString())
-                                {
-                                    case "60":
-                                        rad_60FPS.Checked = true;
-                                        break;
-                                    case "30":
-                                    default:
-                                        rad_30FPS.Checked = true;
-                                        break;
-                                }
-                            }
                             else if (!xmlReader.IsStartElement() && xmlReader.Name == "Window")
                             {
                                 break;
                             }
+                        }
+                    }
+                    else if (xmlReader.IsStartElement("FPS"))
+                    {
+                        switch (xmlReader.GetAttribute("Value").ToString())
+                        {
+                            case "60":
+                                rad_60FPS.Checked = true;
+                                break;
+                            case "30":
+                            default:
+                                rad_30FPS.Checked = true;
+                                break;
+                        }
+                    }
+                    else if (xmlReader.IsStartElement("Options"))
+                    {
+                        Boolean dontReadGlobalEmotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DontReadGlobalEmotes");
+                        Boolean doReadMyEmotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DoReadMyEmotes");
+                        Boolean dontReadGlobalCheermotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DontReadGlobalCheermotes");
+                        Boolean doReadMyCheermotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DoReadMyCheermotes");
+                        String followIdleTime = xmlReader.GetAttribute("LurkerTime");
+                        String ttsTime = xmlReader.GetAttribute("TTSTime");
+
+                        // Then do a bunch of magic.
+                        chk_DontReadGlobalEmotes.Checked = dontReadGlobalEmotes;
+                        chk_DoReadMyEmotes.Checked = dontReadGlobalEmotes && doReadMyEmotes;
+                        chk_DontReadGlobalCheermotes.Checked = dontReadGlobalCheermotes;
+                        chk_DoReadMyCheermote.Checked = dontReadGlobalCheermotes && doReadMyCheermotes;
+
+                        TimeSpan followIdleTimespan = (String.IsNullOrEmpty(followIdleTime) ? new TimeSpan(0) : General.TimeSpanFromString(followIdleTime));
+                        TimeSpan ttsTimespan = (String.IsNullOrEmpty(ttsTime) ? new TimeSpan(0) : General.TimeSpanFromString(ttsTime));
+
+                        if (followIdleTimespan.TotalMilliseconds > 0)
+                        {
+                            chk_FollowCalloutLurkers.Checked = true;
+                            mtxt_FollowCalloutLurkers.Text = General.StringFromTimeSpan(followIdleTimespan);
+                        }
+
+                        if (ttsTimespan.TotalMilliseconds > 0)
+                        {
+                            chk_TimeBetweenTTS.Checked = true;
+                            mtxt_TimeBetweenTTS.Text = General.StringFromTimeSpan(ttsTimespan);
                         }
                     }
                 }
