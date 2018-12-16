@@ -43,53 +43,27 @@
             this.txt_BackgroundImage = new System.Windows.Forms.TextBox();
             this.lbl_BackgroundImage = new System.Windows.Forms.Label();
             this.numud_PaddingY = new System.Windows.Forms.NumericUpDown();
-            this.numud_MaxSizeY = new System.Windows.Forms.NumericUpDown();
+            this.numud_TextHeight = new System.Windows.Forms.NumericUpDown();
             this.numud_PaddingX = new System.Windows.Forms.NumericUpDown();
-            this.numud_MaxSizeX = new System.Windows.Forms.NumericUpDown();
+            this.numud_TextWidth = new System.Windows.Forms.NumericUpDown();
             this.lbl_TextPadding = new System.Windows.Forms.Label();
-            this.lbl_MaxTextSize = new System.Windows.Forms.Label();
-            this.lbl_TextSizeX = new System.Windows.Forms.Label();
             this.lbl_PaddingX = new System.Windows.Forms.Label();
             this.lbl_NarratedText = new System.Windows.Forms.Label();
             this.lbl_DisplayedText = new System.Windows.Forms.Label();
             this.grp_OutlineColor = new System.Windows.Forms.GroupBox();
             this.btn_OutlinePicker = new System.Windows.Forms.Button();
             this.lbl_OutlineHex = new System.Windows.Forms.Label();
-            this.lbl_OutlineA = new System.Windows.Forms.Label();
-            this.lbl_OutlineB = new System.Windows.Forms.Label();
-            this.lbl_OutlineG = new System.Windows.Forms.Label();
-            this.lbl_OutlineR = new System.Windows.Forms.Label();
             this.txt_OutlineHex = new System.Windows.Forms.TextBox();
-            this.numud_OutlineA = new System.Windows.Forms.NumericUpDown();
-            this.numud_OutlineB = new System.Windows.Forms.NumericUpDown();
-            this.numud_OutlineG = new System.Windows.Forms.NumericUpDown();
-            this.numud_OutlineR = new System.Windows.Forms.NumericUpDown();
             this.cmb_OutlineColor = new System.Windows.Forms.ComboBox();
             this.grp_BackColor = new System.Windows.Forms.GroupBox();
             this.btn_BackPicker = new System.Windows.Forms.Button();
             this.lbl_BackHex = new System.Windows.Forms.Label();
-            this.lbl_BackA = new System.Windows.Forms.Label();
-            this.lbl_BackB = new System.Windows.Forms.Label();
-            this.lbl_BackG = new System.Windows.Forms.Label();
-            this.lbl_BackR = new System.Windows.Forms.Label();
             this.txt_BackHex = new System.Windows.Forms.TextBox();
-            this.numud_BackA = new System.Windows.Forms.NumericUpDown();
-            this.numud_BackB = new System.Windows.Forms.NumericUpDown();
-            this.numud_BackG = new System.Windows.Forms.NumericUpDown();
-            this.numud_BackR = new System.Windows.Forms.NumericUpDown();
             this.cmb_BackColor = new System.Windows.Forms.ComboBox();
             this.grp_ForeColor = new System.Windows.Forms.GroupBox();
             this.btn_ForePicker = new System.Windows.Forms.Button();
             this.lbl_ForeHex = new System.Windows.Forms.Label();
-            this.lbl_ForeA = new System.Windows.Forms.Label();
-            this.lbl_ForeB = new System.Windows.Forms.Label();
-            this.lbl_ForeG = new System.Windows.Forms.Label();
-            this.lbl_ForeR = new System.Windows.Forms.Label();
             this.txt_ForeHex = new System.Windows.Forms.TextBox();
-            this.numud_ForeA = new System.Windows.Forms.NumericUpDown();
-            this.numud_ForeB = new System.Windows.Forms.NumericUpDown();
-            this.numud_ForeG = new System.Windows.Forms.NumericUpDown();
-            this.numud_ForeR = new System.Windows.Forms.NumericUpDown();
             this.cmb_ForeColor = new System.Windows.Forms.ComboBox();
             this.grp_FontAndOutline = new System.Windows.Forms.GroupBox();
             this.lbl_Size = new System.Windows.Forms.Label();
@@ -102,6 +76,8 @@
             this.cmb_Font = new System.Windows.Forms.ComboBox();
             this.txt_NarratedText = new System.Windows.Forms.TextBox();
             this.txt_DisplayedText = new System.Windows.Forms.TextBox();
+            this.lbl_MaxSizeX = new System.Windows.Forms.Label();
+            this.lbl_DimensionsX = new System.Windows.Forms.Label();
             this.tab_Focus.SuspendLayout();
             this.tab_Element.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
@@ -147,24 +123,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.trk_VoiceVolume)).BeginInit();
             this.grp_TextDimensions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_MaxSizeY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TextHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_MaxSizeX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TextWidth)).BeginInit();
             this.grp_OutlineColor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineA)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineG)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineR)).BeginInit();
             this.grp_BackColor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackA)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackG)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackR)).BeginInit();
             this.grp_ForeColor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeA)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeG)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeR)).BeginInit();
             this.grp_FontAndOutline.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_Outline)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_FontSize)).BeginInit();
@@ -188,9 +152,9 @@
             // pb_TextPreview
             // 
             this.pb_TextPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pb_TextPreview.Location = new System.Drawing.Point(259, 58);
+            this.pb_TextPreview.Location = new System.Drawing.Point(5, 58);
             this.pb_TextPreview.Name = "pb_TextPreview";
-            this.pb_TextPreview.Size = new System.Drawing.Size(491, 85);
+            this.pb_TextPreview.Size = new System.Drawing.Size(744, 119);
             this.pb_TextPreview.TabIndex = 75;
             this.pb_TextPreview.TabStop = false;
             // 
@@ -211,9 +175,9 @@
             this.grp_TTS.Controls.Add(this.numud_VoiceVolume);
             this.grp_TTS.Controls.Add(this.cmb_TTSVoice);
             this.grp_TTS.Controls.Add(this.trk_VoiceVolume);
-            this.grp_TTS.Location = new System.Drawing.Point(6, 330);
+            this.grp_TTS.Location = new System.Drawing.Point(5, 330);
             this.grp_TTS.Name = "grp_TTS";
-            this.grp_TTS.Size = new System.Drawing.Size(739, 44);
+            this.grp_TTS.Size = new System.Drawing.Size(744, 44);
             this.grp_TTS.TabIndex = 84;
             this.grp_TTS.TabStop = false;
             this.grp_TTS.Text = "Text to Speech Narrator";
@@ -273,27 +237,27 @@
             // 
             // grp_TextDimensions
             // 
+            this.grp_TextDimensions.Controls.Add(this.numud_TextHeight);
+            this.grp_TextDimensions.Controls.Add(this.lbl_DimensionsX);
+            this.grp_TextDimensions.Controls.Add(this.lbl_MaxSizeX);
             this.grp_TextDimensions.Controls.Add(this.btn_BackgroundImage);
             this.grp_TextDimensions.Controls.Add(this.txt_BackgroundImage);
             this.grp_TextDimensions.Controls.Add(this.lbl_BackgroundImage);
             this.grp_TextDimensions.Controls.Add(this.numud_PaddingY);
-            this.grp_TextDimensions.Controls.Add(this.numud_MaxSizeY);
             this.grp_TextDimensions.Controls.Add(this.numud_PaddingX);
-            this.grp_TextDimensions.Controls.Add(this.numud_MaxSizeX);
+            this.grp_TextDimensions.Controls.Add(this.numud_TextWidth);
             this.grp_TextDimensions.Controls.Add(this.lbl_TextPadding);
-            this.grp_TextDimensions.Controls.Add(this.lbl_MaxTextSize);
-            this.grp_TextDimensions.Controls.Add(this.lbl_TextSizeX);
             this.grp_TextDimensions.Controls.Add(this.lbl_PaddingX);
-            this.grp_TextDimensions.Location = new System.Drawing.Point(6, 278);
+            this.grp_TextDimensions.Location = new System.Drawing.Point(5, 282);
             this.grp_TextDimensions.Name = "grp_TextDimensions";
-            this.grp_TextDimensions.Size = new System.Drawing.Size(739, 48);
+            this.grp_TextDimensions.Size = new System.Drawing.Size(744, 44);
             this.grp_TextDimensions.TabIndex = 83;
             this.grp_TextDimensions.TabStop = false;
-            this.grp_TextDimensions.Text = "Text Dimensions";
+            this.grp_TextDimensions.Text = "Text Block Controls";
             // 
             // btn_BackgroundImage
             // 
-            this.btn_BackgroundImage.Location = new System.Drawing.Point(658, 16);
+            this.btn_BackgroundImage.Location = new System.Drawing.Point(270, 13);
             this.btn_BackgroundImage.Name = "btn_BackgroundImage";
             this.btn_BackgroundImage.Size = new System.Drawing.Size(75, 23);
             this.btn_BackgroundImage.TabIndex = 74;
@@ -302,15 +266,15 @@
             // 
             // txt_BackgroundImage
             // 
-            this.txt_BackgroundImage.Location = new System.Drawing.Point(495, 17);
+            this.txt_BackgroundImage.Location = new System.Drawing.Point(109, 14);
             this.txt_BackgroundImage.Name = "txt_BackgroundImage";
-            this.txt_BackgroundImage.Size = new System.Drawing.Size(154, 20);
+            this.txt_BackgroundImage.Size = new System.Drawing.Size(155, 20);
             this.txt_BackgroundImage.TabIndex = 73;
             // 
             // lbl_BackgroundImage
             // 
             this.lbl_BackgroundImage.AutoSize = true;
-            this.lbl_BackgroundImage.Location = new System.Drawing.Point(392, 21);
+            this.lbl_BackgroundImage.Location = new System.Drawing.Point(6, 18);
             this.lbl_BackgroundImage.Name = "lbl_BackgroundImage";
             this.lbl_BackgroundImage.Size = new System.Drawing.Size(97, 13);
             this.lbl_BackgroundImage.TabIndex = 72;
@@ -318,7 +282,7 @@
             // 
             // numud_PaddingY
             // 
-            this.numud_PaddingY.Location = new System.Drawing.Point(298, 19);
+            this.numud_PaddingY.Location = new System.Drawing.Point(689, 14);
             this.numud_PaddingY.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -328,18 +292,18 @@
             this.numud_PaddingY.Size = new System.Drawing.Size(50, 20);
             this.numud_PaddingY.TabIndex = 71;
             // 
-            // numud_MaxSizeY
+            // numud_TextHeight
             // 
-            this.numud_MaxSizeY.Location = new System.Drawing.Point(128, 19);
-            this.numud_MaxSizeY.Maximum = new decimal(new int[] {
+            this.numud_TextHeight.Location = new System.Drawing.Point(502, 14);
+            this.numud_TextHeight.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numud_MaxSizeY.Name = "numud_MaxSizeY";
-            this.numud_MaxSizeY.Size = new System.Drawing.Size(50, 20);
-            this.numud_MaxSizeY.TabIndex = 67;
-            this.numud_MaxSizeY.Value = new decimal(new int[] {
+            this.numud_TextHeight.Name = "numud_TextHeight";
+            this.numud_TextHeight.Size = new System.Drawing.Size(50, 20);
+            this.numud_TextHeight.TabIndex = 67;
+            this.numud_TextHeight.Value = new decimal(new int[] {
             300,
             0,
             0,
@@ -347,7 +311,7 @@
             // 
             // numud_PaddingX
             // 
-            this.numud_PaddingX.Location = new System.Drawing.Point(237, 19);
+            this.numud_PaddingX.Location = new System.Drawing.Point(628, 14);
             this.numud_PaddingX.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -357,18 +321,18 @@
             this.numud_PaddingX.Size = new System.Drawing.Size(50, 20);
             this.numud_PaddingX.TabIndex = 69;
             // 
-            // numud_MaxSizeX
+            // numud_TextWidth
             // 
-            this.numud_MaxSizeX.Location = new System.Drawing.Point(66, 19);
-            this.numud_MaxSizeX.Maximum = new decimal(new int[] {
+            this.numud_TextWidth.Location = new System.Drawing.Point(441, 14);
+            this.numud_TextWidth.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numud_MaxSizeX.Name = "numud_MaxSizeX";
-            this.numud_MaxSizeX.Size = new System.Drawing.Size(50, 20);
-            this.numud_MaxSizeX.TabIndex = 65;
-            this.numud_MaxSizeX.Value = new decimal(new int[] {
+            this.numud_TextWidth.Name = "numud_TextWidth";
+            this.numud_TextWidth.Size = new System.Drawing.Size(50, 20);
+            this.numud_TextWidth.TabIndex = 65;
+            this.numud_TextWidth.Value = new decimal(new int[] {
             450,
             0,
             0,
@@ -377,33 +341,16 @@
             // lbl_TextPadding
             // 
             this.lbl_TextPadding.AutoSize = true;
-            this.lbl_TextPadding.Location = new System.Drawing.Point(189, 22);
+            this.lbl_TextPadding.Location = new System.Drawing.Point(576, 18);
             this.lbl_TextPadding.Name = "lbl_TextPadding";
             this.lbl_TextPadding.Size = new System.Drawing.Size(46, 13);
             this.lbl_TextPadding.TabIndex = 68;
-            this.lbl_TextPadding.Text = "&Padding";
-            // 
-            // lbl_MaxTextSize
-            // 
-            this.lbl_MaxTextSize.Location = new System.Drawing.Point(7, 16);
-            this.lbl_MaxTextSize.Name = "lbl_MaxTextSize";
-            this.lbl_MaxTextSize.Size = new System.Drawing.Size(53, 29);
-            this.lbl_MaxTextSize.TabIndex = 64;
-            this.lbl_MaxTextSize.Text = "&Maximum Text Size";
-            // 
-            // lbl_TextSizeX
-            // 
-            this.lbl_TextSizeX.AutoSize = true;
-            this.lbl_TextSizeX.Location = new System.Drawing.Point(117, 23);
-            this.lbl_TextSizeX.Name = "lbl_TextSizeX";
-            this.lbl_TextSizeX.Size = new System.Drawing.Size(12, 13);
-            this.lbl_TextSizeX.TabIndex = 66;
-            this.lbl_TextSizeX.Text = "x";
+            this.lbl_TextPadding.Text = "Padding";
             // 
             // lbl_PaddingX
             // 
             this.lbl_PaddingX.AutoSize = true;
-            this.lbl_PaddingX.Location = new System.Drawing.Point(287, 24);
+            this.lbl_PaddingX.Location = new System.Drawing.Point(678, 18);
             this.lbl_PaddingX.Name = "lbl_PaddingX";
             this.lbl_PaddingX.Size = new System.Drawing.Size(12, 13);
             this.lbl_PaddingX.TabIndex = 70;
@@ -431,27 +378,19 @@
             // 
             this.grp_OutlineColor.Controls.Add(this.btn_OutlinePicker);
             this.grp_OutlineColor.Controls.Add(this.lbl_OutlineHex);
-            this.grp_OutlineColor.Controls.Add(this.lbl_OutlineA);
-            this.grp_OutlineColor.Controls.Add(this.lbl_OutlineB);
-            this.grp_OutlineColor.Controls.Add(this.lbl_OutlineG);
-            this.grp_OutlineColor.Controls.Add(this.lbl_OutlineR);
             this.grp_OutlineColor.Controls.Add(this.txt_OutlineHex);
-            this.grp_OutlineColor.Controls.Add(this.numud_OutlineA);
-            this.grp_OutlineColor.Controls.Add(this.numud_OutlineB);
-            this.grp_OutlineColor.Controls.Add(this.numud_OutlineG);
-            this.grp_OutlineColor.Controls.Add(this.numud_OutlineR);
             this.grp_OutlineColor.Controls.Add(this.cmb_OutlineColor);
-            this.grp_OutlineColor.Location = new System.Drawing.Point(6, 234);
+            this.grp_OutlineColor.Location = new System.Drawing.Point(508, 233);
             this.grp_OutlineColor.Name = "grp_OutlineColor";
-            this.grp_OutlineColor.Size = new System.Drawing.Size(739, 43);
+            this.grp_OutlineColor.Size = new System.Drawing.Size(241, 43);
             this.grp_OutlineColor.TabIndex = 82;
             this.grp_OutlineColor.TabStop = false;
-            this.grp_OutlineColor.Text = "Outline Color";
+            this.grp_OutlineColor.Text = "Text Outline Color";
             // 
             // btn_OutlinePicker
             // 
             this.btn_OutlinePicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_OutlinePicker.Image")));
-            this.btn_OutlinePicker.Location = new System.Drawing.Point(124, 14);
+            this.btn_OutlinePicker.Location = new System.Drawing.Point(109, 14);
             this.btn_OutlinePicker.Name = "btn_OutlinePicker";
             this.btn_OutlinePicker.Size = new System.Drawing.Size(22, 23);
             this.btn_OutlinePicker.TabIndex = 91;
@@ -460,142 +399,45 @@
             // lbl_OutlineHex
             // 
             this.lbl_OutlineHex.AutoSize = true;
-            this.lbl_OutlineHex.Location = new System.Drawing.Point(491, 19);
+            this.lbl_OutlineHex.Location = new System.Drawing.Point(135, 19);
             this.lbl_OutlineHex.Name = "lbl_OutlineHex";
             this.lbl_OutlineHex.Size = new System.Drawing.Size(26, 13);
             this.lbl_OutlineHex.TabIndex = 49;
             this.lbl_OutlineHex.Text = "Hex";
             // 
-            // lbl_OutlineA
-            // 
-            this.lbl_OutlineA.AutoSize = true;
-            this.lbl_OutlineA.Location = new System.Drawing.Point(407, 19);
-            this.lbl_OutlineA.Name = "lbl_OutlineA";
-            this.lbl_OutlineA.Size = new System.Drawing.Size(34, 13);
-            this.lbl_OutlineA.TabIndex = 47;
-            this.lbl_OutlineA.Text = "Alpha";
-            // 
-            // lbl_OutlineB
-            // 
-            this.lbl_OutlineB.AutoSize = true;
-            this.lbl_OutlineB.Location = new System.Drawing.Point(325, 19);
-            this.lbl_OutlineB.Name = "lbl_OutlineB";
-            this.lbl_OutlineB.Size = new System.Drawing.Size(28, 13);
-            this.lbl_OutlineB.TabIndex = 45;
-            this.lbl_OutlineB.Text = "Blue";
-            // 
-            // lbl_OutlineG
-            // 
-            this.lbl_OutlineG.AutoSize = true;
-            this.lbl_OutlineG.Location = new System.Drawing.Point(239, 19);
-            this.lbl_OutlineG.Name = "lbl_OutlineG";
-            this.lbl_OutlineG.Size = new System.Drawing.Size(36, 13);
-            this.lbl_OutlineG.TabIndex = 43;
-            this.lbl_OutlineG.Text = "Green";
-            // 
-            // lbl_OutlineR
-            // 
-            this.lbl_OutlineR.AutoSize = true;
-            this.lbl_OutlineR.Location = new System.Drawing.Point(162, 19);
-            this.lbl_OutlineR.Name = "lbl_OutlineR";
-            this.lbl_OutlineR.Size = new System.Drawing.Size(27, 13);
-            this.lbl_OutlineR.TabIndex = 41;
-            this.lbl_OutlineR.Text = "Red";
-            // 
             // txt_OutlineHex
             // 
-            this.txt_OutlineHex.Location = new System.Drawing.Point(519, 15);
+            this.txt_OutlineHex.Location = new System.Drawing.Point(163, 15);
             this.txt_OutlineHex.Name = "txt_OutlineHex";
-            this.txt_OutlineHex.Size = new System.Drawing.Size(83, 20);
+            this.txt_OutlineHex.Size = new System.Drawing.Size(67, 20);
             this.txt_OutlineHex.TabIndex = 50;
             this.txt_OutlineHex.Text = "#000000FF";
-            // 
-            // numud_OutlineA
-            // 
-            this.numud_OutlineA.Location = new System.Drawing.Point(443, 15);
-            this.numud_OutlineA.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_OutlineA.Name = "numud_OutlineA";
-            this.numud_OutlineA.Size = new System.Drawing.Size(38, 20);
-            this.numud_OutlineA.TabIndex = 48;
-            this.numud_OutlineA.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            // 
-            // numud_OutlineB
-            // 
-            this.numud_OutlineB.Location = new System.Drawing.Point(355, 15);
-            this.numud_OutlineB.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_OutlineB.Name = "numud_OutlineB";
-            this.numud_OutlineB.Size = new System.Drawing.Size(38, 20);
-            this.numud_OutlineB.TabIndex = 46;
-            // 
-            // numud_OutlineG
-            // 
-            this.numud_OutlineG.Location = new System.Drawing.Point(277, 15);
-            this.numud_OutlineG.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_OutlineG.Name = "numud_OutlineG";
-            this.numud_OutlineG.Size = new System.Drawing.Size(38, 20);
-            this.numud_OutlineG.TabIndex = 44;
-            // 
-            // numud_OutlineR
-            // 
-            this.numud_OutlineR.Location = new System.Drawing.Point(191, 15);
-            this.numud_OutlineR.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_OutlineR.Name = "numud_OutlineR";
-            this.numud_OutlineR.Size = new System.Drawing.Size(38, 20);
-            this.numud_OutlineR.TabIndex = 42;
             // 
             // cmb_OutlineColor
             // 
             this.cmb_OutlineColor.FormattingEnabled = true;
             this.cmb_OutlineColor.Location = new System.Drawing.Point(7, 15);
             this.cmb_OutlineColor.Name = "cmb_OutlineColor";
-            this.cmb_OutlineColor.Size = new System.Drawing.Size(115, 21);
+            this.cmb_OutlineColor.Size = new System.Drawing.Size(100, 21);
             this.cmb_OutlineColor.TabIndex = 40;
             // 
             // grp_BackColor
             // 
             this.grp_BackColor.Controls.Add(this.btn_BackPicker);
             this.grp_BackColor.Controls.Add(this.lbl_BackHex);
-            this.grp_BackColor.Controls.Add(this.lbl_BackA);
-            this.grp_BackColor.Controls.Add(this.lbl_BackB);
-            this.grp_BackColor.Controls.Add(this.lbl_BackG);
-            this.grp_BackColor.Controls.Add(this.lbl_BackR);
             this.grp_BackColor.Controls.Add(this.txt_BackHex);
-            this.grp_BackColor.Controls.Add(this.numud_BackA);
-            this.grp_BackColor.Controls.Add(this.numud_BackB);
-            this.grp_BackColor.Controls.Add(this.numud_BackG);
-            this.grp_BackColor.Controls.Add(this.numud_BackR);
             this.grp_BackColor.Controls.Add(this.cmb_BackColor);
-            this.grp_BackColor.Location = new System.Drawing.Point(6, 190);
+            this.grp_BackColor.Location = new System.Drawing.Point(257, 233);
             this.grp_BackColor.Name = "grp_BackColor";
-            this.grp_BackColor.Size = new System.Drawing.Size(739, 43);
+            this.grp_BackColor.Size = new System.Drawing.Size(241, 43);
             this.grp_BackColor.TabIndex = 81;
             this.grp_BackColor.TabStop = false;
-            this.grp_BackColor.Text = "Background Color";
+            this.grp_BackColor.Text = "Text Background Color";
             // 
             // btn_BackPicker
             // 
             this.btn_BackPicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_BackPicker.Image")));
-            this.btn_BackPicker.Location = new System.Drawing.Point(124, 14);
+            this.btn_BackPicker.Location = new System.Drawing.Point(109, 14);
             this.btn_BackPicker.Name = "btn_BackPicker";
             this.btn_BackPicker.Size = new System.Drawing.Size(22, 23);
             this.btn_BackPicker.TabIndex = 90;
@@ -604,142 +446,45 @@
             // lbl_BackHex
             // 
             this.lbl_BackHex.AutoSize = true;
-            this.lbl_BackHex.Location = new System.Drawing.Point(491, 19);
+            this.lbl_BackHex.Location = new System.Drawing.Point(135, 19);
             this.lbl_BackHex.Name = "lbl_BackHex";
             this.lbl_BackHex.Size = new System.Drawing.Size(26, 13);
             this.lbl_BackHex.TabIndex = 37;
             this.lbl_BackHex.Text = "Hex";
             // 
-            // lbl_BackA
-            // 
-            this.lbl_BackA.AutoSize = true;
-            this.lbl_BackA.Location = new System.Drawing.Point(407, 19);
-            this.lbl_BackA.Name = "lbl_BackA";
-            this.lbl_BackA.Size = new System.Drawing.Size(34, 13);
-            this.lbl_BackA.TabIndex = 35;
-            this.lbl_BackA.Text = "Alpha";
-            // 
-            // lbl_BackB
-            // 
-            this.lbl_BackB.AutoSize = true;
-            this.lbl_BackB.Location = new System.Drawing.Point(325, 19);
-            this.lbl_BackB.Name = "lbl_BackB";
-            this.lbl_BackB.Size = new System.Drawing.Size(28, 13);
-            this.lbl_BackB.TabIndex = 33;
-            this.lbl_BackB.Text = "Blue";
-            // 
-            // lbl_BackG
-            // 
-            this.lbl_BackG.AutoSize = true;
-            this.lbl_BackG.Location = new System.Drawing.Point(239, 19);
-            this.lbl_BackG.Name = "lbl_BackG";
-            this.lbl_BackG.Size = new System.Drawing.Size(36, 13);
-            this.lbl_BackG.TabIndex = 31;
-            this.lbl_BackG.Text = "Green";
-            // 
-            // lbl_BackR
-            // 
-            this.lbl_BackR.AutoSize = true;
-            this.lbl_BackR.Location = new System.Drawing.Point(162, 19);
-            this.lbl_BackR.Name = "lbl_BackR";
-            this.lbl_BackR.Size = new System.Drawing.Size(27, 13);
-            this.lbl_BackR.TabIndex = 29;
-            this.lbl_BackR.Text = "Red";
-            // 
             // txt_BackHex
             // 
-            this.txt_BackHex.Location = new System.Drawing.Point(519, 15);
+            this.txt_BackHex.Location = new System.Drawing.Point(163, 15);
             this.txt_BackHex.Name = "txt_BackHex";
-            this.txt_BackHex.Size = new System.Drawing.Size(83, 20);
+            this.txt_BackHex.Size = new System.Drawing.Size(67, 20);
             this.txt_BackHex.TabIndex = 38;
             this.txt_BackHex.Text = "#000000FF";
-            // 
-            // numud_BackA
-            // 
-            this.numud_BackA.Location = new System.Drawing.Point(443, 15);
-            this.numud_BackA.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_BackA.Name = "numud_BackA";
-            this.numud_BackA.Size = new System.Drawing.Size(38, 20);
-            this.numud_BackA.TabIndex = 36;
-            this.numud_BackA.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            // 
-            // numud_BackB
-            // 
-            this.numud_BackB.Location = new System.Drawing.Point(355, 15);
-            this.numud_BackB.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_BackB.Name = "numud_BackB";
-            this.numud_BackB.Size = new System.Drawing.Size(38, 20);
-            this.numud_BackB.TabIndex = 34;
-            // 
-            // numud_BackG
-            // 
-            this.numud_BackG.Location = new System.Drawing.Point(277, 15);
-            this.numud_BackG.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_BackG.Name = "numud_BackG";
-            this.numud_BackG.Size = new System.Drawing.Size(38, 20);
-            this.numud_BackG.TabIndex = 32;
-            // 
-            // numud_BackR
-            // 
-            this.numud_BackR.Location = new System.Drawing.Point(191, 15);
-            this.numud_BackR.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_BackR.Name = "numud_BackR";
-            this.numud_BackR.Size = new System.Drawing.Size(38, 20);
-            this.numud_BackR.TabIndex = 30;
             // 
             // cmb_BackColor
             // 
             this.cmb_BackColor.FormattingEnabled = true;
             this.cmb_BackColor.Location = new System.Drawing.Point(7, 15);
             this.cmb_BackColor.Name = "cmb_BackColor";
-            this.cmb_BackColor.Size = new System.Drawing.Size(115, 21);
+            this.cmb_BackColor.Size = new System.Drawing.Size(100, 21);
             this.cmb_BackColor.TabIndex = 28;
             // 
             // grp_ForeColor
             // 
             this.grp_ForeColor.Controls.Add(this.btn_ForePicker);
             this.grp_ForeColor.Controls.Add(this.lbl_ForeHex);
-            this.grp_ForeColor.Controls.Add(this.lbl_ForeA);
-            this.grp_ForeColor.Controls.Add(this.lbl_ForeB);
-            this.grp_ForeColor.Controls.Add(this.lbl_ForeG);
-            this.grp_ForeColor.Controls.Add(this.lbl_ForeR);
             this.grp_ForeColor.Controls.Add(this.txt_ForeHex);
-            this.grp_ForeColor.Controls.Add(this.numud_ForeA);
-            this.grp_ForeColor.Controls.Add(this.numud_ForeB);
-            this.grp_ForeColor.Controls.Add(this.numud_ForeG);
-            this.grp_ForeColor.Controls.Add(this.numud_ForeR);
             this.grp_ForeColor.Controls.Add(this.cmb_ForeColor);
-            this.grp_ForeColor.Location = new System.Drawing.Point(6, 146);
+            this.grp_ForeColor.Location = new System.Drawing.Point(6, 233);
             this.grp_ForeColor.Name = "grp_ForeColor";
-            this.grp_ForeColor.Size = new System.Drawing.Size(739, 43);
+            this.grp_ForeColor.Size = new System.Drawing.Size(241, 43);
             this.grp_ForeColor.TabIndex = 80;
             this.grp_ForeColor.TabStop = false;
-            this.grp_ForeColor.Text = "Foreground Color";
+            this.grp_ForeColor.Text = "Text Foreground Color";
             // 
             // btn_ForePicker
             // 
             this.btn_ForePicker.Image = ((System.Drawing.Image)(resources.GetObject("btn_ForePicker.Image")));
-            this.btn_ForePicker.Location = new System.Drawing.Point(124, 14);
+            this.btn_ForePicker.Location = new System.Drawing.Point(109, 14);
             this.btn_ForePicker.Name = "btn_ForePicker";
             this.btn_ForePicker.Size = new System.Drawing.Size(22, 23);
             this.btn_ForePicker.TabIndex = 89;
@@ -748,115 +493,26 @@
             // lbl_ForeHex
             // 
             this.lbl_ForeHex.AutoSize = true;
-            this.lbl_ForeHex.Location = new System.Drawing.Point(491, 19);
+            this.lbl_ForeHex.Location = new System.Drawing.Point(135, 19);
             this.lbl_ForeHex.Name = "lbl_ForeHex";
             this.lbl_ForeHex.Size = new System.Drawing.Size(26, 13);
             this.lbl_ForeHex.TabIndex = 25;
             this.lbl_ForeHex.Text = "Hex";
             // 
-            // lbl_ForeA
-            // 
-            this.lbl_ForeA.AutoSize = true;
-            this.lbl_ForeA.Location = new System.Drawing.Point(407, 19);
-            this.lbl_ForeA.Name = "lbl_ForeA";
-            this.lbl_ForeA.Size = new System.Drawing.Size(34, 13);
-            this.lbl_ForeA.TabIndex = 23;
-            this.lbl_ForeA.Text = "Alpha";
-            // 
-            // lbl_ForeB
-            // 
-            this.lbl_ForeB.AutoSize = true;
-            this.lbl_ForeB.Location = new System.Drawing.Point(325, 19);
-            this.lbl_ForeB.Name = "lbl_ForeB";
-            this.lbl_ForeB.Size = new System.Drawing.Size(28, 13);
-            this.lbl_ForeB.TabIndex = 21;
-            this.lbl_ForeB.Text = "Blue";
-            // 
-            // lbl_ForeG
-            // 
-            this.lbl_ForeG.AutoSize = true;
-            this.lbl_ForeG.Location = new System.Drawing.Point(239, 19);
-            this.lbl_ForeG.Name = "lbl_ForeG";
-            this.lbl_ForeG.Size = new System.Drawing.Size(36, 13);
-            this.lbl_ForeG.TabIndex = 19;
-            this.lbl_ForeG.Text = "Green";
-            // 
-            // lbl_ForeR
-            // 
-            this.lbl_ForeR.AutoSize = true;
-            this.lbl_ForeR.Location = new System.Drawing.Point(162, 19);
-            this.lbl_ForeR.Name = "lbl_ForeR";
-            this.lbl_ForeR.Size = new System.Drawing.Size(27, 13);
-            this.lbl_ForeR.TabIndex = 17;
-            this.lbl_ForeR.Text = "Red";
-            // 
             // txt_ForeHex
             // 
-            this.txt_ForeHex.Location = new System.Drawing.Point(519, 15);
+            this.txt_ForeHex.Location = new System.Drawing.Point(163, 15);
             this.txt_ForeHex.Name = "txt_ForeHex";
-            this.txt_ForeHex.Size = new System.Drawing.Size(83, 20);
+            this.txt_ForeHex.Size = new System.Drawing.Size(67, 20);
             this.txt_ForeHex.TabIndex = 26;
             this.txt_ForeHex.Text = "#000000FF";
-            // 
-            // numud_ForeA
-            // 
-            this.numud_ForeA.Location = new System.Drawing.Point(443, 15);
-            this.numud_ForeA.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_ForeA.Name = "numud_ForeA";
-            this.numud_ForeA.Size = new System.Drawing.Size(38, 20);
-            this.numud_ForeA.TabIndex = 24;
-            this.numud_ForeA.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            // 
-            // numud_ForeB
-            // 
-            this.numud_ForeB.Location = new System.Drawing.Point(355, 15);
-            this.numud_ForeB.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_ForeB.Name = "numud_ForeB";
-            this.numud_ForeB.Size = new System.Drawing.Size(38, 20);
-            this.numud_ForeB.TabIndex = 22;
-            // 
-            // numud_ForeG
-            // 
-            this.numud_ForeG.Location = new System.Drawing.Point(277, 15);
-            this.numud_ForeG.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_ForeG.Name = "numud_ForeG";
-            this.numud_ForeG.Size = new System.Drawing.Size(38, 20);
-            this.numud_ForeG.TabIndex = 20;
-            // 
-            // numud_ForeR
-            // 
-            this.numud_ForeR.Location = new System.Drawing.Point(191, 15);
-            this.numud_ForeR.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numud_ForeR.Name = "numud_ForeR";
-            this.numud_ForeR.Size = new System.Drawing.Size(38, 20);
-            this.numud_ForeR.TabIndex = 18;
             // 
             // cmb_ForeColor
             // 
             this.cmb_ForeColor.FormattingEnabled = true;
             this.cmb_ForeColor.Location = new System.Drawing.Point(7, 15);
             this.cmb_ForeColor.Name = "cmb_ForeColor";
-            this.cmb_ForeColor.Size = new System.Drawing.Size(115, 21);
+            this.cmb_ForeColor.Size = new System.Drawing.Size(100, 21);
             this.cmb_ForeColor.TabIndex = 16;
             // 
             // grp_FontAndOutline
@@ -869,9 +525,9 @@
             this.grp_FontAndOutline.Controls.Add(this.lbl_FontPt);
             this.grp_FontAndOutline.Controls.Add(this.numud_FontSize);
             this.grp_FontAndOutline.Controls.Add(this.cmb_Font);
-            this.grp_FontAndOutline.Location = new System.Drawing.Point(6, 58);
+            this.grp_FontAndOutline.Location = new System.Drawing.Point(5, 183);
             this.grp_FontAndOutline.Name = "grp_FontAndOutline";
-            this.grp_FontAndOutline.Size = new System.Drawing.Size(252, 85);
+            this.grp_FontAndOutline.Size = new System.Drawing.Size(744, 44);
             this.grp_FontAndOutline.TabIndex = 79;
             this.grp_FontAndOutline.TabStop = false;
             this.grp_FontAndOutline.Text = "Font and Outline";
@@ -879,7 +535,7 @@
             // lbl_Size
             // 
             this.lbl_Size.AutoSize = true;
-            this.lbl_Size.Location = new System.Drawing.Point(7, 56);
+            this.lbl_Size.Location = new System.Drawing.Point(382, 19);
             this.lbl_Size.Name = "lbl_Size";
             this.lbl_Size.Size = new System.Drawing.Size(27, 13);
             this.lbl_Size.TabIndex = 9;
@@ -888,7 +544,7 @@
             // lbl_Font
             // 
             this.lbl_Font.AutoSize = true;
-            this.lbl_Font.Location = new System.Drawing.Point(6, 24);
+            this.lbl_Font.Location = new System.Drawing.Point(6, 19);
             this.lbl_Font.Name = "lbl_Font";
             this.lbl_Font.Size = new System.Drawing.Size(28, 13);
             this.lbl_Font.TabIndex = 7;
@@ -897,7 +553,7 @@
             // lbl_OutlinePx
             // 
             this.lbl_OutlinePx.AutoSize = true;
-            this.lbl_OutlinePx.Location = new System.Drawing.Point(223, 56);
+            this.lbl_OutlinePx.Location = new System.Drawing.Point(715, 19);
             this.lbl_OutlinePx.Name = "lbl_OutlinePx";
             this.lbl_OutlinePx.Size = new System.Drawing.Size(18, 13);
             this.lbl_OutlinePx.TabIndex = 14;
@@ -911,7 +567,7 @@
             0,
             0,
             131072});
-            this.numud_Outline.Location = new System.Drawing.Point(170, 52);
+            this.numud_Outline.Location = new System.Drawing.Point(662, 15);
             this.numud_Outline.Maximum = new decimal(new int[] {
             10,
             0,
@@ -924,7 +580,7 @@
             // lbl_Outline
             // 
             this.lbl_Outline.AutoSize = true;
-            this.lbl_Outline.Location = new System.Drawing.Point(128, 56);
+            this.lbl_Outline.Location = new System.Drawing.Point(620, 19);
             this.lbl_Outline.Name = "lbl_Outline";
             this.lbl_Outline.Size = new System.Drawing.Size(40, 13);
             this.lbl_Outline.TabIndex = 12;
@@ -933,7 +589,7 @@
             // lbl_FontPt
             // 
             this.lbl_FontPt.AutoSize = true;
-            this.lbl_FontPt.Location = new System.Drawing.Point(91, 56);
+            this.lbl_FontPt.Location = new System.Drawing.Point(466, 19);
             this.lbl_FontPt.Name = "lbl_FontPt";
             this.lbl_FontPt.Size = new System.Drawing.Size(16, 13);
             this.lbl_FontPt.TabIndex = 11;
@@ -941,7 +597,7 @@
             // 
             // numud_FontSize
             // 
-            this.numud_FontSize.Location = new System.Drawing.Point(37, 52);
+            this.numud_FontSize.Location = new System.Drawing.Point(412, 15);
             this.numud_FontSize.Maximum = new decimal(new int[] {
             144,
             0,
@@ -964,7 +620,7 @@
             // cmb_Font
             // 
             this.cmb_Font.FormattingEnabled = true;
-            this.cmb_Font.Location = new System.Drawing.Point(37, 20);
+            this.cmb_Font.Location = new System.Drawing.Point(37, 15);
             this.cmb_Font.Name = "cmb_Font";
             this.cmb_Font.Size = new System.Drawing.Size(204, 21);
             this.cmb_Font.TabIndex = 8;
@@ -982,6 +638,24 @@
             this.txt_DisplayedText.Name = "txt_DisplayedText";
             this.txt_DisplayedText.Size = new System.Drawing.Size(551, 20);
             this.txt_DisplayedText.TabIndex = 74;
+            // 
+            // lbl_MaxSizeX
+            // 
+            this.lbl_MaxSizeX.AutoSize = true;
+            this.lbl_MaxSizeX.Location = new System.Drawing.Point(374, 18);
+            this.lbl_MaxSizeX.Name = "lbl_MaxSizeX";
+            this.lbl_MaxSizeX.Size = new System.Drawing.Size(61, 13);
+            this.lbl_MaxSizeX.TabIndex = 75;
+            this.lbl_MaxSizeX.Text = "Dimensions";
+            // 
+            // lbl_DimensionsX
+            // 
+            this.lbl_DimensionsX.AutoSize = true;
+            this.lbl_DimensionsX.Location = new System.Drawing.Point(491, 18);
+            this.lbl_DimensionsX.Name = "lbl_DimensionsX";
+            this.lbl_DimensionsX.Size = new System.Drawing.Size(12, 13);
+            this.lbl_DimensionsX.TabIndex = 76;
+            this.lbl_DimensionsX.Text = "x";
             // 
             // Text_Designer_MDI
             // 
@@ -1042,27 +716,15 @@
             this.grp_TextDimensions.ResumeLayout(false);
             this.grp_TextDimensions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_MaxSizeY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TextHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_MaxSizeX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_TextWidth)).EndInit();
             this.grp_OutlineColor.ResumeLayout(false);
             this.grp_OutlineColor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineA)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineG)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineR)).EndInit();
             this.grp_BackColor.ResumeLayout(false);
             this.grp_BackColor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackA)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackG)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_BackR)).EndInit();
             this.grp_ForeColor.ResumeLayout(false);
             this.grp_ForeColor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeA)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeG)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_ForeR)).EndInit();
             this.grp_FontAndOutline.ResumeLayout(false);
             this.grp_FontAndOutline.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_Outline)).EndInit();
@@ -1084,53 +746,27 @@
         private System.Windows.Forms.ComboBox cmb_TTSVoice;
         private System.Windows.Forms.GroupBox grp_TextDimensions;
         private System.Windows.Forms.Label lbl_PaddingX;
-        private System.Windows.Forms.Label lbl_TextSizeX;
         private System.Windows.Forms.NumericUpDown numud_PaddingY;
-        private System.Windows.Forms.NumericUpDown numud_MaxSizeY;
+        private System.Windows.Forms.NumericUpDown numud_TextHeight;
         private System.Windows.Forms.NumericUpDown numud_PaddingX;
-        private System.Windows.Forms.NumericUpDown numud_MaxSizeX;
+        private System.Windows.Forms.NumericUpDown numud_TextWidth;
         private System.Windows.Forms.Label lbl_TextPadding;
-        private System.Windows.Forms.Label lbl_MaxTextSize;
         private System.Windows.Forms.Label lbl_NarratedText;
         private System.Windows.Forms.Label lbl_DisplayedText;
         private System.Windows.Forms.GroupBox grp_OutlineColor;
         private System.Windows.Forms.Button btn_OutlinePicker;
         private System.Windows.Forms.Label lbl_OutlineHex;
-        private System.Windows.Forms.Label lbl_OutlineA;
-        private System.Windows.Forms.Label lbl_OutlineB;
-        private System.Windows.Forms.Label lbl_OutlineG;
-        private System.Windows.Forms.Label lbl_OutlineR;
         private System.Windows.Forms.TextBox txt_OutlineHex;
-        private System.Windows.Forms.NumericUpDown numud_OutlineA;
-        private System.Windows.Forms.NumericUpDown numud_OutlineB;
-        private System.Windows.Forms.NumericUpDown numud_OutlineG;
-        private System.Windows.Forms.NumericUpDown numud_OutlineR;
         private System.Windows.Forms.ComboBox cmb_OutlineColor;
         private System.Windows.Forms.GroupBox grp_BackColor;
         private System.Windows.Forms.Button btn_BackPicker;
         private System.Windows.Forms.Label lbl_BackHex;
-        private System.Windows.Forms.Label lbl_BackA;
-        private System.Windows.Forms.Label lbl_BackB;
-        private System.Windows.Forms.Label lbl_BackG;
-        private System.Windows.Forms.Label lbl_BackR;
         private System.Windows.Forms.TextBox txt_BackHex;
-        private System.Windows.Forms.NumericUpDown numud_BackA;
-        private System.Windows.Forms.NumericUpDown numud_BackB;
-        private System.Windows.Forms.NumericUpDown numud_BackG;
-        private System.Windows.Forms.NumericUpDown numud_BackR;
         private System.Windows.Forms.ComboBox cmb_BackColor;
         private System.Windows.Forms.GroupBox grp_ForeColor;
         private System.Windows.Forms.Button btn_ForePicker;
         private System.Windows.Forms.Label lbl_ForeHex;
-        private System.Windows.Forms.Label lbl_ForeA;
-        private System.Windows.Forms.Label lbl_ForeB;
-        private System.Windows.Forms.Label lbl_ForeG;
-        private System.Windows.Forms.Label lbl_ForeR;
         private System.Windows.Forms.TextBox txt_ForeHex;
-        private System.Windows.Forms.NumericUpDown numud_ForeA;
-        private System.Windows.Forms.NumericUpDown numud_ForeB;
-        private System.Windows.Forms.NumericUpDown numud_ForeG;
-        private System.Windows.Forms.NumericUpDown numud_ForeR;
         private System.Windows.Forms.ComboBox cmb_ForeColor;
         private System.Windows.Forms.GroupBox grp_FontAndOutline;
         private System.Windows.Forms.Label lbl_Size;
@@ -1146,5 +782,7 @@
         private System.Windows.Forms.Label lbl_BackgroundImage;
         private System.Windows.Forms.Button btn_BackgroundImage;
         private System.Windows.Forms.TextBox txt_BackgroundImage;
+        private System.Windows.Forms.Label lbl_MaxSizeX;
+        private System.Windows.Forms.Label lbl_DimensionsX;
     }
 }

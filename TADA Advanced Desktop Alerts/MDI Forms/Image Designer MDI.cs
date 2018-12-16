@@ -25,8 +25,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             eh_1.Child = mediaElement;
             mediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
-            mediaElement.MediaOpened += LoadedMediaFile;
-            mediaElement.MediaFailed += FailedMediaFile;
 
             InitializeCallbacks();
             DisplayVideoControls(false, false);
@@ -41,6 +39,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private void InitializeCallbacks()
         {
             txt_Filename.TextChanged += TestSuppliedFile;
+            mediaElement.MediaOpened += LoadedMediaFile;
+            mediaElement.MediaFailed += FailedMediaFile;
+
             btn_FilenameBrowse.Click += btn_FilenameBrowse_Click;
 
             btn_RestoreDimensions.Click += btn_RestoreDimensions_Click;

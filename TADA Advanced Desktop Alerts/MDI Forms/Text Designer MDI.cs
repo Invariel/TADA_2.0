@@ -15,6 +15,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private Boolean blocked = false;
 
+        private Bitmap backgroundImage;
+        private Bitmap textPreview;
+
         internal Text_Designer_MDI(_TADAAlertText alertText, _TADAAlert parentAlert) : base(parentAlert)
         {
             InitializeComponent();
@@ -42,30 +45,18 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_Outline.ValueChanged += UpdateOutline;
             cmb_OutlineColor.TextChanged += UpdateOutlineColor;
             txt_OutlineHex.TextChanged += UpdateOutlineColor;
-            numud_OutlineA.ValueChanged += UpdateOutlineColor;
-            numud_OutlineR.ValueChanged += UpdateOutlineColor;
-            numud_OutlineG.ValueChanged += UpdateOutlineColor;
-            numud_OutlineB.ValueChanged += UpdateOutlineColor;
             btn_OutlinePicker.Click += PickOutlineColor;
 
             cmb_ForeColor.TextChanged += UpdateForeColor;
             txt_ForeHex.TextChanged += UpdateForeColor;
-            numud_ForeA.ValueChanged += UpdateForeColor;
-            numud_ForeR.ValueChanged += UpdateForeColor;
-            numud_ForeG.ValueChanged += UpdateForeColor;
-            numud_ForeB.ValueChanged += UpdateForeColor;
             btn_ForePicker.Click += PickForeColor;
 
             cmb_BackColor.TextChanged += UpdateBackColor;
             txt_BackHex.TextChanged += UpdateBackColor;
-            numud_BackA.ValueChanged += UpdateBackColor;
-            numud_BackR.ValueChanged += UpdateBackColor;
-            numud_BackG.ValueChanged += UpdateBackColor;
-            numud_BackB.ValueChanged += UpdateBackColor;
             btn_BackPicker.Click += PickBackColor;
 
-            numud_MaxSizeX.ValueChanged += UpdateTextDimensions;
-            numud_MaxSizeY.ValueChanged += UpdateTextDimensions;
+            numud_TextWidth.ValueChanged += UpdateTextDimensions;
+            numud_TextHeight.ValueChanged += UpdateTextDimensions;
             numud_PaddingX.ValueChanged += UpdateTextPadding;
             numud_PaddingY.ValueChanged += UpdateTextPadding;
 
@@ -79,6 +70,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private void GeneratePreview()
         {
             // Draw the preview bitmap using the specified font, colours, and if set, background image.
+            // Measure the string length given the selected font and size and such.
+            // Then, make a copy of this.backgroundImage at the desired size.
+
         }
 
         private void UpdateBackColor(object sender, EventArgs e)
@@ -86,8 +80,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                UpdateColor(sender, cmb_BackColor, txt_BackHex, numud_BackR, numud_BackG, numud_BackB, numud_BackA);
-                this.alertText.Background = General.ColorFromNumuds(numud_BackR, numud_BackG, numud_BackB, numud_BackA);
+                UpdateColor(sender, cmb_BackColor, txt_BackHex);
+                General.ParseHexColor(txt_BackHex.Text, out int r, out int g, out int b, out int a);
+                this.alertText.Background = Color.FromArgb(a, r, g, b);
                 blocked = false;
                 GeneratePreview();
             }
@@ -98,8 +93,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                UpdateColor(sender, cmb_ForeColor, txt_ForeHex, numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA);
-                this.alertText.Foreground = General.ColorFromNumuds(numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA);
+                UpdateColor(sender, cmb_ForeColor, txt_ForeHex);
+                General.ParseHexColor(txt_ForeHex.Text, out int r, out int g, out int b, out int a);
+                this.alertText.Foreground = Color.FromArgb(a, r, g, b);
                 blocked = false;
                 GeneratePreview();
             }
@@ -110,8 +106,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                UpdateColor(sender, cmb_OutlineColor, txt_OutlineHex, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA);
-                this.alertText.Outline = General.ColorFromNumuds(numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA);
+                UpdateColor(sender, cmb_OutlineColor, txt_OutlineHex);
+                General.ParseHexColor(txt_OutlineHex.Text, out int r, out int g, out int b, out int a);
+                this.alertText.Outline = Color.FromArgb(a, r, g, b);
                 blocked = false;
                 GeneratePreview();
             }
@@ -122,8 +119,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                General._ColorPicker(cmb_BackColor, txt_BackHex, numud_BackR, numud_BackG, numud_BackB, numud_BackA);
-                this.alertText.Background = General.ColorFromNumuds(numud_BackR, numud_BackG, numud_BackB, numud_BackA);
+                this.alertText.Background = General._ColorPicker(cmb_BackColor, txt_BackHex);
                 blocked = false;
                 GeneratePreview();
             }
@@ -134,8 +130,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                General._ColorPicker(cmb_ForeColor, txt_ForeHex, numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA);
-                this.alertText.Foreground = General.ColorFromNumuds(numud_ForeR, numud_ForeG, numud_ForeB, numud_ForeA);
+                this.alertText.Foreground = General._ColorPicker(cmb_ForeColor, txt_ForeHex);
                 blocked = false;
                 GeneratePreview();
             }
@@ -146,14 +141,13 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                General._ColorPicker(cmb_OutlineColor, txt_OutlineHex, numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA);
-                this.alertText.Outline = General.ColorFromNumuds(numud_OutlineR, numud_OutlineG, numud_OutlineB, numud_OutlineA);
+                this.alertText.Outline = General._ColorPicker(cmb_OutlineColor, txt_OutlineHex);
                 blocked = false;
                 GeneratePreview();
             }
         }
 
-        private void UpdateColor (object sender, ComboBox c, TextBox hex, NumericUpDown r, NumericUpDown g, NumericUpDown b, NumericUpDown a)
+        private void UpdateColor (object sender, ComboBox c, TextBox hex)
         {
             if (!blocked)
             {
@@ -163,35 +157,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     // Use the known colour name to fill the numuds and the textbox.
                     Color color = Color.FromName(c.Text);
-                    r.Value = color.R;
-                    g.Value = color.G;
-                    b.Value = color.B;
-                    a.Value = color.A;
-
                     hex.Text = String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
                 }
                 else if (sender is TextBox)
                 {
                     General.ParseHexColor(hex.Text, out int red, out int green, out int blue, out int alpha);
-
-                    r.Value = red;
-                    g.Value = green;
-                    b.Value = blue;
-                    a.Value = alpha;
-
                     c.Text = General.GetKnownColorString(Color.FromArgb(alpha, red, green, blue));
-                }
-                else if (sender is NumericUpDown)
-                {
-                    int red = Convert.ToInt32(r.Value);
-                    int green = Convert.ToInt32(g.Value);
-                    int blue = Convert.ToInt32(b.Value);
-                    int alpha = Convert.ToInt32(a.Value);
-
-                    Color color = Color.FromArgb(alpha, red, green, blue);
-                    c.Text = General.GetKnownColorString(color);
-
-                    hex.Text = String.Format(General.COLOR_FORMAT, red, green, blue, alpha);
                 }
 
                 blocked = false;
@@ -201,8 +172,30 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateBackgroundImage (object sender, EventArgs e)
         {
-            // Test the image.  If it's actually a static image, not an animated gif, keep it.  Maybe keep it if it's an animated gif, but don't animate it.
+            if (!blocked)
+            {
+                blocked = true;
 
+                // Unload any existing image.
+                if (this.backgroundImage != null)
+                {
+                    this.backgroundImage.Dispose();
+                }
+
+                // Test the image.  If it's actually an image, keep it.
+                try
+                {
+                    this.backgroundImage = new Bitmap(txt_BackgroundImage.Text);
+
+                }
+                catch (Exception ex) when (ex is System.IO.FileNotFoundException || ex is ArgumentException)
+                {
+                    txt_BackgroundImage.Text = "";
+                }
+
+                blocked = false;
+                GeneratePreview();
+            }
         }
 
         private void UpdateDisplayedText (object sender, EventArgs e)
@@ -232,7 +225,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                this.alertText.Dimensions = new Size(Convert.ToInt32(numud_MaxSizeX.Value), Convert.ToInt32(numud_MaxSizeY.Value));
+                this.alertText.Dimensions = new Size(Convert.ToInt32(numud_TextWidth.Value), Convert.ToInt32(numud_TextHeight.Value));
                 blocked = false;
                 GeneratePreview();
             }

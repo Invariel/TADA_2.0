@@ -223,39 +223,35 @@ namespace TADA_Advanced_Desktop_Alerts
             if (result == DialogResult.OK)
             {
                 Color color = colorDialog.Color;
-                General.FillNumudsFromColor(color, red, green, blue, alpha);
             }
         }
 
-        internal static void _ColorPicker(ComboBox comboBox, TextBox hexBox, NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        internal static Color _ColorPicker(ComboBox comboBox, TextBox hexBox)
         {
+            Color color = Color.Black;
+            General.ParseHexColor(hexBox.Text, out int red, out int green, out int blue, out int alpha);
+
             ColorDialog colorDialog = new ColorDialog()
             {
+                // Instead of getting argb from numuds that don't exist, parse the textbox string.
                 Color = Color.FromArgb(
-                    Convert.ToInt32(alpha?.Value ?? 0),
-                    Convert.ToInt32(red?.Value ?? 0),
-                    Convert.ToInt32(green?.Value ?? 0),
-                    Convert.ToInt32(blue?.Value ?? 0)),
+                    Convert.ToInt32(alpha),
+                    Convert.ToInt32(red),
+                    Convert.ToInt32(green),
+                    Convert.ToInt32(blue)),
                 FullOpen = true
             };
 
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Color color = colorDialog.Color;
+                color = colorDialog.Color;
 
                 comboBox.Text = color.IsNamedColor ? color.Name : "Custom";
                 hexBox.Text = String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
-                General.FillNumudsFromColor(color, red, green, blue, alpha);
             }
-        }
 
-        internal static void FillNumudsFromColor(Color c, NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
-        {
-            red.Value = c.R;
-            green.Value = c.G;
-            blue.Value = c.B;
-            alpha.Value = c.A;
+            return color;
         }
 
         internal static Color ColorFromNumuds(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
