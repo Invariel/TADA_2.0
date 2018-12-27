@@ -10,15 +10,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
     public partial class Text_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
-        private _TADAAlert mainAlert;
-        private _TADAAlertText alertText;
+        private TADAAlert mainAlert;
+        private TADAAlertText alertText;
 
         private Boolean blocked = false;
 
-        private Bitmap backgroundImage;
         private Bitmap textPreview;
 
-        internal Text_Designer_MDI(_TADAAlertText alertText, _TADAAlert parentAlert) : base(parentAlert)
+        internal Text_Designer_MDI(TADAAlertText alertText, TADAAlert parentAlert) : base(parentAlert)
         {
             InitializeComponent();
 
@@ -26,7 +25,68 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             this.alertText = alertText;
 
             this._waypointContainer = this.alertText.Waypoints;
+
+            // Fonts
+            List<String> installedFonts = new List<String>();
+            foreach (FontFamily font in System.Drawing.FontFamily.Families)
+            {
+                installedFonts.Add(font.Name);
+            }
+
+            cmb_Font.DataSource = installedFonts;
+
+            // Colours
+            List<String> namedColours = new List<String>();
+            foreach (KnownColor colour in Enum.GetValues(typeof(KnownColor)))
+            {
+                if (!Color.FromKnownColor(colour).IsSystemColor)
+                {
+                    namedColours.Add(Enum.GetName(typeof(KnownColor), colour));
+                }
+            }
+
+            String[] foreColours = new String[namedColours.Count + 1];
+            String[] backColours = new String[namedColours.Count + 1];
+            String[] outlineColours = new String[namedColours.Count + 1];
+            String[] transparentColours = new String[namedColours.Count + 2];
+
+            namedColours.CopyTo(foreColours, 1);
+            namedColours.CopyTo(backColours, 1);
+            namedColours.CopyTo(outlineColours, 1);
+            namedColours.CopyTo(transparentColours, 2);
+
+            foreColours[0] = "Custom";
+            backColours[0] = "Custom";
+            outlineColours[0] = "Custom";
+            transparentColours[0] = "None";
+            transparentColours[1] = "Custom";
+
+            cmb_ForeColor.DataSource = foreColours;
+            cmb_BackColor.DataSource = backColours;
+            cmb_OutlineColor.DataSource = outlineColours;
+
+            // Voices
+            List<String> installedVoices = new List<string>();
+            using (System.Speech.Synthesis.SpeechSynthesizer talky = new System.Speech.Synthesis.SpeechSynthesizer())
+            {
+                foreach (System.Speech.Synthesis.InstalledVoice voice in talky.GetInstalledVoices())
+                {
+                    if (voice.Enabled)
+                    {
+                        installedVoices.Add(voice.VoiceInfo.Name);
+                    }
+                }
+            }
+
+            cmb_TTSVoice.DataSource = installedVoices;
+
+            tab_AdvancedWaypointControls.TabPages.Remove(tab_Sound);
+
             // Load existing details.
+            LoadExisting();
+
+            numud_PaddingX.Maximum = Math.Floor(numud_TextWidth.Value / 2) - 1;
+            numud_PaddingY.Maximum = Math.Floor(numud_TextHeight.Value / 2) - 1;
 
             InitializeCallbacks();
             GeneratePreview();
@@ -42,7 +102,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             numud_FontSize.ValueChanged += UpdateFont;
 
-            numud_Outline.ValueChanged += UpdateOutline;
+            numud_OutlineWidth.ValueChanged += UpdateOutline;
             cmb_OutlineColor.TextChanged += UpdateOutlineColor;
             txt_OutlineHex.TextChanged += UpdateOutlineColor;
             btn_OutlinePicker.Click += PickOutlineColor;
@@ -61,10 +121,51 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_PaddingY.ValueChanged += UpdateTextPadding;
 
             txt_BackgroundImage.TextChanged += UpdateBackgroundImage;
+            btn_BackgroundImage.Click += btn_BackgroundImage_Click;
 
             cmb_TTSVoice.TextChanged += UpdateTTS;
             trk_VoiceVolume.ValueChanged += UpdateVolume;
             numud_VoiceVolume.ValueChanged += UpdateVolume;
+        }
+
+        private void LoadExisting()
+        {
+            txt_DisplayedText.Text = this.alertText.Message;
+            txt_NarratedText.Text = this.alertText.ReadMessage;
+
+            cmb_Font.Text = this.alertText.ChosenFont.Name;
+            numud_FontSize.Value = Convert.ToDecimal(this.alertText.ChosenFont.Size);
+            numud_OutlineWidth.Value = Convert.ToDecimal(this.alertText.OutlineWidth);
+
+            if (!String.IsNullOrEmpty(this.alertText.BackgroundImage))
+            {
+                this.txt_BackgroundImage.Text = this.alertText.BackgroundImage;
+            }
+
+            General.AssignNumud(this.numud_TextWidth, this.alertText.Dimensions.Width);
+            General.AssignNumud(this.numud_PaddingX, this.alertText.Padding.Width);
+
+            this.cmb_TTSVoice.Text = this.alertText.TTSVoice;
+
+            // Each of these has side effects, like writing these values back to the object, or filling other fields, which is why these are done again.
+            General.AssignNumud(this.numud_TextHeight, this.alertText.Dimensions.Height);
+            General.AssignNumud(this.numud_PaddingY, this.alertText.Padding.Height);
+            txt_ForeHex.Text = General.StringFromColor(this.alertText.Foreground);
+            txt_BackHex.Text = General.StringFromColor(this.alertText.Background);
+            txt_OutlineHex.Text = General.StringFromColor(this.alertText.Outline);
+            this.numud_VoiceVolume.Value = Convert.ToDecimal(this.alertText.Waypoints.InitialVolume);
+
+            Size tempSize = new Size(Convert.ToInt32(this.numud_TextWidth.Value), Convert.ToInt32(this.numud_TextHeight.Value));
+            if (tempSize != this.alertText.Dimensions)
+            {
+                this.alertText.Dimensions = tempSize;
+            }
+
+            tempSize = new Size(Convert.ToInt32(this.numud_PaddingX.Value), Convert.ToInt32(this.numud_PaddingY.Value));
+            if (tempSize != this.alertText.Padding)
+            {
+                this.alertText.Padding = tempSize;
+            }
         }
 
         private void GeneratePreview()
@@ -72,7 +173,24 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             // Draw the preview bitmap using the specified font, colours, and if set, background image.
             // Measure the string length given the selected font and size and such.
             // Then, make a copy of this.backgroundImage at the desired size.
+            if (previewBitmap != null)
+            {
+                previewBitmap.Dispose();
+            }
 
+            previewBitmap = General.GenerateMessageBitmap(this.alertText.Foreground,
+                                                          this.alertText.Background,
+                                                          this.alertText.Outline,
+                                                          this.alertText.ChosenFont,
+                                                          this.alertText.OutlineWidth,
+                                                          this.alertText.Dimensions,
+                                                          this.alertText.Padding,
+                                                          this.alertText.Message,
+                                                          this.alertText.BackgroundImage);
+
+            pb_TextPreview.Image = previewBitmap;
+            pb_TextPreview.Update();
+            UpdatePreview();
         }
 
         private void UpdateBackColor(object sender, EventArgs e)
@@ -149,24 +267,16 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateColor (object sender, ComboBox c, TextBox hex)
         {
-            if (!blocked)
+            if (sender is ComboBox)
             {
-                blocked = true;
-
-                if (sender is ComboBox)
-                {
-                    // Use the known colour name to fill the numuds and the textbox.
-                    Color color = Color.FromName(c.Text);
-                    hex.Text = String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
-                }
-                else if (sender is TextBox)
-                {
-                    General.ParseHexColor(hex.Text, out int red, out int green, out int blue, out int alpha);
-                    c.Text = General.GetKnownColorString(Color.FromArgb(alpha, red, green, blue));
-                }
-
-                blocked = false;
-                GeneratePreview();
+                // Use the known colour name to fill the numuds and the textbox.
+                Color color = Color.FromName(c.Text);
+                hex.Text = General.StringFromColor(color);
+            }
+            else if (sender is TextBox)
+            {
+                General.ParseHexColor(hex.Text, out int red, out int green, out int blue, out int alpha);
+                c.Text = General.GetKnownColorString(Color.FromArgb(alpha, red, green, blue));
             }
         }
 
@@ -176,24 +286,25 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 blocked = true;
 
-                // Unload any existing image.
-                if (this.backgroundImage != null)
-                {
-                    this.backgroundImage.Dispose();
-                }
+                Bitmap backgroundImage = null;
 
                 // Test the image.  If it's actually an image, keep it.
                 try
                 {
-                    this.backgroundImage = new Bitmap(txt_BackgroundImage.Text);
-
+                    backgroundImage = new Bitmap(txt_BackgroundImage.Text);
                 }
                 catch (Exception ex) when (ex is System.IO.FileNotFoundException || ex is ArgumentException)
                 {
                     txt_BackgroundImage.Text = "";
                 }
+                finally
+                {
+                    backgroundImage?.Dispose();
+                }
 
+                this.alertText.BackgroundImage = txt_BackgroundImage.Text;
                 blocked = false;
+
                 GeneratePreview();
             }
         }
@@ -226,7 +337,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 blocked = true;
                 this.alertText.Dimensions = new Size(Convert.ToInt32(numud_TextWidth.Value), Convert.ToInt32(numud_TextHeight.Value));
+                this.SetItemSize(this.alertText.Dimensions);
                 blocked = false;
+
+                numud_PaddingX.Maximum = Math.Floor(numud_TextWidth.Value / 2) - 1;
+                numud_PaddingY.Maximum = Math.Floor(numud_TextHeight.Value / 2) - 1;
+
                 GeneratePreview();
             }
         }
@@ -271,7 +387,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateFont (object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!blocked && cmb_Font.Items.IndexOf(cmb_Font.Text) > -1)
             {
                 blocked = true;
                 this.alertText.ChosenFont = new Font(cmb_Font.SelectedValue.ToString(), (float)numud_FontSize.Value);
@@ -285,10 +401,15 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                this.alertText.OutlineWidth = (float)numud_Outline.Value;
+                this.alertText.OutlineWidth = (float)numud_OutlineWidth.Value;
                 blocked = false;
                 GeneratePreview();
             }
+        }
+
+        private void btn_BackgroundImage_Click(object sender, EventArgs e)
+        {
+            General.openFileDialogBox(txt_BackgroundImage, "Image Files (*.gif, *.jpg, *.jpeg, *.png)|*.gif; *.jpg; *.jpeg; *.png", 0);
         }
     }
 }

@@ -39,19 +39,21 @@ namespace TADA_Advanced_Desktop_Alerts
         public abstract void WriteXml(XmlWriter writer);
     }
 
-    internal class _TADAAlert : PropertyAndXML
+    internal class TADAAlert : PropertyAndXML
     {
         private String alertName;
         private General.ALERTTYPES alertType;
 
-        private List<_TADAAlertImage> images = new List<_TADAAlertImage>();
-        private List<_TADAAlertAudio> audios = new List<_TADAAlertAudio>();
-        private List<_TADAAlertText> streamerTexts = new List<_TADAAlertText>();
-        private List<_TADAAlertText> viewerTexts = new List<_TADAAlertText>();
-        private List<_TADAAlertCondition> conditions = new List<_TADAAlertCondition>();
+        private List<TADAAlertImage> images = new List<TADAAlertImage>();
+        private List<TADAAlertAudio> audios = new List<TADAAlertAudio>();
+        private List<TADAAlertText> streamerTexts = new List<TADAAlertText>();
+        private List<TADAAlertText> viewerTexts = new List<TADAAlertText>();
+        private List<TADAAlertCondition> conditions = new List<TADAAlertCondition>();
+
+        internal Macro macroKey;
 
         #region PropertyStuff
-        public List<_TADAAlertImage> Images
+        public List<TADAAlertImage> Images
         {
             get { return this.images; }
             set
@@ -61,7 +63,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<_TADAAlertAudio> Audios
+        public List<TADAAlertAudio> Audios
         {
             get { return this.audios; }
             set
@@ -71,7 +73,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<_TADAAlertText> StreamerTexts
+        public List<TADAAlertText> StreamerTexts
         {
             get { return this.streamerTexts; }
             set
@@ -81,7 +83,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<_TADAAlertText> ViewerTexts
+        public List<TADAAlertText> ViewerTexts
         {
             get { return this.viewerTexts; }
             set
@@ -91,7 +93,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<_TADAAlertCondition> Conditions
+        public List<TADAAlertCondition> Conditions
         {
             get { return this.conditions; }
             set
@@ -185,6 +187,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     XmlHelper.Read(reader, "Condition", "Conditions", this.conditions);
                 }
+                else if (reader.IsStartElement("Macro"))
+                {
+                    this.macroKey.ReadXml(reader); 
+                }
                 else if (reader.IsStartElement())
                 {
                     if (!error)
@@ -218,6 +224,11 @@ namespace TADA_Advanced_Desktop_Alerts
             XmlHelper.Write(writer, "ViewerTexts", this.viewerTexts);
             XmlHelper.Write(writer, "Conditions", this.conditions);
 
+            if (!this.macroKey.Empty)
+            {
+                this.macroKey.WriteXml(writer);
+            }
+
             writer.WriteEndElement();
         }
         #endregion XML
@@ -228,7 +239,47 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    internal class _TADAAlertImage : PropertyAndXML
+    public class Macro : PropertyAndXML
+    {
+        public bool Ctrl { get; set; } = false;
+        public bool Alt { get; set; } = false;
+        public bool Shift { get; set; } = false;
+        public Keys Key { get; set; } = Keys.None;
+
+        public Boolean Empty
+        {
+            get
+            {
+                return (Key != Keys.None);
+            }
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            if (reader.IsStartElement("Macro"))
+            {
+                this.Ctrl = XmlHelper.ReadBooleanAttribute(reader, "Ctrl");
+                this.Alt = XmlHelper.ReadBooleanAttribute(reader, "Alt");
+                this.Shift = XmlHelper.ReadBooleanAttribute(reader, "Shift");
+                this.Key = (Keys)(Enum.Parse(typeof(Keys), reader.GetAttribute("Key")));
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            if (!this.Empty)
+            {
+                writer.WriteStartElement("Macro");
+                writer.WriteAttributeString("Ctrl", Ctrl.ToString());
+                writer.WriteAttributeString("Alt", Alt.ToString());
+                writer.WriteAttributeString("Shift", Shift.ToString());
+                writer.WriteAttributeString("Key", Enum.GetName(typeof(Keys), Key));
+                writer.WriteEndElement();
+            }
+        }
+    }
+
+    internal class TADAAlertImage : PropertyAndXML
     {
         private String filename = "";
         private Size dimensions = new Size(0, 0);
@@ -278,10 +329,10 @@ namespace TADA_Advanced_Desktop_Alerts
         public TimeSpan StartingPosition { get; set; } = new TimeSpan(0);
 
         // Constructor for XmlReader
-        public _TADAAlertImage () { }
+        public TADAAlertImage () { }
 
         // Constructor for Image
-        public _TADAAlertImage(String filename, int animationLoops, Size dimensions, WaypointContainer waypoints)
+        public TADAAlertImage(String filename, int animationLoops, Size dimensions, WaypointContainer waypoints)
         {
             this.isVideo = false;
 
@@ -292,7 +343,7 @@ namespace TADA_Advanced_Desktop_Alerts
         }
 
         // Constructor for Video
-        public _TADAAlertImage(String filename, Size dimensions, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, WaypointContainer waypoints)
+        public TADAAlertImage(String filename, Size dimensions, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, WaypointContainer waypoints)
         {
             this.isVideo = true;
 
@@ -394,7 +445,7 @@ namespace TADA_Advanced_Desktop_Alerts
         #endregion XML
     }
 
-    internal class _TADAAlertAudio : PropertyAndXML
+    internal class TADAAlertAudio : PropertyAndXML
     {
         private String filename = "";
 
@@ -441,10 +492,10 @@ namespace TADA_Advanced_Desktop_Alerts
         public WaypointContainer Waypoints { get; set; } = new WaypointContainer();
 
         // Constructor for XMLReader
-        public _TADAAlertAudio () { }
+        public TADAAlertAudio () { }
 
         // Constructor for Alert Designer.
-        public _TADAAlertAudio (String filename, TimeSpan delay, TimeSpan duration, TimeSpan startAt, TimeSpan endAt, WaypointContainer waypoints)
+        public TADAAlertAudio (String filename, TimeSpan delay, TimeSpan duration, TimeSpan startAt, TimeSpan endAt, WaypointContainer waypoints)
         {
             this.filename = filename;
             this.Delay = delay;
@@ -527,7 +578,7 @@ namespace TADA_Advanced_Desktop_Alerts
         #endregion XML
     }
 
-    internal class _TADAAlertText : PropertyAndXML
+    internal class TADAAlertText : PropertyAndXML
     {
         private String message = "";
         private String readMessage = "";
@@ -560,6 +611,7 @@ namespace TADA_Advanced_Desktop_Alerts
         #endregion Properties
 
         public String TTSVoice { get; set; } = "";
+        public String BackgroundImage { get; set; } = "";
 
         public Font ChosenFont { get; set; } = new Font(FontFamily.GenericSerif, 10);
 
@@ -574,9 +626,9 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public WaypointContainer Waypoints { get; set; } = new WaypointContainer();
 
-        public _TADAAlertText () { }
+        public TADAAlertText () { }
 
-        public _TADAAlertText(String message, String readMessage, String ttsVoice, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
+        public TADAAlertText(String message, String readMessage, String ttsVoice, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
         {
             this.Message = message;
             this.ReadMessage = readMessage;
@@ -637,6 +689,10 @@ namespace TADA_Advanced_Desktop_Alerts
                     else if (reader.IsStartElement("Read"))
                     {
                         this.ReadMessage = reader.ReadContentAsString();
+                    }
+                    else if (reader.IsStartElement("Background"))
+                    {
+                        this.BackgroundImage = reader.ReadContentAsString();
                     }
                     else if (reader.IsStartElement("Font"))
                     {
@@ -705,6 +761,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
             writer.WriteElementString("Message", this.Message);
             writer.WriteElementString("Read", this.ReadMessage);
+            if (!String.IsNullOrEmpty(this.BackgroundImage))
+            {
+                writer.WriteElementString("Background", this.BackgroundImage);
+            }
 
             writer.WriteStartElement("Font");
             writer.WriteAttributeString("Name", this.ChosenFont.Name);
@@ -726,7 +786,7 @@ namespace TADA_Advanced_Desktop_Alerts
         #endregion XML
     }
 
-    internal class _TADAAlertCondition : PropertyAndXML
+    internal class TADAAlertCondition : PropertyAndXML
     {
         #region Properties
         [DisplayName("No Tier")]

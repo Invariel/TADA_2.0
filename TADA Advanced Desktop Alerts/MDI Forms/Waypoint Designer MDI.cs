@@ -45,7 +45,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             InitializeComponent();
         }
 
-        internal Waypoint_Designer_MDI(_TADAAlert parentAlert = null)
+        internal Waypoint_Designer_MDI(TADAAlert parentAlert = null)
         {
             InitializeComponent();
 

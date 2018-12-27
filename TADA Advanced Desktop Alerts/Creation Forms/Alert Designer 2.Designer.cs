@@ -533,23 +533,23 @@
             // 
             // alertImageBindingSource
             // 
-            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertImage);
+            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertImage);
             // 
             // alertAudioBindingSource
             // 
-            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertAudio);
+            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertAudio);
             // 
             // streamerAlertTextBindingSource
             // 
-            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertText);
+            this.streamerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
             // 
             // viewerAlertTextBindingSource
             // 
-            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertText);
+            this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
             // 
             // alertConditionBindingSource
             // 
-            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts._TADAAlertCondition);
+            this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertCondition);
             // 
             // tab_AlertPieces
             // 

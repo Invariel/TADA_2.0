@@ -33,7 +33,8 @@ namespace TADA_Advanced_Desktop_Alerts
         private bool followerFileWritten = false;
         private String missingFollowers = "";
 
-        private Dictionary<String, List<TADAAlert>> currentAlerts;
+        private Dictionary<String, List<TADAAlert>> currentAlerts = new Dictionary<string, List<TADAAlert>>();
+        private Dictionary<KeyHandler, TADAAlert> currentMacros = new Dictionary<KeyHandler, TADAAlert>();
 
         private Dictionary<String, User> viewers = new Dictionary<String, User>();
 
@@ -120,7 +121,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     this.Invoke((Action)(() => { General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked."); }));
                 }
             };
-            
+
             // Handle these, usually with a reconnection attempt or seventy thousand.
             pubSub.OnPubSubServiceClosed += (sender, e) =>
             {
@@ -225,7 +226,18 @@ namespace TADA_Advanced_Desktop_Alerts
                 General.ConfigureToolTip(this.pb_Websocket, "Websocket server configured on port 21573.");
             }
 
-            currentAlerts = (MainTADAForm.mainTADAForm).snapshotAlerts();
+            // Need to actually iterate over (MainTADAForm.mainTADAForm.snapshotAlerts()) and add macros to their own list.
+            currentAlerts = MainTADAForm.mainTADAForm.snapshotAlerts();
+            /*
+            foreach (_TADAAlert alert in currentAlerts[General.alertTypes[General.ALERTTYPES.MACRO]])
+            {
+                List<Keys> modifiers = new List<Keys>();
+                if (alert.macroKey.Ctrl) { modifiers.Add(Keys.Control); }
+                if (alert.macroKey.Alt) { modifiers.Add(Keys.Alt); }
+                if (alert.macroKey.Shift) { modifiers.Add(Keys.Shift); }
+                currentMacros.Add(new KeyHandler(alert.macroKey.Key, modifiers, this), alert);
+            }
+            */
             MainTADAForm.mainTADAForm.AnimationWindow.SetPlayedAlerts(this);
         }
 
@@ -323,6 +335,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
         {
             SubstitutionObject subObject = new SubstitutionObject();
+            CommunityGiftSub comGift = null;
             User user = null;
 
             switch (alertType)
@@ -519,7 +532,7 @@ namespace TADA_Advanced_Desktop_Alerts
                                 if (community)
                                 {
                                     // Have to use Exists above and Find now because Find returns an empty object if it doesn't Find anything.
-                                    CommunityGiftSub comGift = communityGiftSubs.Find(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
+                                    comGift = communityGiftSubs.Find(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
                                     comGift.giftees.Add(eSubscription.Subscription.RecipientName);
                                     comGift.subObject.Tier = eSubscription.Subscription.SubscriptionPlan;   // Overwriting from the Client version.
                                     comGift.subObject.TierName = eSubscription.Subscription.SubscriptionPlanName;
@@ -568,6 +581,14 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     // Somehow mark that this user triggered the message at X time, and prevent it from playing again for some cooldown period.
                     // This may involve dropping <trigger message> from the message and checking again.
+                }
+                else if (alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY || alertType == General.ALERTTYPES.COMMUNITY)
+                {
+                    // Then find the associated community gift sub and remove it from the list.
+                    if (comGift != null && comGift.Ready ())
+                    {
+                        communityGiftSubs.Remove(comGift);
+                    }
                 }
 
                 PrepareAndPlayAlert(alertToUse, subObject, alertType);
@@ -702,14 +723,8 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription = null;
 
-            try
-            {
-                subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
-            }
-            catch (/* TwitchLib.Api.Exceptions.BadResourceException */ Exception e)
-            {
-                // Then this 404'd or something and we don't have a subscribed user.
-            }
+            // Returns null if not subscribed.
+            subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
 
             return subscription;
         }
@@ -1007,12 +1022,12 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Alert Type")]
         public String AlertType { get; set; }
 
-        public TADAAlertImage alertImage = null;
-        public TADAAlertAudio alertAudio = null;
-        public TADAAlertText alertStreamerText = null;
-        public TADAAlertText alertViewerText = null;
+        internal TADAAlertImage alertImage = null;
+        internal TADAAlertAudio alertAudio = null;
+        internal TADAAlertText alertStreamerText = null;
+        internal TADAAlertText alertViewerText = null;
 
-        public ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText)
+        internal ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText)
         {
             this.ViewerName = viewerName;
             this.AlertMessage = alertMessage;

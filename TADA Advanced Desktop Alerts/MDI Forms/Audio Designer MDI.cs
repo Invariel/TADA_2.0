@@ -10,13 +10,13 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
     public partial class Audio_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
-        _TADAAlertAudio alertAudio;
+        TADAAlertAudio alertAudio;
         private System.Windows.Controls.MediaElement me = new System.Windows.Controls.MediaElement();
 
         private bool isPlaying = false;
         private bool blocked = false;
 
-        internal Audio_Designer_MDI(_TADAAlertAudio alertAudio, _TADAAlert parentAlert = null) : base(parentAlert)
+        internal Audio_Designer_MDI(TADAAlertAudio alertAudio, TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
 
@@ -63,7 +63,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             General.openFileDialogBox(txt_Filename, "Audio File Formats|*.aac; *,aiff; *.amr; *.flac; *.m4a; *.mp3; *.mp3; *.ogg; *.pcm; *.raw; *.wav; *.wma|All Files|*.*", 1);
         }
 
-        private void LoadExisting(_TADAAlertAudio alertAudio)
+        private void LoadExisting(TADAAlertAudio alertAudio)
         {
             txt_Filename.Text = alertAudio.Filename;
 

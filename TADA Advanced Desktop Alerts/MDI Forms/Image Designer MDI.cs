@@ -17,9 +17,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private System.Windows.Controls.MediaElement mediaElement = new System.Windows.Controls.MediaElement();
 
-        private _TADAAlertImage alertImage;
+        private TADAAlertImage alertImage;
 
-        internal Image_Designer_MDI(_TADAAlertImage alertImage, _TADAAlert parentAlert = null) : base(parentAlert)
+        internal Image_Designer_MDI(TADAAlertImage alertImage, TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
 
@@ -109,6 +109,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     }
                     updateScreenshot = true;
                 }
+
+                this.alertImage.StartingPosition = General.TimeSpanFromString(mtxt_StartAt.Text);
+                this.alertImage.EndingPosition = General.TimeSpanFromString(mtxt_LoopAt.Text);
+                this.alertImage.Duration = General.TimeSpanFromString(mtxt_PlayFor.Text);
 
                 if (updateScreenshot)
                 {
@@ -514,7 +518,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 if (isVideo)
                 {
-                    this.alertImage = new _TADAAlertImage(filename,
+                    this.alertImage = new TADAAlertImage(filename,
                                                           dimensions,
                                                           TimeSpan.Parse(mtxt_PlayFor.Text),
                                                           TimeSpan.Parse(mtxt_StartAt.Text),
@@ -523,7 +527,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 }
                 else
                 {
-                    this.alertImage = new _TADAAlertImage(filename,
+                    this.alertImage = new TADAAlertImage(filename,
                                                           Convert.ToInt32(this.numud_AnimatedGifLoop.Value),
                                                           dimensions,
                                                           waypointContainer);
@@ -544,7 +548,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
-        private void LoadExisting(_TADAAlertImage alertImage)
+        private void LoadExisting(TADAAlertImage alertImage)
         {
             txt_Filename.Text = alertImage.Filename;
             justLoaded = !String.IsNullOrEmpty(txt_Filename.Text);

@@ -13,18 +13,18 @@ using System.Xml.Serialization;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
-    public class TADAAlert : INotifyPropertyChanged, IXmlSerializable
+    public class oldTADAAlert : INotifyPropertyChanged, IXmlSerializable
     {
         private String alertName;
         private String alertType;
 
-        private List<TADAAlertImage> images = new List<TADAAlertImage>();
-        private List<TADAAlertAudio> audios = new List<TADAAlertAudio>();
-        private List<TADAAlertText> streamerTexts = new List<TADAAlertText>();
-        private List<TADAAlertText> viewerTexts = new List<TADAAlertText>();
-        private List<TADAAlertCondition> conditions = new List<TADAAlertCondition>();
+        private List<oldTADAAlertImage> images = new List<oldTADAAlertImage>();
+        private List<oldTADAAlertAudio> audios = new List<oldTADAAlertAudio>();
+        private List<oldTADAAlertText> streamerTexts = new List<oldTADAAlertText>();
+        private List<oldTADAAlertText> viewerTexts = new List<oldTADAAlertText>();
+        private List<oldTADAAlertCondition> conditions = new List<oldTADAAlertCondition>();
 
-        public List<TADAAlertImage> Images
+        public List<oldTADAAlertImage> Images
         {
             get { return this.images; }
             set
@@ -34,7 +34,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<TADAAlertAudio> Audios
+        public List<oldTADAAlertAudio> Audios
 
         {
             get { return this.audios; }
@@ -45,7 +45,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<TADAAlertText> StreamerTexts
+        public List<oldTADAAlertText> StreamerTexts
         {
             get { return this.streamerTexts; }
             set
@@ -55,7 +55,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<TADAAlertText> ViewerTexts
+        public List<oldTADAAlertText> ViewerTexts
         {
             get { return this.viewerTexts; }
             set
@@ -65,7 +65,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public List<TADAAlertCondition> Conditions
+        public List<oldTADAAlertCondition> Conditions
         {
             get { return this.conditions; }
             set
@@ -145,7 +145,7 @@ namespace TADA_Advanced_Desktop_Alerts
             return null;
         }
 
-        public void Read<T>(XmlReader reader, String start, String end, List<T> listT) where T: IXmlSerializable, new()
+        public void Read<T>(XmlReader reader, String start, String end, List<T> listT) where T : IXmlSerializable, new()
         {
             while (reader.Read())
             {
@@ -173,23 +173,23 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 if (reader.IsStartElement("Images"))
                 {
-                    Read<TADAAlertImage>(reader, "Image", "Images", this.images);
+                    Read<oldTADAAlertImage>(reader, "Image", "Images", this.images);
                 }
                 else if (reader.IsStartElement("Audios"))
                 {
-                    Read<TADAAlertAudio>(reader, "Audio", "Audios", this.audios);
+                    Read<oldTADAAlertAudio>(reader, "Audio", "Audios", this.audios);
                 }
                 else if (reader.IsStartElement("StreamerTexts"))
                 {
-                    Read<TADAAlertText>(reader, "Text", "StreamerTexts", this.streamerTexts);
+                    Read<oldTADAAlertText>(reader, "Text", "StreamerTexts", this.streamerTexts);
                 }
                 else if (reader.IsStartElement("ViewerTexts"))
                 {
-                    Read<TADAAlertText>(reader, "Text", "ViewerTexts", this.viewerTexts);
+                    Read<oldTADAAlertText>(reader, "Text", "ViewerTexts", this.viewerTexts);
                 }
                 else if (reader.IsStartElement("Conditions"))
                 {
-                    Read<TADAAlertCondition>(reader, "Condition", "Conditions", this.conditions);
+                    Read<oldTADAAlertCondition>(reader, "Condition", "Conditions", this.conditions);
                 }
                 else if (reader.IsStartElement())
                 {
@@ -215,35 +215,35 @@ namespace TADA_Advanced_Desktop_Alerts
             if (images.Count > 0)
             {
                 writer.WriteStartElement("Images");
-                foreach (TADAAlertImage image in images) { image.WriteXml(writer); }
+                foreach (oldTADAAlertImage image in images) { image.WriteXml(writer); }
                 writer.WriteEndElement();
             }
 
             if (audios.Count > 0)
             {
                 writer.WriteStartElement("Audios");
-                foreach (TADAAlertAudio audio in audios) { audio.WriteXml(writer); }
+                foreach (oldTADAAlertAudio audio in audios) { audio.WriteXml(writer); }
                 writer.WriteEndElement();
             }
 
             if (streamerTexts.Count > 0)
             {
                 writer.WriteStartElement("StreamerTexts");
-                foreach (TADAAlertText text in streamerTexts) { text.WriteXml(writer); }
+                foreach (oldTADAAlertText text in streamerTexts) { text.WriteXml(writer); }
                 writer.WriteEndElement();
             }
 
             if (viewerTexts.Count > 0)
             {
                 writer.WriteStartElement("ViewerTexts");
-                foreach (TADAAlertText text in viewerTexts) { text.WriteXml(writer); }
+                foreach (oldTADAAlertText text in viewerTexts) { text.WriteXml(writer); }
                 writer.WriteEndElement();
             }
 
             if (conditions.Count > 0)
             {
                 writer.WriteStartElement("Conditions");
-                foreach (TADAAlertCondition condition in conditions) { condition.WriteXml(writer); }
+                foreach (oldTADAAlertCondition condition in conditions) { condition.WriteXml(writer); }
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
@@ -255,7 +255,7 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public class TADAAlertImage : INotifyPropertyChanged, IXmlSerializable
+    public class oldTADAAlertImage : INotifyPropertyChanged, IXmlSerializable
     {
         private String filename;
         private Size dimensions;
@@ -321,7 +321,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public TADAAlertImage(string filename, bool isVideo, int animationLoops, Size dimensions, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, double volume, double balance, WaypointContainer waypointContainer)
+        public oldTADAAlertImage(string filename, bool isVideo, int animationLoops, Size dimensions, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, double volume, double balance, WaypointContainer waypointContainer)
         {
             this.Filename = filename;
             this.IsVideo = isVideo;
@@ -336,7 +336,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = waypointContainer;
         }
 
-        public TADAAlertImage()
+        public oldTADAAlertImage()
         {
             this.Waypoints = new WaypointContainer();
         }
@@ -384,7 +384,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                throw new XmlException("Reader wasn't sitting on an <Image> tag when TADAAlertImage.ReadXml() was called.");
+                throw new XmlException("Reader wasn't sitting on an <Image> tag when oldTADAAlertImage.ReadXml() was called.");
             }
 
             while (reader.Read())
@@ -442,7 +442,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 writer.WriteAttributeString("Volume", Volume.ToString());
                 writer.WriteAttributeString("Balance", Balance.ToString());
-                
+
                 XmlHelper.WriteTimeSpan(writer, Delay, "Delay");
                 XmlHelper.WriteTimeSpan(writer, Duration, "Duration");
                 XmlHelper.WriteTimeSpan(writer, StartingPosition, "StartAt");
@@ -469,7 +469,7 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public class TADAAlertAudio : INotifyPropertyChanged, IXmlSerializable
+    public class oldTADAAlertAudio : INotifyPropertyChanged, IXmlSerializable
     {
         private String filename;
         private double volume;
@@ -523,7 +523,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public TADAAlertAudio (String filename, double volume, double balance, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, WaypointContainer waypoints)
+        public oldTADAAlertAudio(String filename, double volume, double balance, TimeSpan delay, TimeSpan duration, TimeSpan startingPosition, TimeSpan endingPosition, WaypointContainer waypoints)
         {
             this.Filename = filename;
             this.Volume = volume;
@@ -535,7 +535,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = waypoints;
         }
 
-        public TADAAlertAudio()
+        public oldTADAAlertAudio()
         {
             this.Waypoints = new WaypointContainer();
         }
@@ -560,7 +560,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                throw new XmlException("Reader wasn't sitting on an <Audio> tag when TADAAlertAudio.ReadXml() was called.");
+                throw new XmlException("Reader wasn't sitting on an <Audio> tag when oldTADAAlertAudio.ReadXml() was called.");
             }
 
             while (reader.Read())
@@ -622,7 +622,7 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public class TADAAlertText : INotifyPropertyChanged, IXmlSerializable
+    public class oldTADAAlertText : INotifyPropertyChanged, IXmlSerializable
     {
         private String message;
         private String readMessage;
@@ -681,7 +681,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public TADAAlertText(String message, String readMessage, String ttsVoice, int ttsVolume, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
+        public oldTADAAlertText(String message, String readMessage, String ttsVoice, int ttsVolume, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
         {
             this.Message = message;
             this.ReadMessage = readMessage;
@@ -701,7 +701,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.Waypoints = waypoints;
         }
 
-        public TADAAlertText ()
+        public oldTADAAlertText()
         {
             this.Waypoints = new WaypointContainer();
         }
@@ -752,7 +752,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                throw new XmlException("Reader wasn't sitting on an <Text> tag when TADAAlertText.ReadXml() was called.");
+                throw new XmlException("Reader wasn't sitting on an <Text> tag when oldTADAAlertText.ReadXml() was called.");
             }
 
             while (reader.Read())
@@ -844,7 +844,7 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
-    public class TADAAlertCondition : IXmlSerializable
+    public class oldTADAAlertCondition : IXmlSerializable
     {
         [DisplayName("No Tier")]
         public bool NoTier { get; set; }
@@ -869,7 +869,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         [DisplayName("Minimum")]
         public int Minimum { get; set; }
-        
+
         [DisplayName("Maximum")]
         public int Maximum { get; set; }
 

@@ -39,11 +39,13 @@
             this.cmb_TTSVoice = new System.Windows.Forms.ComboBox();
             this.trk_VoiceVolume = new System.Windows.Forms.TrackBar();
             this.grp_TextDimensions = new System.Windows.Forms.GroupBox();
+            this.numud_TextHeight = new System.Windows.Forms.NumericUpDown();
+            this.lbl_DimensionsX = new System.Windows.Forms.Label();
+            this.lbl_MaxSizeX = new System.Windows.Forms.Label();
             this.btn_BackgroundImage = new System.Windows.Forms.Button();
             this.txt_BackgroundImage = new System.Windows.Forms.TextBox();
             this.lbl_BackgroundImage = new System.Windows.Forms.Label();
             this.numud_PaddingY = new System.Windows.Forms.NumericUpDown();
-            this.numud_TextHeight = new System.Windows.Forms.NumericUpDown();
             this.numud_PaddingX = new System.Windows.Forms.NumericUpDown();
             this.numud_TextWidth = new System.Windows.Forms.NumericUpDown();
             this.lbl_TextPadding = new System.Windows.Forms.Label();
@@ -69,15 +71,13 @@
             this.lbl_Size = new System.Windows.Forms.Label();
             this.lbl_Font = new System.Windows.Forms.Label();
             this.lbl_OutlinePx = new System.Windows.Forms.Label();
-            this.numud_Outline = new System.Windows.Forms.NumericUpDown();
+            this.numud_OutlineWidth = new System.Windows.Forms.NumericUpDown();
             this.lbl_Outline = new System.Windows.Forms.Label();
             this.lbl_FontPt = new System.Windows.Forms.Label();
             this.numud_FontSize = new System.Windows.Forms.NumericUpDown();
             this.cmb_Font = new System.Windows.Forms.ComboBox();
             this.txt_NarratedText = new System.Windows.Forms.TextBox();
             this.txt_DisplayedText = new System.Windows.Forms.TextBox();
-            this.lbl_MaxSizeX = new System.Windows.Forms.Label();
-            this.lbl_DimensionsX = new System.Windows.Forms.Label();
             this.tab_Focus.SuspendLayout();
             this.tab_Element.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
@@ -122,15 +122,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_VoiceVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_VoiceVolume)).BeginInit();
             this.grp_TextDimensions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_TextHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_TextWidth)).BeginInit();
             this.grp_OutlineColor.SuspendLayout();
             this.grp_BackColor.SuspendLayout();
             this.grp_ForeColor.SuspendLayout();
             this.grp_FontAndOutline.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_Outline)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_FontSize)).BeginInit();
             this.SuspendLayout();
             // 
@@ -155,6 +155,7 @@
             this.pb_TextPreview.Location = new System.Drawing.Point(5, 58);
             this.pb_TextPreview.Name = "pb_TextPreview";
             this.pb_TextPreview.Size = new System.Drawing.Size(744, 119);
+            this.pb_TextPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pb_TextPreview.TabIndex = 75;
             this.pb_TextPreview.TabStop = false;
             // 
@@ -219,6 +220,7 @@
             // 
             // cmb_TTSVoice
             // 
+            this.cmb_TTSVoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_TTSVoice.FormattingEnabled = true;
             this.cmb_TTSVoice.Location = new System.Drawing.Point(62, 14);
             this.cmb_TTSVoice.Name = "cmb_TTSVoice";
@@ -254,6 +256,46 @@
             this.grp_TextDimensions.TabIndex = 83;
             this.grp_TextDimensions.TabStop = false;
             this.grp_TextDimensions.Text = "Text Block Controls";
+            // 
+            // numud_TextHeight
+            // 
+            this.numud_TextHeight.Location = new System.Drawing.Point(502, 14);
+            this.numud_TextHeight.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numud_TextHeight.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numud_TextHeight.Name = "numud_TextHeight";
+            this.numud_TextHeight.Size = new System.Drawing.Size(50, 20);
+            this.numud_TextHeight.TabIndex = 67;
+            this.numud_TextHeight.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            // 
+            // lbl_DimensionsX
+            // 
+            this.lbl_DimensionsX.AutoSize = true;
+            this.lbl_DimensionsX.Location = new System.Drawing.Point(491, 18);
+            this.lbl_DimensionsX.Name = "lbl_DimensionsX";
+            this.lbl_DimensionsX.Size = new System.Drawing.Size(12, 13);
+            this.lbl_DimensionsX.TabIndex = 76;
+            this.lbl_DimensionsX.Text = "x";
+            // 
+            // lbl_MaxSizeX
+            // 
+            this.lbl_MaxSizeX.AutoSize = true;
+            this.lbl_MaxSizeX.Location = new System.Drawing.Point(374, 18);
+            this.lbl_MaxSizeX.Name = "lbl_MaxSizeX";
+            this.lbl_MaxSizeX.Size = new System.Drawing.Size(61, 13);
+            this.lbl_MaxSizeX.TabIndex = 75;
+            this.lbl_MaxSizeX.Text = "Dimensions";
             // 
             // btn_BackgroundImage
             // 
@@ -292,23 +334,6 @@
             this.numud_PaddingY.Size = new System.Drawing.Size(50, 20);
             this.numud_PaddingY.TabIndex = 71;
             // 
-            // numud_TextHeight
-            // 
-            this.numud_TextHeight.Location = new System.Drawing.Point(502, 14);
-            this.numud_TextHeight.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numud_TextHeight.Name = "numud_TextHeight";
-            this.numud_TextHeight.Size = new System.Drawing.Size(50, 20);
-            this.numud_TextHeight.TabIndex = 67;
-            this.numud_TextHeight.Value = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            // 
             // numud_PaddingX
             // 
             this.numud_PaddingX.Location = new System.Drawing.Point(628, 14);
@@ -326,6 +351,11 @@
             this.numud_TextWidth.Location = new System.Drawing.Point(441, 14);
             this.numud_TextWidth.Maximum = new decimal(new int[] {
             10000,
+            0,
+            0,
+            0});
+            this.numud_TextWidth.Minimum = new decimal(new int[] {
+            10,
             0,
             0,
             0});
@@ -415,6 +445,7 @@
             // 
             // cmb_OutlineColor
             // 
+            this.cmb_OutlineColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_OutlineColor.FormattingEnabled = true;
             this.cmb_OutlineColor.Location = new System.Drawing.Point(7, 15);
             this.cmb_OutlineColor.Name = "cmb_OutlineColor";
@@ -462,6 +493,7 @@
             // 
             // cmb_BackColor
             // 
+            this.cmb_BackColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_BackColor.FormattingEnabled = true;
             this.cmb_BackColor.Location = new System.Drawing.Point(7, 15);
             this.cmb_BackColor.Name = "cmb_BackColor";
@@ -509,6 +541,7 @@
             // 
             // cmb_ForeColor
             // 
+            this.cmb_ForeColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_ForeColor.FormattingEnabled = true;
             this.cmb_ForeColor.Location = new System.Drawing.Point(7, 15);
             this.cmb_ForeColor.Name = "cmb_ForeColor";
@@ -520,7 +553,7 @@
             this.grp_FontAndOutline.Controls.Add(this.lbl_Size);
             this.grp_FontAndOutline.Controls.Add(this.lbl_Font);
             this.grp_FontAndOutline.Controls.Add(this.lbl_OutlinePx);
-            this.grp_FontAndOutline.Controls.Add(this.numud_Outline);
+            this.grp_FontAndOutline.Controls.Add(this.numud_OutlineWidth);
             this.grp_FontAndOutline.Controls.Add(this.lbl_Outline);
             this.grp_FontAndOutline.Controls.Add(this.lbl_FontPt);
             this.grp_FontAndOutline.Controls.Add(this.numud_FontSize);
@@ -559,23 +592,23 @@
             this.lbl_OutlinePx.TabIndex = 14;
             this.lbl_OutlinePx.Text = "px";
             // 
-            // numud_Outline
+            // numud_OutlineWidth
             // 
-            this.numud_Outline.DecimalPlaces = 2;
-            this.numud_Outline.Increment = new decimal(new int[] {
+            this.numud_OutlineWidth.DecimalPlaces = 2;
+            this.numud_OutlineWidth.Increment = new decimal(new int[] {
             25,
             0,
             0,
             131072});
-            this.numud_Outline.Location = new System.Drawing.Point(662, 15);
-            this.numud_Outline.Maximum = new decimal(new int[] {
+            this.numud_OutlineWidth.Location = new System.Drawing.Point(662, 15);
+            this.numud_OutlineWidth.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numud_Outline.Name = "numud_Outline";
-            this.numud_Outline.Size = new System.Drawing.Size(51, 20);
-            this.numud_Outline.TabIndex = 13;
+            this.numud_OutlineWidth.Name = "numud_OutlineWidth";
+            this.numud_OutlineWidth.Size = new System.Drawing.Size(51, 20);
+            this.numud_OutlineWidth.TabIndex = 13;
             // 
             // lbl_Outline
             // 
@@ -619,6 +652,7 @@
             // 
             // cmb_Font
             // 
+            this.cmb_Font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_Font.FormattingEnabled = true;
             this.cmb_Font.Location = new System.Drawing.Point(37, 15);
             this.cmb_Font.Name = "cmb_Font";
@@ -638,24 +672,6 @@
             this.txt_DisplayedText.Name = "txt_DisplayedText";
             this.txt_DisplayedText.Size = new System.Drawing.Size(551, 20);
             this.txt_DisplayedText.TabIndex = 74;
-            // 
-            // lbl_MaxSizeX
-            // 
-            this.lbl_MaxSizeX.AutoSize = true;
-            this.lbl_MaxSizeX.Location = new System.Drawing.Point(374, 18);
-            this.lbl_MaxSizeX.Name = "lbl_MaxSizeX";
-            this.lbl_MaxSizeX.Size = new System.Drawing.Size(61, 13);
-            this.lbl_MaxSizeX.TabIndex = 75;
-            this.lbl_MaxSizeX.Text = "Dimensions";
-            // 
-            // lbl_DimensionsX
-            // 
-            this.lbl_DimensionsX.AutoSize = true;
-            this.lbl_DimensionsX.Location = new System.Drawing.Point(491, 18);
-            this.lbl_DimensionsX.Name = "lbl_DimensionsX";
-            this.lbl_DimensionsX.Size = new System.Drawing.Size(12, 13);
-            this.lbl_DimensionsX.TabIndex = 76;
-            this.lbl_DimensionsX.Text = "x";
             // 
             // Text_Designer_MDI
             // 
@@ -715,8 +731,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trk_VoiceVolume)).EndInit();
             this.grp_TextDimensions.ResumeLayout(false);
             this.grp_TextDimensions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_TextHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PaddingX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_TextWidth)).EndInit();
             this.grp_OutlineColor.ResumeLayout(false);
@@ -727,7 +743,7 @@
             this.grp_ForeColor.PerformLayout();
             this.grp_FontAndOutline.ResumeLayout(false);
             this.grp_FontAndOutline.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_Outline)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numud_OutlineWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_FontSize)).EndInit();
             this.ResumeLayout(false);
 
@@ -772,7 +788,7 @@
         private System.Windows.Forms.Label lbl_Size;
         private System.Windows.Forms.Label lbl_Font;
         private System.Windows.Forms.Label lbl_OutlinePx;
-        private System.Windows.Forms.NumericUpDown numud_Outline;
+        private System.Windows.Forms.NumericUpDown numud_OutlineWidth;
         private System.Windows.Forms.Label lbl_Outline;
         private System.Windows.Forms.Label lbl_FontPt;
         private System.Windows.Forms.NumericUpDown numud_FontSize;

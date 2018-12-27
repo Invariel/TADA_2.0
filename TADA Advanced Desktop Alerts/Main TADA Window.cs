@@ -124,7 +124,7 @@ namespace TADA_Advanced_Desktop_Alerts
             _mainTADAForm = this;
             webSocketServer = new WebSocketServer(21573);   // Let the user set this, and then auto-increment if the port is unavailable, maybe?
 
-            Creation_Forms.Alert_Designer_MDI ad3 = new Creation_Forms.Alert_Designer_MDI(new _TADAAlert());
+            Creation_Forms.Alert_Designer_MDI ad3 = new Creation_Forms.Alert_Designer_MDI(new TADAAlert());
             ad3.Show();
 
             // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php

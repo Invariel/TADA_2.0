@@ -217,7 +217,7 @@
             // 
             // alertImageBindingSource
             // 
-            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertImage);
+            this.alertImageBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.oldTADAAlertImage);
             // 
             // tab_Audio
             // 
@@ -272,7 +272,7 @@
             // 
             // alertAudioBindingSource
             // 
-            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertAudio);
+            this.alertAudioBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.oldTADAAlertAudio);
             // 
             // tab_Streamer
             // 

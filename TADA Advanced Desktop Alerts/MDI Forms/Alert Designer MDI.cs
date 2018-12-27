@@ -12,7 +12,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
     public partial class Alert_Designer_MDI : Form
     {
-        _TADAAlert mainAlert;
+        TADAAlert mainAlert;
 
         Bitmap previewImage;
 
@@ -23,11 +23,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private double MaximumTime;
 
-        private List <Tuple <_TADAAlertImage, TabPage>> imageTabPages = new List<Tuple<_TADAAlertImage, TabPage>>();
-        private List <Tuple <_TADAAlertAudio, TabPage>> audioTabPages = new List<Tuple<_TADAAlertAudio, TabPage>>();
-        private List <Tuple <_TADAAlertText, TabPage>> textTabPages = new List<Tuple<_TADAAlertText, TabPage>>();
+        private List <Tuple <TADAAlertImage, TabPage>> imageTabPages = new List<Tuple<TADAAlertImage, TabPage>>();
+        private List <Tuple <TADAAlertAudio, TabPage>> audioTabPages = new List<Tuple<TADAAlertAudio, TabPage>>();
+        private List <Tuple <TADAAlertText, TabPage>> textTabPages = new List<Tuple<TADAAlertText, TabPage>>();
 
-        internal Alert_Designer_MDI(_TADAAlert originalAlert)
+        internal Alert_Designer_MDI(TADAAlert originalAlert)
         {
             InitializeComponent();
 
@@ -44,10 +44,20 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             trk_Time.ValueChanged += TrackbarPositionChanged;
 
+            cmb_AlertType.SelectedIndexChanged += UpdateAlertType;
+
             dg_Images.CellContentClick += CellEditClicked;
             dg_Audio.CellContentClick += CellEditClicked;
-            //            dg_StreamerMessages.CellContentClick += CellEditClicked;
-            //            dg_ViewerMessages.CellContentClick += CellEditClicked;
+            dg_StreamerMessages.CellContentClick += CellEditClicked;
+            dg_ViewerMessages.CellContentClick += CellEditClicked;
+
+            // Need to add a listener for anything done in dg_Conditions to ensure that it is always updated.
+
+            dg_Images.UserDeletingRow += RowDeleted;
+            dg_Audio.UserDeletingRow += RowDeleted;
+            dg_StreamerMessages.UserDeletingRow += RowDeleted;
+            dg_ViewerMessages.UserDeletingRow += RowDeleted;
+            dg_Conditions.UserDeletingRow += RowDeleted;
 
             ConfigureMenuItems();
 
@@ -55,27 +65,27 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             this.mainAlert = originalAlert;
 
-            foreach (_TADAAlertImage image in this.mainAlert.Images)
+            foreach (TADAAlertImage image in this.mainAlert.Images)
             {
                 this.alertImageBindingSource.Add(image);
             }
 
-            foreach (_TADAAlertAudio audio in this.mainAlert.Audios)
+            foreach (TADAAlertAudio audio in this.mainAlert.Audios)
             {
                 this.alertAudioBindingSource.Add(audio);
             }
 
-            foreach (_TADAAlertText text in this.mainAlert.StreamerTexts)
+            foreach (TADAAlertText text in this.mainAlert.StreamerTexts)
             {
                 this.streamerAlertTextBindingSource.Add(text);
             }
 
-            foreach (_TADAAlertText text in this.mainAlert.ViewerTexts)
+            foreach (TADAAlertText text in this.mainAlert.ViewerTexts)
             {
                 this.viewerAlertTextBindingSource.Add(text);
             }
 
-            foreach (_TADAAlertCondition condition in this.mainAlert.Conditions)
+            foreach (TADAAlertCondition condition in this.mainAlert.Conditions)
             {
                 this.alertConditionBindingSource.Add(condition);
             }
@@ -87,8 +97,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         {
             this.ts_NewImageVideo.Click += NewImageVideoForm;
             this.ts_NewStreamerAudio.Click += NewAudioForm;
-//            this.ts_NewStreamerText.Click += NewStreamerTextForm;
-//            this.ts_NewViewerText.Click += NewViewerTextForm;
+            this.ts_NewStreamerText.Click += NewStreamerTextForm;
+            this.ts_NewViewerText.Click += NewViewerTextForm;
         }
 
         private void FillAlertTypeComboBox()
@@ -110,37 +120,69 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             return String.Format("{0} {1}        ", type, number);
         }
 
-        private void AddTab(_TADAAlertImage alertImage, TabPage newTab)
+        private void AddTab(TADAAlertImage alertImage, TabPage newTab)
         {
-            imageTabPages.Add(new Tuple<_TADAAlertImage, TabPage>(alertImage, newTab));
+            imageTabPages.Add(new Tuple<TADAAlertImage, TabPage>(alertImage, newTab));
         }
 
-        private void AddTab(_TADAAlertAudio alertAudio, TabPage newTab)
+        private void AddTab(TADAAlertAudio alertAudio, TabPage newTab)
         {
-            audioTabPages.Add(new Tuple<_TADAAlertAudio, TabPage>(alertAudio, newTab));
+            audioTabPages.Add(new Tuple<TADAAlertAudio, TabPage>(alertAudio, newTab));
         }
 
-        private void AddTab(_TADAAlertText alertText, TabPage newTab)
+        private void AddTab(TADAAlertText alertText, TabPage newTab)
         {
-            textTabPages.Add(new Tuple<_TADAAlertText, TabPage>(alertText, newTab));
+            textTabPages.Add(new Tuple<TADAAlertText, TabPage>(alertText, newTab));
         }
 
-        private TabPage TabExists(_TADAAlertImage alertImage)
+        private TabPage TabExists(TADAAlertImage alertImage)
         {
-            Tuple<_TADAAlertImage, TabPage> tuple = imageTabPages.Find(tp => tp.Item1 == alertImage);
+            Tuple<TADAAlertImage, TabPage> tuple = imageTabPages.Find(tp => tp.Item1 == alertImage);
             return tuple?.Item2 ?? null;
         }
 
-        private TabPage TabExists(_TADAAlertAudio alertAudio)
+        private TabPage TabExists(TADAAlertAudio alertAudio)
         {
-            Tuple<_TADAAlertAudio, TabPage> tuple = audioTabPages.Find(tp => tp.Item1 == alertAudio);
+            Tuple<TADAAlertAudio, TabPage> tuple = audioTabPages.Find(tp => tp.Item1 == alertAudio);
             return tuple?.Item2 ?? null;
         }
 
-        private TabPage TabExists(_TADAAlertText alertText)
+        private TabPage TabExists(TADAAlertText alertText)
         {
-            Tuple<_TADAAlertText, TabPage> tuple = textTabPages.Find(tp => tp.Item1 == alertText);
+            Tuple<TADAAlertText, TabPage> tuple = textTabPages.Find(tp => tp.Item1 == alertText);
             return tuple?.Item2 ?? null;
+        }
+
+        private void UpdateAlertType (object sender, EventArgs e)
+        {
+            this.mainAlert.AlertType = cmb_AlertType.Text;
+
+            if (cmb_AlertType.Text == "Macro")
+            {
+                grp_Macro.Visible = true;
+                SaveMacroSettings(sender, e);
+            }
+            else
+            {
+                grp_Macro.Visible = false;
+                DeleteMacroSettings();
+            }
+        }
+
+        private void SaveMacroSettings(object sender, EventArgs e)
+        {
+            this.mainAlert.macroKey.Ctrl = chk_MacroCtrl.Checked;
+            this.mainAlert.macroKey.Alt = chk_MacroAlt.Checked;
+            this.mainAlert.macroKey.Shift = chk_MacroShift.Checked;
+            this.mainAlert.macroKey.Key = (Keys)(Enum.Parse(typeof(Keys), cmb_MacroKey.Text));
+        }
+
+        private void DeleteMacroSettings()
+        {
+            this.mainAlert.macroKey.Ctrl = false;
+            this.mainAlert.macroKey.Alt = false;
+            this.mainAlert.macroKey.Shift = false;
+            this.mainAlert.macroKey.Key = Keys.None;
         }
 
         private void CellEditClicked(object sender, DataGridViewCellEventArgs e)
@@ -171,75 +213,86 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     if (isNewObject)
                     {
-                        this.mainAlert.Images.Add(editObject as _TADAAlertImage);
+                        this.mainAlert.Images.Add(editObject as TADAAlertImage);
                     }
                     else
                     {
-                        existingTabPage = TabExists(editObject as _TADAAlertImage);
+                        existingTabPage = TabExists(editObject as TADAAlertImage);
                     }
 
                     if (existingTabPage == null || isNewObject)
                     {
-                        CreateMDIForm(editObject as _TADAAlertImage, GetCaption("Image", e.RowIndex));
+                        CreateMDIForm(editObject as TADAAlertImage, GetCaption("Image", e.RowIndex));
                     }
                 }
                 else if (dataGrid == dg_Audio)
                 {
                     if (!isNewObject)
                     {
-                        this.mainAlert.Audios.Add(editObject as _TADAAlertAudio);
+                        this.mainAlert.Audios.Add(editObject as TADAAlertAudio);
                     }
                     else
                     {
-                        existingTabPage = TabExists(editObject as _TADAAlertAudio);
+                        existingTabPage = TabExists(editObject as TADAAlertAudio);
                     }
 
                     if (existingTabPage == null || isNewObject)
                     {
-                        CreateMDIForm(editObject as _TADAAlertAudio, GetCaption("Audio", e.RowIndex));
+                        CreateMDIForm(editObject as TADAAlertAudio, GetCaption("Audio", e.RowIndex));
                     }
                 }
-                else if (dataGrid == dg_StreamerMessages)
+                else if (dataGrid == dg_StreamerMessages || dataGrid == dg_ViewerMessages)
                 {
-/*
                     if (isNewObject)
                     {
-                        this.mainAlert.StreamerTexts.Add(editObject as _TADAAlertText);
+                        if (dataGrid == dg_StreamerMessages)
+                        {
+                            this.mainAlert.StreamerTexts.Add(editObject as TADAAlertText);
+                        }
+                        else
+                        {
+                            this.mainAlert.ViewerTexts.Add(editObject as TADAAlertText);
+                        }
                     }
                     else
                     {
-                        existingTabPage = TabExists(editObject as _TADAAlertText);
+                        existingTabPage = TabExists(editObject as TADAAlertText);
                     }
 
                     if (existingTabPage == null || isNewObject)
                     {
-                        CreateMDIForm(editObject as _TADAAlertText, GetCaption("Streamer", e.RowIndex), "Streamer");
+                        CreateMDIForm(editObject as TADAAlertText, GetCaption((dataGrid == dg_StreamerMessages ? "Streamer" : "Viewer"), e.RowIndex));
                     }
-*/
-                }
-                else if (dataGrid == dg_ViewerMessages)
-                {
-/*
-                    if (isNewObject)
-                    {
-                        this.mainAlert.ViewerTexts.Add(editObject as _TADAAlertText);
-                    }
-                    else
-                    {
-                        existingTabPage = TabExists(editObject as _TADAAlertText);
-                    }
-
-                    if (existingTabPage == null || isNewObject)
-                    {
-                        CreateMDIForm(editObject as _TADAAlertText, GetCaption("Streamer", e.RowIndex), "Viewer");
-                    }
-*/
                 }
 
                 if (existingTabPage != null)
                 {
                     SwitchTabPage(existingTabPage);
                 }
+            }
+        }
+
+        private void RowDeleted (object sender, DataGridViewRowCancelEventArgs e)
+        {
+            if (sender == dg_Images)
+            {
+                this.mainAlert.Images.Remove(alertImageBindingSource[e.Row.Index] as TADAAlertImage);
+            }
+            else if (sender == dg_Audio)
+            {
+                this.mainAlert.Audios.Remove(alertAudioBindingSource[e.Row.Index] as TADAAlertAudio);
+            }
+            else if (sender == dg_StreamerMessages)
+            {
+                this.mainAlert.StreamerTexts.Remove(streamerAlertTextBindingSource[e.Row.Index] as TADAAlertText);
+            }
+            else if (sender == dg_ViewerMessages)
+            {
+                this.mainAlert.ViewerTexts.Remove(viewerAlertTextBindingSource[e.Row.Index] as TADAAlertText);
+            }
+            else if (sender == dg_Conditions)
+            {
+                this.mainAlert.Conditions.Remove(alertConditionBindingSource[e.Row.Index] as TADAAlertCondition);
             }
         }
 
@@ -289,28 +342,51 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
         private void NewImageVideoForm(object sender = null, EventArgs e = null)
         {
-            _TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as _TADAAlertImage;
+            TADAAlertImage newAlertImage = alertImageBindingSource.AddNew() as TADAAlertImage;
+            this.mainAlert.Images.Add(newAlertImage);
             CreateMDIForm(newAlertImage, GetCaption("Image", alertImageBindingSource.Count - 1));
         }
 
         private void NewAudioForm(object sender = null, EventArgs e = null)
         {
-            _TADAAlertAudio newAlertAudio = alertAudioBindingSource.AddNew() as _TADAAlertAudio;
+            TADAAlertAudio newAlertAudio = alertAudioBindingSource.AddNew() as TADAAlertAudio;
+            this.mainAlert.Audios.Add(newAlertAudio);
             CreateMDIForm(newAlertAudio, GetCaption("Audio", alertAudioBindingSource.Count - 1));
         }
 
-        private void CreateMDIForm (_TADAAlertImage newAlertImage, String caption)
+        private void NewStreamerTextForm (object sender = null, EventArgs e = null)
+        {
+            TADAAlertText newAlertText = streamerAlertTextBindingSource.AddNew() as TADAAlertText;
+            this.mainAlert.StreamerTexts.Add(newAlertText);
+            CreateMDIForm(newAlertText, GetCaption("Streamer", streamerAlertTextBindingSource.Count - 1));
+        }
+
+        private void NewViewerTextForm (object sender = null, EventArgs e = null)
+        {
+            TADAAlertText newAlertText = viewerAlertTextBindingSource.AddNew() as TADAAlertText;
+            this.mainAlert.ViewerTexts.Add(newAlertText);
+            CreateMDIForm(newAlertText, GetCaption("Viewer", viewerAlertTextBindingSource.Count - 1));
+        }
+
+        private void CreateMDIForm (TADAAlertImage newAlertImage, String caption)
         {
             Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, this.mainAlert);
             TabPage surroundingTabPage = EncapsulateWithTab(newImageForm, caption);
-            imageTabPages.Add(new Tuple<_TADAAlertImage, TabPage>(newAlertImage, surroundingTabPage));
+            imageTabPages.Add(new Tuple<TADAAlertImage, TabPage>(newAlertImage, surroundingTabPage));
         }
 
-        private void CreateMDIForm (_TADAAlertAudio newAlertAudio, String caption)
+        private void CreateMDIForm (TADAAlertAudio newAlertAudio, String caption)
         {
             Form newAudioForm = new MDI_Forms.Audio_Designer_MDI(newAlertAudio, this.mainAlert);
             TabPage surroundingTabPage = EncapsulateWithTab(newAudioForm, caption);
-            audioTabPages.Add(new Tuple<_TADAAlertAudio, TabPage>(newAlertAudio, surroundingTabPage));
+            audioTabPages.Add(new Tuple<TADAAlertAudio, TabPage>(newAlertAudio, surroundingTabPage));
+        }
+
+        private void CreateMDIForm (TADAAlertText newAlertText, String caption)
+        {
+            Form newTextForm = new MDI_Forms.Text_Designer_MDI(newAlertText, this.mainAlert);
+            TabPage surroundingTabPage = EncapsulateWithTab(newTextForm, caption);
+            textTabPages.Add(new Tuple<TADAAlertText, TabPage>(newAlertText, surroundingTabPage));
         }
 
         private void ChildFormClosed (object sender, FormClosedEventArgs e)
@@ -562,23 +638,23 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             double timestamp = TrackbarTime();
             double maximumTime = 0;
 
-            foreach (_TADAAlertImage image in alertImageBindingSource)
+            foreach (TADAAlertImage image in alertImageBindingSource)
             {
                 maximumTime = Math.Max(maximumTime, image.Waypoints.TotalDuration);
             }
 
-            foreach (_TADAAlertAudio audio in alertAudioBindingSource)
+            foreach (TADAAlertAudio audio in alertAudioBindingSource)
             {
                 maximumTime = Math.Max(maximumTime, audio.Waypoints.TotalDuration);
                 maximumTime = Math.Max(maximumTime, audio.Duration.TotalSeconds + audio.Delay.TotalSeconds);
             }
 
-            foreach (_TADAAlertText text in streamerAlertTextBindingSource)
+            foreach (TADAAlertText text in streamerAlertTextBindingSource)
             {
                 maximumTime = Math.Max(maximumTime, text.Waypoints.TotalDuration);
             }
 
-            foreach (_TADAAlertText text in viewerAlertTextBindingSource)
+            foreach (TADAAlertText text in viewerAlertTextBindingSource)
             {
                 maximumTime = Math.Max(maximumTime, text.Waypoints.TotalDuration);
             }
@@ -633,7 +709,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(fileStream, xmlWriterSettings);
                 xmlWriter.WriteStartDocument();
-                foreach (_TADAAlertImage image in alertImageBindingSource) { image.WriteXml(xmlWriter); }
+                this.mainAlert.WriteXml(xmlWriter);
                 xmlWriter.WriteEndDocument();
                 xmlWriter.Flush();
                 xmlWriter.Close();

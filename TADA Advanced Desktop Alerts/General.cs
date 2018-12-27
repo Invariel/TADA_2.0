@@ -87,7 +87,7 @@ namespace TADA_Advanced_Desktop_Alerts
             FOLLOW,
             HOST,
             JOIN,
-//            MACRO,
+            MACRO,
             MESSAGE,
             RAID,
             SUBGIFT,
@@ -107,7 +107,7 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.FOLLOW, "Follow" },
             { ALERTTYPES.HOST, "Host" },
             { ALERTTYPES.JOIN, "Join" },
-//            { ALERTTYPES.MACRO, "Macro" },
+            { ALERTTYPES.MACRO, "Macro" },
             { ALERTTYPES.MESSAGE, "Message" },
             { ALERTTYPES.RAID, "Raid" },
             { ALERTTYPES.SUBGIFT, "Sub Gift" },
@@ -207,6 +207,11 @@ namespace TADA_Advanced_Desktop_Alerts
             a = Convert.ToInt32(hex.Substring(7, 2), 16);
         }
 
+        internal static string StringFromColor(Color color)
+        {
+            return String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
+        }
+
         internal static void ColourPicker(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
         {
             ColorDialog colorDialog = new ColorDialog()
@@ -248,12 +253,13 @@ namespace TADA_Advanced_Desktop_Alerts
                 color = colorDialog.Color;
 
                 comboBox.Text = color.IsNamedColor ? color.Name : "Custom";
-                hexBox.Text = String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
+                hexBox.Text = General.StringFromColor(color);
             }
 
             return color;
         }
 
+        // Deprecated, because this isn't used anymore.
         internal static Color ColorFromNumuds(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
         {
             return Color.FromArgb(Convert.ToInt32(alpha.Value), Convert.ToInt32(red.Value), Convert.ToInt32(green.Value), Convert.ToInt32(blue.Value));
@@ -365,6 +371,8 @@ namespace TADA_Advanced_Desktop_Alerts
             return String.Format(General.MASKED_TEXTBOX_MASK, span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
         }
 
+        public static void AssignNumud<T>(NumericUpDown numud, T value) => numud.Value = Math.Min(Math.Max(Convert.ToDecimal(value), numud.Minimum), numud.Maximum);
+
         public static void FillNumudsFromTimeSpan(TimeSpan time, NumericUpDown hours, NumericUpDown minutes, NumericUpDown seconds, NumericUpDown milliseconds)
         {
             hours.Value = time.Hours;
@@ -373,46 +381,67 @@ namespace TADA_Advanced_Desktop_Alerts
             milliseconds.Value = time.Milliseconds;
         }
 
-        public static Bitmap GenerateMessageBitmap(Color foreColor, Color backColor, Color outlineColor, Font textFont, float outlineWidth, Size maximumSize, SizeF padding, string text)
+        public static Bitmap GenerateMessageBitmap(Color foreColor, Color backColor, Color outlineColor, Font textFont, float outlineWidth, Size bitmapDimensions, Size padding, String text, String backgroundImageLocation = null)
         {
-            SizeF textSize;
-
             StringFormat textFormat = new StringFormat
             {
                 Alignment = StringAlignment.Center,
                 LineAlignment = StringAlignment.Center
             };
 
-            // Figure out the actual dimensions of the image.
-            // TODO:  Future work: let people choose their text alignment.
-            using (Bitmap b = new Bitmap(maximumSize.Width, maximumSize.Height))
-            using (Graphics image = Graphics.FromImage(b))
+            Bitmap outputBitmap = new Bitmap(bitmapDimensions.Width, bitmapDimensions.Height);
+            Bitmap textBitmap = new Bitmap(bitmapDimensions.Width - 2 * padding.Width, bitmapDimensions.Height - 2 * padding.Height);
+            Bitmap backgroundBitmap = null;
+            Bitmap tempBackground = null;
+
+            try
             {
-                textSize = image.MeasureString(text, textFont, Convert.ToInt32(maximumSize.Width - padding.Width * 2), textFormat);
+                tempBackground = new Bitmap(backgroundImageLocation);
+                backgroundBitmap = new Bitmap(tempBackground, outputBitmap.Size);
+            }
+            catch
+            {
+                tempBackground = null;
+                backgroundBitmap = null;
+            }
+            finally
+            {
+                tempBackground?.Dispose();
             }
 
-            Bitmap outputBitmap = new Bitmap(Convert.ToInt32(Math.Min(textSize.Width, maximumSize.Width)), Convert.ToInt32(Math.Min(textSize.Height, maximumSize.Height)));
-
+            // Draw the textBitmap.
             using (SolidBrush foreBrush = new SolidBrush(foreColor))
-            using (SolidBrush backBrush = new SolidBrush(backColor))
+            using (Graphics textGraphics = Graphics.FromImage(textBitmap))
             {
-                Graphics image = Graphics.FromImage(outputBitmap);
-                image.FillRectangle(backBrush, new Rectangle(new Point(0, 0), outputBitmap.Size));
-
                 System.Drawing.Drawing2D.GraphicsPath textOutline = new System.Drawing.Drawing2D.GraphicsPath();
-                textOutline.AddString(text, textFont.FontFamily, (int)textFont.Style, textFont.Size, new RectangleF(new PointF(padding.Width, padding.Height), textSize), textFormat);
+                textOutline.AddString(text, textFont.FontFamily, (int)textFont.Style, textFont.Size, new Rectangle(Point.Empty, textBitmap.Size), textFormat);
 
                 if (outlineColor != Color.Empty && outlineWidth > 0)
                 {
-                    using (Pen pen = new Pen(outlineColor, (float)outlineWidth))
+                    using (Pen pen = new Pen(outlineColor, outlineWidth))
                     {
-                        image.DrawPath(pen, textOutline);
+                        textGraphics.DrawPath(pen, textOutline);
                     }
                 }
 
-                image.FillPath(foreBrush, textOutline);
-
+                textGraphics.FillPath(foreBrush, textOutline);
             }
+
+            using (SolidBrush backBrush = new SolidBrush(backColor))
+            using (Graphics outputGraphics = Graphics.FromImage(outputBitmap))
+            {
+                outputGraphics.FillRectangle(backBrush, new Rectangle(0, 0, outputBitmap.Width, outputBitmap.Height));
+
+                if (backgroundBitmap != null)
+                {
+                    outputGraphics.DrawImage(backgroundBitmap, new Point(0, 0));
+                }
+
+                outputGraphics.DrawImage(textBitmap, new Point(padding.Width, padding.Height));
+            }
+
+            textBitmap.Dispose();
+            backgroundBitmap?.Dispose();
 
             return outputBitmap;
         }

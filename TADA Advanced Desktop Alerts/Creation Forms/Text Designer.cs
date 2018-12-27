@@ -271,7 +271,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             Color outlineColor = ColorFromDecimals(numud_OutlineA.Value, numud_OutlineR.Value, numud_OutlineG.Value, numud_OutlineB.Value);
             float outlineWidth = (float)numud_Outline.Value;
             Size maximumSize = new Size(Convert.ToInt32(numud_MaxSizeX.Value), Convert.ToInt32(numud_MaxSizeY.Value));
-            SizeF padding = new SizeF((float)numud_PaddingX.Value, (float)numud_PaddingY.Value);
+            Size padding = new Size(Convert.ToInt32(numud_PaddingX.Value), Convert.ToInt32(numud_PaddingY.Value));
             String text = "The quick brown fox jumps over the lazy dog.";
 
             // Create a bitmap.
