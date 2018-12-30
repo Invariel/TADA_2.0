@@ -50,7 +50,7 @@ namespace TADA_Advanced_Desktop_Alerts
         private List<TADAAlertText> viewerTexts = new List<TADAAlertText>();
         private List<TADAAlertCondition> conditions = new List<TADAAlertCondition>();
 
-        internal Macro macroKey;
+        internal Macro macroKey = new Macro();
 
         #region PropertyStuff
         public List<TADAAlertImage> Images
@@ -167,6 +167,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
             while (reader.Read())
             {
+                if (reader.IsEmptyElement)
+                {
+                    continue;
+                }
                 if (reader.IsStartElement("Images"))
                 {
                     XmlHelper.Read(reader, "Image", "Images", this.images);
@@ -258,9 +262,9 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             if (reader.IsStartElement("Macro"))
             {
-                this.Ctrl = XmlHelper.ReadBooleanAttribute(reader, "Ctrl");
-                this.Alt = XmlHelper.ReadBooleanAttribute(reader, "Alt");
-                this.Shift = XmlHelper.ReadBooleanAttribute(reader, "Shift");
+                this.Ctrl = XmlHelper.ReadAttribute(reader, "Ctrl", false);
+                this.Alt = XmlHelper.ReadAttribute(reader, "Alt", false);
+                this.Shift = XmlHelper.ReadAttribute(reader, "Shift", false);
                 this.Key = (Keys)(Enum.Parse(typeof(Keys), reader.GetAttribute("Key")));
             }
         }
@@ -367,6 +371,13 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.IsVideo = Boolean.Parse(reader.GetAttribute("IsVideo"));
                 this.AnimationLoops = Int32.Parse(reader.GetAttribute("Loops") ?? "0.0");
 
+                // Have to read all of the 1.0-written properties.
+                double initialAngle = XmlHelper.ReadAttribute(reader, "Angle", 0.0d);
+                double initialMagnification = XmlHelper.ReadAttribute(reader, "Magnification", 1.0d);
+                double initialOpacity = XmlHelper.ReadAttribute(reader, "Opacity", 100.0d);
+                double initialBalance = XmlHelper.ReadAttribute(reader, "Balance", 0.0d);
+                double initialVolume = XmlHelper.ReadAttribute(reader, "Volume", 0.0d);
+
                 while (reader.Read())
                 {
                     if (reader.IsStartElement("Time"))
@@ -396,11 +407,19 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else if (reader.IsStartElement("Waypoints"))
                     {
-                        XmlHelper.Read<Waypoint>(reader, "Waypoint", "Waypoints", this.Waypoints.Waypoints);
+                        this.Waypoints.ReadXml(reader);
                     }
                     else if (!reader.IsStartElement() && reader.Name == "Image")
                     {
                         closingTag = true;
+
+                        // And to write the 1.0 properties if they're there.
+                        if (this.Waypoints.InitialAngle == General.INITIAL_ANGLE) { this.Waypoints.InitialAngle = initialAngle; }
+                        if (this.Waypoints.InitialMagnification == General.INITIAL_MAGNIFICATION) { this.Waypoints.InitialMagnification = initialMagnification; }
+                        if (this.Waypoints.InitialOpacity == General.INITIAL_OPACITY) { this.Waypoints.InitialOpacity = initialOpacity; }
+                        if (this.Waypoints.InitialBalance == General.INITIAL_BALANCE) { this.Waypoints.InitialBalance = initialBalance; }
+                        if (this.Waypoints.InitialVolume == General.INITIAL_VOLUME) { this.Waypoints.InitialVolume = initialVolume; }
+
                         break;
                     }
                 }
@@ -435,10 +454,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             XmlHelper.WriteSize(writer, this.dimensions, "Dimensions");
 
-            if (this.Waypoints.Waypoints.Count > 0)
-            {
-                this.Waypoints.WriteXml(writer);
-            }
+            this.Waypoints.WriteXml(writer);
 
             writer.WriteEndElement();
         }
@@ -514,6 +530,13 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 this.Filename = reader.GetAttribute("Filename");
 
+                // Have to read all of the 1.0-written properties.
+                double initialAngle = XmlHelper.ReadAttribute(reader, "Angle", 0.0d);
+                double initialMagnification = XmlHelper.ReadAttribute(reader, "Magnification", 1.0d);
+                double initialOpacity = XmlHelper.ReadAttribute(reader, "Opacity", 100.0d);
+                double initialBalance = XmlHelper.ReadAttribute(reader, "Balance", 0.0d);
+                double initialVolume = XmlHelper.ReadAttribute(reader, "Volume", 0.0d);
+
                 while (reader.Read())
                 {
                     if (reader.IsStartElement("Time"))
@@ -543,6 +566,14 @@ namespace TADA_Advanced_Desktop_Alerts
                     else if (!reader.IsStartElement() && reader.Name == "Audio")
                     {
                         closingTag = true;
+
+                        // And to write the 1.0 properties if they're there.
+                        if (this.Waypoints.InitialAngle == General.INITIAL_ANGLE) { this.Waypoints.InitialAngle = initialAngle; }
+                        if (this.Waypoints.InitialMagnification == General.INITIAL_MAGNIFICATION) { this.Waypoints.InitialMagnification = initialMagnification; }
+                        if (this.Waypoints.InitialOpacity == General.INITIAL_OPACITY) { this.Waypoints.InitialOpacity = initialOpacity; }
+                        if (this.Waypoints.InitialBalance == General.INITIAL_BALANCE) { this.Waypoints.InitialBalance = initialBalance; }
+                        if (this.Waypoints.InitialVolume == General.INITIAL_VOLUME) { this.Waypoints.InitialVolume = initialVolume; }
+
                         break;
                     }
                 }
@@ -568,10 +599,7 @@ namespace TADA_Advanced_Desktop_Alerts
             XmlHelper.WriteTimeSpan(writer, this.StartingPosition, "StartAt");
             XmlHelper.WriteTimeSpan(writer, this.EndingPosition, "LoopAt");
 
-            if (this.Waypoints.Waypoints.Count > 0)
-            {
-                this.Waypoints.WriteXml(writer);
-            }
+            this.Waypoints.WriteXml(writer);
 
             writer.WriteEndElement();
         }
@@ -678,17 +706,24 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.Message = reader.GetAttribute("Message");
                 this.ReadMessage = reader.GetAttribute("Read");
                 this.TTSVoice = reader.GetAttribute("Voice");
-                
+
+                // Have to read all of the 1.0-written properties.
+                double initialAngle = XmlHelper.ReadAttribute(reader, "Angle", 0.0d);
+                double initialMagnification = XmlHelper.ReadAttribute(reader, "Magnification", 1.0d);
+                double initialOpacity = XmlHelper.ReadAttribute(reader, "Opacity", 100.0d);
+                double initialBalance = XmlHelper.ReadAttribute(reader, "Balance", 0.0d);
+                double initialVolume = XmlHelper.ReadAttribute(reader, "Volume", 0.0d);
+
                 while (reader.Read())
                 {
                     // Version 2.0 of the file writes Message and ReadMessage as elements with String content.
                     if (reader.IsStartElement("Message"))
                     {
-                        this.Message = reader.ReadContentAsString();
+                        this.Message = reader.ReadElementContentAsString();
                     }
                     else if (reader.IsStartElement("Read"))
                     {
-                        this.ReadMessage = reader.ReadContentAsString();
+                        this.ReadMessage = reader.ReadElementContentAsString();
                     }
                     else if (reader.IsStartElement("Background"))
                     {
@@ -739,6 +774,14 @@ namespace TADA_Advanced_Desktop_Alerts
                     else if (!reader.IsStartElement() && reader.Name == "Text")
                     {
                         closingTag = true;
+
+                        // And to write the 1.0 properties if they're there.  Can't do it in <Waypoints> because there's no guarantee that tag exists.
+                        if (this.Waypoints.InitialAngle == General.INITIAL_ANGLE) { this.Waypoints.InitialAngle = initialAngle; }
+                        if (this.Waypoints.InitialMagnification == General.INITIAL_MAGNIFICATION) { this.Waypoints.InitialMagnification = initialMagnification; }
+                        if (this.Waypoints.InitialOpacity == General.INITIAL_OPACITY) { this.Waypoints.InitialOpacity = initialOpacity; }
+                        if (this.Waypoints.InitialBalance == General.INITIAL_BALANCE) { this.Waypoints.InitialBalance = initialBalance; }
+                        if (this.Waypoints.InitialVolume == General.INITIAL_VOLUME) { this.Waypoints.InitialVolume = initialVolume; }
+
                         break;
                     }
                 }
@@ -828,13 +871,13 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             if (reader.Name == "Condition")
             {
-                NoTier = Boolean.Parse(reader.GetAttribute("NoTier"));
-                TwitchPrime = Boolean.Parse(reader.GetAttribute("TwitchPrime"));
-                TierOne = Boolean.Parse(reader.GetAttribute("TierOne"));
-                TierTwo = Boolean.Parse(reader.GetAttribute("TierTwo"));
-                TierThree = Boolean.Parse(reader.GetAttribute("TierThree"));
+                NoTier = XmlHelper.ReadAttribute(reader, "NoTier", false);
+                TwitchPrime = XmlHelper.ReadAttribute(reader, "TwitchPrime", false);
+                TierOne = XmlHelper.ReadAttribute(reader, "TierOne", false);
+                TierTwo = XmlHelper.ReadAttribute(reader, "TierTwo", false);
+                TierThree = XmlHelper.ReadAttribute(reader, "TierThree", false);
 
-                VIP = Boolean.Parse(reader.GetAttribute("VIP"));
+                VIP = XmlHelper.ReadAttribute(reader, "VIP", false);
 
                 Usernames = (String.IsNullOrEmpty(reader.GetAttribute("Usernames")) ? "" : reader.GetAttribute("Usernames"));
                 Keywords = (String.IsNullOrEmpty(reader.GetAttribute("Keywords")) ? "" : reader.GetAttribute("Keywords"));

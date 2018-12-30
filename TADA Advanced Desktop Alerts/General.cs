@@ -127,7 +127,7 @@ namespace TADA_Advanced_Desktop_Alerts
             { "Follow", ALERTTYPES.FOLLOW },
             { "Host", ALERTTYPES.HOST },
             { "Join", ALERTTYPES.JOIN },
-//            { "Macro", ALERTTYPES.MACRO },
+            { "Macro", ALERTTYPES.MACRO },
             { "Message", ALERTTYPES.MESSAGE },
             { "Raid", ALERTTYPES.RAID  },
             { "Sub Gift", ALERTTYPES.SUBGIFT },

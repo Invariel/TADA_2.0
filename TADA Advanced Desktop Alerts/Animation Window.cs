@@ -12,12 +12,11 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class TADAAnimationWindow : Form
     {
-        public List<PlayingAlert> pendingAlerts = new List<PlayingAlert>();
-        public List<PlayingAlert> keyboardAlerts = new List<PlayingAlert>();
+        internal List<PlayingAlert> pendingAlerts = new List<PlayingAlert>();
+        internal List<PlayingAlert> keyboardAlerts = new List<PlayingAlert>();
 
         internal PlayingAlert nowPlaying = null;
 
-        private List<Creation_Forms.MainWaypointForm> listeningDesignWindows = new List<Creation_Forms.MainWaypointForm>();
         private Played_Alerts playedAlerts;
 
         private Graphics myGraphics;
@@ -60,33 +59,13 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public Size Listen(Creation_Forms.MainWaypointForm form)
-        {
-            if (!listeningDesignWindows.Contains(form))
-            {
-                listeningDesignWindows.Add(form);
-            }
-
-            return this.ClientSize;
-        }
-
         public Size GetClientSize()
         {
             return this.ClientSize;
         }
 
-        public void Silence(Creation_Forms.MainWaypointForm form)
-        {
-            this.listeningDesignWindows.Remove(form);
-        }
-
         public void OnSizeChanged(object sender, EventArgs e)
         {
-            foreach (Creation_Forms.MainWaypointForm form in listeningDesignWindows)
-            {
-                form.SetAnimationWindowSize(this.ClientSize);
-            }
-
             if (sender is NumericUpDown && (sender as NumericUpDown).ParentForm != MainTADAForm.mainTADAForm)
             {
                 MainTADAForm.mainTADAForm.SetAnimationWindowSize(this.ClientSize);
@@ -103,7 +82,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.DecideWhatToPlay();
         }
 
-        public void AlertFinished(PlayingAlert alert)
+        internal void AlertFinished(PlayingAlert alert)
         {
             if (alert == nowPlaying)
             {
@@ -134,7 +113,7 @@ namespace TADA_Advanced_Desktop_Alerts
             return pauseAlerts;
         }
 
-        public void AddPlayingAlert(PlayingAlert playingAlert, bool isTest = false)
+        internal void AddPlayingAlert(PlayingAlert playingAlert, bool isTest = false)
         {
             this.pendingAlerts.Add(playingAlert);
             if (isTest || this.keyboardAlerts.Count >= 0)

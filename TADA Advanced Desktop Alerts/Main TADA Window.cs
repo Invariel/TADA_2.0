@@ -16,7 +16,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         bool blockUpdates = false;
 
-        Creation_Forms.AlertCreationForm _alertCreationForm;
+        Creation_Forms.Alert_Designer_MDI _alertCreationForm;
         private TADAAnimationWindow animationWindow;
 
         internal WebSocketServer webSocketServer;
@@ -292,21 +292,19 @@ namespace TADA_Advanced_Desktop_Alerts
                     DataGridView dataGrid = (sender as DataGridView);
                     BindingSource bindingSource = dataGrid.DataSource as BindingSource;
                     TADAAlert editObject;
-                    bool isNew = false;
 
                     DataGridView dgView = (sender as DataGridView);
                     if (dataGrid.Rows[e.RowIndex].IsNewRow)
                     {
                         bindingSource.CancelEdit();
                         editObject = bindingSource.AddNew() as TADAAlert;
-                        isNew = true;
                     }
                     else
                     {
                         editObject = bindingSource.Current as TADAAlert;
                     }
 
-                    _alertCreationForm = new Creation_Forms.AlertCreationForm(this, editObject, isNew);
+                    _alertCreationForm = new Creation_Forms.Alert_Designer_MDI(editObject);
                 }
 
                 _alertCreationForm.Show();
@@ -492,10 +490,10 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else if (xmlReader.IsStartElement("Options"))
                     {
-                        Boolean dontReadGlobalEmotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DontReadGlobalEmotes");
-                        Boolean doReadMyEmotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DoReadMyEmotes");
-                        Boolean dontReadGlobalCheermotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DontReadGlobalCheermotes");
-                        Boolean doReadMyCheermotes = XmlHelper.ReadBooleanAttribute(xmlReader, "DoReadMyCheermotes");
+                        Boolean dontReadGlobalEmotes = XmlHelper.ReadAttribute(xmlReader, "DontReadGlobalEmotes", false);
+                        Boolean doReadMyEmotes = XmlHelper.ReadAttribute(xmlReader, "DoReadMyEmotes", false);
+                        Boolean dontReadGlobalCheermotes = XmlHelper.ReadAttribute(xmlReader, "DontReadGlobalCheermotes", false);
+                        Boolean doReadMyCheermotes = XmlHelper.ReadAttribute(xmlReader, "DoReadMyCheermotes", false);
                         String followIdleTime = xmlReader.GetAttribute("LurkerTime");
                         String ttsTime = xmlReader.GetAttribute("TTSTime");
 
@@ -519,6 +517,10 @@ namespace TADA_Advanced_Desktop_Alerts
                             chk_TimeBetweenTTS.Checked = true;
                             mtxt_TimeBetweenTTS.Text = General.StringFromTimeSpan(ttsTimespan);
                         }
+                    }
+                    else if (xmlReader.IsStartElement("TADAConfiguration"))
+                    {
+                        // Version check here.
                     }
                 }
             }
@@ -602,7 +604,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public Dictionary<String, List<TADAAlert>> snapshotAlerts ()
+        internal Dictionary<String, List<TADAAlert>> snapshotAlerts ()
         {
             Dictionary<String, List<TADAAlert>> dictionary = new Dictionary<string, List<TADAAlert>>();
 

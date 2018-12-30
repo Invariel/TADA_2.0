@@ -9,7 +9,7 @@ using System.Timers;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
-    public class PlayingAlert
+    internal class PlayingAlert
     {
         List<PlayingObject> playingObjects = new List<PlayingObject>();
         List<PlayingObject> completedObjects = new List<PlayingObject>();
@@ -21,7 +21,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         Graphics graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
 
-        public PlayingAlert (TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
+        internal PlayingAlert (TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
         {
             if (alertImage != null)
             {
@@ -394,9 +394,9 @@ namespace TADA_Advanced_Desktop_Alerts
             g.TranslateTransform(-this.modifiedPosition.X, -this.modifiedPosition.Y);
         }
 
-        protected PlayingAlert containerAlert;
-        protected TADAAlertImage alertImage;
-        protected WaypointContainer waypoints;
+        internal PlayingAlert containerAlert;
+        internal TADAAlertImage alertImage;
+        internal WaypointContainer waypoints;
         protected Graphics graphics;
 
         public bool BehindImage()
@@ -404,7 +404,7 @@ namespace TADA_Advanced_Desktop_Alerts
             return this.waypoints.CurrentWaypoint != null && this.waypoints.CurrentWaypoint.BehindImage;
         }
 
-        public PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage)
+        internal PlayingObject(PlayingAlert containerAlert, TADAAlertImage alertImage)
         {
             this.containerAlert = containerAlert;
             this.graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
@@ -416,9 +416,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.waypoints = alertImage.Waypoints;
                 this.initialSize = alertImage.Dimensions;
 
-                this.angle = alertImage.InitialAngle;
-                this.magnification = alertImage.InitialMagnification;
-                this.opacity = alertImage.InitialOpacity;
+                this.angle = alertImage.Waypoints.InitialAngle;
+                this.magnification = alertImage.Waypoints.InitialMagnification;
+                this.opacity = alertImage.Waypoints.InitialOpacity;
             }
 
             this.angleTimer.Elapsed += new ElapsedEventHandler((sender, e) => { this.NextEffectFrame(ref this.angle, ref this.angleEffect, this.angleTimer); });
@@ -602,7 +602,7 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
-        public PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage) : base (containerAlert, alertImage)
+        internal PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage) : base (containerAlert, alertImage)
         {
             Bitmap b = new Bitmap(alertImage.Filename);
 
@@ -664,7 +664,7 @@ namespace TADA_Advanced_Desktop_Alerts
             base.Dispose(disposing);
         }
 
-        public PlayingElement(PlayingAlert containerAlert, TADAAlertImage alertImage) : base(containerAlert, null)
+        internal PlayingElement(PlayingAlert containerAlert, TADAAlertImage alertImage) : base(containerAlert, null)
         {
             this.waypoints = alertImage.Waypoints;
 
@@ -672,22 +672,22 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.startingPosition = alertImage.StartingPosition;
             this.endingPosition = alertImage.EndingPosition;
-            this.delay = alertImage.Delay;
+            this.delay = TimeSpan.FromSeconds(alertImage.Waypoints.Waypoints[0].TransitionTime);
             this.duration = alertImage.Duration;
 
-            this.angle = alertImage.InitialAngle;
-            this.magnification = alertImage.InitialMagnification;
-            this.opacity = alertImage.InitialOpacity;
+            this.angle = alertImage.Waypoints.InitialAngle;
+            this.magnification = alertImage.Waypoints.InitialMagnification;
+            this.opacity = alertImage.Waypoints.InitialOpacity;
 
-            this.balance = alertImage.Balance;
-            this.volume = alertImage.Volume;
+            this.balance = alertImage.Waypoints.InitialBalance;
+            this.volume = alertImage.Waypoints.InitialVolume;
 
             this.initialSize = alertImage.Dimensions;
 
             this.SharedSetup();
         }
 
-        public PlayingElement(PlayingAlert containerAlert, TADAAlertAudio alertAudio) : base(containerAlert, null)
+        internal PlayingElement(PlayingAlert containerAlert, TADAAlertAudio alertAudio) : base(containerAlert, null)
         {
             this.waypoints = alertAudio.Waypoints;
 
@@ -862,27 +862,27 @@ namespace TADA_Advanced_Desktop_Alerts
     }
 
     // Next up, PlayingText - the code that handles the Twitch streamer and Twitch user text.
-    public class PlayingText : PlayingObject
+    internal class PlayingText : PlayingObject
     {
         private System.Speech.Synthesis.SpeechSynthesizer talky;
         private System.Speech.Synthesis.PromptBuilder prompt;
 
         private bool talkingCompleted = true;
 
-        public PlayingText(PlayingAlert containerAlert, TADAAlertText alertText) : base(containerAlert, null)
+        internal PlayingText(PlayingAlert containerAlert, TADAAlertText alertText) : base(containerAlert, null)
         {
             this.waypoints = alertText.Waypoints;
 
-            this.angle = alertImage.InitialAngle;
-            this.magnification = alertImage.InitialMagnification;
-            this.opacity = alertImage.InitialOpacity;
+            this.angle = alertImage.Waypoints.InitialAngle;
+            this.magnification = alertImage.Waypoints.InitialMagnification;
+            this.opacity = alertImage.Waypoints.InitialOpacity;
 
             if (!String.IsNullOrEmpty(alertText.Message))
             {
                 this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage());
             }
 
-            if (alertText.TTSVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.GetReadMessage()))
+            if (alertText.Waypoints.InitialVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.GetReadMessage()))
             {
                 talky = new System.Speech.Synthesis.SpeechSynthesizer();
                 try

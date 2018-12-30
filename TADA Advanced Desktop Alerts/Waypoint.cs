@@ -492,7 +492,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.InitialBalance = Double.Parse(reader.GetAttribute("Balance") ?? General.INITIAL_BALANCE.ToString());
                 this.InitialVolume = Double.Parse(reader.GetAttribute("Volume") ?? General.INITIAL_VOLUME.ToString());
 
-                XmlHelper.Read(reader, "Waypoint", "Waypoints", this.waypoints);
+                if (!reader.IsEmptyElement)
+                {
+                    XmlHelper.Read(reader, "Waypoint", "Waypoints", this.waypoints);
+                }
             }
         }
 

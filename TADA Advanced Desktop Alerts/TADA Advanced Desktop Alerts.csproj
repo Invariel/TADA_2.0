@@ -261,53 +261,11 @@
       <DependentUpon>Animation Window.cs</DependentUpon>
     </Compile>
     <Compile Include="Bezier.cs" />
-    <Compile Include="Creation Forms\Alert Designer 2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Alert Designer 2.Designer.cs">
-      <DependentUpon>Alert Designer 2.cs</DependentUpon>
-    </Compile>
     <Compile Include="MDI Forms\Alert Designer MDI.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MDI Forms\Alert Designer MDI.Designer.cs">
       <DependentUpon>Alert Designer MDI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Creation Forms\Alert Designer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Alert Designer.Designer.cs">
-      <DependentUpon>Alert Designer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Creation Forms\Audio Designer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Audio Designer.Designer.cs">
-      <DependentUpon>Audio Designer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Creation Forms\Image Designer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Image Designer.Designer.cs">
-      <DependentUpon>Image Designer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Creation Forms\Text Designer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Text Designer.Designer.cs">
-      <DependentUpon>Text Designer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Creation Forms\Waypoint Designer 2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Waypoint Designer 2.Designer.cs">
-      <DependentUpon>Waypoint Designer 2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Creation Forms\Waypoint Designer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Creation Forms\Waypoint Designer.Designer.cs">
-      <DependentUpon>Waypoint Designer.cs</DependentUpon>
     </Compile>
     <Compile Include="Keypress Handler.cs" />
     <Compile Include="Main TADA Window.cs">
@@ -358,29 +316,8 @@
     <EmbeddedResource Include="Animation Window.resx">
       <DependentUpon>Animation Window.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Alert Designer 2.resx">
-      <DependentUpon>Alert Designer 2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MDI Forms\Alert Designer MDI.resx">
       <DependentUpon>Alert Designer MDI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Alert Designer.resx">
-      <DependentUpon>Alert Designer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Audio Designer.resx">
-      <DependentUpon>Audio Designer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Image Designer.resx">
-      <DependentUpon>Image Designer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Text Designer.resx">
-      <DependentUpon>Text Designer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Waypoint Designer 2.resx">
-      <DependentUpon>Waypoint Designer 2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Creation Forms\Waypoint Designer.resx">
-      <DependentUpon>Waypoint Designer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main TADA Window.resx">
       <DependentUpon>Main TADA Window.cs</DependentUpon>

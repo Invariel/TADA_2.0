@@ -31,6 +31,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         {
             InitializeComponent();
 
+            this.mainAlert = originalAlert;
+
             this.MdiChildActivate += ShowOrHideMdiTabs;
             this.tab_ChildMDIForms.SelectedIndexChanged += SwitchTabPage;
 
@@ -63,8 +65,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             FillAlertTypeComboBox();
 
-            this.mainAlert = originalAlert;
-
             foreach (TADAAlertImage image in this.mainAlert.Images)
             {
                 this.alertImageBindingSource.Add(image);
@@ -90,7 +90,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 this.alertConditionBindingSource.Add(condition);
             }
 
-            // Then fill the four alert types, and conditions, because mainAlert is NEVER null.
+            this.cmb_AlertType.Text = this.mainAlert.AlertType;
+            this.txt_AlertName.Text = this.mainAlert.AlertName;
         }
 
         private void ConfigureMenuItems ()

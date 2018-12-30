@@ -77,11 +77,9 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 while (dg_Played.SelectedRows.Count > 0)
                 {
-                    // Then copy them over, in the order selected
-                    pendingAlertBindingSource.Add(playedAlertBindingSource[dg_Played.SelectedRows[0].Index]);
-
-                    // and deletes them from dg_Played
-                    playedAlertBindingSource.RemoveAt(dg_Played.SelectedRows[0].Index);
+                    ListedAlert alert = playedAlertBindingSource[dg_Played.SelectedRows[0].Index] as ListedAlert;
+                    pendingAlertBindingSource.Add(alert);
+                    playedAlertBindingSource.Remove(alert);
                 }
 
                 // And then let the system know that there are alerts waiting.
@@ -97,7 +95,23 @@ namespace TADA_Advanced_Desktop_Alerts
         private async void Connect()
         {
             var result = await twitchAPI.Helix.Users.GetUsersAsync(null, new List<string> { channelName }, twitchAPI.Settings.AccessToken);
-            channelID = result.Users[0].Id;
+            if (result.Users.Length > 0)
+            {
+                channelID = result.Users[0].Id;
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("No Twitch user was found with the name '" + channelName + "'.", "Unrecognized Twitch User", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            /*
+             *  Open question.
+             *  Do I repurpose PubSub usage to just getting Follows and let TwitchClient do everything else?
+             *  I don't think the objects are all that different, and it means not having to translate from one thing to another.
+             *  It might be a bit much, but it might also make things much cleaner.
+             *  Though, PubSub is supposed to be near-instant (yay, websocket) instead of up to ten seconds (IRC).
+             */
 
             pubSub = new TwitchPubSub();
             pubSub.OnBitsReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);

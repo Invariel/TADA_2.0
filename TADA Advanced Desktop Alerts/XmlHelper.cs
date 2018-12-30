@@ -29,14 +29,27 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public static Boolean ReadBooleanAttribute(XmlReader reader, String propertyName)
+        public static Boolean ReadAttribute(XmlReader reader, String propertyName, Boolean defaultValue)
         {
-            Boolean retVal = false;
+            Boolean retVal = defaultValue;
             String value = reader.GetAttribute(propertyName);
 
             if (value != null)
             {
                 retVal = Boolean.Parse(value);
+            }
+
+            return retVal;
+        }
+
+        public static Double ReadAttribute(XmlReader reader, String propertyName, Double defaultValue)
+        {
+            Double retVal = defaultValue;
+            String value = reader.GetAttribute(propertyName);
+
+            if (value != null)
+            {
+                retVal = Double.Parse(value);
             }
 
             return retVal;
@@ -133,12 +146,17 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public static void Write<T>(XmlWriter writer, String tag, List<T> elements, bool writeContainerElement = true) where T : IXmlSerializable
         {
-            if (elements.Count > 0)
+            if (writeContainerElement)
             {
-                if (writeContainerElement) { writer.WriteStartElement(tag); }
-                foreach (T element in elements) { element.WriteXml(writer); }
-                writer.WriteEndElement();
+                writer.WriteStartElement(tag);
             }
+
+            foreach (T element in elements)
+            {
+                element.WriteXml(writer);
+            }
+
+            writer.WriteEndElement();
         }
 
         public static void WriteColor(XmlWriter writer, Color color, String colorName)
