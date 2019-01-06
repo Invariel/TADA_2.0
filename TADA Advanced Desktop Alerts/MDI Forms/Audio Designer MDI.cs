@@ -34,8 +34,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             mtxt_Delay.TextChanged += UpdateDelay;
             mtxt_PlayFor.TextChanged += UpdatePlayFor;
-            mtxt_StartAt.TextChanged += UpdateStartAt;
-            mtxt_LoopAt.TextChanged += UpdateLoopAt;
+
+            mtxt_StartAt.TextChanged += UpdateTimestamps;
+            trk_StartAt.ValueChanged += UpdateTimestamps;
+
+            mtxt_LoopAt.TextChanged += UpdateTimestamps;
+            trk_LoopAt.ValueChanged += UpdateTimestamps;
 
             trk_Volume.ValueChanged += UpdateVolume;
             trk_Balance.ValueChanged += UpdateBalance;
@@ -108,6 +112,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             txt_Duration.Text = General.DurationFromTimeSpan(mediaDuration);
 
             mtxt_PlayFor.Text = General.StringFromTimeSpan(mediaDuration);
+
+            trk_StartAt.Maximum = Convert.ToInt32(mediaDuration.TotalMilliseconds);
+            trk_LoopAt.Maximum = Convert.ToInt32(mediaDuration.TotalMilliseconds);
 
             trk_Position.Maximum = Convert.ToInt32(Math.Round(mediaDuration.TotalMilliseconds));
             trk_Position.TickFrequency = trk_Position.Maximum / 25;
@@ -204,16 +211,65 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private void UpdatePlayFor (object sender, EventArgs e)
         {
             this.alertAudio.Duration = General.TimeSpanFromString(mtxt_StartAt.Text);
+            // And update the trackbar's position.
         }
 
         private void UpdateStartAt(object sender, EventArgs e)
         {
             this.alertAudio.StartingPosition = General.TimeSpanFromString(mtxt_StartAt.Text);
+            // And update the trackbar's position.
         }
 
         private void UpdateLoopAt(object sender, EventArgs e)
         {
             this.alertAudio.EndingPosition = General.TimeSpanFromString(mtxt_LoopAt.Text);
+        }
+
+        private void UpdateTimestamps(object sender, EventArgs e)
+        {
+            // Make sure that the start_at timestamp is before the loop_at timestamp, update mtxt_ and trk_ at the same time.
+            if (!blocked)
+            {
+                blocked = true;
+                bool updateScreenshot = (sender == mtxt_StartAt || sender == trk_StartAt);
+
+                if (sender == trk_StartAt)
+                {
+                    mtxt_StartAt.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trk_StartAt.Value));
+                }
+                else if (sender == trk_LoopAt)
+                {
+                    mtxt_LoopAt.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trk_LoopAt.Value));
+                }
+                if (sender == mtxt_StartAt)
+                {
+                    trk_StartAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_StartAt.Text).TotalMilliseconds);
+                }
+                else if (sender == mtxt_LoopAt)
+                {
+                    trk_LoopAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_LoopAt.Text).TotalMilliseconds);
+                }
+
+                if (trk_LoopAt.Value < trk_StartAt.Value)
+                {
+                    if (sender == mtxt_LoopAt || sender == trk_LoopAt)
+                    {
+                        mtxt_StartAt.Text = mtxt_LoopAt.Text;
+                        trk_StartAt.Value = trk_LoopAt.Value;
+                    }
+                    else if (sender == mtxt_StartAt || sender == trk_StartAt)
+                    {
+                        mtxt_LoopAt.Text = mtxt_StartAt.Text;
+                        trk_LoopAt.Value = trk_StartAt.Value;
+                    }
+                }
+
+                this.alertAudio.StartingPosition = General.TimeSpanFromString(mtxt_StartAt.Text);
+                this.alertAudio.EndingPosition = General.TimeSpanFromString(mtxt_LoopAt.Text);
+                this.alertAudio.Duration = General.TimeSpanFromString(mtxt_PlayFor.Text);
+
+                blocked = false;
+            }
         }
     }
 }

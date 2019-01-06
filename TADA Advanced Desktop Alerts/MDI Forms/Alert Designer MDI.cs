@@ -33,6 +33,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             this.mainAlert = originalAlert;
 
+            ConfigureMenuItems();
+
+            FillAlertTypeComboBox();
+            FillMacroKeysComboBox();
+
             this.MdiChildActivate += ShowOrHideMdiTabs;
             this.tab_ChildMDIForms.SelectedIndexChanged += SwitchTabPage;
 
@@ -61,10 +66,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             dg_ViewerMessages.UserDeletingRow += RowDeleted;
             dg_Conditions.UserDeletingRow += RowDeleted;
 
-            ConfigureMenuItems();
-
-            FillAlertTypeComboBox();
-
             foreach (TADAAlertImage image in this.mainAlert.Images)
             {
                 this.alertImageBindingSource.Add(image);
@@ -90,6 +91,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 this.alertConditionBindingSource.Add(condition);
             }
 
+            UpdatePreviewDropdowns();
+
             this.cmb_AlertType.Text = this.mainAlert.AlertType;
             this.txt_AlertName.Text = this.mainAlert.AlertName;
         }
@@ -114,6 +117,28 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             cmb_AlertType.DropDownWidth = cmb_AlertType.Items.Cast<string>().Max(x => TextRenderer.MeasureText(x, cmb_AlertType.Font).Width);
             cmb_AlertType.SelectedIndex = 0;
+        }
+
+        private void FillMacroKeysComboBox()
+        {
+            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            {
+                String keyname = Enum.GetName(typeof(Keys), key);
+
+                if ((key & Keys.Modifiers) == 0 && key != Keys.KeyCode && !cmb_MacroKey.Items.Contains(keyname))
+                {
+                    cmb_MacroKey.Items.Add(keyname);
+                }
+
+            }
+
+            cmb_MacroKey.DropDownWidth = cmb_MacroKey.Items.Cast<string>().Max(x => TextRenderer.MeasureText(x, cmb_MacroKey.Font).Width);
+            cmb_MacroKey.Text = "None";
+        }
+
+        private void UpdatePreviewDropdowns()
+        {
+
         }
 
         private String GetCaption(String type, int number)

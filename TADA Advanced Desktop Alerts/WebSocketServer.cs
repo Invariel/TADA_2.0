@@ -18,11 +18,15 @@ namespace TADA_Advanced_Desktop_Alerts
 
         Thread listeningThread;
 
+        // Maybe make this not a magic number later.
         public WebSocketServer(int port = 21573)
         {
             listeningThread = new Thread(() => InitializeWebSocketServer(port));
-            listeningThread.Start();
-            MainTADAForm.mainTADAForm.webSocketServer = this;
+            if (listeningThread != null)
+            {
+                listeningThread.Start();
+                MainTADAForm.mainTADAForm.webSocketServer = this;
+            }
         }
 
         private void InitializeWebSocketServer(int port = 21573)

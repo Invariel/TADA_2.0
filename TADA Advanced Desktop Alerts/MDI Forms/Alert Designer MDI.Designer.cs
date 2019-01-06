@@ -59,7 +59,6 @@
             this.lbl_AlertType = new System.Windows.Forms.Label();
             this.cmb_AlertType = new System.Windows.Forms.ComboBox();
             this.grp_Preview = new System.Windows.Forms.GroupBox();
-            this.btn_Test = new System.Windows.Forms.Button();
             this.grp_PreviewControls = new System.Windows.Forms.GroupBox();
             this.cmb_PreviewViewerText = new System.Windows.Forms.ComboBox();
             this.cmb_PreviewStreamerText = new System.Windows.Forms.ComboBox();
@@ -67,21 +66,22 @@
             this.chk_PreviewViewerText = new System.Windows.Forms.CheckBox();
             this.chk_PreviewStreamerText = new System.Windows.Forms.CheckBox();
             this.chk_PreviewImage = new System.Windows.Forms.CheckBox();
-            this.lbl_HighlightSurrounding = new System.Windows.Forms.Label();
-            this.numud_SurroundingWaypoints = new System.Windows.Forms.NumericUpDown();
-            this.lbl_WaypointNumbers = new System.Windows.Forms.Label();
             this.lbl_Time = new System.Windows.Forms.Label();
             this.trk_Time = new System.Windows.Forms.TrackBar();
             this.pb_Preview = new System.Windows.Forms.PictureBox();
             this.tab_AlertPieces = new System.Windows.Forms.TabControl();
             this.tab_Image = new System.Windows.Forms.TabPage();
             this.dg_Images = new System.Windows.Forms.DataGridView();
+            this.Images_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_Audio = new System.Windows.Forms.TabPage();
             this.dg_Audio = new System.Windows.Forms.DataGridView();
+            this.Audio_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_Streamer = new System.Windows.Forms.TabPage();
             this.dg_StreamerMessages = new System.Windows.Forms.DataGridView();
+            this.Your_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_Viewer = new System.Windows.Forms.TabPage();
             this.dg_ViewerMessages = new System.Windows.Forms.DataGridView();
+            this.Viewer_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_Conditions = new System.Windows.Forms.TabPage();
             this.dg_Conditions = new System.Windows.Forms.DataGridView();
             this.VIP = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -108,10 +108,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tab_ChildMDIForms = new System.Windows.Forms.TabControl();
-            this.Images_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Audio_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Your_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Viewer_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dimensionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -141,7 +137,6 @@
             this.grp_Macro.SuspendLayout();
             this.grp_Preview.SuspendLayout();
             this.grp_PreviewControls.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_SurroundingWaypoints)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Time)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Preview)).BeginInit();
             this.tab_AlertPieces.SuspendLayout();
@@ -347,6 +342,7 @@
             // 
             // cmb_MacroKey
             // 
+            this.cmb_MacroKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_MacroKey.FormattingEnabled = true;
             this.cmb_MacroKey.Location = new System.Drawing.Point(197, 11);
             this.cmb_MacroKey.Name = "cmb_MacroKey";
@@ -413,7 +409,6 @@
             // 
             // grp_Preview
             // 
-            this.grp_Preview.Controls.Add(this.btn_Test);
             this.grp_Preview.Controls.Add(this.grp_PreviewControls);
             this.grp_Preview.Controls.Add(this.lbl_Time);
             this.grp_Preview.Controls.Add(this.trk_Time);
@@ -426,16 +421,6 @@
             this.grp_Preview.TabStop = false;
             this.grp_Preview.Text = "Path Preview";
             // 
-            // btn_Test
-            // 
-            this.btn_Test.Location = new System.Drawing.Point(13, 558);
-            this.btn_Test.Name = "btn_Test";
-            this.btn_Test.Size = new System.Drawing.Size(118, 23);
-            this.btn_Test.TabIndex = 218;
-            this.btn_Test.Text = "Write Out Xml";
-            this.btn_Test.UseVisualStyleBackColor = true;
-            this.btn_Test.Click += new System.EventHandler(this.btn_Test_Click);
-            // 
             // grp_PreviewControls
             // 
             this.grp_PreviewControls.Controls.Add(this.cmb_PreviewViewerText);
@@ -444,12 +429,9 @@
             this.grp_PreviewControls.Controls.Add(this.chk_PreviewViewerText);
             this.grp_PreviewControls.Controls.Add(this.chk_PreviewStreamerText);
             this.grp_PreviewControls.Controls.Add(this.chk_PreviewImage);
-            this.grp_PreviewControls.Controls.Add(this.lbl_HighlightSurrounding);
-            this.grp_PreviewControls.Controls.Add(this.numud_SurroundingWaypoints);
-            this.grp_PreviewControls.Controls.Add(this.lbl_WaypointNumbers);
             this.grp_PreviewControls.Location = new System.Drawing.Point(6, 355);
             this.grp_PreviewControls.Name = "grp_PreviewControls";
-            this.grp_PreviewControls.Size = new System.Drawing.Size(511, 143);
+            this.grp_PreviewControls.Size = new System.Drawing.Size(511, 106);
             this.grp_PreviewControls.TabIndex = 217;
             this.grp_PreviewControls.TabStop = false;
             this.grp_PreviewControls.Text = "Preview Controls";
@@ -507,31 +489,6 @@
             this.chk_PreviewImage.TabIndex = 217;
             this.chk_PreviewImage.Text = "Image";
             this.chk_PreviewImage.UseVisualStyleBackColor = true;
-            // 
-            // lbl_HighlightSurrounding
-            // 
-            this.lbl_HighlightSurrounding.AutoSize = true;
-            this.lbl_HighlightSurrounding.Location = new System.Drawing.Point(127, 121);
-            this.lbl_HighlightSurrounding.Name = "lbl_HighlightSurrounding";
-            this.lbl_HighlightSurrounding.Size = new System.Drawing.Size(108, 13);
-            this.lbl_HighlightSurrounding.TabIndex = 214;
-            this.lbl_HighlightSurrounding.Text = "Highlight Surrounding";
-            // 
-            // numud_SurroundingWaypoints
-            // 
-            this.numud_SurroundingWaypoints.Location = new System.Drawing.Point(237, 117);
-            this.numud_SurroundingWaypoints.Name = "numud_SurroundingWaypoints";
-            this.numud_SurroundingWaypoints.Size = new System.Drawing.Size(51, 20);
-            this.numud_SurroundingWaypoints.TabIndex = 215;
-            // 
-            // lbl_WaypointNumbers
-            // 
-            this.lbl_WaypointNumbers.AutoSize = true;
-            this.lbl_WaypointNumbers.Location = new System.Drawing.Point(290, 121);
-            this.lbl_WaypointNumbers.Name = "lbl_WaypointNumbers";
-            this.lbl_WaypointNumbers.Size = new System.Drawing.Size(97, 13);
-            this.lbl_WaypointNumbers.TabIndex = 216;
-            this.lbl_WaypointNumbers.Text = "Waypoint Numbers";
             // 
             // lbl_Time
             // 
@@ -611,6 +568,17 @@
             this.dg_Images.Size = new System.Drawing.Size(756, 115);
             this.dg_Images.TabIndex = 0;
             // 
+            // Images_Edit
+            // 
+            this.Images_Edit.HeaderText = "New / Edit";
+            this.Images_Edit.MinimumWidth = 75;
+            this.Images_Edit.Name = "Images_Edit";
+            this.Images_Edit.ReadOnly = true;
+            this.Images_Edit.Text = "Edit";
+            this.Images_Edit.ToolTipText = "Create a new image/video alert piece, or edit an existing one.";
+            this.Images_Edit.UseColumnTextForButtonValue = true;
+            this.Images_Edit.Width = 75;
+            // 
             // tab_Audio
             // 
             this.tab_Audio.BackColor = System.Drawing.SystemColors.Control;
@@ -637,6 +605,16 @@
             this.dg_Audio.Name = "dg_Audio";
             this.dg_Audio.Size = new System.Drawing.Size(756, 115);
             this.dg_Audio.TabIndex = 0;
+            // 
+            // Audio_Edit
+            // 
+            this.Audio_Edit.HeaderText = "New / Edit";
+            this.Audio_Edit.MinimumWidth = 75;
+            this.Audio_Edit.Name = "Audio_Edit";
+            this.Audio_Edit.Text = "Edit";
+            this.Audio_Edit.ToolTipText = "Create a new audio piece or edit an existing one.";
+            this.Audio_Edit.UseColumnTextForButtonValue = true;
+            this.Audio_Edit.Width = 75;
             // 
             // tab_Streamer
             // 
@@ -665,6 +643,16 @@
             this.dg_StreamerMessages.Size = new System.Drawing.Size(758, 117);
             this.dg_StreamerMessages.TabIndex = 0;
             // 
+            // Your_Edit
+            // 
+            this.Your_Edit.HeaderText = "New / Edit";
+            this.Your_Edit.MinimumWidth = 75;
+            this.Your_Edit.Name = "Your_Edit";
+            this.Your_Edit.Text = "Edit";
+            this.Your_Edit.ToolTipText = "Create a new piece of displayed text, or edit an existing one.";
+            this.Your_Edit.UseColumnTextForButtonValue = true;
+            this.Your_Edit.Width = 75;
+            // 
             // tab_Viewer
             // 
             this.tab_Viewer.BackColor = System.Drawing.SystemColors.Control;
@@ -691,6 +679,16 @@
             this.dg_ViewerMessages.Name = "dg_ViewerMessages";
             this.dg_ViewerMessages.Size = new System.Drawing.Size(758, 117);
             this.dg_ViewerMessages.TabIndex = 0;
+            // 
+            // Viewer_Edit
+            // 
+            this.Viewer_Edit.HeaderText = "New / Edit";
+            this.Viewer_Edit.MinimumWidth = 75;
+            this.Viewer_Edit.Name = "Viewer_Edit";
+            this.Viewer_Edit.Text = "Edit";
+            this.Viewer_Edit.ToolTipText = "Create a new style for a viewer\'s text, or edit an existing one.";
+            this.Viewer_Edit.UseColumnTextForButtonValue = true;
+            this.Viewer_Edit.Width = 75;
             // 
             // tab_Conditions
             // 
@@ -980,47 +978,6 @@
             this.tab_ChildMDIForms.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tab_ChildMDIForms_DrawItem);
             this.tab_ChildMDIForms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tab_ChildMDIForms_MouseUp);
             // 
-            // Images_Edit
-            // 
-            this.Images_Edit.HeaderText = "New / Edit";
-            this.Images_Edit.MinimumWidth = 75;
-            this.Images_Edit.Name = "Images_Edit";
-            this.Images_Edit.ReadOnly = true;
-            this.Images_Edit.Text = "Edit";
-            this.Images_Edit.ToolTipText = "Create a new image/video alert piece, or edit an existing one.";
-            this.Images_Edit.UseColumnTextForButtonValue = true;
-            this.Images_Edit.Width = 75;
-            // 
-            // Audio_Edit
-            // 
-            this.Audio_Edit.HeaderText = "New / Edit";
-            this.Audio_Edit.MinimumWidth = 75;
-            this.Audio_Edit.Name = "Audio_Edit";
-            this.Audio_Edit.Text = "Edit";
-            this.Audio_Edit.ToolTipText = "Create a new audio piece or edit an existing one.";
-            this.Audio_Edit.UseColumnTextForButtonValue = true;
-            this.Audio_Edit.Width = 75;
-            // 
-            // Your_Edit
-            // 
-            this.Your_Edit.HeaderText = "New / Edit";
-            this.Your_Edit.MinimumWidth = 75;
-            this.Your_Edit.Name = "Your_Edit";
-            this.Your_Edit.Text = "Edit";
-            this.Your_Edit.ToolTipText = "Create a new piece of displayed text, or edit an existing one.";
-            this.Your_Edit.UseColumnTextForButtonValue = true;
-            this.Your_Edit.Width = 75;
-            // 
-            // Viewer_Edit
-            // 
-            this.Viewer_Edit.HeaderText = "New / Edit";
-            this.Viewer_Edit.MinimumWidth = 75;
-            this.Viewer_Edit.Name = "Viewer_Edit";
-            this.Viewer_Edit.Text = "Edit";
-            this.Viewer_Edit.ToolTipText = "Create a new style for a viewer\'s text, or edit an existing one.";
-            this.Viewer_Edit.UseColumnTextForButtonValue = true;
-            this.Viewer_Edit.Width = 75;
-            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -1194,7 +1151,7 @@
             this.MinimumSize = new System.Drawing.Size(1305, 720);
             this.Name = "Alert_Designer_MDI";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Alert_Designer_MDI";
+            this.Text = "Alert Designer";
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -1207,7 +1164,6 @@
             this.grp_Preview.PerformLayout();
             this.grp_PreviewControls.ResumeLayout(false);
             this.grp_PreviewControls.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numud_SurroundingWaypoints)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Time)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Preview)).EndInit();
             this.tab_AlertPieces.ResumeLayout(false);
@@ -1277,9 +1233,6 @@
         private System.Windows.Forms.CheckBox chk_PreviewViewerText;
         private System.Windows.Forms.CheckBox chk_PreviewStreamerText;
         private System.Windows.Forms.CheckBox chk_PreviewImage;
-        protected internal System.Windows.Forms.Label lbl_HighlightSurrounding;
-        protected internal System.Windows.Forms.NumericUpDown numud_SurroundingWaypoints;
-        protected internal System.Windows.Forms.Label lbl_WaypointNumbers;
         protected internal System.Windows.Forms.Label lbl_Time;
         protected internal System.Windows.Forms.TrackBar trk_Time;
         protected internal System.Windows.Forms.PictureBox pb_Preview;
@@ -1323,7 +1276,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabControl tab_ChildMDIForms;
-        private System.Windows.Forms.Button btn_Test;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn4;

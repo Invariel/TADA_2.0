@@ -59,8 +59,8 @@ namespace TADA_Advanced_Desktop_Alerts
             this.AnimationWindow.Show();
 
             btn_SaveManifest.Click += btn_SaveManifest_Click;
-            btn_LoadManifest.Click += btn_LoadManifest_Click;
-            btn_MergeManifest.Click += btn_MergeManifest_Click;
+            btn_LoadManifest.Click += (sender, e) => GetManifestFile(sender, e, false);
+            btn_MergeManifest.Click += (sender, e) => GetManifestFile(sender, e, true);
 
             btn_SaveChannelDetails.Click += btn_SaveChannelDetails_Click;
             btn_LoadChannelDetails.Click += btn_LoadChannelDetails_Click;
@@ -92,7 +92,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 try
                 {
-                    LoadManifest(General.SUBDIRECTORY + General.DEFAULT_ALERTS);
+                    LoadManifest(General.SUBDIRECTORY + General.DEFAULT_ALERTS, false);
                 }
                 catch (Exception e)
                 {
@@ -123,9 +123,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
             _mainTADAForm = this;
             webSocketServer = new WebSocketServer(21573);   // Let the user set this, and then auto-increment if the port is unavailable, maybe?
-
-            Creation_Forms.Alert_Designer_MDI ad3 = new Creation_Forms.Alert_Designer_MDI(new TADAAlert());
-            ad3.Show();
 
             // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php
         }
@@ -403,7 +400,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private void btn_LoadManifest_Click(object sender, EventArgs e)
+        private void GetManifestFile(object sender, EventArgs e, Boolean isMerge)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -418,16 +415,18 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (result == DialogResult.OK && System.IO.File.Exists(openFileDialog.FileName))
             {
-                LoadManifest(openFileDialog.FileName);
+                LoadManifest(openFileDialog.FileName, isMerge);
             }
         }
 
-        private void btn_MergeManifest_Click(object sender, EventArgs e)
+        private void LoadManifest(String filename, Boolean merge)
         {
-        }
+            if (!merge)
+            {
+                // Clear all alerts.
+                alertBindingSource.Clear();
+            }
 
-        private void LoadManifest(String filename)
-        {
             XmlReaderSettings xmlReaderSettings = new XmlReaderSettings
             {
                 IgnoreWhitespace = true,
