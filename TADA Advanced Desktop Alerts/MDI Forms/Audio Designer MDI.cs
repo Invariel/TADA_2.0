@@ -11,22 +11,44 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
     public partial class Audio_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
         TADAAlertAudio alertAudio;
-        private System.Windows.Controls.MediaElement me = new System.Windows.Controls.MediaElement();
+        private System.Windows.Controls.MediaElement me;
 
         private bool isPlaying = false;
         private bool blocked = false;
+        private bool mediaLoaded = false;
+        private bool loadExisting = false;
 
         internal Audio_Designer_MDI(TADAAlertAudio alertAudio, TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
 
-            this.alertAudio = alertAudio;
+            me = new System.Windows.Controls.MediaElement();
+            eh_1.Child = me;
+            me.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
+            me.MediaOpened += LoadedMediaFile;
+            me.MediaFailed += FailedMediaFile;
 
             // Remove the Angle, Magnification, and Opacity tabs from ...
             tab_AdvancedWaypointControls.TabPages.Remove(tab_AngleAndMagnification);
             tab_AdvancedWaypointControls.TabPages.Remove(tab_Opacity);
             tab_AdvancedWaypointControls.TabPages.Remove(tab_Path);
 
+            DisplayControls(false);
+            InitializeCallbacks();
+
+            this.alertAudio = alertAudio;
+            this.waypointContainer = alertAudio.Waypoints;
+
+            this.Shown += new EventHandler((sender, e) =>
+            {
+                this.Refresh();
+                this.loadExisting = true;
+                txt_Filename.Text = alertAudio.Filename;
+            });
+        }
+
+        private void InitializeCallbacks()
+        {
             txt_Filename.TextChanged += TestAudioFile;
 
             btn_FilenameBrowse.Click += btn_FilenameBrowse_Click;
@@ -52,34 +74,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             dg_Waypoints.Columns["readMessageDataGridViewCheckBoxColumn"].Visible = false;
             dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].HeaderText = "Waypoint Duration";
             dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].ToolTipText = "How long, in seconds, before the next volume change, balance change, or macro begins.";
-
-            eh_1.Child = me;
-            me.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
-            me.MediaOpened += LoadedMediaFile;
-            me.MediaFailed += FailedMediaFile;
-
-            this.waypointContainer = alertAudio.Waypoints;
-            LoadExisting(this.alertAudio);
         }
 
         private void btn_FilenameBrowse_Click(object sender, EventArgs e)
         {
             General.openFileDialogBox(txt_Filename, "Audio File Formats|*.aac; *,aiff; *.amr; *.flac; *.m4a; *.mp3; *.mp3; *.ogg; *.pcm; *.raw; *.wav; *.wma|All Files|*.*", 1);
-        }
-
-        private void LoadExisting(TADAAlertAudio alertAudio)
-        {
-            txt_Filename.Text = alertAudio.Filename;
-
-            mtxt_Delay.Text = General.StringFromTimeSpan(alertAudio.Delay);
-            mtxt_PlayFor.Text = General.StringFromTimeSpan(alertAudio.Duration);
-            mtxt_StartAt.Text = General.StringFromTimeSpan(alertAudio.StartingPosition);
-            mtxt_LoopAt.Text = General.StringFromTimeSpan(alertAudio.EndingPosition);
-
-            trk_Balance.Value = Convert.ToInt32(alertAudio.Balance * 100.0);
-            trk_Volume.Value = Convert.ToInt32(alertAudio.Volume * 10.0);
-
-            this.SetWaypoints(alertAudio.Waypoints);
         }
 
         private void TestAudioFile(object sender, EventArgs e)
@@ -121,6 +120,30 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             this.alertAudio.Filename = txt_Filename.Text;
 
+            if (this.loadExisting)
+            {
+                mtxt_Delay.Text = General.StringFromTimeSpan(alertAudio.Delay);
+                mtxt_PlayFor.Text = General.StringFromTimeSpan(alertAudio.Duration);
+                mtxt_StartAt.Text = General.StringFromTimeSpan(alertAudio.StartingPosition);
+                mtxt_LoopAt.Text = General.StringFromTimeSpan(alertAudio.EndingPosition);
+
+                trk_Balance.Value = Convert.ToInt32(alertAudio.Balance * 100.0);
+                trk_Volume.Value = Convert.ToInt32(alertAudio.Volume * 10.0);
+
+                this.loadExisting = false;
+            }
+            else
+            {
+                mtxt_Delay.Text = "0";
+                mtxt_PlayFor.Text = "0";
+                mtxt_StartAt.Text = "0";
+                mtxt_LoopAt.Text = "0";
+
+                trk_Balance.Value = 0;
+                trk_Volume.Value = 0;
+            }
+
+
             DisplayControls(true);
         }
 
@@ -156,6 +179,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             trk_Balance.Visible = showControls;
             lbl_Balance.Visible = showControls;
+
+            eh_1.Visible = true;
+            mediaLoaded = showControls;
         }
 
         private void btn_PlayPause_Click(object sender, EventArgs e)

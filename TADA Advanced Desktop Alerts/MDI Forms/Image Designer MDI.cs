@@ -508,9 +508,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             numud_AnimatedGifLoop.Value = alertImage.AnimationLoops;
 
-            mtxt_PlayFor.Text = String.Format("{0,3}:{1,2}:{2,2}.{3,3}", alertImage.Duration.Hours, alertImage.Duration.Minutes, alertImage.Duration.Seconds, alertImage.Duration.Milliseconds);
-            mtxt_StartAt.Text = String.Format("{0,3}:{1,2}:{2,2}.{3,3}", alertImage.StartingPosition.Hours, alertImage.StartingPosition.Minutes, alertImage.StartingPosition.Seconds, alertImage.StartingPosition.Milliseconds);
-            mtxt_LoopAt.Text = String.Format("{0,3}:{1,2}:{2,2}.{3,3}", alertImage.EndingPosition.Hours, alertImage.EndingPosition.Minutes, alertImage.EndingPosition.Seconds, alertImage.EndingPosition.Milliseconds);
+            mtxt_PlayFor.Text = General.StringFromTimeSpan(alertImage.Duration);
+            mtxt_StartAt.Text = General.StringFromTimeSpan(alertImage.StartingPosition);
+            mtxt_LoopAt.Text = General.StringFromTimeSpan(alertImage.EndingPosition);
 
             this.blocked = true;
             numud_DesiredDimensionsX.Value = alertImage.Dimensions.Width;

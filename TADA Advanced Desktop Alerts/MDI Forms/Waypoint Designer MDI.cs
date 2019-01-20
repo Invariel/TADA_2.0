@@ -790,7 +790,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         internal void SetWaypoints(WaypointContainer waypointContainer)
         {
-            if (waypointContainer != null)
+            if (waypointContainer != null && waypointContainer.Waypoints.Count > 0)
             {
                 BindingSource bindingSource = dg_Waypoints.DataSource as BindingSource;
                 foreach (Waypoint waypoint in waypointContainer.Waypoints)
