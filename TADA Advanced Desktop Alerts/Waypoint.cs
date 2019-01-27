@@ -411,6 +411,30 @@ namespace TADA_Advanced_Desktop_Alerts
             this.BehindImage = behind;
             this.ReadMessage = read;
         }
+
+        internal void Copy(Waypoint waypoint)
+        {
+            this.p1 = waypoint.P1;
+            this.c0 = waypoint.C0;
+            this.c1 = waypoint.C1;
+            this.isCurve = waypoint.IsCurve;
+
+            this.transitionTime = waypoint.TransitionTime;
+            this.persistTime = waypoint.PersistTime;
+
+            this.leaveScreen = waypoint.LeaveScreen;
+            this.behindImage = waypoint.BehindImage;
+            this.ReadMessage = waypoint.ReadMessage;
+
+            this.windowTarget = waypoint.WindowTarget;
+            this.Keypresses = waypoint.Keypresses;
+
+            this.Angle.Copy(waypoint.Angle);
+            this.Magnification.Copy(waypoint.Magnification);
+            this.Opacity.Copy(waypoint.Opacity);
+            this.Volume.Copy(waypoint.Volume);
+            this.Balance.Copy(waypoint.Balance);
+        }
     }
 
     public class WaypointContainer
@@ -510,6 +534,173 @@ namespace TADA_Advanced_Desktop_Alerts
             if (this.InitialVolume != 0) { writer.WriteAttributeString("Volume", this.InitialVolume.ToString()); }
 
             XmlHelper.Write(writer, "Waypoint", this.waypoints, false);
+        }
+
+        internal void Copy(WaypointContainer waypointContainer)
+        {
+            this.Waypoints.Clear();
+
+            this.InitialAngle = waypointContainer.InitialAngle;
+            this.InitialBalance = waypointContainer.InitialBalance;
+            this.InitialMagnification = waypointContainer.InitialMagnification;
+            this.InitialOpacity = waypointContainer.InitialOpacity;
+            this.InitialVolume = waypointContainer.InitialVolume;
+
+            foreach (Waypoint waypoint in waypointContainer.Waypoints)
+            {
+                Waypoint w = new Waypoint();
+                w.Copy(waypoint);
+                this.Waypoints.Add(w);
+            }
+        }
+
+        private void CalculateEffectChange(Effect effect, Boolean isAngle, ref double currentEffect, ref double prevEffect, ref double nextEffect, ref double elapsedEffect, double durationEffect, double timeAdjustment)
+        {
+            if (effect.change)
+            {
+                elapsedEffect = 0;
+                durationEffect = effect.duration;
+                prevEffect = currentEffect;
+                nextEffect = effect.target;
+
+                if (isAngle)
+                {
+                    while (prevEffect < 0)
+                    {
+                        prevEffect += 360;
+                    }
+                    prevEffect %= 360;
+                }
+            }
+
+            elapsedEffect = Math.Min(durationEffect, elapsedEffect + timeAdjustment);
+
+            if (elapsedEffect == durationEffect)
+            {
+                currentEffect = nextEffect;
+                elapsedEffect = 0;
+                durationEffect = 0;
+            }
+            else
+            {
+                currentEffect = elapsedEffect / durationEffect * (nextEffect - prevEffect) + prevEffect;
+            }
+        }
+
+        internal virtual CurrentPosition CalculatePositionFromTime(double time)
+        {
+            // Walk through the waypoints to figure out exactly where the object should be displayed, and with what values.
+            PointF position;
+            Boolean actuallyOnScreen = false;
+            Boolean aroundCenter = false;
+
+            if (Waypoints.Count > 0)
+            {
+                Waypoint currentWaypoint = Waypoints[0];
+
+                double prevAngle = InitialAngle;
+                double nextAngle = prevAngle;
+                double currentAngle = prevAngle;
+                double elapsedAngle = 0;
+                double durationAngle = 0;
+
+                double prevMagnification = InitialMagnification;
+                double nextMagnification = prevMagnification;
+                double currentMagnification = prevMagnification;
+                double elapsedMagnification = 0;
+                double durationMagnification = 0;
+
+                double prevOpacity = InitialOpacity;
+                double nextOpacity = prevOpacity;
+                double currentOpacity = prevOpacity;
+                double elapsedOpacity = 0;
+                double durationOpacity = 0;
+
+                double prevBalance = InitialBalance;
+                double nextBalance = prevBalance;
+                double currentBalance = prevBalance;
+                double elapsedBalance = 0;
+                double durationBalance = 0;
+
+                double prevVolume = InitialVolume;
+                double nextVolume = prevVolume;
+                double currentVolume = prevVolume;
+                double elapsedVolume = 0;
+                double durationVolume = 0;
+
+                double currentTime = 0.0;
+
+                position = currentWaypoint.P1;
+
+                // Starting at waypoint 0 (initial conditions), start counting time and tracking position and variables.
+                if (time >= currentWaypoint.TransitionTime)
+                {
+                    for (int i = 0; i < Waypoints.Count && time >= currentTime; ++i)
+                    {
+                        currentWaypoint = Waypoints[i];
+                        double waypointDuration = Math.Min(time - currentTime, currentWaypoint.TransitionTime + currentWaypoint.PersistTime);
+
+                        CalculateEffectChange(currentWaypoint.Angle, true, ref currentAngle, ref prevAngle, ref nextAngle, ref elapsedAngle, durationAngle, waypointDuration);
+                        CalculateEffectChange(currentWaypoint.Magnification, false, ref currentMagnification, ref prevMagnification, ref nextMagnification, ref elapsedMagnification, durationMagnification, waypointDuration);
+                        CalculateEffectChange(currentWaypoint.Opacity, false, ref currentOpacity, ref prevOpacity, ref nextOpacity, ref elapsedOpacity, durationOpacity, waypointDuration);
+                        CalculateEffectChange(currentWaypoint.Balance, false, ref currentBalance, ref prevBalance, ref nextBalance, ref elapsedBalance, durationBalance, waypointDuration);
+                        CalculateEffectChange(currentWaypoint.Volume, false, ref currentVolume, ref prevVolume, ref nextVolume, ref elapsedVolume, durationVolume, waypointDuration);
+
+                        // Because these two are linked now, due to mathematical requirements, whichever one is changing determines whether this is around the center or not.
+                        if (currentWaypoint.Angle.change)
+                        {
+                            aroundCenter = currentWaypoint.Angle.aroundCenter;
+                        }
+
+                        if (currentWaypoint.Magnification.change)
+                        {
+                            aroundCenter = currentWaypoint.Magnification.aroundCenter;
+                        }
+
+                        if (currentTime <= time && time <= currentTime + currentWaypoint.TransitionTime + currentWaypoint.PersistTime)
+                        {
+                            // Then this is the waypoint which is relevant.
+                            actuallyOnScreen = true;
+
+                            double t = (currentWaypoint.TransitionTime == 0 ? 1 : Math.Min(1, (time - currentTime) / (currentWaypoint.TransitionTime)));
+
+                            if (currentWaypoint.IsCurve)
+                            {
+                                position = Bezier.CalculateBezierPosition(position,
+                                                                            currentWaypoint.C0,
+                                                                            currentWaypoint.C1,
+                                                                            currentWaypoint.P1,
+                                                                            t);
+                            }
+                            else
+                            {
+                                Bezier.CalculateLinearControlPoints(position, currentWaypoint.P1, out PointF C0, out PointF C1);
+                                position = Bezier.CalculateBezierPosition(position, C0, C1, currentWaypoint.P1, t);
+                            }
+                        }
+                        else
+                        {
+                            position = currentWaypoint.P1;
+                        }
+
+                        currentTime += currentWaypoint.TransitionTime + currentWaypoint.PersistTime;
+                    }
+                }
+
+                return new CurrentPosition()
+                {
+                    location = position,
+                    angle = (float)currentAngle,
+                    magnification = (float)currentMagnification,
+                    opacity = (float)currentOpacity,
+                    balance = (float)currentBalance,
+                    volume = (float)currentVolume,
+                    aroundCenter = aroundCenter,
+                    actuallyDraw = actuallyOnScreen
+                };
+            }
+
+            return null;
         }
     }
 }

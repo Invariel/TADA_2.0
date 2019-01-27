@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,7 +16,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         protected internal bool disableUpdates = false;
 
         private SizeF itemSize = new SizeF();
-        protected internal WaypointContainer _waypointContainer;
+        private TADAAlert parentAlert;
+
+        private WaypointContainer _waypointContainer;
 
         protected Bitmap previewBitmap;
 
@@ -35,7 +38,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             set
             {
                 this._waypointContainer = value;
-                this.SetWaypoints(this._waypointContainer);
+                this.SetWaypoints();
             }
         }
 
@@ -56,6 +59,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             dg_Waypoints.RowsAdded += WaypointContainerAddRows;
             dg_Waypoints.RowsRemoved += WaypointContainerRemoveRows;
 
+            btn_ImportWaypointsFrom.Click += btn_ImportWaypointsFrom_Click;
             btn_CopySelected.Click += btn_CopySelected_Click;
             btn_ShiftSelected.Click += btn_ShiftSelected_Click;
 
@@ -108,14 +112,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_InitialMagnification.ValueChanged += UpdateInitialMagnification;
             numud_InitialOpacity.ValueChanged += UpdateInitialOpacity;
 
-            if (parentAlert != null)
-            {
-                // Then populate cmb_ImportWaypoints with the other alert names and types.
-                // One of the alerts is this one.  Need to figure out which.
+            this.parentAlert = parentAlert;
 
-                cmb_ImportWaypoints.DisplayMember = "Text";
-                cmb_ImportWaypoints.ValueMember = "Waypoints";
-            }
+            General.ResizeDropdown(cmb_ImportWaypoints);
+            FillImportComboBox();
 
             ConfigureTooltips();
         }
@@ -125,6 +125,48 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (previewBitmap != null)
             {
                 previewBitmap.Dispose();
+            }
+        }
+
+        internal void FillImportComboBox()
+        {
+            cmb_ImportWaypoints.Items.Clear();
+
+            for (int i = 0; i < this.parentAlert.ImageCount; ++ i)
+            {
+                if ((this as MDI_Forms.Image_Designer_MDI)?.alertImage != this.parentAlert.Images[i])
+                {
+                    cmb_ImportWaypoints.Items.Add(String.Format("Image/Video {0}", i + 1));
+                }
+            }
+
+            for (int i = 0; i < this.parentAlert.AudioCount; ++i)
+            {
+                if ((this as MDI_Forms.Audio_Designer_MDI)?.alertAudio != this.parentAlert.Audios[i])
+                {
+                    cmb_ImportWaypoints.Items.Add(String.Format("Audio {0}", i + 1));
+                }
+            }
+
+            for (int i = 0; i < this.parentAlert.StreamerCount; ++i)
+            {
+                if ((this as MDI_Forms.Text_Designer_MDI)?.alertText != this.parentAlert.StreamerTexts[i])
+                {
+                    cmb_ImportWaypoints.Items.Add(String.Format("Streamer Text {0}", i + 1));
+                }
+            }
+
+            for (int i = 0; i < this.parentAlert.ViewerCount; ++i)
+            {
+                if ((this as MDI_Forms.Text_Designer_MDI)?.alertText != this.parentAlert.ViewerTexts[i])
+                {
+                    cmb_ImportWaypoints.Items.Add(String.Format("Viewer Text {0}", i + 1));
+                }
+            }
+
+            if (cmb_ImportWaypoints.Items.Count > 0)
+            {
+                cmb_ImportWaypoints.SelectedIndex = 0;
             }
         }
 
@@ -232,6 +274,38 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             UpdatePreview();
         }
 
+        private void btn_ImportWaypointsFrom_Click(object sender, EventArgs e)
+        {
+            // Parse the string into type and index (+ 1).
+            // Reduce index by 1, grab the waypoint container from parentAlert, copy it over using the functions I wrote.
+            if (!String.IsNullOrEmpty(cmb_ImportWaypoints.Text))
+            {
+                Regex regex = new Regex(@"([\w\/ ]+) (\d+)");
+                Match match = regex.Match(cmb_ImportWaypoints.Text);
+                if (match.Success)
+                {
+                    String type = match.Groups[1].Value;
+                    int index = Int32.Parse(match.Groups[2].Value) - 1;
+
+                    switch (type)
+                    {
+                        case "Image/Video":
+                            this.CopyWaypoints(this.parentAlert.Images[index].Waypoints);
+                            break;
+                        case "Audio":
+                            this.CopyWaypoints(this.parentAlert.Audios[index].Waypoints);
+                            break;
+                        case "Streamer Text":
+                            this.CopyWaypoints(this.parentAlert.StreamerTexts[index].Waypoints);
+                            break;
+                        case "Viewer Text":
+                            this.CopyWaypoints(this.parentAlert.ViewerTexts[index].Waypoints);
+                            break;
+                    }
+                }
+            }
+        }
+
         private void btn_CopySelected_Click(object sender, EventArgs e)
         {
             if (dg_Waypoints.SelectedRows.Count > 0)
@@ -301,160 +375,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     r.X += (float)numud_ShiftX.Value;
                     r.Y += (float)numud_ShiftY.Value;
                 }
-            }
-        }
-
-        // Each form will need to call this on its own, because that form will have to supply its own balance and volume values.
-        /**
-        <returns>Tuple(PointF destination, double angle, double magnification, double opacity, double balance, double volume, boolean actuallyOnScreen)</returns>
-        */
-        internal virtual CurrentPosition CalculatePositionFromTime(double time, double initialBalance = 0.0, double initialVolume = 0.0)
-        {
-            // Walk through the waypoints to figure out exactly where the object should be displayed, and with what values.
-            PointF position;
-            Boolean actuallyOnScreen = false;
-            Boolean aroundCenter = false;
-
-            WaypointContainer w = GetWaypoints();
-            if (w.Waypoints.Count > 0)
-            {
-                Waypoint currentWaypoint = w.Waypoints[0];
-
-                double prevAngle = w.InitialAngle;
-                double nextAngle = prevAngle;
-                double currentAngle = prevAngle;
-                double elapsedAngle = 0;
-                double durationAngle = 0;
-
-                double prevMagnification = w.InitialMagnification;
-                double nextMagnification = prevMagnification;
-                double currentMagnification = prevMagnification;
-                double elapsedMagnification = 0;
-                double durationMagnification = 0;
-
-                double prevOpacity = w.InitialOpacity;
-                double nextOpacity = prevOpacity;
-                double currentOpacity = prevOpacity;
-                double elapsedOpacity = 0;
-                double durationOpacity = 0;
-
-                double prevBalance = w.InitialBalance;
-                double nextBalance = prevBalance;
-                double currentBalance = prevBalance;
-                double elapsedBalance = 0;
-                double durationBalance = 0;
-
-                double prevVolume = w.InitialVolume;
-                double nextVolume = prevVolume;
-                double currentVolume = prevVolume;
-                double elapsedVolume = 0;
-                double durationVolume = 0;
-
-                double currentTime = 0.0;
-
-                position = currentWaypoint.P1;
-
-                // Starting at waypoint 0 (initial conditions), start counting time and tracking position and variables.
-                if (time >= currentWaypoint.TransitionTime)
-                {
-                    for (int i = 0; i < w.Waypoints.Count && time >= currentTime; ++i)
-                    {
-                        currentWaypoint = w.Waypoints[i];
-                        double waypointDuration = Math.Min (time - currentTime, currentWaypoint.TransitionTime + currentWaypoint.PersistTime);
-
-                        CalculateEffectChange(currentWaypoint.Angle, true, ref currentAngle, ref prevAngle, ref nextAngle, ref elapsedAngle, durationAngle, waypointDuration);
-                        CalculateEffectChange(currentWaypoint.Magnification, false, ref currentMagnification, ref prevMagnification, ref nextMagnification, ref elapsedMagnification, durationMagnification, waypointDuration);
-                        CalculateEffectChange(currentWaypoint.Opacity, false, ref currentOpacity, ref prevOpacity, ref nextOpacity, ref elapsedOpacity, durationOpacity, waypointDuration);
-                        CalculateEffectChange(currentWaypoint.Balance, false, ref currentBalance, ref prevBalance, ref nextBalance, ref elapsedBalance, durationBalance, waypointDuration);
-                        CalculateEffectChange(currentWaypoint.Volume, false, ref currentVolume, ref prevVolume, ref nextVolume, ref elapsedVolume, durationVolume, waypointDuration);
-
-                        // Because these two are linked now, due to mathematical requirements, whichever one is changing determines whether this is around the center or not.
-                        if (currentWaypoint.Angle.change)
-                        {
-                            aroundCenter = currentWaypoint.Angle.aroundCenter;
-                        }
-
-                        if (currentWaypoint.Magnification.change)
-                        {
-                            aroundCenter = currentWaypoint.Magnification.aroundCenter;
-                        }
-
-                        if (currentTime <= time && time <= currentTime + currentWaypoint.TransitionTime + currentWaypoint.PersistTime)
-                        {
-                            // Then this is the waypoint which is relevant.
-                            actuallyOnScreen = true;
-
-                            double t = (currentWaypoint.TransitionTime == 0 ? 1 : Math.Min(1, (time - currentTime) / (currentWaypoint.TransitionTime)));
-
-                            if (currentWaypoint.IsCurve)
-                            {
-                                position = Bezier.CalculateBezierPosition(position,
-                                                                            currentWaypoint.C0,
-                                                                            currentWaypoint.C1,
-                                                                            currentWaypoint.P1,
-                                                                            t);
-                            }
-                            else
-                            {
-                                Bezier.CalculateLinearControlPoints(position, currentWaypoint.P1, out PointF C0, out PointF C1);
-                                position = Bezier.CalculateBezierPosition(position, C0, C1, currentWaypoint.P1, t);
-                            }
-                        }
-                        else
-                        {
-                            position = currentWaypoint.P1;
-                        }
-
-                        currentTime += currentWaypoint.TransitionTime + currentWaypoint.PersistTime;
-                    }
-                }
-
-                return new CurrentPosition()
-                {
-                    location = position,
-                    angle = (float)currentAngle,
-                    magnification = (float)currentMagnification,
-                    opacity = (float)currentOpacity,
-                    balance = (float)currentBalance,
-                    volume = (float)currentVolume,
-                    aroundCenter = aroundCenter,
-                    actuallyDraw = actuallyOnScreen
-                };
-            }
-
-            return null;
-        }
-
-        private void CalculateEffectChange(Effect effect, Boolean isAngle, ref double currentEffect, ref double prevEffect, ref double nextEffect, ref double elapsedEffect, double durationEffect, double timeAdjustment)
-        {
-            if (effect.change)
-            {
-                elapsedEffect = 0;
-                durationEffect = effect.duration;
-                prevEffect = currentEffect;
-                nextEffect = effect.target;
-
-                if (isAngle)
-                {
-                    while (prevEffect < 0)
-                    {
-                        prevEffect += 360;
-                    }
-                    prevEffect %= 360;
-                }
-            }
-
-            elapsedEffect = Math.Min(durationEffect, elapsedEffect + timeAdjustment);
-
-            if (elapsedEffect == durationEffect)
-            {
-                currentEffect = nextEffect;
-                elapsedEffect = 0;
-                durationEffect = 0;
-            }
-            else
-            {
-                currentEffect = elapsedEffect / durationEffect * (nextEffect - prevEffect) + prevEffect;
             }
         }
 
@@ -788,15 +708,49 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             return this._waypointContainer;
         }
 
-        internal void SetWaypoints(WaypointContainer waypointContainer)
+        internal void SetWaypoints()
         {
-            if (waypointContainer != null && waypointContainer.Waypoints.Count > 0)
+            if (this._waypointContainer == null)
+            {
+                this._waypointContainer = new WaypointContainer();
+            }
+
+            if (this._waypointContainer.Waypoints.Count > 0)
             {
                 BindingSource bindingSource = dg_Waypoints.DataSource as BindingSource;
-                foreach (Waypoint waypoint in waypointContainer.Waypoints)
+                bindingSource.Clear();
+                foreach (Waypoint waypoint in this._waypointContainer.Waypoints)
                 {
                     bindingSource.Add(waypoint);
                 }
+            }
+        }
+
+        internal void CopyWaypoints(WaypointContainer waypointContainer)
+        {
+            if (this._waypointContainer == null)
+            {
+                this._waypointContainer = new WaypointContainer();
+            }
+
+            this._waypointContainer.Waypoints.Clear();
+            BindingSource bindingSource = dg_Waypoints.DataSource as BindingSource;
+            bindingSource.Clear();
+
+            if (waypointContainer.Waypoints.Count > 0)
+            {
+                foreach (Waypoint waypoint in waypointContainer.Waypoints)
+                {
+                    Waypoint w = new Waypoint();
+                    w.Copy(waypoint);
+                    bindingSource.Add(w);
+                }
+
+                this._waypointContainer.InitialAngle = waypointContainer.InitialAngle;
+                this._waypointContainer.InitialBalance = waypointContainer.InitialBalance;
+                this._waypointContainer.InitialMagnification = waypointContainer.InitialMagnification;
+                this._waypointContainer.InitialOpacity = waypointContainer.InitialOpacity;
+                this._waypointContainer.InitialVolume = waypointContainer.InitialVolume;
             }
         }
 

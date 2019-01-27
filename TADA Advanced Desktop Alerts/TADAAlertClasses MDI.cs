@@ -154,6 +154,14 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get { return this.Conditions.Count; }
         }
+
+        public int Combinations
+        {
+            get
+            {
+                return Math.Max(1, this.ImageCount) * Math.Max(1, this.AudioCount) * Math.Max(1, this.StreamerCount) * Math.Max(1, this.ViewerCount);
+            }
+        }
         #endregion PropertyStuff
 
         #region XML
@@ -320,6 +328,14 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 this.isVideo = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public double TotalDuration
+        {
+            get
+            {
+                return (this.isVideo ? Math.Max(this.Duration.TotalSeconds, this.Waypoints.TotalDuration) : this.Waypoints.TotalDuration);
             }
         }
         #endregion Properties
@@ -498,6 +514,14 @@ namespace TADA_Advanced_Desktop_Alerts
                 NotifyPropertyChanged();
             }
         }
+
+        public double TotalDuration
+        {
+            get
+            {
+                return this.Delay.TotalSeconds + this.Duration.TotalSeconds;
+            }
+        }
         #endregion Properties
 
         public TimeSpan Delay { get; set; } = new TimeSpan(0);
@@ -634,6 +658,14 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 this.readMessage = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public double TotalDuration
+        {
+            get
+            {
+                return this.Waypoints.TotalDuration;
             }
         }
         #endregion Properties

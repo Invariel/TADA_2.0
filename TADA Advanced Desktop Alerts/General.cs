@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -212,6 +213,16 @@ namespace TADA_Advanced_Desktop_Alerts
             return String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);
         }
 
+        internal static void MaintainBounds (TrackBar trackBar, MaskedTextBox maskedTextBox)
+        {
+            TimeSpan timespan = General.TimeSpanFromString(maskedTextBox.Text);
+            if (timespan.TotalMilliseconds > trackBar.Maximum)
+            {
+                trackBar.Value = trackBar.Maximum;
+                maskedTextBox.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trackBar.Value));
+            }
+        }
+
         internal static void ColourPicker(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
         {
             ColorDialog colorDialog = new ColorDialog()
@@ -280,6 +291,16 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             return returnColor;
+        }
+
+        internal static void ResizeDropdown(ComboBox comboBox)
+        {
+            if (comboBox.Items.Count > 0)
+            {
+                int scrollBarWidth = (comboBox.Items.Count > comboBox.MaxDropDownItems) ? SystemInformation.VerticalScrollBarWidth : 0;
+                comboBox.DropDownWidth = comboBox.Items.Cast<string>().Max(x => TextRenderer.MeasureText(x, comboBox.Font).Width + scrollBarWidth);
+                comboBox.SelectedIndex = 0;
+            }
         }
 
         public static void ExtractAllFrames(Bitmap bitmap, Size newSize, out Bitmap[] frames, out int[] timing, out int totalDuration)

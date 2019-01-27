@@ -10,7 +10,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
     public partial class Audio_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
-        TADAAlertAudio alertAudio;
+        internal TADAAlertAudio alertAudio;
         private System.Windows.Controls.MediaElement me;
 
         private bool isPlaying = false;
@@ -45,6 +45,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 this.loadExisting = true;
                 txt_Filename.Text = alertAudio.Filename;
             });
+
+            FillImportComboBox();
         }
 
         private void InitializeCallbacks()
@@ -267,13 +269,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     mtxt_LoopAt.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trk_LoopAt.Value));
                 }
+
                 if (sender == mtxt_StartAt)
                 {
-                    trk_StartAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_StartAt.Text).TotalMilliseconds);
+                    General.MaintainBounds(trk_StartAt, mtxt_StartAt);
                 }
                 else if (sender == mtxt_LoopAt)
                 {
-                    trk_LoopAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_LoopAt.Text).TotalMilliseconds);
+                    General.MaintainBounds(trk_LoopAt, mtxt_LoopAt);
                 }
 
                 if (trk_LoopAt.Value < trk_StartAt.Value)

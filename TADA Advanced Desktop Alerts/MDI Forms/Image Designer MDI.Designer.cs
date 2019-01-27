@@ -102,6 +102,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).BeginInit();
             this.grp_ImagePreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Position)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredDimensionsY)).BeginInit();
@@ -155,7 +156,7 @@
             // lbl_Balance
             // 
             this.lbl_Balance.AutoSize = true;
-            this.lbl_Balance.Location = new System.Drawing.Point(261, 241);
+            this.lbl_Balance.Location = new System.Drawing.Point(265, 241);
             this.lbl_Balance.Name = "lbl_Balance";
             this.lbl_Balance.Size = new System.Drawing.Size(58, 13);
             this.lbl_Balance.TabIndex = 121;
@@ -560,6 +561,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_BalanceFrames)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_DesiredBalance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waypointBindingSource)).EndInit();
             this.grp_ImagePreview.ResumeLayout(false);
             this.grp_ImagePreview.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trk_Position)).EndInit();

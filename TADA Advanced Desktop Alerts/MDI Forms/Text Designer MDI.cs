@@ -10,8 +10,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
     public partial class Text_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
-        private TADAAlert mainAlert;
-        private TADAAlertText alertText;
+        internal TADAAlertText alertText;
 
         private Boolean blocked = false;
 
@@ -21,10 +20,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             InitializeComponent();
 
-            this.mainAlert = parentAlert;
             this.alertText = alertText;
 
-            this._waypointContainer = this.alertText.Waypoints;
+            this.waypointContainer = this.alertText.Waypoints;
 
             // Fonts
             List<String> installedFonts = new List<String>();
@@ -88,8 +86,15 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_PaddingX.Maximum = Math.Floor(numud_TextWidth.Value / 2) - 1;
             numud_PaddingY.Maximum = Math.Floor(numud_TextHeight.Value / 2) - 1;
 
+            General.ResizeDropdown(cmb_ForeColor);
+            General.ResizeDropdown(cmb_BackColor);
+            General.ResizeDropdown(cmb_Font);
+            General.ResizeDropdown(cmb_OutlineColor);
+            General.ResizeDropdown(cmb_TTSVoice);
+
             InitializeCallbacks();
             GeneratePreview();
+            FillImportComboBox();
         }
 
         private void InitializeCallbacks()

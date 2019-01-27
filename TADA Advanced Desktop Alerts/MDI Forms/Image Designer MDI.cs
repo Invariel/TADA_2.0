@@ -10,14 +10,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
     public partial class Image_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
+        internal TADAAlertImage alertImage;
+
         private bool blocked = false;   // This prevents infinite updating loops.
         private bool justLoaded = false;
         private bool playing = false;
         private bool isVideo = false;
 
         private System.Windows.Controls.MediaElement mediaElement = new System.Windows.Controls.MediaElement();
-
-        private TADAAlertImage alertImage;
 
         internal Image_Designer_MDI(TADAAlertImage alertImage, TADAAlert parentAlert = null) : base(parentAlert)
         {
@@ -34,6 +34,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             // Even if alertImage is new, things should be initialized inside it.
             LoadExisting(this.alertImage);
+
+            FillImportComboBox();
         }
 
         private void InitializeCallbacks()
@@ -86,13 +88,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     mtxt_LoopAt.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trk_LoopAt.Value));
                 }
+
                 if (sender == mtxt_StartAt)
                 {
-                    trk_StartAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_StartAt.Text).TotalMilliseconds);
+                    General.MaintainBounds(trk_StartAt, mtxt_StartAt);
                 }
                 else if (sender == mtxt_LoopAt)
                 {
-                    trk_LoopAt.Value = Convert.ToInt32(General.TimeSpanFromString(mtxt_LoopAt.Text).TotalMilliseconds);
+                    General.MaintainBounds(trk_LoopAt, mtxt_LoopAt);
                 }
 
                 if (trk_LoopAt.Value < trk_StartAt.Value)
@@ -242,14 +245,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 numud_ActualDimensionsX.Value = width;
                 numud_ActualDimensionsY.Value = height;
 
-                if (!justLoaded)
-                {
-                    numud_DesiredDimensionsX.Value = width;
-                    numud_DesiredDimensionsY.Value = height;
-                }
-
-                SetItemSize(numud_DesiredDimensionsX.Value, numud_DesiredDimensionsY.Value);
-
                 trk_Volume.Maximum = (mediaElement.HasAudio ? 1000 : 0);
                 trk_Position.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
                 trk_Position.Value = 0;
@@ -263,6 +258,27 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 trk_LoopAt.TickFrequency = 60;
                 trk_LoopAt.SmallChange = 1000;
                 trk_LoopAt.LargeChange = 60000;
+
+                if (!justLoaded)
+                {
+                    numud_DesiredDimensionsX.Value = width;
+                    numud_DesiredDimensionsY.Value = height;
+                }
+                else
+                {
+                    // Unblocked because I want the side-effect of setting the sliders.
+                    mtxt_PlayFor.Text = General.StringFromTimeSpan(alertImage.Duration);
+                    mtxt_StartAt.Text = General.StringFromTimeSpan(alertImage.StartingPosition);
+                    mtxt_LoopAt.Text = General.StringFromTimeSpan(alertImage.EndingPosition);
+
+                    blocked = false;
+                    UpdateTimestamps(mtxt_PlayFor, null);
+                    UpdateTimestamps(mtxt_StartAt, null);
+                    UpdateTimestamps(mtxt_LoopAt, null);
+                    blocked = true;
+                }
+
+                SetItemSize(numud_DesiredDimensionsX.Value, numud_DesiredDimensionsY.Value);
 
                 playing = false;
                 justLoaded = false;
@@ -501,16 +517,13 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 playing = true;
             }
         }
+
         private void LoadExisting(TADAAlertImage alertImage)
         {
             txt_Filename.Text = alertImage.Filename;
             justLoaded = !String.IsNullOrEmpty(txt_Filename.Text);
 
             numud_AnimatedGifLoop.Value = alertImage.AnimationLoops;
-
-            mtxt_PlayFor.Text = General.StringFromTimeSpan(alertImage.Duration);
-            mtxt_StartAt.Text = General.StringFromTimeSpan(alertImage.StartingPosition);
-            mtxt_LoopAt.Text = General.StringFromTimeSpan(alertImage.EndingPosition);
 
             this.blocked = true;
             numud_DesiredDimensionsX.Value = alertImage.Dimensions.Width;

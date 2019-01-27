@@ -66,6 +66,25 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             dg_ViewerMessages.UserDeletingRow += RowDeleted;
             dg_Conditions.UserDeletingRow += RowDeleted;
 
+            dg_Images.UserDeletingRow += UpdateAlertContents;
+            dg_Audio.UserDeletingRow += UpdateAlertContents;
+            dg_StreamerMessages.UserDeletingRow += UpdateAlertContents;
+            dg_ViewerMessages.UserDeletingRow += UpdateAlertContents;
+            dg_Conditions.UserDeletingRow += UpdateAlertContents;
+
+            dg_Images.RowPostPaint += DrawRowNumber;
+            dg_Audio.RowPostPaint += DrawRowNumber;
+            dg_StreamerMessages.RowPostPaint += DrawRowNumber;
+            dg_ViewerMessages.RowPostPaint += DrawRowNumber;
+            dg_Conditions.RowPostPaint += DrawRowNumber;
+
+            chk_PreviewImage.CheckedChanged += delegate { UpdatePreview(); };
+            chk_PreviewStreamerText.CheckedChanged += delegate { UpdatePreview(); };
+            chk_PreviewViewerText.CheckedChanged += delegate { UpdatePreview(); };
+            numud_PreviewImage.ValueChanged += delegate { UpdatePreview(); };
+            numud_PreviewStreamer.ValueChanged += delegate { UpdatePreview(); };
+            numud_PreviewViewer.ValueChanged += delegate { UpdatePreview(); };
+            
             foreach (TADAAlertImage image in this.mainAlert.Images)
             {
                 this.alertImageBindingSource.Add(image);
@@ -92,6 +111,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
 
             UpdatePreviewDropdowns();
+            UpdatePreview();
+
+            numud_PreviewImage.Maximum = this.mainAlert.ImageCount;
+            numud_PreviewStreamer.Maximum = this.mainAlert.StreamerCount;
+            numud_PreviewViewer.Maximum = this.mainAlert.ViewerCount;
 
             this.cmb_AlertType.Text = this.mainAlert.AlertType;
             this.txt_AlertName.Text = this.mainAlert.AlertName;
@@ -115,8 +139,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 }
             }
 
-            cmb_AlertType.DropDownWidth = cmb_AlertType.Items.Cast<string>().Max(x => TextRenderer.MeasureText(x, cmb_AlertType.Font).Width);
-            cmb_AlertType.SelectedIndex = 0;
+            General.ResizeDropdown(cmb_AlertType);
         }
 
         private void FillMacroKeysComboBox()
@@ -136,9 +159,52 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             cmb_MacroKey.Text = "None";
         }
 
+        private void DrawRowNumber(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            DataGridView dataGrid = sender as DataGridView;
+
+            if (dataGrid.Rows[e.RowIndex].IsNewRow)
+            {
+                return;
+            }
+
+            String rowNumber = String.Format ("{0,5}  ", e.RowIndex + 1);
+
+            StringFormat alignment = new StringFormat()
+            {
+                Alignment = StringAlignment.Far,
+                LineAlignment = StringAlignment.Center
+            };
+
+            Rectangle headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, dataGrid.RowHeadersWidth, e.RowBounds.Height);
+            e.Graphics.DrawString(rowNumber, this.Font, SystemBrushes.ControlText, headerBounds, alignment);
+        }
+
         private void UpdatePreviewDropdowns()
         {
 
+        }
+
+        private void UpdateAlertContents (object sender, EventArgs e)
+        {
+            foreach (Tuple<TADAAlertImage, TabPage> t in imageTabPages)
+            {
+                ((t.Item2 as TabPage).Tag as MDI_Forms.Image_Designer_MDI).FillImportComboBox();
+            }
+
+            foreach (Tuple<TADAAlertAudio, TabPage> t in audioTabPages)
+            {
+                ((t.Item2 as TabPage).Tag as MDI_Forms.Audio_Designer_MDI).FillImportComboBox();
+            }
+
+            foreach (Tuple<TADAAlertText, TabPage> t in textTabPages)
+            {
+                ((t.Item2 as TabPage).Tag as MDI_Forms.Text_Designer_MDI).FillImportComboBox();
+            }
+
+            numud_PreviewImage.Maximum = this.mainAlert.ImageCount;
+            numud_PreviewStreamer.Maximum = this.mainAlert.StreamerCount;
+            numud_PreviewViewer.Maximum = this.mainAlert.ViewerCount;
         }
 
         private String GetCaption(String type, int number)
@@ -253,7 +319,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 }
                 else if (dataGrid == dg_Audio)
                 {
-                    if (!isNewObject)
+                    if (isNewObject)
                     {
                         this.mainAlert.Audios.Add(editObject as TADAAlertAudio);
                     }
@@ -295,6 +361,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 {
                     SwitchTabPage(existingTabPage);
                 }
+
+                UpdateAlertContents(sender, e);
             }
         }
 
@@ -319,6 +387,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             else if (sender == dg_Conditions)
             {
                 this.mainAlert.Conditions.Remove(alertConditionBindingSource[e.Row.Index] as TADAAlertCondition);
+            }
+
+            if (sender != dg_Conditions)
+            {
+                UpdateAlertContents(sender, e);
             }
         }
 
@@ -557,6 +630,19 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                 Graphics imageGraphics = Graphics.FromImage(previewImage);
 
+                bool deleteImage = false;
+
+                if (itemToDraw == null)
+                {
+                    deleteImage = true;
+                    itemToDraw = new Bitmap(Convert.ToInt32(unmodifiedSize.Width), Convert.ToInt32(unmodifiedSize.Height));
+                    Graphics graphics = Graphics.FromImage(itemToDraw);
+                    using (SolidBrush b = new SolidBrush(lineColour))
+                    {
+                        graphics.FillRectangle(b, new Rectangle(0, 0, itemToDraw.Width, itemToDraw.Height));
+                    }
+                }
+
                 for (int currentWaypoint = 1; currentWaypoint < waypoints.Waypoints.Count; ++ currentWaypoint)
                 {
                     Waypoint waypoint = waypoints.Waypoints[currentWaypoint];
@@ -625,6 +711,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                 pb_Preview.Image = previewImage;
                 pb_Preview.Update();
+
+                if (deleteImage)
+                {
+                    itemToDraw.Dispose();
+                }
             }
         }
 
@@ -695,51 +786,101 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             }
         }
 
+        private void UpdateTimes()
+        {
+            // Maximum time of alert is the maximum of all alert durations.
+            // Minimum time of alert is the maximum time of all minimums across alert parts.
+            double minImage = this.mainAlert.ImageCount == 0 ? 0 : this.mainAlert.Images.Min(image => image.TotalDuration);
+            double maxImage = this.mainAlert.ImageCount == 0 ? 0 : this.mainAlert.Images.Max(image => image.TotalDuration);
+            double minAudio = this.mainAlert.AudioCount == 0 ? 0 : this.mainAlert.Audios.Min(audio => audio.TotalDuration);
+            double maxAudio = this.mainAlert.AudioCount == 0 ? 0 : this.mainAlert.Audios.Max(audio => audio.TotalDuration);
+            double minStreamerText = this.mainAlert.StreamerCount == 0 ? 0 : this.mainAlert.StreamerTexts.Min(text => text.TotalDuration);
+            double maxStreamerText = this.mainAlert.StreamerCount == 0 ? 0 : this.mainAlert.StreamerTexts.Max(text => text.TotalDuration);
+            double minViewerText = this.mainAlert.ViewerCount == 0 ? 0 : this.mainAlert.ViewerTexts.Min(text => text.TotalDuration);
+            double maxViewerText = this.mainAlert.ViewerCount == 0 ? 0 : this.mainAlert.ViewerTexts.Max(text => text.TotalDuration);
+
+            lbl_MaximumDurationCount.Text = String.Format("{0:0.0} s", new double[] { maxImage, maxAudio, maxStreamerText, maxViewerText }.Max());
+            lbl_MinimumDurationCount.Text = String.Format("{0:0.0} s", new double[] { minImage, minAudio, minStreamerText, minViewerText }.Max());
+            lbl_CombinationsCount.Text = String.Format("{0}", this.mainAlert.Combinations);
+        }
+
+
+        // Update the preview image based on the child MDI forms that are being monitored.
         public void UpdatePreview ()
         {
             UpdateTrackbar();
+            UpdateTimes();
 
-            // Update the preview image based on the child MDI forms that are being monitored.
             Graphics imageGraphics = Graphics.FromImage(previewImage);
             imageGraphics.FillRectangle(Brushes.Black, 0, 0, previewImage.Width, previewImage.Height);
-            
-            MDI_Forms.Waypoint_Designer_MDI activeTab = this.ActiveMdiChild as MDI_Forms.Waypoint_Designer_MDI;
 
             // Always monitor the active tab.  And know what type of tab is active.
-            if (activeTab != null)
+            MDI_Forms.Waypoint_Designer_MDI activeTab = this.ActiveMdiChild as MDI_Forms.Waypoint_Designer_MDI;
+
+            // If not active, draw the selected image
+            if (!(activeTab is MDI_Forms.Image_Designer_MDI) && chk_PreviewImage.Checked)
             {
-                CurrentPosition currentValues = activeTab.CalculatePositionFromTime(TrackbarTime(), 0, 0);
-                if (currentValues != null)
+                int index = Convert.ToInt32(numud_PreviewImage.Value) - 1;
+                if (index >= 0)
                 {
-                    DrawWaypoints(activeTab.GetWaypoints(), activeTab.PreviewItemSize, activeTab.PreviewBitmap, currentValues, COLOR_TAB);
+                    TADAAlertImage alertImage = this.mainAlert.Images[index];
+                    WaypointContainer waypointContainer = alertImage.Waypoints;
+
+                    CurrentPosition currentPosition = waypointContainer.CalculatePositionFromTime(TrackbarTime());
+
+                    if (currentPosition != null)
+                    {
+                        DrawWaypoints(waypointContainer, alertImage.Dimensions, null, currentPosition, COLOR_IMAGE);
+                    }
                 }
             }
 
-            // Then, if not active, draw the selected image
-
             // Then, if not active, draw the selected Streamer Text
+            if (!(activeTab is MDI_Forms.Text_Designer_MDI && this.mainAlert.StreamerTexts.Contains((activeTab as MDI_Forms.Text_Designer_MDI).alertText)) && chk_PreviewStreamerText.Checked)
+            {
+                int index = Convert.ToInt32(numud_PreviewStreamer.Value) - 1;
+                if (index >= 0)
+                {
+                    TADAAlertText alertText = this.mainAlert.StreamerTexts[index];
+                    WaypointContainer waypointContainer = alertText.Waypoints;
+
+                    CurrentPosition currentPosition = waypointContainer.CalculatePositionFromTime(TrackbarTime());
+
+                    if (currentPosition != null)
+                    {
+                        DrawWaypoints(waypointContainer, alertText.Dimensions, null, currentPosition, COLOR_STREAMER_TEXT);
+                    }
+                }
+            }
 
             // Then, if not active, draw the selected Viewer Text
-        }
-
-        private void btn_Test_Click(object sender, EventArgs e)
-        {
-            System.Xml.XmlWriterSettings xmlWriterSettings = new System.Xml.XmlWriterSettings
+            if (!(activeTab is MDI_Forms.Text_Designer_MDI && this.mainAlert.ViewerTexts.Contains((activeTab as MDI_Forms.Text_Designer_MDI).alertText)) && chk_PreviewViewerText.Checked)
             {
-                Encoding = Encoding.UTF8,
-                Indent = true,
-                NewLineOnAttributes = false
-            };
+                int index = Convert.ToInt32(numud_PreviewViewer.Value) - 1;
+                if (index >= 0)
+                {
+                    TADAAlertText alertText = this.mainAlert.StreamerTexts[index];
+                    WaypointContainer waypointContainer = alertText.Waypoints;
 
-            using (System.IO.FileStream fileStream = new System.IO.FileStream(@"D:\Temp\xmlfile.xml", System.IO.FileMode.Create))
-            {
-                System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(fileStream, xmlWriterSettings);
-                xmlWriter.WriteStartDocument();
-                this.mainAlert.WriteXml(xmlWriter);
-                xmlWriter.WriteEndDocument();
-                xmlWriter.Flush();
-                xmlWriter.Close();
+                    CurrentPosition currentPosition = waypointContainer.CalculatePositionFromTime(TrackbarTime());
+
+                    if (currentPosition != null)
+                    {
+                        DrawWaypoints(waypointContainer, alertText.Dimensions, null, currentPosition, COLOR_STREAMER_TEXT);
+                    }
+                }
             }
+            
+            // Finally, so that it is on top, draw the active item.
+            if (activeTab != null)
+            {
+                CurrentPosition currentPosition = activeTab.waypointContainer.CalculatePositionFromTime(TrackbarTime());
+                if (currentPosition != null)
+                {
+                    DrawWaypoints(activeTab.GetWaypoints(), activeTab.PreviewItemSize, activeTab.PreviewBitmap, currentPosition, COLOR_TAB);
+                }
+            }
+
         }
     }
 }
