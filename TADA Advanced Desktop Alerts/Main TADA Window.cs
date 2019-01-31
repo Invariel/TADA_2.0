@@ -146,7 +146,7 @@ namespace TADA_Advanced_Desktop_Alerts
                                              "&redirect_uri=" +
                                              General.AUTH_URI +
                                              "&response_type=token&" +
-                                             "scope=chat_login channel_subscriptions channel_check_subscription");
+                                             "scope=chat_login channel_subscriptions channel_check_subscription user_read");
         }
 
         private void PasswordMask(object sender, EventArgs e)

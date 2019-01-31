@@ -921,6 +921,7 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         public String AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
         public int Amount { get; set; } = 0;
+        public bool VIP { get; set; } = false;
         public String Message { get; set; } = "";
         public String RecipientName { get; set; } = "";
         public TwitchLib.PubSub.Enums.SubscriptionPlan Tier { get; set; } = TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet;

@@ -759,7 +759,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else if (reader.IsStartElement("Background"))
                     {
-                        this.BackgroundImage = reader.ReadContentAsString();
+                        this.BackgroundImage = reader.ReadElementContentAsString();
                     }
                     else if (reader.IsStartElement("Font"))
                     {
@@ -878,6 +878,37 @@ namespace TADA_Advanced_Desktop_Alerts
 
         [DisplayName("Tier Three")]
         public bool TierThree { get; set; }
+
+        [DisplayName("Admin")]
+        public bool Admin { get; set; }
+
+        /*
+         * Bit levels:
+         * 1, 100, 1000, 5000, 10000, 25000, 50000, 75000, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000
+         */
+
+        [DisplayName("Bits")]
+        public bool Bits { get; set; }
+
+        [DisplayName("Broadcaster")]
+        public bool Broadcaster { get; set; }
+
+        [DisplayName("Global Mod")]
+        public bool GlobalMod { get; set; }
+
+        [DisplayName("Moderator")]
+        public bool Moderator { get; set; }
+
+        /*
+        [DisplayName("Subscription Duration")]
+        public bool Subscribe { get; set; }
+        */
+
+        [DisplayName("Twitch Staff")]
+        public bool Staff { get; set; }
+
+        [DisplayName("Turbo")]
+        public bool Turbo { get; set; }
 
         [DisplayName("VIP")]
         public bool VIP { get; set; }

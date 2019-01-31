@@ -67,12 +67,13 @@ namespace TADA_Advanced_Desktop_Alerts
         [Flags]
         public enum SCORES
         {
-            SCORE_ABSOLUTE_MINIMUM = -1,
-            SCORE_TIER_MATCHED = 0x8000,
-            SCORE_NAME_MATCHED = 0x4000,
-            SCORE_KEYWORD_MATCHED = 0x2000,
-            SCORE_WITHIN_AMOUNT = 0x1000,
-            SCORE_NO_CONDITIONS = 0x0100
+            SCORE_ABSOLUTE_MINIMUM  = -1,
+            SCORE_BADGE_MATCHED     = 0x10000,
+            SCORE_TIER_MATCHED      = 0x8000,
+            SCORE_NAME_MATCHED      = 0x4000,
+            SCORE_KEYWORD_MATCHED   = 0x2000,
+            SCORE_WITHIN_AMOUNT     = 0x1000,
+            SCORE_NO_CONDITIONS     = 0x0100
         }
 
         public enum ALERTTYPES
@@ -220,6 +221,10 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 trackBar.Value = trackBar.Maximum;
                 maskedTextBox.Text = General.StringFromTimeSpan(new TimeSpan(0, 0, 0, 0, trackBar.Value));
+            }
+            else
+            {
+                trackBar.Value = Convert.ToInt16(timespan.TotalMilliseconds);
             }
         }
 

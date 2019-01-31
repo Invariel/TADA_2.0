@@ -80,6 +80,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             tab_AdvancedWaypointControls.TabPages.Remove(tab_Sound);
 
+            InitializeCallbacks();
+
             // Load existing details.
             LoadExisting();
 
@@ -92,7 +94,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             General.ResizeDropdown(cmb_OutlineColor);
             General.ResizeDropdown(cmb_TTSVoice);
 
-            InitializeCallbacks();
             GeneratePreview();
             FillImportComboBox();
         }
@@ -377,6 +378,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             if (!blocked)
             {
+                blocked = true;
                 if (sender is TrackBar)
                 {
                     numud_VoiceVolume.Value = trk_VoiceVolume.Value / 10;
@@ -387,6 +389,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 }
 
                 this.alertText.Waypoints.InitialVolume = Convert.ToDouble(numud_VoiceVolume.Value);
+                blocked = false;
             }
         }
 

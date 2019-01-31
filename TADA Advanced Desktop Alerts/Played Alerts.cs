@@ -19,8 +19,6 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class Played_Alerts : Form
     {
-        const int ABSOLUTE_MINIMUM_SCORE = -10000000;
-
         private TwitchAPI twitchAPI;
         private TwitchPubSub pubSub;
         private TwitchClient twitchClient;
@@ -700,6 +698,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
 
+            if (user != null)
+            {
+                GetBadgesUndocumented(user);
+            }
+
             return user;
         }
 
@@ -718,6 +721,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        // Need a better scheme than this, because it relies on seeing a chat message first.
         private bool IsVIP (TwitchLib.Client.Models.UserState userState)
         {
             bool retval = false;
@@ -730,6 +734,100 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
             return retval;
+        }
+
+        private bool UndocumentedVIPRequest (String userId)
+        {
+            // Get a user's information from a channel with the following undocumented endpoint: https://api.twitch.tv/kraken/users/user_id/chat/channels/channel_id
+
+            //twitchAPI.Undocumented.GetChatUserAsync(userId, channelId);
+
+            bool retval = false;
+
+            System.Net.Http.HttpClient twitchAPIRequest = new System.Net.Http.HttpClient();
+            twitchAPIRequest.DefaultRequestHeaders.Add("Client-ID", General.CLIENT_ID);
+            twitchAPIRequest.DefaultRequestHeaders.Add("Authorization", "Oauth " + twitchAPI.Settings.AccessToken);
+            twitchAPIRequest.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
+
+            System.Net.Http.HttpResponseMessage twitchAPIResponse = twitchAPIRequest.GetAsync(new Uri(String.Format(@"https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}", userId, this.channelID))).Result;
+
+            if (twitchAPIResponse.IsSuccessStatusCode)
+            {
+                System.Net.Http.HttpContent content = twitchAPIResponse.Content;
+                Newtonsoft.Json.Linq.JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(content.ReadAsStringAsync().Result);
+                
+                if (jObject["badges"] != null)
+                {
+                    for (int c = 0; c < jObject["badges"].Count(); ++ c)
+                    {
+                        if ((String)jObject["badges"][c]["id"] == "vip")
+                        {
+                            retval = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return retval;
+        }
+
+        private void GetBadgesUndocumented (User user)
+        {
+            if (user != null)
+            {
+                System.Net.Http.HttpClient twitchAPIRequest = new System.Net.Http.HttpClient();
+                twitchAPIRequest.DefaultRequestHeaders.Add("Client-ID", General.CLIENT_ID);
+                twitchAPIRequest.DefaultRequestHeaders.Add("Authorization", "Oauth " + twitchAPI.Settings.AccessToken);
+                twitchAPIRequest.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
+
+                System.Net.Http.HttpResponseMessage twitchAPIResponse = twitchAPIRequest.GetAsync(new Uri(String.Format(@"https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}", user.UserID, this.channelID))).Result;
+
+                if (twitchAPIResponse.IsSuccessStatusCode)
+                {
+                    System.Net.Http.HttpContent content = twitchAPIResponse.Content;
+                    Newtonsoft.Json.Linq.JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(content.ReadAsStringAsync().Result);
+
+                    if (jObject["badges"] != null)
+                    {
+                        for (int c = 0; c < jObject["badges"].Count(); ++c)
+                        {
+                            switch ((String)jObject["badges"][c]["id"])
+                            {
+                                case "admin":
+                                    user.badges.admin = true;
+                                    break;
+                                case "bits":
+                                    user.badges.bits = true;
+                                    user.badges.bit_badge = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
+                                    break;
+                                case "broadcaster":
+                                    user.badges.broadcaster = true;
+                                    break;
+                                case "global_mod":
+                                    user.badges.global_mod = true;
+                                    break;
+                                case "moderator":
+                                    user.badges.moderator = true;
+                                    break;
+                                case "subscriber":
+                                    user.badges.subscriber = true;
+                                    user.badges.subscribe_months = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
+                                    break;
+                                case "staff":
+                                    user.badges.staff = true;
+                                    break;
+                                case "turbo":
+                                    user.badges.turbo = true;
+                                    break;
+                                case "vip":
+                                    user.badges.vip = true;
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -762,7 +860,7 @@ namespace TADA_Advanced_Desktop_Alerts
             TADAAlert returnedAlert = null;
             List<TADAAlert> potentialAlerts = new List<TADAAlert>();
 
-            int alertScore = ABSOLUTE_MINIMUM_SCORE;
+            int alertScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
 
             String alertTypeString = General.alertTypes[alertType];
             String viewerName = subObject.ViewerName;
@@ -779,14 +877,14 @@ namespace TADA_Advanced_Desktop_Alerts
                      * name > tier > keyword > amount
                      */
 
-                    int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier);
+                    int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier, subObject.VIP);
                     if (thisAlertScore > alertScore)
                     {
                         potentialAlerts.Clear();
                         alertScore = thisAlertScore;
                     }
 
-                    if (thisAlertScore == alertScore && alertScore != ABSOLUTE_MINIMUM_SCORE)
+                    if (thisAlertScore == alertScore && alertScore != (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM)
                     {
                         potentialAlerts.Add(alert);
                     }
@@ -802,18 +900,28 @@ namespace TADA_Advanced_Desktop_Alerts
             return returnedAlert;
         }
 
-        private int ScoreAlert (TADAAlert alert, String username, int amount, String message, String tier)
+        private void CheckBasicBadge(bool condition, bool userState, ref int score, ref bool continueTesting)
         {
-            int finalScore = ABSOLUTE_MINIMUM_SCORE;
-            bool continueTesting = true;
+            if (continueTesting)
+            {
+                score = (condition == userState) ? score + (int)General.SCORES.SCORE_BADGE_MATCHED : (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                continueTesting = (condition == userState);
+            }
+        }
+
+        private int ScoreAlert (TADAAlert alert, User user, int amount, String message, String tier)
+        {
+            int finalScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
 
             foreach (TADAAlertCondition condition in alert.Conditions)
             {
+                bool continueTesting = true;
                 int score = 0;
-                // First, check that the tier matches.
+
+                // First, check that the tier matches.  Only subscriptions care about Twitch Prime, so Conditions will be adjusted accordingly.
                 if (condition.NoTier || condition.TwitchPrime || condition.TierOne || condition.TierTwo || condition.TierThree)
                 {
-                    // If any of the "tier" checkboxes are checked, we have to match against them.
+                    // If any of the "tier" checkboxen are checked, we have to match against them exactly.
                     if ((condition.NoTier && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet]) ||
                         (condition.TwitchPrime && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Prime]) ||
                         (condition.TierOne && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
@@ -824,7 +932,72 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else
                     {
-                        score = ABSOLUTE_MINIMUM_SCORE;
+                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                        continueTesting = false;
+                    }
+                }
+
+                // This is where badges are considered and compared.  
+                CheckBasicBadge(condition.Admin, user.badges.admin, ref score, ref continueTesting);
+                CheckBasicBadge(condition.Broadcaster, user.badges.broadcaster, ref score, ref continueTesting);
+                CheckBasicBadge(condition.GlobalMod, user.badges.global_mod, ref score, ref continueTesting);
+                CheckBasicBadge(condition.Moderator, user.badges.moderator, ref score, ref continueTesting);
+                CheckBasicBadge(condition.Staff, user.badges.staff, ref score, ref continueTesting);
+                CheckBasicBadge(condition.Turbo, user.badges.turbo, ref score, ref continueTesting);
+                CheckBasicBadge(condition.VIP, user.badges.vip, ref score, ref continueTesting);
+                
+/*
+    case "bits":
+        user.badges.bits = true;
+        user.badges.bit_badge = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
+    break;
+    case "subscriber":
+        user.badges.subscriber = true;
+        user.badges.subscribe_months = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
+    break;
+ */
+
+
+            }
+            return finalScore;
+        }
+
+        private int ScoreAlert (TADAAlert alert, String username, int amount, String message, String tier, bool isVIP)
+        {
+            int finalScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+            bool continueTesting = true;
+
+            foreach (TADAAlertCondition condition in alert.Conditions)
+            {
+                int score = 0;
+                // First, check that the tier matches.
+                if (condition.NoTier || condition.TwitchPrime || condition.TierOne || condition.TierTwo || condition.TierThree)
+                {
+                    // If any of the "tier" checkboxes are checked, we have to match against them.  Same for the VIP flag.
+                    if ((condition.NoTier && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet]) ||
+                        (condition.TwitchPrime && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Prime]) ||
+                        (condition.TierOne && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
+                        (condition.TierTwo && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2]) ||
+                        (condition.TierThree && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3]))
+                    {
+                        score += (int)General.SCORES.SCORE_TIER_MATCHED;
+                    }
+                    else
+                    {
+                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                        continueTesting = false;
+                    }
+                }
+
+                if (condition.VIP)
+                {
+                    if (isVIP)
+                    {
+                        score += (int)General.SCORES.SCORE_BADGE_MATCHED;
+                    }
+                    else
+                    {
+                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
                         continueTesting = false;
                     }
                 }
@@ -840,7 +1013,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else
                     {
-                        score = ABSOLUTE_MINIMUM_SCORE;
+                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
                         continueTesting = false;
                     }
                 }
@@ -854,7 +1027,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else
                     {
-                        score = ABSOLUTE_MINIMUM_SCORE;
+                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
                         continueTesting = false;
                     }
                 }
@@ -877,7 +1050,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     if (!matched)
                     {
-                        score = ABSOLUTE_MINIMUM_SCORE;
+                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
                         continueTesting = false;
                     }
                 }
@@ -924,6 +1097,21 @@ namespace TADA_Advanced_Desktop_Alerts
         }
     }
 
+    public class Badges
+    {
+        public bool admin = false;
+        public bool bits = false;
+        public bool broadcaster = false;
+        public bool global_mod = false;
+        public bool moderator = false;
+        public bool subscriber = false;
+        public bool staff = false;
+        public bool turbo = false;
+        public bool vip = false;
+        public uint bit_badge = 0;
+        public uint subscribe_months = 0;
+    }
+
     public class User
     {
         // In the future, this sort of information might be stored in a database to be stored beyond one session.
@@ -936,20 +1124,21 @@ namespace TADA_Advanced_Desktop_Alerts
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
         public DateTime lastSpoke;                  // Is this necessary?  Maybe not...
         public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
+        public Badges badges = new Badges();        // The badges a user has.
 
-        public String UserID()
+        public String UserID
         {
-            return user?.Id;
+            get { return user?.Id; }
         }
 
-        public String SubscriptionTier()
+        public String SubscriptionTier
         {
-            return subscription?.SubPlan ?? "None";
+            get { return subscription?.SubPlan ?? "None"; }
         }
 
-        public String SubscriptionTierName()
+        public String SubscriptionTierName
         {
-            return subscription?.SubPlanName ?? "None";
+            get { return subscription?.SubPlanName ?? "None"; }
         }
 
         public void UpdateLastSpoke()
