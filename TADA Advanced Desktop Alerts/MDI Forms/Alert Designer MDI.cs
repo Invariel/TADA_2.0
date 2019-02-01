@@ -26,6 +26,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private List <Tuple <TADAAlertImage, TabPage>> imageTabPages = new List<Tuple<TADAAlertImage, TabPage>>();
         private List <Tuple <TADAAlertAudio, TabPage>> audioTabPages = new List<Tuple<TADAAlertAudio, TabPage>>();
         private List <Tuple <TADAAlertText, TabPage>> textTabPages = new List<Tuple<TADAAlertText, TabPage>>();
+        private List<Tuple<TADAAlertCondition, TabPage>> conditionTabPages = new List<Tuple<TADAAlertCondition, TabPage>>();
 
         internal Alert_Designer_MDI(TADAAlert originalAlert)
         {
@@ -57,6 +58,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             dg_Audio.CellContentClick += CellEditClicked;
             dg_StreamerMessages.CellContentClick += CellEditClicked;
             dg_ViewerMessages.CellContentClick += CellEditClicked;
+            dg_Conditions.CellContentClick += CellEditClicked;
 
             // Need to add a listener for anything done in dg_Conditions to ensure that it is always updated.
 
@@ -110,7 +112,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 this.alertConditionBindingSource.Add(condition);
             }
 
-            UpdatePreviewDropdowns();
             UpdatePreview();
 
             numud_PreviewImage.Maximum = this.mainAlert.ImageCount;
@@ -127,6 +128,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.ts_NewStreamerAudio.Click += NewAudioForm;
             this.ts_NewStreamerText.Click += NewStreamerTextForm;
             this.ts_NewViewerText.Click += NewViewerTextForm;
+            this.ts_NewCondition.Click += NewConditionForm;
         }
 
         private void FillAlertTypeComboBox()
@@ -178,11 +180,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
             Rectangle headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, dataGrid.RowHeadersWidth, e.RowBounds.Height);
             e.Graphics.DrawString(rowNumber, this.Font, SystemBrushes.ControlText, headerBounds, alignment);
-        }
-
-        private void UpdatePreviewDropdowns()
-        {
-
         }
 
         private void UpdateAlertContents (object sender, EventArgs e)
@@ -245,6 +242,12 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             return tuple?.Item2 ?? null;
         }
 
+        private TabPage TabExists (TADAAlertCondition alertCondition)
+        {
+            Tuple<TADAAlertCondition, TabPage> tuple = conditionTabPages.Find(tp => tp.Item1 == alertCondition);
+            return tuple?.Item2 ?? null;
+        }
+
         private void UpdateAlertType (object sender, EventArgs e)
         {
             this.mainAlert.AlertType = cmb_AlertType.Text;
@@ -258,6 +261,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 grp_Macro.Visible = false;
                 DeleteMacroSettings();
+            }
+
+            foreach (Tuple <TADAAlertCondition, TabPage> tuple in conditionTabPages)
+            {
+                (tuple.Item2.Tag as MDI_Forms.Condition_Designer_MDI).AlertTypeOptions(General.alertStrings[this.mainAlert.AlertType]);
             }
         }
 
@@ -354,6 +362,22 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     if (existingTabPage == null || isNewObject)
                     {
                         CreateMDIForm(editObject as TADAAlertText, GetCaption((dataGrid == dg_StreamerMessages ? "Streamer" : "Viewer"), e.RowIndex));
+                    }
+                }
+                else if (dataGrid == dg_Conditions)
+                {
+                    if (isNewObject)
+                    {
+                        this.mainAlert.Conditions.Add(editObject as TADAAlertCondition);
+                    }
+                    else
+                    {
+                        existingTabPage = TabExists(editObject as TADAAlertCondition);
+                    }
+
+                    if (existingTabPage == null || isNewObject)
+                    {
+                        CreateMDIForm(editObject as TADAAlertCondition, GetCaption("Condition", e.RowIndex));
                     }
                 }
 
@@ -467,6 +491,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             CreateMDIForm(newAlertText, GetCaption("Viewer", viewerAlertTextBindingSource.Count - 1));
         }
 
+        private void NewConditionForm (object sender = null, EventArgs e = null)
+        {
+            TADAAlertCondition newCondition = alertConditionBindingSource.AddNew() as TADAAlertCondition;
+            this.mainAlert.Conditions.Add(newCondition);
+            CreateMDIForm(newCondition, GetCaption("Condition", alertConditionBindingSource.Count - 1));
+        }
+
         private void CreateMDIForm (TADAAlertImage newAlertImage, String caption)
         {
             Form newImageForm = new MDI_Forms.Image_Designer_MDI(newAlertImage, this.mainAlert);
@@ -486,6 +517,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             Form newTextForm = new MDI_Forms.Text_Designer_MDI(newAlertText, this.mainAlert);
             TabPage surroundingTabPage = EncapsulateWithTab(newTextForm, caption);
             textTabPages.Add(new Tuple<TADAAlertText, TabPage>(newAlertText, surroundingTabPage));
+        }
+
+        private void CreateMDIForm (TADAAlertCondition newAlertCondition, String caption)
+        {
+            Form newCaptionForm = new MDI_Forms.Condition_Designer_MDI(newAlertCondition, this.mainAlert);
+            TabPage surroundingTabPage = EncapsulateWithTab(newCaptionForm, caption);
+            conditionTabPages.Add(new Tuple<TADAAlertCondition, TabPage>(newAlertCondition, surroundingTabPage));
         }
 
         private void ChildFormClosed (object sender, FormClosedEventArgs e)

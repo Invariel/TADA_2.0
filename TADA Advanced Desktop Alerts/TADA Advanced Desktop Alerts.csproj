@@ -281,6 +281,12 @@
     <Compile Include="MDI Forms\Audio Designer MDI.Designer.cs">
       <DependentUpon>Audio Designer MDI.cs</DependentUpon>
     </Compile>
+    <Compile Include="MDI Forms\Condition Designer MDI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MDI Forms\Condition Designer MDI.Designer.cs">
+      <DependentUpon>Condition Designer MDI.cs</DependentUpon>
+    </Compile>
     <Compile Include="MDI Forms\Image Designer MDI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -324,6 +330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MDI Forms\Audio Designer MDI.resx">
       <DependentUpon>Audio Designer MDI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MDI Forms\Condition Designer MDI.resx">
+      <DependentUpon>Condition Designer MDI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MDI Forms\Image Designer MDI.resx">
       <DependentUpon>Image Designer MDI.cs</DependentUpon>

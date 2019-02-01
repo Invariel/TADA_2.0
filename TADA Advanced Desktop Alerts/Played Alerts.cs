@@ -836,7 +836,14 @@ namespace TADA_Advanced_Desktop_Alerts
             TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription = null;
 
             // Returns null if not subscribed.
-            subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            try
+            {
+                subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            }
+            catch (TwitchLib.Api.Core.Exceptions.BadResourceException)
+            {
+                // This is the current way of figuring out that there's no subscription right now.  Thanks, Twitch.
+            }
 
             return subscription;
         }

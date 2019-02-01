@@ -80,6 +80,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             NONE,   // Used when, for whatever reason, an alert needs to not play.
             ANONYMOUS,
+            ANONYMOUS_BITS,
             ANONYMOUS_COMMUNITY,
             AUTOHOST,
             BITS,
@@ -100,6 +101,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             { ALERTTYPES.NONE, "No alert." },
             { ALERTTYPES.ANONYMOUS, "Anonymous Gift Subs" },
+            { ALERTTYPES.ANONYMOUS_BITS, "Anonymous Bits" },
             { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
             { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
@@ -121,6 +123,7 @@ namespace TADA_Advanced_Desktop_Alerts
             { "No alert.", ALERTTYPES.NONE },
             { "Auto-Host", ALERTTYPES.AUTOHOST },
             { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS },
+            { "Anonymous Bits", ALERTTYPES.ANONYMOUS_BITS },
             { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
             { "Bits", ALERTTYPES.BITS },
             { "Game Purchase", ALERTTYPES.COMMERCE },
