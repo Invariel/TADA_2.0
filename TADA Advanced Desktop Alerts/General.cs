@@ -67,21 +67,22 @@ namespace TADA_Advanced_Desktop_Alerts
         [Flags]
         public enum SCORES
         {
-            SCORE_ABSOLUTE_MINIMUM  = -1,
-            SCORE_BADGE_MATCHED     = 0x10000,
-            SCORE_TIER_MATCHED      = 0x8000,
-            SCORE_NAME_MATCHED      = 0x4000,
-            SCORE_KEYWORD_MATCHED   = 0x2000,
-            SCORE_WITHIN_AMOUNT     = 0x1000,
-            SCORE_NO_CONDITIONS     = 0x0100
+            SCORE_ABSOLUTE_MINIMUM      = -1,
+            SCORE_BADGE_MATCHED         = 0x40000,
+            SCORE_VIEWER_TIER_MATCHED   = 0x10000,
+            SCORE_SUB_TIER_MATCHED      = 0x8000,
+            SCORE_NAME_MATCHED          = 0x4000,
+            SCORE_KEYWORD_MATCHED       = 0x2000,
+            SCORE_WITHIN_AMOUNT         = 0x1000,
+            SCORE_NO_CONDITIONS         = 0x0100
         }
 
         public enum ALERTTYPES
         {
             NONE,   // Used when, for whatever reason, an alert needs to not play.
-            ANONYMOUS,
             ANONYMOUS_BITS,
             ANONYMOUS_COMMUNITY,
+            ANONYMOUS_GIFT,
             AUTOHOST,
             BITS,
             COMMERCE,
@@ -100,8 +101,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public static Dictionary<ALERTTYPES, String> alertTypes = new Dictionary<ALERTTYPES, String>()
         {
             { ALERTTYPES.NONE, "No alert." },
-            { ALERTTYPES.ANONYMOUS, "Anonymous Gift Subs" },
             { ALERTTYPES.ANONYMOUS_BITS, "Anonymous Bits" },
+            { ALERTTYPES.ANONYMOUS_GIFT, "Anonymous Gift Subs" },
             { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
             { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
@@ -122,9 +123,9 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             { "No alert.", ALERTTYPES.NONE },
             { "Auto-Host", ALERTTYPES.AUTOHOST },
-            { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS },
             { "Anonymous Bits", ALERTTYPES.ANONYMOUS_BITS },
             { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
+            { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS_GIFT },
             { "Bits", ALERTTYPES.BITS },
             { "Game Purchase", ALERTTYPES.COMMERCE },
             { "Community Gift Subs", ALERTTYPES.COMMUNITY },

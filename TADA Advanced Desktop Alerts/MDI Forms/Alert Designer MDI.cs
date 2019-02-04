@@ -524,6 +524,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             Form newCaptionForm = new MDI_Forms.Condition_Designer_MDI(newAlertCondition, this.mainAlert);
             TabPage surroundingTabPage = EncapsulateWithTab(newCaptionForm, caption);
             conditionTabPages.Add(new Tuple<TADAAlertCondition, TabPage>(newAlertCondition, surroundingTabPage));
+            (newCaptionForm as MDI_Forms.Condition_Designer_MDI).AlertTypeOptions(General.alertStrings[cmb_AlertType.Text]);
         }
 
         private void ChildFormClosed (object sender, FormClosedEventArgs e)

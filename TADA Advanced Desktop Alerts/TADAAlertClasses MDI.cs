@@ -864,74 +864,354 @@ namespace TADA_Advanced_Desktop_Alerts
     internal class TADAAlertCondition : PropertyAndXML
     {
         #region Properties
-        [DisplayName("No Tier")]
-        public bool NoTier { get; set; }
+        [DisplayName ("Viewer's Subscription Tier")]
+        public String ViewerSubTier
+        {
+            get
+            {
+                int count = (ViewerTierNoTier ? 1 : 0) +
+                            (ViewerTierTierOne ? 1 : 0) +
+                            (ViewerTierTierTwo ? 1 : 0) +
+                            (ViewerTierTierThree ? 1 : 0);
 
-        [DisplayName("Twitch Prime")]
-        public bool TwitchPrime { get; set; }
+                String retval;
 
-        [DisplayName("Tier One")]
-        public bool TierOne { get; set; }
+                // This absurd construction creates a human-readable phrase that describes the tier of user that can trigger the alert.
+                switch (count)
+                {
+                    case 0:
+                    case 4:
+                        retval = "Any viewer, regardless of subscription tier, ";
+                        break;
+                    case 1:
+                        if (ViewerTierNoTier)
+                        {
+                            retval = "Only someone without an active subscription";
+                        }
+                        else
+                        {
+                            retval = "Only someone subscribed at tier " + (ViewerTierTierOne ? "one" : ViewerTierTierTwo ? "two" : "three");
+                        }
+                        break;
+                    default:
+                        if (ViewerTierNoTier)
+                        {
+                            retval = "Someone with no active subscription, or subscribed at ";
+                            if (ViewerTierTierOne && ViewerTierTierTwo)
+                            {
+                                retval += "tier one or tier two";
+                            }
+                            else if (ViewerTierTierOne && ViewerTierTierThree)
+                            {
+                                retval += "tier one or tier three";
+                            }
+                            else if (ViewerTierTierTwo && ViewerTierTierThree)
+                            {
+                                retval += "tier two or tier three";
+                            }
+                            else
+                            {
+                                retval += "tier " + (ViewerTierTierOne ? "one" : ViewerTierTierTwo ? "two" : "three");
+                            }
+                        }
+                        else
+                        {
+                            retval = "Someone subscribed at ";
+                            if (ViewerTierTierOne && ViewerTierTierTwo && ViewerTierTierThree)
+                            {
+                                retval += "any tier ";
+                            }
+                            else
+                            {
+                                if (ViewerTierTierOne)
+                                {
+                                    retval += "tier one or " + (ViewerTierTierTwo ? "two" : "three");
+                                }
+                                else
+                                {
+                                    retval += "tier two or three";
+                                }
+                            }
+                        }
 
-        [DisplayName("Tier Two")]
-        public bool TierTwo { get; set; }
+                        break;
+                }
 
-        [DisplayName("Tier Three")]
-        public bool TierThree { get; set; }
+                retval += " can trigger this alert.";
 
-        [DisplayName("Admin")]
-        public bool Admin { get; set; }
+                return retval;
+            }
+        }
 
-        /*
-         * Bit levels:
-         * 1, 100, 1000, 5000, 10000, 25000, 50000, 75000, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000
-         */
+        [DisplayName("Subscription Tier")]
+        public String SubscriptionTier
+        {
+            get
+            {
+                int count = (SubscriptionTierPrime ? 1 : 0) +
+                            (SubscriptionTierTierOne ? 1 : 0) +
+                            (SubscriptionTierTierTwo ? 1 : 0) +
+                            (SubscriptionTierTierThree ? 1 : 0);
 
-        [DisplayName("Bits")]
-        public bool Bits { get; set; }
+                String retval;
 
-        [DisplayName("Broadcaster")]
-        public bool Broadcaster { get; set; }
+                // This absurd construction creates a human-readable phrase that describes the subscription tier(s) that can trigger this alert.
+                switch (count)
+                {
+                    case 0:
+                    case 4:
+                        retval = "A subscription at any tier";
+                        break;
+                    case 1:
+                        retval = String.Format("Only a {0} subscription", (SubscriptionTierPrime ? "Twitch Prime" : ("tier " + (SubscriptionTierTierOne ? "one" : (SubscriptionTierTierTwo ? "two" : "three")))));
+                        break;
+                    case 3:
+                        if (!SubscriptionTierPrime)
+                        {
+                            retval = "A tier one, two, or three subscription";
+                        }
+                        else if (!SubscriptionTierTierOne)
+                        {
+                            retval = "A Twitch Prime, tier two, or tier three subscription";
+                        }
+                        else if (!SubscriptionTierTierTwo)
+                        {
+                            retval = "A Twitch Prime, tier one, or tier three subscription";
+                        }
+                        else
+                        {
+                            retval = "A Twitch Prime, tier one, or tier two subscription";
+                        }
+                        break;
+                    default:
+                        if (SubscriptionTierPrime)
+                        {
+                            retval = "A Twitch Prime or tier " + (SubscriptionTierTierOne ? "one" : (SubscriptionTierTierTwo ? "two" : "three")) + " subscription";
+                        }
+                        else if (SubscriptionTierTierOne)
+                        {
+                            retval = "A tier one or " + (SubscriptionTierTierTwo ? "two" : "three") + " subscription";
+                        }
+                        else
+                        {
+                            retval = "A tier two or three subscription";
+                        }
+                        break;
+                }
 
-        [DisplayName("Global Mod")]
-        public bool GlobalMod { get; set; }
+                retval += " can trigger this alert.";
+                return retval;
+            }
+        }
 
-        [DisplayName("Moderator")]
-        public bool Moderator { get; set; }
+        [DisplayName("Viewer Badges")]
+        public String BadgeString
+        {
+            get
+            {
+                String retval = "";
+                bool concat = false;
 
-        /*
-        [DisplayName("Subscription Duration")]
-        public bool Subscribe { get; set; }
-        */
+                int count = (IsAdmin ? 1 : 0) +
+                            (IsBits ? 1 : 0) +
+                            (IsBroadcaster ? 1 : 0) +
+                            (IsGlobalMod ? 1 : 0) +
+                            (IsModerator ? 1 : 0) +
+                            (IsPrime ? 1 : 0) +
+                            (IsSubscribed ? 1 : 0) +
+                            (IsStaff ? 1 : 0) +
+                            (IsTurbo ? 1 : 0) +
+                            (IsVIP ? 1 : 0);
 
-        [DisplayName("Twitch Staff")]
-        public bool Staff { get; set; }
 
-        [DisplayName("Turbo")]
-        public bool Turbo { get; set; }
+                if (IsAdmin)
+                {
+                    retval += "The viewer must be a Twitch Admin";
+                    concat = true;
+                    --count;
+                }
 
-        [DisplayName("VIP")]
-        public bool VIP { get; set; }
+                if (IsBits)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ");
+                    concat = true;
+                    --count;
 
-        [DisplayName("Usernames")]
-        public String Usernames { get; set; }
+                    if (MinBits == 0 && MaxBits == 0)
+                    {
+                        retval += "must have dropped at least one bit in the channel";
+                    }
+                    else if (MinBits == 0)
+                    {
+                        retval += $"must have dropped no more than {MaxBits} bits in the channel";
+                    }
+                    else if (MaxBits == 0)
+                    {
+                        retval += $"must have dropped at least {MinBits} bits in the channel";
+                    }
+                    else if (MinBits == MaxBits)
+                    {
+                        retval += $"must have the {MinBits} bit badge";
+                    }
+                    else
+                    {
+                        retval += $"must have dropped between {MinBits} and {MaxBits} bits in the channel";
+                    }
+                }
 
-        [DisplayName("Keywords")]
-        public String Keywords { get; set; }
+                if (IsBroadcaster)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be you, the broadcaster";
+                    concat = true;
+                    --count;
+                }
 
-        [DisplayName("Minimum")]
-        public int Minimum { get; set; }
+                if (IsGlobalMod)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be a Twitch Global Moderator";
+                    concat = true;
+                    --count;
+                }
 
-        [DisplayName("Maximum")]
-        public int Maximum { get; set; }
+                if (IsModerator)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be a moderator in your channel";
+                    concat = true;
+                    --count;
+                }
 
-        [DisplayName("Keypress")]
-        public String Keypress { get; set; }
-        #endregion Properties
+                if (IsPrime)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must pay for Twitch Prime";
+                    concat = true;
+                    --count;
+                }
+
+                if (IsSubscribed)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ");
+                    concat = true;
+                    --count;
+
+                    if (MinMonths == 0 && MaxMonths == 0)
+                    {
+                        retval += "must be subscribed to the channel";
+                    }
+                    else if (MinMonths == 0)
+                    {
+                        retval += $"must be subscribed to the channel for at most {MaxMonths} months";
+                    }
+                    else if (MaxMonths == 0)
+                    {
+                        retval += $"must be subscribed to the channel for more than {MinMonths} months";
+                    }
+                    else if (MinMonths == MaxMonths)
+                    {
+                        retval += $"must be subscribed to the channel for exactly {MinMonths} months";
+                    }
+                    else
+                    {
+                        retval += $"must be subscribed to the channel for between {MinMonths} and {MaxMonths} months";
+                    }
+                }
+
+                if (IsStaff)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be a member of Twitch staff";
+                    concat = true;
+                    --count;
+                }
+
+                if (IsTurbo)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must subscribe to Twitch Turbo";
+                    concat = true;
+                    --count;
+                }
+
+                if (IsVIP)
+                {
+                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be one of your channel VIPs";
+                    --count;
+                }
+
+                retval += ".";
+
+                return retval;
+            }
+        }
+        #endregion
+
+        public bool ViewerTierNoTier;
+        public bool ViewerTierTierOne;
+        public bool ViewerTierTierTwo;
+        public bool ViewerTierTierThree;
+
+        public bool SubscriptionTierPrime;
+        public bool SubscriptionTierTierOne;
+        public bool SubscriptionTierTierTwo;
+        public bool SubscriptionTierTierThree;
+
+        public bool IsAdmin;
+        public bool IsBits;
+        public bool IsBroadcaster;
+        public bool IsGlobalMod;
+        public bool IsModerator;
+        public bool IsPrime;
+        public bool IsSubscribed;
+        public bool IsStaff;
+        public bool IsTurbo;
+        public bool IsVIP;
+
+        public String Usernames;
+        public String Keywords;
+
+        public int MinBits;
+        public int MaxBits;
+
+        public int MinMonths;
+        public int MaxMonths;
+
+        public int MinAmount;
+        public int MaxAmount;
+
+        public bool Empty
+        {
+            get
+            {
+                return !(HasViewerTier || HasSubscriptionTier || HasBadges);
+            }
+        }
+
+        public bool HasViewerTier
+        {
+            get
+            {
+                return ViewerTierNoTier || ViewerTierTierOne || ViewerTierTierTwo || ViewerTierTierThree;
+            }
+        }
+
+        public bool HasSubscriptionTier
+        {
+            get
+            {
+                return SubscriptionTierPrime || SubscriptionTierTierOne || SubscriptionTierTierTwo || SubscriptionTierTierThree;
+            }
+        }
+
+        public bool HasBadges
+        {
+            get
+            {
+                return IsAdmin || IsBits || IsBroadcaster || IsGlobalMod || IsModerator || IsPrime || IsSubscribed || IsStaff || IsTurbo || IsVIP;
+            }
+        }
+
 
         #region XML
         public override void ReadXml(XmlReader reader)
         {
+            /*
             if (reader.Name == "Condition")
             {
                 NoTier = XmlHelper.ReadAttribute(reader, "NoTier", false);
@@ -953,10 +1233,79 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 throw new XmlException("Reader was not pointed at a <Condition> tag when ReadXml() was called.");
             }
+            */
         }
 
+        public void WriteAttributes(XmlWriter writer, List<Tuple<Boolean, String>> tuples)
+        {
+            foreach (Tuple <Boolean, String> tuple in tuples)
+            {
+                if (tuple.Item1)
+                {
+                    writer.WriteAttributeString(tuple.Item2, "true");
+                }
+            }
+        }
+        
         public override void WriteXml(XmlWriter writer)
         {
+            /*
+             <Condition>
+                <ViewerTier NoTier="true" TierOne="true" TierTwo="true" TierThree="true" />
+                <SubscriptionTier TwitchPrime="true" TierOne="true" TierTwo="True" TierThree="true" />
+                <Badges>
+                    <SubscribeMonths Min="1" Max="1" />
+                    <BitBadge Min="0" Max="1000000" />
+                </Badges>
+            </Condition>
+             */
+
+
+            if (!this.Empty)
+            {
+                writer.WriteStartElement("Condition");
+
+                if (HasViewerTier)
+                {
+                    List<Tuple<Boolean, String>> viewerTiers = new List<Tuple<Boolean, String>>()
+                    {
+                        new Tuple<Boolean, String>(this.ViewerTierNoTier, "NoTier"),
+                        new Tuple<Boolean, String>(this.ViewerTierTierOne, "TierOne"),
+                        new Tuple<Boolean, String>(this.ViewerTierTierTwo, "TierTwo"),
+                        new Tuple<Boolean, String>(this.ViewerTierTierThree, "TierThree")
+                    };
+
+                    writer.WriteStartElement("ViewerTier");
+                    WriteAttributes(writer, viewerTiers);
+                    writer.WriteEndElement();
+                }
+
+                if (HasSubscriptionTier)
+                {
+                    List<Tuple<Boolean, String>> subscriptionTiers = new List<Tuple<Boolean, String>>()
+                    {
+                        new Tuple<Boolean, String>(this.SubscriptionTierPrime, "Prime"),
+                        new Tuple<Boolean, String>(this.SubscriptionTierTierOne, "TierOne"),
+                        new Tuple<Boolean, String>(this.SubscriptionTierTierTwo, "TierTwo"),
+                        new Tuple<Boolean, String>(this.SubscriptionTierTierThree, "TierThree")
+                    };
+
+                    writer.WriteStartElement("SubscriptionTier");
+                    WriteAttributes(writer, subscriptionTiers);
+                    writer.WriteEndElement();
+                }
+
+                if (HasBadges)
+                {
+
+                }
+            }
+
+
+
+
+
+/*
             List<Tuple<Boolean, String>> pairs = new List<Tuple<bool, string>>()
             {
                 new Tuple<Boolean, String>(this.NoTier, "NoTier"),
@@ -1002,6 +1351,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             writer.WriteEndElement();
+*/
         }
         #endregion XML
     }

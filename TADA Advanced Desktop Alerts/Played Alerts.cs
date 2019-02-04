@@ -251,6 +251,8 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             */
             MainTADAForm.mainTADAForm.AnimationWindow.SetPlayedAlerts(this);
+            TwitchLib.Api.V5.Models.Users.User tas9000 = twitchAPI.V5.Users.GetUserByNameAsync("tas9000").Result.Matches[0];
+            User tas9000user = await GetUser(tas9000.Id);
         }
 
         private async void GetAllFollowers()
@@ -419,12 +421,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         CommunityGiftSub communityGiftSub = null;
 
-                        if (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS_COMMUNITY, subObject) != null)
+                        if (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS_COMMUNITY, user, subObject) != null)
                         {
                             communityGiftSub = new CommunityGiftSub(subObject);
                             communityGiftSub.use_anonymous_alert = true;
                         }
-                        else if (FindSuitableAlert (General.ALERTTYPES.COMMUNITY, subObject) != null)
+                        else if (FindSuitableAlert (General.ALERTTYPES.COMMUNITY, user, subObject) != null)
                         {
                             if (user != null)
                             {
@@ -461,7 +463,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         // A FIRSTMESSAGE can't possibly come through Twitch channels.  It doesn't know.
                         if (alertType == General.ALERTTYPES.MESSAGE)
                         {
-                            if (!user.firstMessage && FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, subObject) != null)
+                            if (!user.firstMessage && FindSuitableAlert(General.ALERTTYPES.FIRSTMESSAGE, user, subObject) != null)
                             {
                                 alertType = General.ALERTTYPES.FIRSTMESSAGE;
                             }
@@ -563,7 +565,7 @@ namespace TADA_Advanced_Desktop_Alerts
                                 else
                                 {
                                     // It's potentially an anonymous sub gift.  If anonymous is set, see if there's an anonymous sub alert set up.
-                                    alertType = (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS, subObject) != null) ? General.ALERTTYPES.ANONYMOUS : General.ALERTTYPES.SUBGIFT;
+                                    alertType = (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS_GIFT, user, subObject) != null) ? General.ALERTTYPES.ANONYMOUS_GIFT : General.ALERTTYPES.SUBGIFT;
                                 }
 
                                 break;
@@ -581,7 +583,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             subObject.AlertType = General.alertTypes[alertType];
 
-            TADAAlert alertToUse = (alertType == General.ALERTTYPES.NONE ? null : FindSuitableAlert(alertType, subObject));
+            TADAAlert alertToUse = (alertType == General.ALERTTYPES.NONE ? null : FindSuitableAlert(alertType, user, subObject));
 
             if (alertToUse != null)
             {
@@ -810,6 +812,9 @@ namespace TADA_Advanced_Desktop_Alerts
                                 case "moderator":
                                     user.badges.moderator = true;
                                     break;
+                                case "premium":
+                                    user.badges.premium = true;
+                                    break;
                                 case "subscriber":
                                     user.badges.subscriber = true;
                                     user.badges.subscribe_months = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
@@ -862,7 +867,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private TADAAlert FindSuitableAlert(General.ALERTTYPES alertType, SubstitutionObject subObject)
+        private TADAAlert FindSuitableAlert(General.ALERTTYPES alertType, User user, SubstitutionObject subObject)
         {
             TADAAlert returnedAlert = null;
             List<TADAAlert> potentialAlerts = new List<TADAAlert>();
@@ -884,7 +889,7 @@ namespace TADA_Advanced_Desktop_Alerts
                      * name > tier > keyword > amount
                      */
 
-                    int thisAlertScore = ScoreAlert(alert, viewerName, amount, message, tier, subObject.VIP);
+                    int thisAlertScore = ScoreAlert(alert, user, amount, message, tier);
                     if (thisAlertScore > alertScore)
                     {
                         potentialAlerts.Clear();
@@ -925,161 +930,144 @@ namespace TADA_Advanced_Desktop_Alerts
                 bool continueTesting = true;
                 int score = 0;
 
-                // First, check that the tier matches.  Only subscriptions care about Twitch Prime, so Conditions will be adjusted accordingly.
-                if (condition.NoTier || condition.TwitchPrime || condition.TierOne || condition.TierTwo || condition.TierThree)
+                if (condition.Empty)
                 {
-                    // If any of the "tier" checkboxen are checked, we have to match against them exactly.
-                    if ((condition.NoTier && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet]) ||
-                        (condition.TwitchPrime && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Prime]) ||
-                        (condition.TierOne && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
-                        (condition.TierTwo && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2]) ||
-                        (condition.TierThree && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3]))
-                    {
-                        score += (int)General.SCORES.SCORE_TIER_MATCHED;
-                    }
-                    else
-                    {
-                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                        continueTesting = false;
-                    }
+                    score = (int)General.SCORES.SCORE_NO_CONDITIONS;
                 }
-
-                // This is where badges are considered and compared.  
-                CheckBasicBadge(condition.Admin, user.badges.admin, ref score, ref continueTesting);
-                CheckBasicBadge(condition.Broadcaster, user.badges.broadcaster, ref score, ref continueTesting);
-                CheckBasicBadge(condition.GlobalMod, user.badges.global_mod, ref score, ref continueTesting);
-                CheckBasicBadge(condition.Moderator, user.badges.moderator, ref score, ref continueTesting);
-                CheckBasicBadge(condition.Staff, user.badges.staff, ref score, ref continueTesting);
-                CheckBasicBadge(condition.Turbo, user.badges.turbo, ref score, ref continueTesting);
-                CheckBasicBadge(condition.VIP, user.badges.vip, ref score, ref continueTesting);
-                
-/*
-    case "bits":
-        user.badges.bits = true;
-        user.badges.bit_badge = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
-    break;
-    case "subscriber":
-        user.badges.subscriber = true;
-        user.badges.subscribe_months = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
-    break;
- */
-
-
-            }
-            return finalScore;
-        }
-
-        private int ScoreAlert (TADAAlert alert, String username, int amount, String message, String tier, bool isVIP)
-        {
-            int finalScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-            bool continueTesting = true;
-
-            foreach (TADAAlertCondition condition in alert.Conditions)
-            {
-                int score = 0;
-                // First, check that the tier matches.
-                if (condition.NoTier || condition.TwitchPrime || condition.TierOne || condition.TierTwo || condition.TierThree)
+                else
                 {
-                    // If any of the "tier" checkboxes are checked, we have to match against them.  Same for the VIP flag.
-                    if ((condition.NoTier && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet]) ||
-                        (condition.TwitchPrime && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Prime]) ||
-                        (condition.TierOne && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
-                        (condition.TierTwo && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2]) ||
-                        (condition.TierThree && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3]))
+                    // This has to be rewritten to consider viewer tier separately from subscription tier.
+                    if (condition.HasViewerTier)
                     {
-                        score += (int)General.SCORES.SCORE_TIER_MATCHED;
-                    }
-                    else
-                    {
-                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                        continueTesting = false;
-                    }
-                }
-
-                if (condition.VIP)
-                {
-                    if (isVIP)
-                    {
-                        score += (int)General.SCORES.SCORE_BADGE_MATCHED;
-                    }
-                    else
-                    {
-                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                        continueTesting = false;
-                    }
-                }
-
-                if (continueTesting && !String.IsNullOrEmpty(condition.Usernames))
-                {
-                    username = username.ToLower();
-
-                    List<String> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
-                    if (names.Contains(username))
-                    {
-                        score += (int)General.SCORES.SCORE_NAME_MATCHED;
-                    }
-                    else
-                    {
-                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                        continueTesting = false;
-                    }
-                }
-
-                if (continueTesting && (condition.Minimum > 0 || condition.Maximum > 0))
-                {
-                    if ((condition.Minimum == 0 || amount >= condition.Minimum) &&
-                        (condition.Maximum == 0 || amount <= condition.Maximum))
-                    {
-                        score += (int)General.SCORES.SCORE_WITHIN_AMOUNT;
-                    }
-                    else
-                    {
-                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                        continueTesting = false;
-                    }
-                }
-
-                if (continueTesting && !String.IsNullOrEmpty(condition.Keywords))
-                {
-                    bool matched = false;
-
-                    List<String> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
-
-                    foreach (String key in keywords)
-                    {
-                        String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
-                        if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase) != null)
+                        if ((condition.ViewerTierNoTier && user.SubscriptionTier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet]) ||
+                            (condition.ViewerTierTierOne && user.SubscriptionTier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
+                            (condition.ViewerTierTierTwo && user.SubscriptionTier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2]) ||
+                            (condition.ViewerTierTierThree && user.SubscriptionTier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3]))
                         {
-                            matched = true;
-                            score += (int)General.SCORES.SCORE_KEYWORD_MATCHED;
+                            score += (int)General.SCORES.SCORE_VIEWER_TIER_MATCHED;
+                        }
+                        else
+                        {
+                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                            continueTesting = false;
                         }
                     }
 
-                    if (!matched)
+                    if (continueTesting && condition.HasSubscriptionTier)
                     {
-                        score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                        continueTesting = false;
+                        if ((condition.SubscriptionTierPrime && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Prime]) ||
+                            (condition.SubscriptionTierTierOne && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1]) ||
+                            (condition.SubscriptionTierTierTwo && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2]) ||
+                            (condition.SubscriptionTierTierThree && tier == General.TwitchLibSubPlanToString[TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3]))
+                        {
+                            score += (int)General.SCORES.SCORE_SUB_TIER_MATCHED;
+                        }
+                        else
+                        {
+                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                            continueTesting = false;
+                        }
                     }
-                }
 
-                if (continueTesting &&
-                    !condition.NoTier &&
-                    !condition.TwitchPrime &&
-                    !condition.TierOne &&
-                    !condition.TierTwo &&
-                    !condition.TierThree &&
-                    String.IsNullOrEmpty(condition.Usernames) &&
-                    String.IsNullOrEmpty(condition.Keywords) &&
-                    condition.Minimum == 0 &&
-                    condition.Maximum == 0)
-                {
-                    score = (int)General.SCORES.SCORE_NO_CONDITIONS;
+                    if (continueTesting && condition.HasBadges)
+                    {
+                        CheckBasicBadge(condition.IsAdmin, user.badges.admin, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsBroadcaster, user.badges.broadcaster, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsGlobalMod, user.badges.global_mod, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsModerator, user.badges.moderator, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsPrime, user.badges.premium, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsStaff, user.badges.staff, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsTurbo, user.badges.turbo, ref score, ref continueTesting);
+                        CheckBasicBadge(condition.IsVIP, user.badges.vip, ref score, ref continueTesting);
+
+                        if (continueTesting && condition.IsBits)
+                        {
+                            if ((condition.MinBits == 0 || amount >= condition.MinBits) &&
+                                (condition.MaxBits == 0 || amount <= condition.MaxBits))
+                            {
+                                score += (int)General.SCORES.SCORE_BADGE_MATCHED;
+                            }
+                            else
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+
+                        if (continueTesting && condition.IsSubscribed)
+                        {
+                            if ((condition.MinMonths == 0 || user.badges.subscribe_months >= condition.MinMonths) &&
+                                (condition.MaxMonths == 0 || user.badges.subscribe_months <= condition.MaxMonths))
+                            {
+                                score += (int)General.SCORES.SCORE_BADGE_MATCHED;
+                            }
+                            else
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+                    }
+
+                    // Then check usernames, keywords, and amount.
+                    if (continueTesting && !String.IsNullOrEmpty(condition.Usernames))
+                    {
+                        String username = user.user?.DisplayName.ToLower() ?? "anonymous";
+
+                        List<String> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+                        if (names.Contains(username))
+                        {
+                            score += (int)General.SCORES.SCORE_NAME_MATCHED;
+                        }
+                        else
+                        {
+                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                            continueTesting = false;
+                        }
+                    }
+
+                    if (continueTesting && !String.IsNullOrEmpty(condition.Keywords))
+                    {
+                        bool matched = false;
+
+                        List<String> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+
+                        foreach (String key in keywords)
+                        {
+                            String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
+                            if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase) != null)
+                            {
+                                matched = true;
+                                score += (int)General.SCORES.SCORE_KEYWORD_MATCHED;
+                            }
+                        }
+
+                        if (!matched)
+                        {
+                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                            continueTesting = false;
+                        }
+                    }
+
+                    if (continueTesting && (condition.MinAmount > 0 || condition.MaxAmount > 0))
+                    {
+                        if ((condition.MinAmount == 0 || amount >= condition.MinAmount) &&
+                            (condition.MaxAmount == 0 || amount <= condition.MaxAmount))
+                        {
+                            score += (int)General.SCORES.SCORE_WITHIN_AMOUNT;
+                        }
+                        else
+                        {
+                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                            continueTesting = false;
+                        }
+                    }
                 }
 
                 finalScore = Math.Max(finalScore, score);
             }
 
-            return (alert.ConditionCount == 0 ? 0 : finalScore);
+            return finalScore;
         }
 
         private void PendingAlertAdded(object sender, AddingNewEventArgs e)
@@ -1111,6 +1099,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public bool broadcaster = false;
         public bool global_mod = false;
         public bool moderator = false;
+        public bool premium = false;
         public bool subscriber = false;
         public bool staff = false;
         public bool turbo = false;

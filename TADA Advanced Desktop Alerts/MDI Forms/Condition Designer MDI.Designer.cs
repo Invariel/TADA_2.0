@@ -62,6 +62,8 @@
             this.lbl_QuantityTo = new System.Windows.Forms.Label();
             this.numud_AmountMaximum = new System.Windows.Forms.NumericUpDown();
             this.lbl_QuantityThings = new System.Windows.Forms.Label();
+            this.chk_BadgePrime = new System.Windows.Forms.CheckBox();
+            this.txt_Description = new System.Windows.Forms.TextBox();
             this.grp_ViewerTier.SuspendLayout();
             this.grp_SubscriptionTier.SuspendLayout();
             this.grp_Badges.SuspendLayout();
@@ -182,6 +184,7 @@
             // 
             // grp_Badges
             // 
+            this.grp_Badges.Controls.Add(this.chk_BadgePrime);
             this.grp_Badges.Controls.Add(this.numud_SubscriptionMonthsMaximum);
             this.grp_Badges.Controls.Add(this.numud_SubscriptionMonthsMinimum);
             this.grp_Badges.Controls.Add(this.cmb_BitBadgeMaximum);
@@ -287,9 +290,9 @@
             this.chk_BadgeTurbo.AutoSize = true;
             this.chk_BadgeTurbo.Location = new System.Drawing.Point(449, 68);
             this.chk_BadgeTurbo.Name = "chk_BadgeTurbo";
-            this.chk_BadgeTurbo.Size = new System.Drawing.Size(114, 17);
+            this.chk_BadgeTurbo.Size = new System.Drawing.Size(79, 17);
             this.chk_BadgeTurbo.TabIndex = 8;
-            this.chk_BadgeTurbo.Text = "Twitch Turbo User";
+            this.chk_BadgeTurbo.Text = "Turbo User";
             this.chk_BadgeTurbo.UseVisualStyleBackColor = true;
             // 
             // cmb_BitBadgeMinimum
@@ -378,7 +381,7 @@
             this.grp_MessageKeywords.Controls.Add(this.txt_MessageKeywords);
             this.grp_MessageKeywords.Location = new System.Drawing.Point(13, 229);
             this.grp_MessageKeywords.Name = "grp_MessageKeywords";
-            this.grp_MessageKeywords.Size = new System.Drawing.Size(736, 47);
+            this.grp_MessageKeywords.Size = new System.Drawing.Size(327, 47);
             this.grp_MessageKeywords.TabIndex = 3;
             this.grp_MessageKeywords.TabStop = false;
             this.grp_MessageKeywords.Text = "Message Keywords (comma-separated)";
@@ -387,7 +390,7 @@
             // 
             this.txt_MessageKeywords.Location = new System.Drawing.Point(7, 20);
             this.txt_MessageKeywords.Name = "txt_MessageKeywords";
-            this.txt_MessageKeywords.Size = new System.Drawing.Size(723, 20);
+            this.txt_MessageKeywords.Size = new System.Drawing.Size(311, 20);
             this.txt_MessageKeywords.TabIndex = 0;
             // 
             // grp_TriggerUsers
@@ -395,7 +398,7 @@
             this.grp_TriggerUsers.Controls.Add(this.txt_Users);
             this.grp_TriggerUsers.Location = new System.Drawing.Point(13, 283);
             this.grp_TriggerUsers.Name = "grp_TriggerUsers";
-            this.grp_TriggerUsers.Size = new System.Drawing.Size(736, 47);
+            this.grp_TriggerUsers.Size = new System.Drawing.Size(327, 47);
             this.grp_TriggerUsers.TabIndex = 4;
             this.grp_TriggerUsers.TabStop = false;
             this.grp_TriggerUsers.Text = "Users that can Trigger this Alert (comma-separated)";
@@ -404,7 +407,7 @@
             // 
             this.txt_Users.Location = new System.Drawing.Point(7, 20);
             this.txt_Users.Name = "txt_Users";
-            this.txt_Users.Size = new System.Drawing.Size(723, 20);
+            this.txt_Users.Size = new System.Drawing.Size(311, 20);
             this.txt_Users.TabIndex = 0;
             // 
             // grp_RelevantQuantity
@@ -416,7 +419,7 @@
             this.grp_RelevantQuantity.Controls.Add(this.lbl_QuantityFrom);
             this.grp_RelevantQuantity.Location = new System.Drawing.Point(13, 337);
             this.grp_RelevantQuantity.Name = "grp_RelevantQuantity";
-            this.grp_RelevantQuantity.Size = new System.Drawing.Size(736, 56);
+            this.grp_RelevantQuantity.Size = new System.Drawing.Size(327, 56);
             this.grp_RelevantQuantity.TabIndex = 5;
             this.grp_RelevantQuantity.TabStop = false;
             this.grp_RelevantQuantity.Text = "Relevant Quantity";
@@ -472,11 +475,32 @@
             this.lbl_QuantityThings.TabIndex = 3;
             this.lbl_QuantityThings.Text = "Relevant Things";
             // 
+            // chk_BadgePrime
+            // 
+            this.chk_BadgePrime.AutoSize = true;
+            this.chk_BadgePrime.Location = new System.Drawing.Point(655, 68);
+            this.chk_BadgePrime.Name = "chk_BadgePrime";
+            this.chk_BadgePrime.Size = new System.Drawing.Size(77, 17);
+            this.chk_BadgePrime.TabIndex = 11;
+            this.chk_BadgePrime.Text = "Prime User";
+            this.chk_BadgePrime.UseVisualStyleBackColor = true;
+            // 
+            // txt_Description
+            // 
+            this.txt_Description.Enabled = false;
+            this.txt_Description.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_Description.Location = new System.Drawing.Point(347, 229);
+            this.txt_Description.Multiline = true;
+            this.txt_Description.Name = "txt_Description";
+            this.txt_Description.Size = new System.Drawing.Size(402, 164);
+            this.txt_Description.TabIndex = 6;
+            // 
             // Condition_Designer_MDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 405);
+            this.Controls.Add(this.txt_Description);
             this.Controls.Add(this.grp_RelevantQuantity);
             this.Controls.Add(this.grp_TriggerUsers);
             this.Controls.Add(this.grp_MessageKeywords);
@@ -504,6 +528,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AmountMinimum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AmountMaximum)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -543,5 +568,7 @@
         private System.Windows.Forms.NumericUpDown numud_AmountMinimum;
         private System.Windows.Forms.Label lbl_QuantityFrom;
         private System.Windows.Forms.Label lbl_QuantityThings;
+        private System.Windows.Forms.CheckBox chk_BadgePrime;
+        private System.Windows.Forms.TextBox txt_Description;
     }
 }
