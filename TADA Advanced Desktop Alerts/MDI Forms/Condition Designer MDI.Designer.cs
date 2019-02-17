@@ -297,7 +297,8 @@
             // 
             // cmb_BitBadgeMinimum
             // 
-            this.cmb_BitBadgeMinimum.AutoCompleteCustomSource.AddRange(new string[] {
+            this.cmb_BitBadgeMinimum.FormattingEnabled = true;
+            this.cmb_BitBadgeMinimum.Items.AddRange(new object[] {
             "0",
             "1",
             "100",
@@ -317,7 +318,6 @@
             "800000",
             "900000",
             "1000000"});
-            this.cmb_BitBadgeMinimum.FormattingEnabled = true;
             this.cmb_BitBadgeMinimum.Location = new System.Drawing.Point(571, 20);
             this.cmb_BitBadgeMinimum.Name = "cmb_BitBadgeMinimum";
             this.cmb_BitBadgeMinimum.Size = new System.Drawing.Size(77, 21);
@@ -326,7 +326,8 @@
             // 
             // cmb_BitBadgeMaximum
             // 
-            this.cmb_BitBadgeMaximum.AutoCompleteCustomSource.AddRange(new string[] {
+            this.cmb_BitBadgeMaximum.FormattingEnabled = true;
+            this.cmb_BitBadgeMaximum.Items.AddRange(new object[] {
             "1",
             "100",
             "1000",
@@ -345,7 +346,6 @@
             "800000",
             "900000",
             "1000000"});
-            this.cmb_BitBadgeMaximum.FormattingEnabled = true;
             this.cmb_BitBadgeMaximum.Location = new System.Drawing.Point(653, 20);
             this.cmb_BitBadgeMaximum.Name = "cmb_BitBadgeMaximum";
             this.cmb_BitBadgeMaximum.Size = new System.Drawing.Size(77, 21);

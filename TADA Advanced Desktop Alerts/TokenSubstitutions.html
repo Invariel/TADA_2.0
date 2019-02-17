@@ -56,21 +56,21 @@
 
         <div class="container">
             <div class="token">{<span class="tokenName">name</span>}</div>
-            <div class="definition">The name of the person who: dropped bits, followed the channel, gifted a subscription, hosted the channel, subscribed to the channel, or talked in chat.</div>
+            <div class="definition">The name of the person who: dropped bits, followed the channel, gifted a subscription, hosted the channel, subscribed to the channel, or talked in chat.  If this is an anonymous event, then "An Anonymous Gifter" and "An Anonymous Bit Dropper" will be substituted instead.</div>
             <div class="example">Thank you, {<span class="tokenName">name</span>}, for that subscription!</div>
             <div class="example">Thank you, <span class="tokenName">Invariel</span>, for that subscription!</div>
         </div>
 
         <div class="container">
             <div class="token">{<span class="tokenName">amount</span>}</div>
-            <div class="definition">The amount of bits dropped, users who came along with the host, or months subscribed for.</div>
+            <div class="definition">The amount of bits dropped, subscriptions gifted at once, users who came along with the host, or months subscribed for.</div>
             <div class="example">Thank you for that very generous {<span class="tokenName">amount</span>} bit drop!</div>
             <div class="example">Thank you for that very generous <span class="tokenName">573</span> bit drop!</div>
         </div>
 
         <div class="container">
             <div class="token">{<span class="tokenName">giftee</span>}</div>
-            <div class="definition">The name of the person receiving a gift subscription.</div>
+            <div class="definition">The name of the person receiving a gift subscription, or in the case of a mass gift, the list of people gifted to.</div>
             <div class="example">Welcome {<span class="tokenName">giftee</span>} to the club, thanks to a gifted subscription!</div>
             <div class="example">Welcome <span class="tokenName">LeiRavni</span> to the club, thanks to a gifted subscription!</div>
         </div>
@@ -89,6 +89,16 @@
             <div class="example">A donation of {<span class="tokenName">amount</span>} bit{<span class="tokenName">s</span>}?  That's like {<span class="tokenName">amount</span>} whole splash{<span class="tokenName">es</span>}!  Making waves!</div>
             <div class="example">A donation of <span class="tokenName">1</span> bit?  That's like <span class="tokenName">1</span> whole splash!  Making waves!</div>
             <div class="example">A donation of <span class="tokenName">573</span> bit<span class="tokenName">s</span>?  That's like <span class="tokenName">573</span> whole splash<span class="tokenName">es</span>!  Making waves!</div>
+        </div>
+
+        <div class="container">
+            <div class="token">{<span class="planName">plan</span>}</div>
+            <div class="definition">The current subscription plan for the user: <span class="tokenName">Unsubscribed</span>, <span class="tokenName">Tier One</span>, <span class="tokenName">Tier Two</span>, or <span class="tokenName">Tier Three</span>.  Note that all Twitch Prime subscribers have the Tier One plan.</div>
+            <div class="example">Thank you, {<span class="tokenName">name</span>} ({<span class="tokenName">plan</span>}), for those {<span class="tokenName">amount</span>} bits.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span> (<span class="tokenName">Unsubscribed</span>), for those <span class="tokenName">250</span> bits.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span> (<span class="tokenName">Tier One</span>), for those <span class="tokenName">250</span> bits.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span> (<span class="tokenName">Tier Two</span>), for those <span class="tokenName">250</span> bits.</div>
+            <div class="example">Thank you, <span class="tokenName">Invariel</span> (<span class="tokenName">Tier Three</span>), for those <span class="tokenName">250</span> bits.</div>
         </div>
 
         <div class="container">

@@ -671,6 +671,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                 bool deleteImage = false;
 
+                unmodifiedSize.Width = Math.Max(1, unmodifiedSize.Width);
+                unmodifiedSize.Height = Math.Max(1, unmodifiedSize.Height);
+
                 if (itemToDraw == null)
                 {
                     deleteImage = true;

@@ -39,30 +39,9 @@ namespace TADA_Advanced_Desktop_Alerts
         public const double INITIAL_VOLUME = 0;
 
         public const String ANONYMOUS_SUB_GIFT_NAME = "An Anonymous Gifter";
+        public const String ANONYMOUS_BITS_NAME = "An Anonymous Bit Dropper";
 
         public static Random rng = new Random();
-
-        public static Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String> TwitchLibSubPlanToString = new Dictionary<TwitchLib.PubSub.Enums.SubscriptionPlan, String>() {
-            { TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet, "None" },
-            { TwitchLib.PubSub.Enums.SubscriptionPlan.Prime, "Twitch Prime" },
-            { TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1, "Tier One" },
-            { TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2, "Tier Two" },
-            { TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3, "Tier Three" },
-        };
-
-        public static Dictionary<String, TwitchLib.PubSub.Enums.SubscriptionPlan> stringToTwitchLibSubPlan = new Dictionary<string, TwitchLib.PubSub.Enums.SubscriptionPlan>()
-        {
-            { "None", TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet },
-            { "0", TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet },
-            { "Twitch Prime", TwitchLib.PubSub.Enums.SubscriptionPlan.Prime },
-            { "Prime", TwitchLib.PubSub.Enums.SubscriptionPlan.Prime },
-            { "Tier One", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1 },
-            { "1000", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1 },
-            { "Tier Two", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2 },
-            { "2000", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2 },
-            { "Tier Three", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3 },
-            { "3000", TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3 },
-        };
 
         [Flags]
         public enum SCORES
@@ -500,7 +479,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             message = message.Replace("{name}", substitutionObject.ViewerName);
             message = message.Replace("{giftee}", substitutionObject.RecipientName);
-            message = message.Replace("{tier}", General.TwitchLibSubPlanToString[substitutionObject.Tier]);
+            message = message.Replace("{tier}", substitutionObject.TierString);
             message = message.Replace("{tierName}", substitutionObject.TierName);
 
             message = message.Replace("{amount}", substitutionObject.Amount.ToString());
@@ -518,13 +497,13 @@ namespace TADA_Advanced_Desktop_Alerts
 
             int tierNumber = 0;
 
-            switch (substitutionObject.Tier)
+            switch (substitutionObject.Plan)
             {
-                case TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet: tierNumber = 1; break;
-                case TwitchLib.PubSub.Enums.SubscriptionPlan.Prime: tierNumber = 2; break;
-                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1: tierNumber = 3; break;
-                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2: tierNumber = 4; break;
-                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3: tierNumber = 5; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.NO_TIER: tierNumber = 1; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TWITCH_PRIME: tierNumber = 2; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_ONE: tierNumber = 3; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_TWO: tierNumber = 4; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_THREE: tierNumber = 5; break;
             }
 
             // Now figure out <a|b|c|d|e>

@@ -1059,11 +1059,44 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                 }
 
-                if (IsBroadcaster)
+                if (IsBroadcaster || IsModerator || IsVIP)
                 {
-                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be you, the broadcaster";
+                    retval += (concat ? ", " : "The viewer ");
+
+                    int internalCount = (IsBroadcaster ? 1 : 0) +
+                                        (IsModerator ? 1 : 0) +
+                                        (IsVIP ? 1 : 0);
+
+                    if (internalCount == 3)
+                    {
+                        retval += (concat && count == 3 ? "and " : "") + "must be you, one of your moderators, or one of your VIPs";
+                        count -= 3;
+                    }
+                    else if (internalCount == 2)
+                    {
+                        retval += (concat && count == 2 ? "and " : "");
+                        count -= 2;
+
+                        if (!IsBroadcaster)
+                        {
+                            retval += "must be one of your moderators or your VIPs";
+                        }
+                        else if (!IsModerator)
+                        {
+                            retval += "must be you or one of your VIPs";
+                        }
+                        else
+                        {
+                            retval += "must be you or one of your moderators";
+                        }
+                    }
+                    else
+                    {
+                        retval += (concat && count == 1 ? "and " : "") + "must be " + (IsBroadcaster ? "you" : "one of your " + (IsModerator ? "moderators" : "VIPs"));
+                        --count;
+                    }
+
                     concat = true;
-                    --count;
                 }
 
                 if (IsGlobalMod)
@@ -1073,12 +1106,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     --count;
                 }
 
-                if (IsModerator)
-                {
-                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be a moderator in your channel";
-                    concat = true;
-                    --count;
-                }
 
                 if (IsPrime)
                 {
@@ -1126,12 +1153,6 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must subscribe to Twitch Turbo";
                     concat = true;
-                    --count;
-                }
-
-                if (IsVIP)
-                {
-                    retval += (concat ? ", " + (count == 1 ? "and " : "") : "The viewer ") + "must be one of your channel VIPs";
                     --count;
                 }
 

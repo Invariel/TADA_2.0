@@ -267,6 +267,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
             else
             {
+                while (dg_Waypoints.Rows.Count <= waypointBindingSource.Count)
+                {
+                    waypointBindingSource.RemoveAt(waypointBindingSource.Count - 1);
+                }
                 waypointBindingSource.Add(newWaypoint);
             }
 

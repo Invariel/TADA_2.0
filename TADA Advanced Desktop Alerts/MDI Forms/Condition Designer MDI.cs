@@ -49,9 +49,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             chk_BadgeBits.CheckedChanged += EnableDisableBitBadge;
             chk_BadgeSubscription.CheckedChanged += EnableDisableSubscriptionMonths;
-
-            chk_BadgeModerator.CheckedChanged += EnableDisableModeratorVIP;
-            chk_BadgeVIP.CheckedChanged += EnableDisableModeratorVIP;
         }
 
         private void UpdateViewer (object sender, EventArgs e)
@@ -178,12 +175,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_SubscriptionMonthsMaximum.Enabled = chk_BadgeSubscription.Checked;
         }
 
-        private void EnableDisableModeratorVIP(object sender, EventArgs e)
-        {
-            chk_BadgeModerator.Enabled = !chk_BadgeVIP.Checked;
-            chk_BadgeVIP.Enabled = !chk_BadgeModerator.Checked;
-        }
-
         public void AlertTypeOptions(General.ALERTTYPES alertType)
         {
             if (alertType == General.ALERTTYPES.MACRO)
@@ -228,6 +219,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                                                 alertType == General.ALERTTYPES.JOIN ||
                                                 alertType == General.ALERTTYPES.RAID);
 
+                chk_BadgeBroadcaster.Enabled = (alertType == General.ALERTTYPES.COMMUNITY ||
+                                                alertType == General.ALERTTYPES.FIRSTMESSAGE ||
+                                                alertType == General.ALERTTYPES.JOIN ||
+                                                alertType == General.ALERTTYPES.MESSAGE ||
+                                                alertType == General.ALERTTYPES.SUBGIFT);
+
                 if (alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY || alertType == General.ALERTTYPES.COMMUNITY)
                 {
                     lbl_QuantityThings.Text = "Community gifts";
@@ -252,6 +249,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     lbl_QuantityThings.Text = "Months subscribed";
                 }
+
+                UpdateDescription();
             }
         }
     }
