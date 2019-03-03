@@ -36,6 +36,7 @@
             this.ts_NewStreamerAudio = new System.Windows.Forms.ToolStripMenuItem();
             this.ts_NewStreamerText = new System.Windows.Forms.ToolStripMenuItem();
             this.ts_NewViewerText = new System.Windows.Forms.ToolStripMenuItem();
+            this.ts_NewCondition = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.ts_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,6 +60,11 @@
             this.lbl_AlertType = new System.Windows.Forms.Label();
             this.cmb_AlertType = new System.Windows.Forms.ComboBox();
             this.grp_Preview = new System.Windows.Forms.GroupBox();
+            this.cmb_Cooldowns = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.mtxt_GlobalCooldown = new System.Windows.Forms.MaskedTextBox();
+            this.mtxt_UserCooldown = new System.Windows.Forms.MaskedTextBox();
+            this.lbl_UserCooldown = new System.Windows.Forms.Label();
             this.grp_AlertDetails = new System.Windows.Forms.GroupBox();
             this.lbl_MaximumDurationCount = new System.Windows.Forms.Label();
             this.lbl_CombinationsCount = new System.Windows.Forms.Label();
@@ -91,13 +97,14 @@
             this.Viewer_Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_Conditions = new System.Windows.Forms.TabPage();
             this.dg_Conditions = new System.Windows.Forms.DataGridView();
+            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tab_PreviewControls = new System.Windows.Forms.TabPage();
             this.txt_ViewerMessage = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.numud_Amount = new System.Windows.Forms.NumericUpDown();
             this.dom_SubTier = new System.Windows.Forms.DomainUpDown();
             this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
+            this.lbl_SubPlan = new System.Windows.Forms.Label();
             this.txt_SubTierName = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.txt_RecipientName = new System.Windows.Forms.TextBox();
@@ -114,7 +121,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tab_ChildMDIForms = new System.Windows.Forms.TabControl();
-            this.ts_NewCondition = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dimensionsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -127,14 +133,21 @@
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewerAlertTextBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.viewerSubTierDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subscriptionTierDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.badgeStringDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.emptyDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.hasViewerTierDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.hasSubscriptionTierDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.hasBadgesDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.alertConditionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.grp_AlertSettings.SuspendLayout();
             this.grp_Macro.SuspendLayout();
             this.grp_Preview.SuspendLayout();
+            this.cmb_Cooldowns.SuspendLayout();
             this.grp_AlertDetails.SuspendLayout();
             this.grp_PreviewControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_PreviewViewer)).BeginInit();
@@ -222,6 +235,13 @@
             this.ts_NewViewerText.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
             this.ts_NewViewerText.Size = new System.Drawing.Size(212, 22);
             this.ts_NewViewerText.Text = "New Vi&ewer Text";
+            // 
+            // ts_NewCondition
+            // 
+            this.ts_NewCondition.Name = "ts_NewCondition";
+            this.ts_NewCondition.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.ts_NewCondition.Size = new System.Drawing.Size(212, 22);
+            this.ts_NewCondition.Text = "New C&ondition";
             // 
             // toolStripSeparator5
             // 
@@ -413,6 +433,7 @@
             // 
             // grp_Preview
             // 
+            this.grp_Preview.Controls.Add(this.cmb_Cooldowns);
             this.grp_Preview.Controls.Add(this.grp_AlertDetails);
             this.grp_Preview.Controls.Add(this.grp_PreviewControls);
             this.grp_Preview.Controls.Add(this.lbl_Time);
@@ -426,6 +447,57 @@
             this.grp_Preview.TabStop = false;
             this.grp_Preview.Text = "Path Preview";
             // 
+            // cmb_Cooldowns
+            // 
+            this.cmb_Cooldowns.Controls.Add(this.label1);
+            this.cmb_Cooldowns.Controls.Add(this.mtxt_GlobalCooldown);
+            this.cmb_Cooldowns.Controls.Add(this.mtxt_UserCooldown);
+            this.cmb_Cooldowns.Controls.Add(this.lbl_UserCooldown);
+            this.cmb_Cooldowns.Location = new System.Drawing.Point(6, 520);
+            this.cmb_Cooldowns.Name = "cmb_Cooldowns";
+            this.cmb_Cooldowns.Size = new System.Drawing.Size(511, 75);
+            this.cmb_Cooldowns.TabIndex = 219;
+            this.cmb_Cooldowns.TabStop = false;
+            this.cmb_Cooldowns.Text = "Alert Cooldowns";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(92, 48);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(252, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "must pass before anyone can trigger this alert again.";
+            // 
+            // mtxt_GlobalCooldown
+            // 
+            this.mtxt_GlobalCooldown.Location = new System.Drawing.Point(7, 44);
+            this.mtxt_GlobalCooldown.Mask = "###:##:##.###";
+            this.mtxt_GlobalCooldown.Name = "mtxt_GlobalCooldown";
+            this.mtxt_GlobalCooldown.PromptChar = '0';
+            this.mtxt_GlobalCooldown.Size = new System.Drawing.Size(79, 20);
+            this.mtxt_GlobalCooldown.TabIndex = 3;
+            this.mtxt_GlobalCooldown.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            // 
+            // mtxt_UserCooldown
+            // 
+            this.mtxt_UserCooldown.Location = new System.Drawing.Point(7, 17);
+            this.mtxt_UserCooldown.Mask = "###:##:##.###";
+            this.mtxt_UserCooldown.Name = "mtxt_UserCooldown";
+            this.mtxt_UserCooldown.PromptChar = '0';
+            this.mtxt_UserCooldown.Size = new System.Drawing.Size(79, 20);
+            this.mtxt_UserCooldown.TabIndex = 2;
+            this.mtxt_UserCooldown.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            // 
+            // lbl_UserCooldown
+            // 
+            this.lbl_UserCooldown.AutoSize = true;
+            this.lbl_UserCooldown.Location = new System.Drawing.Point(92, 21);
+            this.lbl_UserCooldown.Name = "lbl_UserCooldown";
+            this.lbl_UserCooldown.Size = new System.Drawing.Size(295, 13);
+            this.lbl_UserCooldown.TabIndex = 1;
+            this.lbl_UserCooldown.Text = "must pass before the same person can trigger this alert again.";
+            // 
             // grp_AlertDetails
             // 
             this.grp_AlertDetails.Controls.Add(this.lbl_MaximumDurationCount);
@@ -434,7 +506,7 @@
             this.grp_AlertDetails.Controls.Add(this.lbl_Combinations);
             this.grp_AlertDetails.Controls.Add(this.lbl_MaximumDuration);
             this.grp_AlertDetails.Controls.Add(this.lbl_MinimumDuration);
-            this.grp_AlertDetails.Location = new System.Drawing.Point(6, 417);
+            this.grp_AlertDetails.Location = new System.Drawing.Point(6, 601);
             this.grp_AlertDetails.Name = "grp_AlertDetails";
             this.grp_AlertDetails.Size = new System.Drawing.Size(511, 74);
             this.grp_AlertDetails.TabIndex = 218;
@@ -777,13 +849,25 @@
             this.dg_Conditions.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dg_Conditions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_Conditions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Edit});
+            this.Edit,
+            this.viewerSubTierDataGridViewTextBoxColumn,
+            this.subscriptionTierDataGridViewTextBoxColumn,
+            this.badgeStringDataGridViewTextBoxColumn,
+            this.emptyDataGridViewCheckBoxColumn,
+            this.hasViewerTierDataGridViewCheckBoxColumn,
+            this.hasSubscriptionTierDataGridViewCheckBoxColumn,
+            this.hasBadgesDataGridViewCheckBoxColumn});
             this.dg_Conditions.DataSource = this.alertConditionBindingSource;
             this.dg_Conditions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dg_Conditions.Location = new System.Drawing.Point(0, 0);
             this.dg_Conditions.Name = "dg_Conditions";
             this.dg_Conditions.Size = new System.Drawing.Size(758, 117);
             this.dg_Conditions.TabIndex = 1;
+            // 
+            // Edit
+            // 
+            this.Edit.HeaderText = "New / Edit";
+            this.Edit.Name = "Edit";
             // 
             // tab_PreviewControls
             // 
@@ -793,7 +877,7 @@
             this.tab_PreviewControls.Controls.Add(this.numud_Amount);
             this.tab_PreviewControls.Controls.Add(this.dom_SubTier);
             this.tab_PreviewControls.Controls.Add(this.label11);
-            this.tab_PreviewControls.Controls.Add(this.label10);
+            this.tab_PreviewControls.Controls.Add(this.lbl_SubPlan);
             this.tab_PreviewControls.Controls.Add(this.txt_SubTierName);
             this.tab_PreviewControls.Controls.Add(this.label9);
             this.tab_PreviewControls.Controls.Add(this.txt_RecipientName);
@@ -846,7 +930,7 @@
             // 
             // dom_SubTier
             // 
-            this.dom_SubTier.Items.Add("None");
+            this.dom_SubTier.Items.Add("No Tier");
             this.dom_SubTier.Items.Add("Twitch Prime");
             this.dom_SubTier.Items.Add("Tier One");
             this.dom_SubTier.Items.Add("Tier Two");
@@ -855,7 +939,7 @@
             this.dom_SubTier.Name = "dom_SubTier";
             this.dom_SubTier.Size = new System.Drawing.Size(120, 20);
             this.dom_SubTier.TabIndex = 92;
-            this.dom_SubTier.Text = "None";
+            this.dom_SubTier.Text = "No Tier";
             // 
             // label11
             // 
@@ -866,14 +950,14 @@
             this.label11.TabIndex = 93;
             this.label11.Text = "Relevant Amount";
             // 
-            // label10
+            // lbl_SubPlan
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(466, 12);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(89, 13);
-            this.label10.TabIndex = 91;
-            this.label10.Text = "Viewer\'s Sub Tier";
+            this.lbl_SubPlan.AutoSize = true;
+            this.lbl_SubPlan.Location = new System.Drawing.Point(466, 12);
+            this.lbl_SubPlan.Name = "lbl_SubPlan";
+            this.lbl_SubPlan.Size = new System.Drawing.Size(92, 13);
+            this.lbl_SubPlan.TabIndex = 91;
+            this.lbl_SubPlan.Text = "Viewer\'s Sub Plan";
             // 
             // txt_SubTierName
             // 
@@ -1032,13 +1116,6 @@
             this.tab_ChildMDIForms.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tab_ChildMDIForms_DrawItem);
             this.tab_ChildMDIForms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tab_ChildMDIForms_MouseUp);
             // 
-            // ts_NewCondition
-            // 
-            this.ts_NewCondition.Name = "ts_NewCondition";
-            this.ts_NewCondition.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.ts_NewCondition.Size = new System.Drawing.Size(212, 22);
-            this.ts_NewCondition.Text = "New C&ondition";
-            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -1117,6 +1194,55 @@
             // 
             this.viewerAlertTextBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertText);
             // 
+            // viewerSubTierDataGridViewTextBoxColumn
+            // 
+            this.viewerSubTierDataGridViewTextBoxColumn.DataPropertyName = "ViewerSubTier";
+            this.viewerSubTierDataGridViewTextBoxColumn.HeaderText = "Viewer\'s Subscription Tier";
+            this.viewerSubTierDataGridViewTextBoxColumn.Name = "viewerSubTierDataGridViewTextBoxColumn";
+            this.viewerSubTierDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // subscriptionTierDataGridViewTextBoxColumn
+            // 
+            this.subscriptionTierDataGridViewTextBoxColumn.DataPropertyName = "SubscriptionTier";
+            this.subscriptionTierDataGridViewTextBoxColumn.HeaderText = "Subscription Tier";
+            this.subscriptionTierDataGridViewTextBoxColumn.Name = "subscriptionTierDataGridViewTextBoxColumn";
+            this.subscriptionTierDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // badgeStringDataGridViewTextBoxColumn
+            // 
+            this.badgeStringDataGridViewTextBoxColumn.DataPropertyName = "BadgeString";
+            this.badgeStringDataGridViewTextBoxColumn.HeaderText = "Viewer Badges";
+            this.badgeStringDataGridViewTextBoxColumn.Name = "badgeStringDataGridViewTextBoxColumn";
+            this.badgeStringDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // emptyDataGridViewCheckBoxColumn
+            // 
+            this.emptyDataGridViewCheckBoxColumn.DataPropertyName = "Empty";
+            this.emptyDataGridViewCheckBoxColumn.HeaderText = "Empty";
+            this.emptyDataGridViewCheckBoxColumn.Name = "emptyDataGridViewCheckBoxColumn";
+            this.emptyDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // hasViewerTierDataGridViewCheckBoxColumn
+            // 
+            this.hasViewerTierDataGridViewCheckBoxColumn.DataPropertyName = "HasViewerTier";
+            this.hasViewerTierDataGridViewCheckBoxColumn.HeaderText = "HasViewerTier";
+            this.hasViewerTierDataGridViewCheckBoxColumn.Name = "hasViewerTierDataGridViewCheckBoxColumn";
+            this.hasViewerTierDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // hasSubscriptionTierDataGridViewCheckBoxColumn
+            // 
+            this.hasSubscriptionTierDataGridViewCheckBoxColumn.DataPropertyName = "HasSubscriptionTier";
+            this.hasSubscriptionTierDataGridViewCheckBoxColumn.HeaderText = "HasSubscriptionTier";
+            this.hasSubscriptionTierDataGridViewCheckBoxColumn.Name = "hasSubscriptionTierDataGridViewCheckBoxColumn";
+            this.hasSubscriptionTierDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // hasBadgesDataGridViewCheckBoxColumn
+            // 
+            this.hasBadgesDataGridViewCheckBoxColumn.DataPropertyName = "HasBadges";
+            this.hasBadgesDataGridViewCheckBoxColumn.HeaderText = "HasBadges";
+            this.hasBadgesDataGridViewCheckBoxColumn.Name = "hasBadgesDataGridViewCheckBoxColumn";
+            this.hasBadgesDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
             // alertConditionBindingSource
             // 
             this.alertConditionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlertCondition);
@@ -1124,11 +1250,6 @@
             // waypointBindingSource
             // 
             this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "New / Edit";
-            this.Edit.Name = "Edit";
             // 
             // Alert_Designer_MDI
             // 
@@ -1147,7 +1268,7 @@
             this.MinimumSize = new System.Drawing.Size(1305, 720);
             this.Name = "Alert_Designer_MDI";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Alert Designer";
+            this.Text = " ";
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -1158,6 +1279,8 @@
             this.grp_Macro.PerformLayout();
             this.grp_Preview.ResumeLayout(false);
             this.grp_Preview.PerformLayout();
+            this.cmb_Cooldowns.ResumeLayout(false);
+            this.cmb_Cooldowns.PerformLayout();
             this.grp_AlertDetails.ResumeLayout(false);
             this.grp_AlertDetails.PerformLayout();
             this.grp_PreviewControls.ResumeLayout(false);
@@ -1257,7 +1380,7 @@
         private System.Windows.Forms.NumericUpDown numud_Amount;
         private System.Windows.Forms.DomainUpDown dom_SubTier;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lbl_SubPlan;
         private System.Windows.Forms.TextBox txt_SubTierName;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txt_RecipientName;
@@ -1298,6 +1421,18 @@
         private System.Windows.Forms.Label lbl_Combinations;
         private System.Windows.Forms.ToolStripMenuItem ts_NewCondition;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
+        private System.Windows.Forms.GroupBox cmb_Cooldowns;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.MaskedTextBox mtxt_GlobalCooldown;
+        private System.Windows.Forms.MaskedTextBox mtxt_UserCooldown;
+        private System.Windows.Forms.Label lbl_UserCooldown;
+        private System.Windows.Forms.DataGridViewTextBoxColumn viewerSubTierDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn subscriptionTierDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn badgeStringDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn emptyDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn hasViewerTierDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn hasSubscriptionTierDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn hasBadgesDataGridViewCheckBoxColumn;
     }
 }
 

@@ -21,7 +21,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         Graphics graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
 
-        internal PlayingAlert (TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
+        internal PlayingAlert(TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
         {
             if (alertImage != null)
             {
@@ -34,7 +34,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 else
                 {
                     Bitmap tempMap = new Bitmap(alertImage.Filename);
-                    if (ImageAnimator.CanAnimate (tempMap))
+                    if (ImageAnimator.CanAnimate(tempMap))
                     {
                         this.playingObjects.Add(new PlayingAnimatedImage(this, alertImage));
                     }
@@ -65,7 +65,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public void RemoveObject (PlayingObject playingObject)
+        public void RemoveObject(PlayingObject playingObject)
         {
             if (!this.completedObjects.Contains(playingObject))
             {
@@ -88,7 +88,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public void DrawElements (Graphics g)
+        public void DrawElements(Graphics g)
         {
             foreach (PlayingObject o in this.playingObjects)
             {
@@ -115,7 +115,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public void Play ()
+        public void Play()
         {
             List<PlayingObject> remainingObjects = new List<PlayingObject>();
 
@@ -134,7 +134,7 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
-        public void Stop ()
+        public void Stop()
         {
             foreach (PlayingObject o in this.playingObjects)
             {
@@ -180,7 +180,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.opacityTimer.Stop();
             this.opacityTimer.Dispose();
-            
+
             if (this.mainImage != null)
             {
                 this.mainImage.Dispose();
@@ -225,7 +225,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         protected double bezierTotalTime = 0;
 
-        protected double fps = (MainTADAForm.mainTADAForm.rad_60FPS.Checked ? 60 : 30);  // The 60 FPS build for GGG.
+        protected double fps = (MainTADAForm.mainTADAForm.rad_60FPS.Checked ? 60 : 30);
 
         protected bool redrawMe = false;
 
@@ -247,22 +247,22 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        protected bool ReachedTarget (ActiveEffect effect, double value)
+        protected bool ReachedTarget(ActiveEffect effect, double value)
         {
             return effect.target == value;
         }
 
-        protected bool ReachedDestination ()
+        protected bool ReachedDestination()
         {
             return this.position == this.bezierP1 && this.stopwatch.ElapsedMilliseconds >= this.bezierTotalTime / 1000;
         }
 
-        public void StartWatch ()
+        public void StartWatch()
         {
             this.stopwatch.Start();
         }
 
-        public void StopWatch ()
+        public void StopWatch()
         {
             this.stopwatch.Stop();
         }
@@ -285,11 +285,11 @@ namespace TADA_Advanced_Desktop_Alerts
             double delta = nextEffect.target - currentEffect.target;
 
             currentEffect.Copy(nextEffect);
-            currentEffect.delta = delta / Math.Max (nextEffect.frames, 1);
+            currentEffect.delta = delta / Math.Max(nextEffect.frames, 1);
             timer.Interval = (currentEffect.frames == 0 ? 1 : currentEffect.duration * 1000.0 / currentEffect.frames);
         }
 
-        protected void SetNextDestination (Waypoint w)
+        protected void SetNextDestination(Waypoint w)
         {
             this.bezierP0 = this.position;
             this.bezierP1 = w.P1;
@@ -309,7 +309,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.stopwatch.Restart();
         }
 
-        public void NextEffectFrame (ref double variable, ref ActiveEffect effect, Timer timer)
+        public void NextEffectFrame(ref double variable, ref ActiveEffect effect, Timer timer)
         {
             effect.NextEffectFrame(ref variable, timer);
 
@@ -317,14 +317,14 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
-        protected void NextPosition ()
+        protected void NextPosition()
         {
             long ms = stopwatch.ElapsedMilliseconds;
             double bezierT = (Math.Min(ms / 1000.0d, this.bezierTotalTime) / this.bezierTotalTime);
             this.position = Bezier.CalculateBezierPosition(this.bezierP0, this.bezierC0, this.bezierC1, this.bezierP1, bezierT);
         }
 
-        public virtual void DrawImage (Graphics g)
+        public virtual void DrawImage(Graphics g)
         {
             if (this.isDisposed)
             {
@@ -455,7 +455,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.redrawMe = true;
         }
 
-        public virtual void Start ()
+        public virtual void Start()
         {
             this.waypoints.FirstWaypoint();
             this.stopwatch.Start(); // Filthy hack to just use restart () all the time.
@@ -469,12 +469,6 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.positionTimer.Stop();
             Waypoint w = this.waypoints.CurrentWaypoint;
-
-            if (this.waypoints.IsFirstWaypoint())
-            {
-                // If it's the first waypoint, move to P1
-                this.position = this.waypoints.CurrentWaypoint.P1;
-            }
 
             if (w.Angle.change)
             {
@@ -494,14 +488,10 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.opacityTimer.Start();
             }
 
-            if (w.TransitionTime > 0 && !this.waypoints.IsFirstWaypoint())
+            if (w.TransitionTime == 0)
             {
-                this.SetNextDestination(w);
-                this.fps = 30.0;
-                this.positionTimer.Start();
-            }
-            else if (this.waypoints.IsFirstWaypoint() || w.TransitionTime == 0)
-            {
+                this.position = w.P1;
+
                 if (w.PersistTime > 0)
                 {
                     this.persistTimer.Interval = w.PersistTime * 1000;
@@ -512,6 +502,23 @@ namespace TADA_Advanced_Desktop_Alerts
                     this.Persist();
                 }
             }
+            else
+            {
+                if (this.waypoints.IsFirstWaypoint())
+                {
+                    // It's the first waypoint, and it has transition time,
+                    // so wait the appropriate amount of time and THEN appear at P1.
+
+                    this.positionTimer.Interval = w.TransitionTime;
+                }
+                else
+                {
+                    this.SetNextDestination(w);
+                    this.positionTimer.Interval = 1000.0 / this.fps;
+                }
+
+                this.positionTimer.Start();
+            }
         }
 
         protected virtual void Persist()
@@ -519,7 +526,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.persistTimer.Stop();
 
             Waypoint w = this.waypoints.CurrentWaypoint;
-            
+
             // Press keys, if this is a press keys sorta situation.
             if (w != null && !String.IsNullOrEmpty(w.WindowTarget) && !String.IsNullOrEmpty(w.Keypresses))
             {
@@ -541,6 +548,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.ConfigureWaypoint();
                 if (w.TransitionTime > 0)
                 {
+                    this.positionTimer.Interval = 1000.0 / this.fps;
                     this.positionTimer.Start();
                 }
             }
@@ -602,7 +610,7 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.InvalidateMe();
         }
 
-        internal PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage) : base (containerAlert, alertImage)
+        internal PlayingAnimatedImage(PlayingAlert containerAlert, TADAAlertImage alertImage) : base(containerAlert, alertImage)
         {
             Bitmap b = new Bitmap(alertImage.Filename);
 
@@ -790,7 +798,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.Dispose();
             }));
         }
-        
+
         public override void Stop()
         {
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
@@ -873,9 +881,9 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.waypoints = alertText.Waypoints;
 
-            this.angle = alertImage.Waypoints.InitialAngle;
-            this.magnification = alertImage.Waypoints.InitialMagnification;
-            this.opacity = alertImage.Waypoints.InitialOpacity;
+            this.angle = alertText.Waypoints.InitialAngle;
+            this.magnification = alertText.Waypoints.InitialMagnification;
+            this.opacity = alertText.Waypoints.InitialOpacity;
 
             if (!String.IsNullOrEmpty(alertText.Message))
             {

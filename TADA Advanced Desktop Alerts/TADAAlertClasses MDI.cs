@@ -50,6 +50,9 @@ namespace TADA_Advanced_Desktop_Alerts
         private List<TADAAlertText> viewerTexts = new List<TADAAlertText>();
         private List<TADAAlertCondition> conditions = new List<TADAAlertCondition>();
 
+        internal TimeSpan userCooldown = new TimeSpan(0);
+        internal TimeSpan globalCooldown = new TimeSpan(0);
+
         internal Macro macroKey = new Macro();
 
         #region PropertyStuff
@@ -172,6 +175,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.alertName = reader.GetAttribute("Name");
             this.alertType = General.alertStrings[reader.GetAttribute("Type")];
+            this.globalCooldown = General.TimeSpanFromString(reader.GetAttribute("GlobalCooldown"));
+            this.userCooldown = General.TimeSpanFromString(reader.GetAttribute("UserCooldown"));
 
             while (reader.Read())
             {
@@ -229,6 +234,8 @@ namespace TADA_Advanced_Desktop_Alerts
             writer.WriteStartElement("Alert");
             writer.WriteAttributeString("Name", alertName);
             writer.WriteAttributeString("Type", General.alertTypes[alertType]);
+            writer.WriteAttributeString("GlobalCooldown", General.StringFromTimeSpan(this.globalCooldown));
+            writer.WriteAttributeString("UserCooldown", General.StringFromTimeSpan(this.userCooldown));
 
             XmlHelper.Write(writer, "Images", this.images);
             XmlHelper.Write(writer, "Audios", this.audios);
@@ -709,7 +716,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public String GetMessage()
         {
-            return this.substitutedMessage ?? this.message;
+            return String.IsNullOrEmpty(this.substitutedMessage) ? this.message : this.substitutedMessage;
         }
 
         public void SetMessage (String message)
@@ -719,7 +726,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public String GetReadMessage()
         {
-            return this.substitutedReadMessage ?? this.readMessage;
+            return String.IsNullOrEmpty(this.substitutedReadMessage) ? this.message : this.substitutedReadMessage;
         }
 
         public void SetReadMessage (String message)

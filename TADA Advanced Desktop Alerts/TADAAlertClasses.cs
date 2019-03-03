@@ -950,12 +950,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public String PlanString
         {
-            get { return TierAndPlanConverter.SubscriptionPlanToString[Plan]; }
+            get { return TierAndPlanConverter.SubscriptionPlanToString(Plan); }
         }
 
         public String TierString
         {
-            get { return TierAndPlanConverter.SubscriptionTierToString[Tier]; }
+            get { return TierAndPlanConverter.SubscriptionTierToString(Tier); }
         }
 
         public override string ToString()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
-    public static class TierAndPlanConverter
+    public sealed class TierAndPlanConverter
     {
         private const String NO_TIER = "No Tier";
         private const String TWITCH_PRIME = "Twitch Prime";
@@ -31,40 +31,71 @@ namespace TADA_Advanced_Desktop_Alerts
             TIER_THREE
         };
 
-        public static Dictionary<SUBSCRIPTION_PLANS, String> SubscriptionPlanToString = new Dictionary<SUBSCRIPTION_PLANS, string>()
+        public static String SubscriptionPlanToString (SUBSCRIPTION_PLANS plan)
         {
-            { SUBSCRIPTION_PLANS.NO_TIER, NO_TIER },
-            { SUBSCRIPTION_PLANS.TWITCH_PRIME, TWITCH_PRIME },
-            { SUBSCRIPTION_PLANS.TIER_ONE, TIER_ONE },
-            { SUBSCRIPTION_PLANS.TIER_TWO, TIER_TWO },
-            { SUBSCRIPTION_PLANS.TIER_THREE, TIER_THREE },
-        };
+            String planString = TierAndPlanConverter.NO_TIER;
 
-        public static Dictionary<String, SUBSCRIPTION_PLANS> StringToSubscriptionPlan = new Dictionary<string, SUBSCRIPTION_PLANS>()
-        {
-            { null, SUBSCRIPTION_PLANS.NO_TIER },
-            { NO_TIER, SUBSCRIPTION_PLANS.NO_TIER },
-            { TWITCH_PRIME, SUBSCRIPTION_PLANS.TWITCH_PRIME },
-            { TIER_ONE, SUBSCRIPTION_PLANS.TIER_ONE },
-            { TIER_TWO, SUBSCRIPTION_PLANS.TIER_TWO },
-            { TIER_THREE, SUBSCRIPTION_PLANS.TIER_THREE },
-        };
+            switch (plan)
+            {
+                case SUBSCRIPTION_PLANS.TWITCH_PRIME: planString = TierAndPlanConverter.TWITCH_PRIME; break;
+                case SUBSCRIPTION_PLANS.TIER_ONE: planString = TierAndPlanConverter.TIER_ONE; break;
+                case SUBSCRIPTION_PLANS.TIER_TWO: planString = TierAndPlanConverter.TIER_TWO; break;
+                case SUBSCRIPTION_PLANS.TIER_THREE: planString = TierAndPlanConverter.TIER_THREE; break;
+            }
 
-        public static Dictionary<SUBSCRIPTION_TIERS, String> SubscriptionTierToString = new Dictionary<SUBSCRIPTION_TIERS, string>()
-        {
-            { SUBSCRIPTION_TIERS.NO_TIER, NO_TIER },
-            { SUBSCRIPTION_TIERS.TIER_ONE, TIER_ONE },
-            { SUBSCRIPTION_TIERS.TIER_TWO, TIER_TWO },
-            { SUBSCRIPTION_TIERS.TIER_THREE, TIER_THREE },
-        };
+            return planString;
+        }
 
-        public static Dictionary<String, SUBSCRIPTION_TIERS> StringToSubscriptionTier = new Dictionary<string, SUBSCRIPTION_TIERS>()
+        public static SUBSCRIPTION_PLANS StringToSubscriptionPlan (String planString)
         {
-            { NO_TIER, SUBSCRIPTION_TIERS.NO_TIER },
-            { TIER_ONE, SUBSCRIPTION_TIERS.TIER_ONE },
-            { TIER_TWO, SUBSCRIPTION_TIERS.TIER_TWO },
-            { TIER_THREE, SUBSCRIPTION_TIERS.TIER_THREE },
-        };
+            SUBSCRIPTION_PLANS plan = SUBSCRIPTION_PLANS.NO_TIER;
+
+            switch (planString)
+            {
+                case null:
+                case NO_TIER:
+                    plan = SUBSCRIPTION_PLANS.NO_TIER;
+                    break;
+                case TWITCH_PRIME: plan = SUBSCRIPTION_PLANS.TWITCH_PRIME; break;
+                case TIER_ONE: plan = SUBSCRIPTION_PLANS.TIER_ONE; break;
+                case TIER_TWO: plan = SUBSCRIPTION_PLANS.TIER_TWO; break;
+                case TIER_THREE: plan = SUBSCRIPTION_PLANS.TIER_THREE; break;
+            }
+
+            return plan;
+        }
+
+        public static String SubscriptionTierToString (SUBSCRIPTION_TIERS tier)
+        {
+            String tierString = NO_TIER;
+
+            switch (tier)
+            {
+                case SUBSCRIPTION_TIERS.TIER_ONE: tierString = TIER_ONE; break;
+                case SUBSCRIPTION_TIERS.TIER_TWO: tierString = TIER_TWO; break;
+                case SUBSCRIPTION_TIERS.TIER_THREE: tierString = TIER_THREE; break;
+            }
+
+            return tierString;
+        }
+
+        public static SUBSCRIPTION_TIERS StringToSubscriptionTier (String tierString)
+        {
+            SUBSCRIPTION_TIERS tier = SUBSCRIPTION_TIERS.NO_TIER;
+
+            switch (tierString)
+            {
+                case null:
+                case NO_TIER:
+                    tier = SUBSCRIPTION_TIERS.NO_TIER;
+                    break;
+                case TIER_ONE: tier = SUBSCRIPTION_TIERS.TIER_ONE; break;
+                case TIER_TWO: tier = SUBSCRIPTION_TIERS.TIER_TWO; break;
+                case TIER_THREE: tier = SUBSCRIPTION_TIERS.TIER_THREE; break;
+            }
+
+            return tier;
+        }
 
         public static SUBSCRIPTION_PLANS NormalizePlanName(TwitchLib.Client.Enums.SubscriptionPlan plan)
         {

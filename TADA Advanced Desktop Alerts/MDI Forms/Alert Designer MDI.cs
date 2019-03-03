@@ -60,8 +60,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             dg_ViewerMessages.CellContentClick += CellEditClicked;
             dg_Conditions.CellContentClick += CellEditClicked;
 
-            // Need to add a listener for anything done in dg_Conditions to ensure that it is always updated.
-
             dg_Images.UserDeletingRow += RowDeleted;
             dg_Audio.UserDeletingRow += RowDeleted;
             dg_StreamerMessages.UserDeletingRow += RowDeleted;
@@ -86,6 +84,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             numud_PreviewImage.ValueChanged += delegate { UpdatePreview(); };
             numud_PreviewStreamer.ValueChanged += delegate { UpdatePreview(); };
             numud_PreviewViewer.ValueChanged += delegate { UpdatePreview(); };
+
+            mtxt_GlobalCooldown.TextChanged += UpdateCooldowns;
+            mtxt_UserCooldown.TextChanged += UpdateCooldowns;
             
             foreach (TADAAlertImage image in this.mainAlert.Images)
             {
@@ -112,11 +113,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 this.alertConditionBindingSource.Add(condition);
             }
 
-            UpdatePreview();
+            mtxt_GlobalCooldown.Text = General.StringFromTimeSpan(this.mainAlert.globalCooldown);
+            mtxt_UserCooldown.Text = General.StringFromTimeSpan(this.mainAlert.userCooldown);
 
-            numud_PreviewImage.Maximum = this.mainAlert.ImageCount;
-            numud_PreviewStreamer.Maximum = this.mainAlert.StreamerCount;
-            numud_PreviewViewer.Maximum = this.mainAlert.ViewerCount;
+            btn_TestAlert.Click += TestAlert;
+
+            UpdatePreview();
+            UpdateAlertPieceCounts();
 
             this.cmb_AlertType.Text = this.mainAlert.AlertType;
             this.txt_AlertName.Text = this.mainAlert.AlertName;
@@ -199,9 +202,34 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                 ((t.Item2 as TabPage).Tag as MDI_Forms.Text_Designer_MDI).FillImportComboBox();
             }
 
+            UpdateAlertPieceCounts();
+        }
+
+        private void UpdateCooldowns(object sender, EventArgs e)
+        {
+            if (!(sender as MaskedTextBox).Focused)
+            {
+                if (sender == mtxt_GlobalCooldown)
+                {
+                    this.mainAlert.globalCooldown = General.TimeSpanFromString(mtxt_GlobalCooldown.Text);
+                }
+                else if (sender == mtxt_UserCooldown)
+                {
+                    this.mainAlert.userCooldown = General.TimeSpanFromString(mtxt_UserCooldown.Text);
+                }
+            }
+        }
+
+        private void UpdateAlertPieceCounts ()
+        {
             numud_PreviewImage.Maximum = this.mainAlert.ImageCount;
             numud_PreviewStreamer.Maximum = this.mainAlert.StreamerCount;
             numud_PreviewViewer.Maximum = this.mainAlert.ViewerCount;
+
+            numud_TestAudio.Maximum = this.mainAlert.AudioCount;
+            numud_TestImage.Maximum = this.mainAlert.ImageCount;
+            numud_TestStreamerMessage.Maximum = this.mainAlert.StreamerCount;
+            numud_TestViewerMessage.Maximum = this.mainAlert.ViewerCount;
         }
 
         private String GetCaption(String type, int number)
@@ -844,6 +872,56 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             lbl_MaximumDurationCount.Text = String.Format("{0:0.0} s", new double[] { maxImage, maxAudio, maxStreamerText, maxViewerText }.Max());
             lbl_MinimumDurationCount.Text = String.Format("{0:0.0} s", new double[] { minImage, minAudio, minStreamerText, minViewerText }.Max());
             lbl_CombinationsCount.Text = String.Format("{0}", this.mainAlert.Combinations);
+        }
+
+        private void TestAlert (object sender, EventArgs e)
+        {
+            // Make an alert based on the items selected on the pane, send them to the window to test.
+            TADAAlertImage image = null;
+            TADAAlertAudio audio = null;
+            TADAAlertText text = null;
+            TADAAlertText response = null;
+
+            SubstitutionObject subObject = new SubstitutionObject()
+            {
+                AlertType = cmb_AlertType.Text,
+                Amount = Convert.ToInt32(numud_Amount.Value),
+                Message = txt_ViewerMessage.Text,
+                RecipientName = txt_RecipientName.Text,
+                TierName = txt_SubTierName.Text,
+                ViewerName = txt_ViewerName.Text
+            };
+
+            subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan(dom_SubTier.Text));
+
+            if (numud_TestImage.Value > 0)
+            {
+                image = alertImageBindingSource[Convert.ToInt32(numud_TestImage.Value - 1)] as TADAAlertImage;
+            }
+
+            if (numud_TestAudio.Value > 0)
+            {
+                audio = alertAudioBindingSource[Convert.ToInt32(numud_TestAudio.Value - 1)] as TADAAlertAudio;
+            }
+
+            if (numud_TestStreamerMessage.Value > 0)
+            {
+                text = streamerAlertTextBindingSource[Convert.ToInt32(numud_TestStreamerMessage.Value - 1)] as TADAAlertText;
+                String textMessage = text.GetMessage();
+                String textAudio = text.GetReadMessage();
+                General.PerformSubstitutions(ref textMessage, subObject);
+                General.PerformSubstitutions(ref textAudio, subObject);
+                text.SetMessage(textMessage);
+                text.SetReadMessage(textAudio);
+            }
+
+            if (numud_TestViewerMessage.Value > 0)
+            {
+                response = viewerAlertTextBindingSource[Convert.ToInt32(numud_TestViewerMessage.Value - 1)] as TADAAlertText;
+            }
+
+            PlayingAlert testAlert = new PlayingAlert(image, audio, text, response);
+            MainTADAForm.mainTADAForm.AnimationWindow.AddPlayingAlert(testAlert, true);
         }
 
 

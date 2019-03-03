@@ -258,12 +258,6 @@ namespace TADA_Advanced_Desktop_Alerts
             return color;
         }
 
-        // Deprecated, because this isn't used anymore.
-        internal static Color ColorFromNumuds(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
-        {
-            return Color.FromArgb(Convert.ToInt32(alpha.Value), Convert.ToInt32(red.Value), Convert.ToInt32(green.Value), Convert.ToInt32(blue.Value));
-        }
-
         internal static String GetKnownColorString(Color color)
         {
             String returnColor = "Custom";
@@ -287,7 +281,10 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 int scrollBarWidth = (comboBox.Items.Count > comboBox.MaxDropDownItems) ? SystemInformation.VerticalScrollBarWidth : 0;
                 comboBox.DropDownWidth = comboBox.Items.Cast<string>().Max(x => TextRenderer.MeasureText(x, comboBox.Font).Width + scrollBarWidth);
-                comboBox.SelectedIndex = 0;
+                if (comboBox.SelectedIndex <= 0)
+                {
+                    comboBox.SelectedIndex = 0;
+                }
             }
         }
 
@@ -359,6 +356,11 @@ namespace TADA_Advanced_Desktop_Alerts
         // The difference between this and DurationFromTimeSpan is that Duration... is trimmed.  This needs every value because of the masked text box class these items fill.
         public static TimeSpan TimeSpanFromString(String text)
         {
+            if (String.IsNullOrEmpty(text))
+            {
+                text = "0:0.0";
+            }
+
             var explode = text.Split(':');
 
             int hours = 0,

@@ -13,8 +13,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         internal TADAAlertText alertText;
 
         private Boolean blocked = false;
-
-        private Bitmap textPreview;
+        private Boolean loading = false;
 
         internal Text_Designer_MDI(TADAAlertText alertText, TADAAlert parentAlert) : base(parentAlert)
         {
@@ -136,6 +135,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void LoadExisting()
         {
+            loading = true;
+
             txt_DisplayedText.Text = this.alertText.Message;
             txt_NarratedText.Text = this.alertText.ReadMessage;
 
@@ -172,6 +173,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 this.alertText.Padding = tempSize;
             }
+
+            loading = false;
         }
 
         private void GeneratePreview()
@@ -206,8 +209,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 blocked = true;
                 UpdateColor(sender, cmb_BackColor, txt_BackHex);
                 General.ParseHexColor(txt_BackHex.Text, out int r, out int g, out int b, out int a);
-                this.alertText.Background = Color.FromArgb(a, r, g, b);
                 blocked = false;
+
+
+                if (!loading)
+                {
+                    this.alertText.Background = Color.FromArgb(a, r, g, b);
+                }
+
                 GeneratePreview();
             }
         }
@@ -219,8 +228,13 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 blocked = true;
                 UpdateColor(sender, cmb_ForeColor, txt_ForeHex);
                 General.ParseHexColor(txt_ForeHex.Text, out int r, out int g, out int b, out int a);
-                this.alertText.Foreground = Color.FromArgb(a, r, g, b);
                 blocked = false;
+
+                if (!loading)
+                {
+                    this.alertText.Foreground = Color.FromArgb(a, r, g, b);
+                }
+
                 GeneratePreview();
             }
         }
@@ -232,43 +246,46 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 blocked = true;
                 UpdateColor(sender, cmb_OutlineColor, txt_OutlineHex);
                 General.ParseHexColor(txt_OutlineHex.Text, out int r, out int g, out int b, out int a);
-                this.alertText.Outline = Color.FromArgb(a, r, g, b);
                 blocked = false;
+
+
+                if (!loading)
+                {
+                    this.alertText.Outline = Color.FromArgb(a, r, g, b);
+                }
+
                 GeneratePreview();
             }
         }
 
         private void PickBackColor(object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.Background = General._ColorPicker(cmb_BackColor, txt_BackHex);
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void PickForeColor(object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.Foreground = General._ColorPicker(cmb_ForeColor, txt_ForeHex);
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void PickOutlineColor(object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.Outline = General._ColorPicker(cmb_OutlineColor, txt_OutlineHex);
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void UpdateColor (object sender, ComboBox c, TextBox hex)
@@ -308,33 +325,35 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     backgroundImage?.Dispose();
                 }
 
-                this.alertText.BackgroundImage = txt_BackgroundImage.Text;
                 blocked = false;
-
-                GeneratePreview();
             }
+
+            if (!loading)
+            {
+                this.alertText.BackgroundImage = txt_BackgroundImage.Text;
+            }
+
+            GeneratePreview();
         }
 
         private void UpdateDisplayedText (object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.Message = txt_DisplayedText.Text;
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void UpdateNarratedText (object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.ReadMessage = txt_NarratedText.Text;
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void UpdateTextDimensions (object sender, EventArgs e)
@@ -342,35 +361,36 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked)
             {
                 blocked = true;
-                this.alertText.Dimensions = new Size(Convert.ToInt32(numud_TextWidth.Value), Convert.ToInt32(numud_TextHeight.Value));
                 this.SetItemSize(this.alertText.Dimensions);
                 blocked = false;
 
                 numud_PaddingX.Maximum = Math.Floor(numud_TextWidth.Value / 2) - 1;
                 numud_PaddingY.Maximum = Math.Floor(numud_TextHeight.Value / 2) - 1;
-
-                GeneratePreview();
             }
+
+            if (!loading)
+            {
+                this.alertText.Dimensions = new Size(Convert.ToInt32(numud_TextWidth.Value), Convert.ToInt32(numud_TextHeight.Value));
+            }
+
+            GeneratePreview();
         }
 
         private void UpdateTextPadding (object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.Padding = new Size(Convert.ToInt32(numud_PaddingX.Value), Convert.ToInt32(numud_PaddingY.Value));
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void UpdateTTS (object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.TTSVoice = cmb_TTSVoice.Text;
-                blocked = false;
             }
         }
 
@@ -388,7 +408,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     trk_VoiceVolume.Value = Convert.ToInt32(numud_VoiceVolume.Value * 10);
                 }
 
-                this.alertText.Waypoints.InitialVolume = Convert.ToDouble(numud_VoiceVolume.Value);
+                if (!loading)
+                {
+                    this.alertText.Waypoints.InitialVolume = Convert.ToDouble(numud_VoiceVolume.Value);
+                }
+
                 blocked = false;
             }
         }
@@ -398,7 +422,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!blocked && cmb_Font.Items.IndexOf(cmb_Font.Text) > -1)
             {
                 blocked = true;
-                this.alertText.ChosenFont = new Font(cmb_Font.SelectedValue.ToString(), (float)numud_FontSize.Value);
+
+                if (!loading)
+                {
+                    this.alertText.ChosenFont = new Font(cmb_Font.SelectedValue.ToString(), (float)numud_FontSize.Value);
+                }
+
                 blocked = false;
                 GeneratePreview();
             }
@@ -406,13 +435,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateOutline (object sender, EventArgs e)
         {
-            if (!blocked)
+            if (!loading)
             {
-                blocked = true;
                 this.alertText.OutlineWidth = (float)numud_OutlineWidth.Value;
-                blocked = false;
-                GeneratePreview();
             }
+
+            GeneratePreview();
         }
 
         private void btn_BackgroundImage_Click(object sender, EventArgs e)

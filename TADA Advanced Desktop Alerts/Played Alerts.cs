@@ -40,8 +40,7 @@ namespace TADA_Advanced_Desktop_Alerts
         private Dictionary<String, User> viewers = new Dictionary<String, User>();
 
         // Need something for storing messages.  <alert, last procced, <user, last procced>>  Need an object for this probably.
-
-
+        private Dictionary<TADAAlert, RecentlyPlayed> recentlyPlayed = new Dictionary<TADAAlert, RecentlyPlayed>();
 
 
         // Need a thing for storing community gift subs that are being compiled.
@@ -619,10 +618,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     {
                         communityGiftSubs.Remove(comGift);
                     }
-                    else if (alertType == General.ALERTTYPES.MESSAGE)
-                    {
-                        // Then somehow mark the message as having been trigged at X time, prevent it for some cooldown period.
-                    }
 
                     break;
                 }
@@ -630,6 +625,15 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (alertToUse != null)
             {
+                if (!recentlyPlayed.ContainsKey(alertToUse))
+                {
+                    recentlyPlayed.Add(alertToUse, new RecentlyPlayed(alertToUse, user));
+                }
+                else
+                {
+                    recentlyPlayed[alertToUse].AddTriggerer(user);
+                }
+
                 PrepareAndPlayAlert(alertToUse, subObject, alertType);
                 MainTADAForm.mainTADAForm.webSocketServer.TellConnectedSockets(subObject);
             }
@@ -650,8 +654,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (alertText != null)
             {
-                String alertTextMessage = alertText.Message;
-                String alertReadMessage = alertText.ReadMessage;
+                String alertTextMessage = alertText.GetMessage();
+                String alertReadMessage = alertText.GetReadMessage();
 
                 General.PerformSubstitutions(ref alertTextMessage, subObject);
                 General.PerformSubstitutions(ref alertReadMessage, subObject);
@@ -879,7 +883,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             if (user.subscription?.SubPlan != null)
             {
-                subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan[user.subscription?.SubPlan]);
+                subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan(user.subscription?.SubPlan));
                 subObject.TierName = user.subscription?.SubPlanName;
             }
         }
@@ -905,6 +909,12 @@ namespace TADA_Advanced_Desktop_Alerts
                      * Loop through the appropriate alerts, and assign each one a score.
                      * name > tier > keyword > amount
                      */
+
+                    // If this alert was recently triggered and is on cooldown, check the next alert.
+                    if (recentlyPlayed.ContainsKey(alert) && !recentlyPlayed[alert].CanTrigger(user))
+                    {
+                        continue;
+                    }
 
                     int thisAlertScore = ScoreAlert(alert, user, amount, message, plan);
                     if (thisAlertScore > alertScore)
@@ -1157,7 +1167,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public TierAndPlanConverter.SUBSCRIPTION_TIERS SubscriptionTier
         {
-            get { return TierAndPlanConverter.SubscriptionTierFromPlan(TierAndPlanConverter.StringToSubscriptionPlan[subscription?.SubPlan]); }
+            get { return TierAndPlanConverter.SubscriptionTierFromPlan(TierAndPlanConverter.StringToSubscriptionPlan(subscription?.SubPlan)); }
         }
 
         public String SubscriptionTierName
@@ -1268,6 +1278,44 @@ namespace TADA_Advanced_Desktop_Alerts
         public override string ToString()
         {
             return String.Format("{0} - {1} : {2}", this.AlertType, this.ViewerName, this.AlertMessage);
+        }
+    }
+
+    // Need something for storing messages.  <alert, last procced, <user, last procced>>  Need an object for this probably.
+    internal class RecentlyPlayed
+    {
+        private Dictionary<User, DateTime> lastTriggeredByUser = new Dictionary<User, DateTime>();
+        private DateTime lastTriggered;
+        private TimeSpan userCooldown;
+        private TimeSpan globalCooldown;
+
+        internal RecentlyPlayed (TADAAlert alert, User triggerer)
+        {
+            this.lastTriggered = DateTime.Now;
+            this.userCooldown = alert.userCooldown;
+            this.globalCooldown = alert.globalCooldown;
+            AddTriggerer(triggerer);
+        }
+
+        public void AddTriggerer (User triggerer)
+        {
+            if (!lastTriggeredByUser.ContainsKey(triggerer))
+            {
+                lastTriggeredByUser.Add(triggerer, DateTime.Now);
+            }
+
+            lastTriggeredByUser[triggerer] = DateTime.Now;
+        }
+
+        public Boolean CanTrigger(User triggerer)
+        {
+            DateTime now = DateTime.Now;
+            if (lastTriggeredByUser.ContainsKey(triggerer))
+            {
+                return lastTriggered + globalCooldown <= now && lastTriggeredByUser[triggerer] + userCooldown <= now;
+            }
+
+            return lastTriggered + globalCooldown <= now;
         }
     }
 }
