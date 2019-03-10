@@ -192,6 +192,12 @@ namespace TADA_Advanced_Desktop_Alerts
             a = Convert.ToInt32(hex.Substring(7, 2), 16);
         }
 
+        internal static void ParseHexColor(string hex, out Color color)
+        {
+            ParseHexColor(hex, out int r, out int g, out int b, out int a);
+            color = Color.FromArgb(a, r, g, b);
+        }
+
         internal static string StringFromColor(Color color)
         {
             return String.Format(General.COLOR_FORMAT, color.R, color.G, color.B, color.A);

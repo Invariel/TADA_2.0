@@ -14,6 +14,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
     {
         TADAAlert mainAlert;
         TADAAlertCondition condition;
+        private bool loading = false;
         
         public Condition_Designer_MDI()
         {
@@ -49,6 +50,21 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             chk_BadgeBits.CheckedChanged += EnableDisableBitBadge;
             chk_BadgeSubscription.CheckedChanged += EnableDisableSubscriptionMonths;
+
+            txt_MessageKeywords.LostFocus += UpdateKeywords;
+            txt_Users.LostFocus += UpdateUsers;
+            numud_AmountMinimum.LostFocus += UpdateAmounts;
+            numud_AmountMaximum.LostFocus += UpdateAmounts;
+
+            loading = true;
+            LoadValues();
+            loading = false;
+        }
+
+        private void LoadValues ()
+        {
+            // Go over them one by one.
+
         }
 
         private void UpdateViewer (object sender, EventArgs e)
@@ -134,6 +150,40 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
 
             UpdateDescription();
+        }
+
+        private void UpdateKeywords(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                this.condition.Keywords = txt_MessageKeywords.Text;
+            }
+        }
+
+        private void UpdateUsers (object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                this.condition.Usernames = txt_Users.Text;
+            }
+        }
+
+        private void UpdateAmounts (object sender, EventArgs e)
+        {
+            if (sender == numud_AmountMinimum)
+            {
+                numud_AmountMaximum.Minimum = numud_AmountMinimum.Value;
+            }
+            else if (sender == numud_AmountMaximum)
+            {
+                numud_AmountMinimum.Maximum = numud_AmountMaximum.Value;
+            }
+
+            if (!loading)
+            {
+                this.condition.MinAmount = Convert.ToInt32(numud_AmountMinimum.Value);
+                this.condition.MaxAmount = Convert.ToInt32(numud_AmountMaximum.Value);
+            }
         }
 
         private void UpdateDescription()

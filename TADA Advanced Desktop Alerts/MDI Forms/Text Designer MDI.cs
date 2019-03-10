@@ -150,16 +150,17 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
 
             General.AssignNumud(this.numud_TextWidth, this.alertText.Dimensions.Width);
+            General.AssignNumud(this.numud_TextHeight, this.alertText.Dimensions.Height);
+
             General.AssignNumud(this.numud_PaddingX, this.alertText.Padding.Width);
+            General.AssignNumud(this.numud_PaddingY, this.alertText.Padding.Height);
 
             this.cmb_TTSVoice.Text = this.alertText.TTSVoice;
 
-            // Each of these has side effects, like writing these values back to the object, or filling other fields, which is why these are done again.
-            General.AssignNumud(this.numud_TextHeight, this.alertText.Dimensions.Height);
-            General.AssignNumud(this.numud_PaddingY, this.alertText.Padding.Height);
             txt_ForeHex.Text = General.StringFromColor(this.alertText.Foreground);
             txt_BackHex.Text = General.StringFromColor(this.alertText.Background);
             txt_OutlineHex.Text = General.StringFromColor(this.alertText.Outline);
+
             this.numud_VoiceVolume.Value = Convert.ToDecimal(this.alertText.Waypoints.InitialVolume);
 
             Size tempSize = new Size(Convert.ToInt32(this.numud_TextWidth.Value), Convert.ToInt32(this.numud_TextHeight.Value));
@@ -187,15 +188,30 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 previewBitmap.Dispose();
             }
 
-            previewBitmap = General.GenerateMessageBitmap(this.alertText.Foreground,
-                                                          this.alertText.Background,
-                                                          this.alertText.Outline,
-                                                          this.alertText.ChosenFont,
-                                                          this.alertText.OutlineWidth,
-                                                          this.alertText.Dimensions,
-                                                          this.alertText.Padding,
-                                                          this.alertText.Message,
-                                                          this.alertText.BackgroundImage);
+            //previewBitmap = General.GenerateMessageBitmap(this.alertText.Foreground,
+            //                                              this.alertText.Background,
+            //                                              this.alertText.Outline,
+            //                                              this.alertText.ChosenFont,
+            //                                              this.alertText.OutlineWidth,
+            //                                              this.alertText.Dimensions,
+            //                                              this.alertText.Padding,
+            //                                              this.alertText.Message,
+            //                                              this.alertText.BackgroundImage);
+
+            General.ParseHexColor(txt_ForeHex.Text, out Color foreColor);
+            General.ParseHexColor(txt_BackHex.Text, out Color backColor);
+            General.ParseHexColor(txt_OutlineHex.Text, out Color outlineColor);
+
+
+            previewBitmap = General.GenerateMessageBitmap(foreColor,
+                                                          backColor,
+                                                          outlineColor,
+                                                          new Font(cmb_Font.Text, (float)numud_FontSize.Value),
+                                                          (float)numud_OutlineWidth.Value,
+                                                          new Size(Convert.ToInt32(numud_TextWidth.Value), Convert.ToInt32(numud_TextHeight.Value)),
+                                                          new Size(Convert.ToInt32(numud_PaddingX.Value), Convert.ToInt32(numud_PaddingY.Value)),
+                                                          txt_DisplayedText.Text,
+                                                          txt_BackgroundImage.Text);
 
             pb_TextPreview.Image = previewBitmap;
             pb_TextPreview.Update();

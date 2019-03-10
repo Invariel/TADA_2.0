@@ -13,6 +13,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         internal TADAAlertImage alertImage;
 
         private bool blocked = false;   // This prevents infinite updating loops.
+        private bool loading = false;
+
         private bool justLoaded = false;
         private bool playing = false;
         private bool isVideo = false;
@@ -33,7 +35,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             this.waypointContainer = alertImage.Waypoints;
 
             // Even if alertImage is new, things should be initialized inside it.
+            loading = true;
             LoadExisting(this.alertImage);
+            loading = false;
 
             FillImportComboBox();
         }
@@ -444,7 +448,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 txt_Duration.Text = General.DurationFromTimeSpan(new TimeSpan(0, 0, 0, 0, duration));
 
-                if (!String.IsNullOrEmpty(txt_Filename.Text))
+                if (!String.IsNullOrEmpty(txt_Filename.Text) && !loading)
                 {
                     this.alertImage.Filename = txt_Filename.Text;
                 }
@@ -481,7 +485,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 }
 
                 SetItemSize((float)numud_DesiredDimensionsX.Value, (float)numud_DesiredDimensionsY.Value);
-                this.alertImage.Dimensions = new Size(Convert.ToInt32(numud_DesiredDimensionsX.Value), Convert.ToInt32(numud_DesiredDimensionsY.Value));
+                if (!loading)
+                {
+                    this.alertImage.Dimensions = new Size(Convert.ToInt32(numud_DesiredDimensionsX.Value), Convert.ToInt32(numud_DesiredDimensionsY.Value));
+                }
                 UpdatePreview();
             }
         }

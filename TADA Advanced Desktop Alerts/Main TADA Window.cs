@@ -588,6 +588,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
                 if (playedAlerts == null || playedAlerts.IsDisposed)
                 {
+                    // Make an object containing the banned words, and the other settings?
                     playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
                 }
 

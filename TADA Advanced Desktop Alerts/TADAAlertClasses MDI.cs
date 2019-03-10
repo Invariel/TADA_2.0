@@ -1383,4 +1383,51 @@ namespace TADA_Advanced_Desktop_Alerts
         }
         #endregion XML
     }
+
+    public class SubstitutionObject
+    {
+        public String AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
+        public int Amount { get; set; } = 0;
+        public bool VIP { get; set; } = false;
+        public String Message { get; set; } = "";
+        public String RecipientName { get; set; } = "";
+        public String ViewerName { get; set; } = "";
+        public String TierName { get; set; } = "";
+
+        public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }
+        public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;
+
+        public void SetPlan(TwitchLib.Client.Enums.SubscriptionPlan plan)
+        {
+            Plan = TierAndPlanConverter.NormalizePlanName(plan);
+            Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public void SetPlan(TwitchLib.PubSub.Enums.SubscriptionPlan plan)
+        {
+            Plan = TierAndPlanConverter.NormalizePlanName(plan);
+            Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public void SetPlan(TierAndPlanConverter.SUBSCRIPTION_PLANS plan)
+        {
+            Plan = plan;
+            Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public String PlanString
+        {
+            get { return TierAndPlanConverter.SubscriptionPlanToString(Plan); }
+        }
+
+        public String TierString
+        {
+            get { return TierAndPlanConverter.SubscriptionTierToString(Tier); }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}, {1}, {2}, {3}", this.ViewerName, this.Amount, this.Message, this.TierName);
+        }
+    }
 }

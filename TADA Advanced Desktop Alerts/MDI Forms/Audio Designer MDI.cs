@@ -13,8 +13,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         internal TADAAlertAudio alertAudio;
         private System.Windows.Controls.MediaElement me;
 
-        private bool isPlaying = false;
         private bool blocked = false;
+        private bool loading = false;
+
+        private bool isPlaying = false;
         private bool mediaLoaded = false;
         private bool loadExisting = false;
 
@@ -43,7 +45,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 this.Refresh();
                 this.loadExisting = true;
+                loading = true;
                 txt_Filename.Text = alertAudio.Filename;
+                loading = false;
             });
 
             FillImportComboBox();
@@ -215,14 +219,22 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             lbl_Balance.Text = String.Format("Balance: {0,2}", trk_Balance.Value / 100.0);
             me.Balance = trk_Balance.Value / 100.0;
-            this.alertAudio.Balance = trk_Balance.Value / 100.0;
+
+            if (!loading)
+            {
+                this.alertAudio.Balance = trk_Balance.Value / 100.0;
+            }
         }
 
         private void UpdateVolume(object sender, EventArgs e)
         {
             lbl_Volume.Text = String.Format("Vol: {0,2}", trk_Volume.Value / 10.0);
             me.Volume = trk_Volume.Value / 1000.0;
-            this.alertAudio.Volume = trk_Volume.Value / 10.0;
+
+            if (!loading)
+            {
+                this.alertAudio.Volume = trk_Volume.Value / 10.0;
+            }
         }
 
         private void UpdateDelay(object sender, EventArgs e)
