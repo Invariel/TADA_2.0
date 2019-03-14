@@ -719,6 +719,11 @@ namespace TADA_Advanced_Desktop_Alerts
             return String.IsNullOrEmpty(this.substitutedMessage) ? this.message : this.substitutedMessage;
         }
 
+        public String GetMessage(Boolean raw)
+        {
+            return (raw ? this.message : GetMessage());
+        }
+
         public void SetMessage (String message)
         {
             this.substitutedMessage = message;
@@ -727,6 +732,20 @@ namespace TADA_Advanced_Desktop_Alerts
         public String GetReadMessage()
         {
             return String.IsNullOrEmpty(this.substitutedReadMessage) ? this.message : this.substitutedReadMessage;
+        }
+
+        public String GetReadMessage(Boolean raw)
+        {
+            String outString = null;
+            if (raw)
+            {
+                outString = String.IsNullOrEmpty(this.readMessage) ? this.message : this.readMessage;
+            }
+            else
+            {
+                outString = GetReadMessage();
+            }
+            return outString;
         }
 
         public void SetReadMessage (String message)

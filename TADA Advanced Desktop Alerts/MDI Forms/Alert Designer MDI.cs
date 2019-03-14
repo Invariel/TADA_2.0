@@ -907,8 +907,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             if (numud_TestStreamerMessage.Value > 0)
             {
                 text = streamerAlertTextBindingSource[Convert.ToInt32(numud_TestStreamerMessage.Value - 1)] as TADAAlertText;
-                String textMessage = text.GetMessage();
-                String textAudio = text.GetReadMessage();
+                String textMessage = text.GetMessage(true);
+                String textAudio = text.GetReadMessage(true);
                 General.PerformSubstitutions(ref textMessage, subObject);
                 General.PerformSubstitutions(ref textAudio, subObject);
                 text.SetMessage(textMessage);
