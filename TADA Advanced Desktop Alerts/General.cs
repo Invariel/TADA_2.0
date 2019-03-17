@@ -213,7 +213,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                trackBar.Value = Convert.ToInt16(timespan.TotalMilliseconds);
+                trackBar.Value = Convert.ToInt32(timespan.TotalMilliseconds);
             }
         }
 

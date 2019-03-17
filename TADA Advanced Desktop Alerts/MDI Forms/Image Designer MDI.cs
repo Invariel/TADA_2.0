@@ -221,6 +221,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             eh_1.Visible = isVideo && showControls;
 
+            numud_InitialAngle.Enabled = !isVideo;
+            numud_InitialOpacity.Enabled = !isVideo;
+
             if (!isVideo && showControls && playing)
             {
                 mediaElement.Stop();
@@ -536,8 +539,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_DesiredDimensionsX.Value = alertImage.Dimensions.Width;
             numud_DesiredDimensionsY.Value = alertImage.Dimensions.Height;
 
-            trk_Balance.Value = Convert.ToInt32(alertImage.Waypoints.InitialBalance * 100.0);
-            trk_Volume.Value = Convert.ToInt32(alertImage.Waypoints.InitialVolume * 10.0);
+            trk_Balance.Value = Convert.ToInt32(alertImage.Waypoints.InitialBalance / 100.0);
+            trk_Volume.Value = Convert.ToInt32(alertImage.Waypoints.InitialVolume / 10.0);
             this.blocked = false;
         }
     }

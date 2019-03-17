@@ -411,14 +411,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.COMMUNITY:
                     {
-                        /*
-                         * Entirely guessing, because thanks undocumented everything.
-                         * But, the guess is that MassGiftCount is the number of gift subs for this event.
-                         * Then, parcel up the next <count> subs --from this person-- and turn them into a mass alert.
-                         * Which means grabbing gift sub events and applying them to an internal variable.
-                         * When that variable has enough names, it's ready and so play it.
-                         */
-
                         // This also needs to check for anonymous community gift subs.  Hurrah.
                         OnCommunitySubscriptionArgs eCommunity = eventDetails as OnCommunitySubscriptionArgs;
 
@@ -514,6 +506,14 @@ namespace TADA_Advanced_Desktop_Alerts
                                 this.missingFollowers = "";
                             }
                         }
+
+                        // If we don't want to toast idle people, and the user hasn't spoken in the specified time, then don't toast.
+                        if (MainTADAForm.configurationSettings.dontToastLurkingFollowers &&
+                            DateTime.Now - MainTADAForm.configurationSettings.lurkingFollowerTime > user.lastSpoke)
+                        {
+                            alertType = General.ALERTTYPES.NONE;
+                        }
+
                     }
                     break;
                 /*
@@ -634,12 +634,12 @@ namespace TADA_Advanced_Desktop_Alerts
                     recentlyPlayed[alertToUse].AddTriggerer(user);
                 }
 
-                PrepareAndPlayAlert(alertToUse, subObject, alertType);
+                PrepareAndPlayAlert(alertToUse, user, subObject, alertType);
                 MainTADAForm.mainTADAForm.webSocketServer.TellConnectedSockets(subObject);
             }
         }
 
-        private void PrepareAndPlayAlert (TADAAlert alertToUse, SubstitutionObject subObject, General.ALERTTYPES alertType)
+        private void PrepareAndPlayAlert (TADAAlert alertToUse, User user, SubstitutionObject subObject, General.ALERTTYPES alertType)
         {
             // Now that an alert has been decided on, pick pieces, and then add it to the to-play list.
             TADAAlertImage alertImage = null;
@@ -676,12 +676,25 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (!String.IsNullOrEmpty(message))
                 {
                     // Remove blocked words.
-
+                    // Optionally remove emote words.
                     // Optionally remove cheer words.
                 }
 
                 alertResponse.SetMessage(message);
-                alertResponse.SetReadMessage(message);
+
+                // Search through alertResponse to see if any waypoint has readMessage checked.
+                var hasReadMessage = (alertResponse.Waypoints.Waypoints.Any(x => x.ReadMessage));
+
+                if (hasReadMessage)
+                {
+                    // Then, make sure they aren't TTS'ing too much.
+                    if (!MainTADAForm.configurationSettings.disallowSpammyTTS ||
+                        DateTime.Now - MainTADAForm.configurationSettings.spammyTTSTime >= user.lastTTS)
+                    {
+                        alertResponse.SetReadMessage(message);
+                        user.lastTTS = DateTime.Now;
+                    }
+                }
             }
 
             ListedAlert alert = new ListedAlert(subObject.ViewerName,
@@ -1156,7 +1169,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public TwitchLib.Api.Helix.Models.Users.User user;
         public TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription;
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
-        public DateTime lastSpoke;                  // Is this necessary?  Maybe not...
+        public DateTime lastSpoke;
+        public DateTime lastTTS;
         public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
         public Badges badges = new Badges();        // The badges a user has.
 

@@ -53,6 +53,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             trk_Time.ValueChanged += TrackbarPositionChanged;
 
             cmb_AlertType.SelectedIndexChanged += UpdateAlertType;
+            txt_AlertName.LostFocus += UpdateAlertName;
 
             dg_Images.CellContentClick += CellEditClicked;
             dg_Audio.CellContentClick += CellEditClicked;
@@ -295,6 +296,11 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 (tuple.Item2.Tag as MDI_Forms.Condition_Designer_MDI).AlertTypeOptions(General.alertStrings[this.mainAlert.AlertType]);
             }
+        }
+
+        private void UpdateAlertName (object sender, EventArgs e)
+        {
+            this.mainAlert.AlertName = txt_AlertName.Text;
         }
 
         private void SaveMacroSettings(object sender, EventArgs e)

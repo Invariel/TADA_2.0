@@ -117,6 +117,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.trk_LoopAt)).BeginInit();
             this.SuspendLayout();
             // 
+            // tab_Focus
+            // 
+            this.tab_Focus.Size = new System.Drawing.Size(761, 405);
+            // 
             // tab_Element
             // 
             this.tab_Element.Controls.Add(this.trk_LoopAt);
@@ -152,6 +156,11 @@
             this.tab_Element.Controls.Add(this.txt_Filename);
             this.tab_Element.Controls.Add(this.lbl_Filename);
             this.tab_Element.Controls.Add(this.trk_Balance);
+            this.tab_Element.Size = new System.Drawing.Size(753, 379);
+            // 
+            // tab_Waypoints
+            // 
+            this.tab_Waypoints.Size = new System.Drawing.Size(753, 379);
             // 
             // lbl_Balance
             // 

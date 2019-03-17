@@ -23,12 +23,18 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private static MainTADAForm _mainTADAForm;
         internal Played_Alerts playedAlerts = null;
+        private static TADAConfigurationSettings _configurationSettings;
 
         public static MainTADAForm mainTADAForm
         {
             get { return _mainTADAForm; }
         }
 
+        public static TADAConfigurationSettings configurationSettings
+        {
+            get { return _configurationSettings; }
+        }
+        
         public TADAAnimationWindow AnimationWindow
         {
             get
@@ -55,6 +61,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public MainTADAForm()
         {
             InitializeComponent();
+            _configurationSettings = new TADAConfigurationSettings();
 
             this.AnimationWindow.Show();
 
@@ -87,6 +94,16 @@ namespace TADA_Advanced_Desktop_Alerts
             btn_Update.Click += OpenDownloadPage;
 
             this.FormClosing += StopWebSocketServer;
+
+            txt_BlockedWords.LostFocus += UpdateBannedWords;
+            chk_DontReadGlobalCheermotes.CheckedChanged += UpdateConfiguration;
+            chk_DoReadMyCheermote.CheckedChanged += UpdateConfiguration;
+            chk_DontReadGlobalEmotes.CheckedChanged += UpdateConfiguration;
+            chk_DoReadMyEmotes.CheckedChanged += UpdateConfiguration;
+            chk_FollowCalloutLurkers.CheckedChanged += UpdateFollowCallout;
+            mtxt_FollowCalloutLurkers.LostFocus += UpdateFollowCallout;
+            chk_TimeBetweenTTS.CheckedChanged += UpdateTimeBetweenTTS;
+            mtxt_TimeBetweenTTS.LostFocus += UpdateTimeBetweenTTS;
 
             if (System.IO.File.Exists(General.SUBDIRECTORY + General.DEFAULT_ALERTS))
             {
@@ -621,5 +638,62 @@ namespace TADA_Advanced_Desktop_Alerts
 
             return dictionary;
         }
+
+        private void UpdateBannedWords (object sender, EventArgs e)
+        {
+            configurationSettings.blockedWords = txt_BlockedWords.Text;
+        }
+
+        private void UpdateConfiguration (object sender, EventArgs e)
+        {
+            configurationSettings.dontReadEmotes = chk_DontReadGlobalEmotes.Checked;
+            configurationSettings.allowMyEmotes = chk_DoReadMyEmotes.Checked;
+
+            configurationSettings.dontReadCheers = chk_DontReadGlobalCheermotes.Checked;
+            configurationSettings.allowMyCheer = chk_DoReadMyCheermote.Checked;
+        }
+
+        private void UpdateFollowCallout (object sender, EventArgs e)
+        {
+            if (chk_FollowCalloutLurkers.Checked)
+            {
+                configurationSettings.dontToastLurkingFollowers = true;
+                configurationSettings.lurkingFollowerTime = General.TimeSpanFromString(mtxt_FollowCalloutLurkers.Text);
+            }
+            else
+            {
+                configurationSettings.dontToastLurkingFollowers = false;
+            }
+        }
+
+        private void UpdateTimeBetweenTTS(object sender, EventArgs e)
+        {
+            if (chk_TimeBetweenTTS.Checked)
+            {
+                configurationSettings.disallowSpammyTTS = true;
+                configurationSettings.spammyTTSTime = General.TimeSpanFromString(mtxt_TimeBetweenTTS.Text);
+            }
+            else
+            {
+                configurationSettings.disallowSpammyTTS = false;
+            }
+        }
+    }
+
+    public class TADAConfigurationSettings
+    {
+        public String blockedWords = "";
+
+        public bool dontReadEmotes = false;
+        public bool allowMyEmotes = false;
+
+        public bool dontReadCheers = false;
+        public bool allowMyCheer = false;
+
+        public bool dontToastLurkingFollowers = false;
+        public TimeSpan lurkingFollowerTime = new TimeSpan(0);
+
+        public bool disallowSpammyTTS = false;
+        public TimeSpan spammyTTSTime = new TimeSpan(0);
     }
 }
