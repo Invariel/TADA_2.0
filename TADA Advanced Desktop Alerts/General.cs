@@ -473,6 +473,17 @@ namespace TADA_Advanced_Desktop_Alerts
             return duration;
         }
 
+        public static string ReplaceCaseInsensitive(string input, string search, string replacement)
+        {
+            string result = Regex.Replace(
+                input,
+                Regex.Escape(search),
+                replacement.Replace("$", "$$"),
+                RegexOptions.IgnoreCase
+            );
+            return result;
+        }
+
         internal static void PerformSubstitutions(ref string message, SubstitutionObject substitutionObject)
         {
             // {name} => substitutionObject.ViewerName;
@@ -485,14 +496,14 @@ namespace TADA_Advanced_Desktop_Alerts
             // [a|b] => extract a and b, if amount == 1, a, else b
             // <a|b|c|d> => extract a, b, c, d.  Use <Twitch Prime | Tier One | Tier Two | Tier Three>
 
-            message = message.Replace("{name}", substitutionObject.ViewerName);
-            message = message.Replace("{giftee}", substitutionObject.RecipientName);
-            message = message.Replace("{tier}", substitutionObject.TierString);
-            message = message.Replace("{tierName}", substitutionObject.TierName);
+            message = General.ReplaceCaseInsensitive(message, "{name}", substitutionObject.ViewerName);
+            message = General.ReplaceCaseInsensitive(message, "{giftee}", substitutionObject.RecipientName);
+            message = General.ReplaceCaseInsensitive(message, "{tier}", substitutionObject.TierString);
+            message = General.ReplaceCaseInsensitive(message, "{tierName}", substitutionObject.TierName);
 
-            message = message.Replace("{amount}", substitutionObject.Amount.ToString());
-            message = message.Replace("{s}", substitutionObject.Amount == 1 ? "" : "s");
-            message = message.Replace("{es}", substitutionObject.Amount == 1 ? "" : "es");
+            message = General.ReplaceCaseInsensitive(message, "{amount}", substitutionObject.Amount.ToString());
+            message = General.ReplaceCaseInsensitive(message, "{s}", substitutionObject.Amount == 1 ? "" : "s");
+            message = General.ReplaceCaseInsensitive(message, "{es}", substitutionObject.Amount == 1 ? "" : "es");
 
             // Now figure out [a|b]
             String pattern = @"\[([^|]+)\|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.

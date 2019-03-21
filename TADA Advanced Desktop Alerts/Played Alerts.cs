@@ -676,8 +676,20 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (!String.IsNullOrEmpty(message))
                 {
                     // Remove blocked words.
-                    // Optionally remove emote words.
-                    // Optionally remove cheer words.
+                    foreach (String blockedWord in MainTADAForm.configurationSettings.blockedWords.Split(' '))
+                    {
+                        message = General.ReplaceCaseInsensitive(message, blockedWord, null);
+                    }
+
+                    if (MainTADAForm.configurationSettings.dontReadEmotes)
+                    {
+                        // Figure out what the emote words are.  Remove them.
+                    }
+
+                    if (MainTADAForm.configurationSettings.dontReadCheers)
+                    {
+                        // Figure out what the cheer words are.  Remove them and the amounts.
+                    }
                 }
 
                 alertResponse.SetMessage(message);

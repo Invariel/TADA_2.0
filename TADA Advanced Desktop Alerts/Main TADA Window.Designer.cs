@@ -47,7 +47,10 @@
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
+            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
             this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
@@ -60,6 +63,8 @@
             this.tab_Main = new System.Windows.Forms.TabControl();
             this.tab_Manifest = new System.Windows.Forms.TabPage();
             this.tab_Banned = new System.Windows.Forms.TabPage();
+            this.lbl_Banned = new System.Windows.Forms.Label();
+            this.txt_BlockedWords = new System.Windows.Forms.TextBox();
             this.tab_AlertSettings = new System.Windows.Forms.TabPage();
             this.mtxt_TimeBetweenTTS = new System.Windows.Forms.MaskedTextBox();
             this.lbl_MuteTTS2 = new System.Windows.Forms.Label();
@@ -78,17 +83,13 @@
             this.rad_30FPS = new System.Windows.Forms.RadioButton();
             this.rad_60FPS = new System.Windows.Forms.RadioButton();
             this.btn_Update = new System.Windows.Forms.Button();
-            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.txt_BlockedWords = new System.Windows.Forms.TextBox();
-            this.lbl_Banned = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.tab_Main.SuspendLayout();
             this.tab_Manifest.SuspendLayout();
@@ -96,7 +97,6 @@
             this.tab_AlertSettings.SuspendLayout();
             this.tab_Configuration.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // numud_bgB
@@ -307,6 +307,22 @@
             this.dg_Alerts.Size = new System.Drawing.Size(494, 184);
             this.dg_Alerts.TabIndex = 5;
             // 
+            // alertNameDataGridViewTextBoxColumn
+            // 
+            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
+            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
+            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
             // Edit
             // 
             this.Edit.HeaderText = "New / Edit";
@@ -315,6 +331,10 @@
             this.Edit.Text = "Edit";
             this.Edit.UseColumnTextForButtonValue = true;
             this.Edit.Width = 75;
+            // 
+            // alertBindingSource
+            // 
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 
@@ -440,6 +460,24 @@
             this.tab_Banned.TabIndex = 2;
             this.tab_Banned.Text = "Banned Words";
             // 
+            // lbl_Banned
+            // 
+            this.lbl_Banned.AutoSize = true;
+            this.lbl_Banned.Location = new System.Drawing.Point(6, 3);
+            this.lbl_Banned.Name = "lbl_Banned";
+            this.lbl_Banned.Size = new System.Drawing.Size(422, 13);
+            this.lbl_Banned.TabIndex = 1;
+            this.lbl_Banned.Text = "A space-separated list of words you don\'t want to have appear in viewer alert mes" +
+    "sages.";
+            // 
+            // txt_BlockedWords
+            // 
+            this.txt_BlockedWords.Location = new System.Drawing.Point(8, 19);
+            this.txt_BlockedWords.Multiline = true;
+            this.txt_BlockedWords.Name = "txt_BlockedWords";
+            this.txt_BlockedWords.Size = new System.Drawing.Size(494, 203);
+            this.txt_BlockedWords.TabIndex = 0;
+            // 
             // tab_AlertSettings
             // 
             this.tab_AlertSettings.BackColor = System.Drawing.SystemColors.Control;
@@ -492,6 +530,7 @@
             // chk_DoReadMyEmotes
             // 
             this.chk_DoReadMyEmotes.AutoSize = true;
+            this.chk_DoReadMyEmotes.Enabled = false;
             this.chk_DoReadMyEmotes.Location = new System.Drawing.Point(28, 36);
             this.chk_DoReadMyEmotes.Name = "chk_DoReadMyEmotes";
             this.chk_DoReadMyEmotes.Size = new System.Drawing.Size(163, 17);
@@ -502,6 +541,7 @@
             // chk_DoReadMyCheermote
             // 
             this.chk_DoReadMyCheermote.AutoSize = true;
+            this.chk_DoReadMyCheermote.Enabled = false;
             this.chk_DoReadMyCheermote.Location = new System.Drawing.Point(28, 82);
             this.chk_DoReadMyCheermote.Name = "chk_DoReadMyCheermote";
             this.chk_DoReadMyCheermote.Size = new System.Drawing.Size(240, 17);
@@ -512,6 +552,7 @@
             // chk_DontReadGlobalCheermotes
             // 
             this.chk_DontReadGlobalCheermotes.AutoSize = true;
+            this.chk_DontReadGlobalCheermotes.Enabled = false;
             this.chk_DontReadGlobalCheermotes.Location = new System.Drawing.Point(8, 59);
             this.chk_DontReadGlobalCheermotes.Name = "chk_DontReadGlobalCheermotes";
             this.chk_DontReadGlobalCheermotes.Size = new System.Drawing.Size(113, 17);
@@ -522,6 +563,7 @@
             // chk_DontReadGlobalEmotes
             // 
             this.chk_DontReadGlobalEmotes.AutoSize = true;
+            this.chk_DontReadGlobalEmotes.Enabled = false;
             this.chk_DontReadGlobalEmotes.Location = new System.Drawing.Point(8, 13);
             this.chk_DontReadGlobalEmotes.Name = "chk_DontReadGlobalEmotes";
             this.chk_DontReadGlobalEmotes.Size = new System.Drawing.Size(115, 17);
@@ -643,44 +685,6 @@
             this.btn_Update.UseVisualStyleBackColor = true;
             this.btn_Update.Visible = false;
             // 
-            // alertNameDataGridViewTextBoxColumn
-            // 
-            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
-            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
-            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
-            // 
-            // alertTypeDataGridViewTextBoxColumn
-            // 
-            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
-            // 
-            // txt_Banned
-            // 
-            this.txt_BlockedWords.Location = new System.Drawing.Point(8, 19);
-            this.txt_BlockedWords.Multiline = true;
-            this.txt_BlockedWords.Name = "txt_Banned";
-            this.txt_BlockedWords.Size = new System.Drawing.Size(494, 203);
-            this.txt_BlockedWords.TabIndex = 0;
-            // 
-            // lbl_Banned
-            // 
-            this.lbl_Banned.AutoSize = true;
-            this.lbl_Banned.Location = new System.Drawing.Point(6, 3);
-            this.lbl_Banned.Name = "lbl_Banned";
-            this.lbl_Banned.Size = new System.Drawing.Size(422, 13);
-            this.lbl_Banned.TabIndex = 1;
-            this.lbl_Banned.Text = "A space-separated list of words you don\'t want to have appear in viewer alert mes" +
-    "sages.";
-            // 
             // MainTADAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -699,6 +703,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tab_Main.ResumeLayout(false);
@@ -710,7 +715,6 @@
             this.tab_Configuration.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
