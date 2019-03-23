@@ -112,6 +112,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_InitialMagnification.ValueChanged += UpdateInitialMagnification;
             numud_InitialOpacity.ValueChanged += UpdateInitialOpacity;
 
+            btn_TextMacroCheatsheet.Click += btn_TextMacroCheatsheet_Click;
+
             this.parentAlert = parentAlert;
 
             General.ResizeDropdown(cmb_ImportWaypoints);
@@ -380,6 +382,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     r.Y += (float)numud_ShiftY.Value;
                 }
             }
+        }
+
+        private void btn_TextMacroCheatsheet_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=netframework-4.7.2#remarks");
         }
 
         private void CheckChecked()

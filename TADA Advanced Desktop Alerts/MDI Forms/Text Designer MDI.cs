@@ -108,6 +108,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             txt_NarratedText.TextChanged += UpdateNarratedText;
 
             cmb_Font.TextChanged += UpdateFont;
+            cmb_Font.SelectedValueChanged += UpdateFont;
 
             numud_FontSize.ValueChanged += UpdateFont;
 
@@ -137,6 +138,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_VoiceVolume.ValueChanged += UpdateVolume;
 
             btn_TestVoice.Click += TestTTSVoice;
+            btn_TextSubstitution.Click += btn_TextSubstitution_Click;
         }
 
         private void LoadExisting()
@@ -495,6 +497,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private void btn_BackgroundImage_Click(object sender, EventArgs e)
         {
             General.openFileDialogBox(txt_BackgroundImage, "Image Files (*.gif, *.jpg, *.jpeg, *.png)|*.gif; *.jpg; *.jpeg; *.png", 0);
+        }
+
+        private void btn_TextSubstitution_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("TokenSubstitutions.html");
         }
     }
 }

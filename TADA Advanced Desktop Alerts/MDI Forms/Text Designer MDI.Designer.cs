@@ -134,6 +134,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_FontSize)).BeginInit();
             this.SuspendLayout();
             // 
+            // tab_Focus
+            // 
+            this.tab_Focus.Size = new System.Drawing.Size(761, 405);
+            // 
             // tab_Element
             // 
             this.tab_Element.Controls.Add(this.grp_TextDimensions);
@@ -148,6 +152,11 @@
             this.tab_Element.Controls.Add(this.txt_DisplayedText);
             this.tab_Element.Controls.Add(this.grp_BackColor);
             this.tab_Element.Controls.Add(this.grp_OutlineColor);
+            this.tab_Element.Size = new System.Drawing.Size(753, 379);
+            // 
+            // tab_Waypoints
+            // 
+            this.tab_Waypoints.Size = new System.Drawing.Size(753, 379);
             // 
             // pb_TextPreview
             // 

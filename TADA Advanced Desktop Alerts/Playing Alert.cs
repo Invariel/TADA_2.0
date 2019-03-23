@@ -897,7 +897,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     talky.SelectVoice(alertText.TTSVoice);
 
-                    prompt = new System.Speech.Synthesis.PromptBuilder();
+                    // Gotta specify the culture so that numbers get translated and such.
+                    prompt = new System.Speech.Synthesis.PromptBuilder(talky.Voice.Culture);
                     prompt.AppendText(alertText.GetReadMessage());
 
                     talky.SpeakCompleted += (sender, e) =>
