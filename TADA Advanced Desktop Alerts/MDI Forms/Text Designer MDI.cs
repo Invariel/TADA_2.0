@@ -15,6 +15,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private Boolean blocked = false;
         private Boolean loading = false;
 
+        private System.Speech.Synthesis.SpeechSynthesizer talky = null;
+
         internal Text_Designer_MDI(TADAAlertText alertText, TADAAlert parentAlert) : base(parentAlert)
         {
             InitializeComponent();
@@ -79,6 +81,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             tab_AdvancedWaypointControls.TabPages.Remove(tab_Sound);
 
+            talky = new System.Speech.Synthesis.SpeechSynthesizer();
+
             InitializeCallbacks();
 
             // Load existing details.
@@ -131,6 +135,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             cmb_TTSVoice.TextChanged += UpdateTTS;
             trk_VoiceVolume.ValueChanged += UpdateVolume;
             numud_VoiceVolume.ValueChanged += UpdateVolume;
+
+            btn_TestVoice.Click += TestTTSVoice;
         }
 
         private void LoadExisting()
@@ -188,16 +194,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 previewBitmap.Dispose();
             }
 
-            //previewBitmap = General.GenerateMessageBitmap(this.alertText.Foreground,
-            //                                              this.alertText.Background,
-            //                                              this.alertText.Outline,
-            //                                              this.alertText.ChosenFont,
-            //                                              this.alertText.OutlineWidth,
-            //                                              this.alertText.Dimensions,
-            //                                              this.alertText.Padding,
-            //                                              this.alertText.Message,
-            //                                              this.alertText.BackgroundImage);
-
             General.ParseHexColor(txt_ForeHex.Text, out Color foreColor);
             General.ParseHexColor(txt_BackHex.Text, out Color backColor);
             General.ParseHexColor(txt_OutlineHex.Text, out Color outlineColor);
@@ -216,6 +212,39 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             pb_TextPreview.Image = previewBitmap;
             pb_TextPreview.Update();
             UpdatePreview();
+        }
+
+        private void TestTTSVoice (object sender, EventArgs e)
+        {
+            try
+            {
+                System.Speech.Synthesis.PromptBuilder prompt = new System.Speech.Synthesis.PromptBuilder(talky.Voice.Culture);
+                String baseText = txt_DisplayedText.Text;
+
+                if (String.IsNullOrEmpty(baseText))
+                {
+                    baseText = txt_NarratedText.Text;
+                }
+
+                if (String.IsNullOrEmpty(baseText))
+                {
+                    baseText = cmb_TTSVoice.Text;
+                }
+
+                if (String.IsNullOrEmpty(baseText))
+                {
+                    // This means the voice is null, and what even do you do then?
+                    return;
+                }
+
+                // Normally, substitutions would be made, but what gets substituted?  Easier to let that happen in the actual test tab.
+                prompt.AppendText(baseText);
+                talky.SpeakAsync(prompt);
+            }
+            catch (Exception)
+            {
+                // The voice didn't work.
+            }
         }
 
         private void UpdateBackColor(object sender, EventArgs e)
@@ -408,6 +437,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             {
                 this.alertText.TTSVoice = cmb_TTSVoice.Text;
             }
+
+            talky.SelectVoice(cmb_TTSVoice.Text);
         }
 
         private void UpdateVolume (object sender, EventArgs e)
@@ -423,6 +454,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     trk_VoiceVolume.Value = Convert.ToInt32(numud_VoiceVolume.Value * 10);
                 }
+
+                talky.Volume = Convert.ToInt32(numud_VoiceVolume.Value);
 
                 if (!loading)
                 {

@@ -391,11 +391,14 @@ namespace TADA_Advanced_Desktop_Alerts
                         subObject.Message = eBits.ChatMessage;
                         subObject.ViewerName = (eBits.IsAnonymous ? General.ANONYMOUS_BITS_NAME : eBits.Username);
 
-                        user = await GetUser(eBits?.UserId);
-
                         if (eBits.IsAnonymous)
                         {
                             searchAlerts.Insert(0, General.ALERTTYPES.ANONYMOUS_BITS);
+                            user = AnonymousUser;
+                        }
+                        else
+                        {
+                            user = await GetUser(eBits?.UserId);
                         }
                     }
                     break;
@@ -423,7 +426,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                         else
                         {
-                            user = null;
+                            user = AnonymousUser;
                         }
 
                         // Fill in Tier and Tier Name from the SubGift / AnonSubGift messages that come in.
@@ -513,7 +516,6 @@ namespace TADA_Advanced_Desktop_Alerts
                         {
                             alertType = General.ALERTTYPES.NONE;
                         }
-
                     }
                     break;
                 /*
@@ -539,12 +541,12 @@ namespace TADA_Advanced_Desktop_Alerts
                         subObject.RecipientName = eGift.GiftedSubscription.MsgParamRecipientDisplayName;
                         subObject.SetPlan(eGift.GiftedSubscription.MsgParamSubPlan);
                         subObject.TierName = eGift.GiftedSubscription.MsgParamSubPlanName;
-                        subObject.ViewerName = eGift.GiftedSubscription.MsgParamRecipientDisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
+                        subObject.ViewerName = eGift.GiftedSubscription.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
 
                         bool isAnonymousGift = (subObject.ViewerName == General.ANONYMOUS_SUB_GIFT_NAME);
                         bool communityGiftSub = communityGiftSubs.Exists(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
 
-                        user = isAnonymousGift ? null : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
+                        user = isAnonymousGift ? AnonymousUser : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
                         UpdateUserSubscription(await GetUser(eGift.GiftedSubscription.MsgParamRecipientId));
 
                         if (communityGiftSub)
@@ -580,17 +582,37 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.SUBSCRIPTION:
                     {
-                        OnChannelSubscriptionArgs eSubscription = eventDetails as OnChannelSubscriptionArgs;
+                        String userId = null;
 
-                        subObject.Amount = eSubscription.Subscription.Months;
-                        subObject.Message = eSubscription.Subscription.SubMessage.Message ?? "";
-                        subObject.RecipientName = eSubscription.Subscription.RecipientName ?? "";
-                        subObject.SetPlan(eSubscription.Subscription.SubscriptionPlan);
-                        subObject.TierName = eSubscription.Subscription.SubscriptionPlanName;
-                        subObject.ViewerName = eSubscription.Subscription.Username ?? General.ANONYMOUS_SUB_GIFT_NAME;
+                        if (eventDetails is OnNewSubscriberArgs)
+                        {
+                            OnNewSubscriberArgs newSubscriberArgs = eventDetails as OnNewSubscriberArgs;
 
-                        UpdateUserSubscription(await GetUser(eSubscription.Subscription.Username));
-                        user = await GetUser(eSubscription.Subscription.UserId);
+                            subObject.Amount = 1;
+                            subObject.Message = newSubscriberArgs.Subscriber.ResubMessage ?? "";
+                            subObject.RecipientName = newSubscriberArgs.Subscriber.DisplayName ?? "";
+                            subObject.SetPlan(newSubscriberArgs.Subscriber.SubscriptionPlan);
+                            subObject.TierName = newSubscriberArgs.Subscriber.SubscriptionPlanName;
+                            subObject.ViewerName = newSubscriberArgs.Subscriber.DisplayName ?? "";
+
+                            userId = newSubscriberArgs.Subscriber.UserId;
+                        }
+                        else if (eventDetails is OnReSubscriberArgs)
+                        {
+                            OnReSubscriberArgs reSubscriberArgs = eventDetails as OnReSubscriberArgs;
+
+                            subObject.Amount = reSubscriberArgs.ReSubscriber.ShareStreak ? reSubscriberArgs.ReSubscriber.StreakMonths : reSubscriberArgs.ReSubscriber.CumulativeMonths;
+                            subObject.Message = reSubscriberArgs.ReSubscriber.ResubMessage ?? "";
+                            subObject.RecipientName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
+                            subObject.SetPlan(reSubscriberArgs.ReSubscriber.SubscriptionPlan);
+                            subObject.TierName = reSubscriberArgs.ReSubscriber.SubscriptionPlanName;
+                            subObject.ViewerName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
+
+                            userId = reSubscriberArgs.ReSubscriber.UserId;
+                        }
+
+                        user = await GetUser(userId);
+                        UpdateUserSubscription(user);
                     }
                     break;
                 default:
@@ -654,8 +676,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (alertText != null)
             {
-                String alertTextMessage = alertText.GetMessage();
-                String alertReadMessage = alertText.GetReadMessage();
+                String alertTextMessage = alertText.GetMessage(true);
+                String alertReadMessage = alertText.GetReadMessage(true);
 
                 General.PerformSubstitutions(ref alertTextMessage, subObject);
                 General.PerformSubstitutions(ref alertReadMessage, subObject);
@@ -895,6 +917,13 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 // This is the current way of figuring out that there's no subscription right now.  Thanks, Twitch.
             }
+            catch (Exception ex)
+            {
+                // Something really bad happened.  No idea why.  Let's find out.
+                // Together.
+                General.LogFile("An exception happened.  It wasn't very nice.");
+                General.LogFile(ex.Message);
+            }
 
             return subscription;
         }
@@ -977,159 +1006,165 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             int finalScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
 
-            foreach (TADAAlertCondition condition in alert.Conditions)
+            if (alert.ConditionCount == 0)
             {
-                bool continueTesting = true;
-                int score = 0;
-
-                if (condition.Empty)
-                {
-                    score = (int)General.SCORES.SCORE_NO_CONDITIONS;
-                }
-                else
-                {
-                    // This has to be rewritten to consider viewer tier separately from subscription tier.
-                    if (condition.HasViewerTier)
-                    {
-                        if ((condition.ViewerTierNoTier && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER) ||
-                            (condition.ViewerTierTierOne && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_ONE) ||
-                            (condition.ViewerTierTierTwo && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_TWO) ||
-                            (condition.ViewerTierTierThree && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_THREE))
-                        {
-                            score += (int)General.SCORES.SCORE_VIEWER_TIER_MATCHED;
-                        }
-                        else
-                        {
-                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                            continueTesting = false;
-                        }
-                    }
-
-                    if (continueTesting && condition.HasSubscriptionTier)
-                    {
-                        if ((condition.SubscriptionTierPrime && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TWITCH_PRIME) ||
-                            (condition.SubscriptionTierTierOne && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_ONE) ||
-                            (condition.SubscriptionTierTierTwo && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_TWO) ||
-                            (condition.SubscriptionTierTierThree && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_THREE))
-                        {
-                            score += (int)General.SCORES.SCORE_SUB_TIER_MATCHED;
-                        }
-                        else
-                        {
-                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                            continueTesting = false;
-                        }
-                    }
-
-                    if (continueTesting && condition.HasBadges)
-                    {
-                        CheckBasicBadge(condition.IsAdmin, user.badges.admin, ref score, ref continueTesting);
-                        CheckBasicBadge(condition.IsPrime, user.badges.premium, ref score, ref continueTesting);
-                        CheckBasicBadge(condition.IsStaff, user.badges.staff, ref score, ref continueTesting);
-                        CheckBasicBadge(condition.IsTurbo, user.badges.turbo, ref score, ref continueTesting);
-
-                        if (continueTesting)
-                        {
-                            if (condition.IsBroadcaster && user.badges.broadcaster ||
-                                condition.IsModerator && user.badges.moderator ||
-                                condition.IsVIP && user.badges.vip)
-                            {
-                                score += (int)General.SCORES.SCORE_BADGE_MATCHED;
-                            }
-                            else
-                            {
-                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                                continueTesting = false;
-                            }
-                        }
-
-                        if (continueTesting && condition.IsBits)
-                        {
-                            if ((condition.MinBits == 0 || amount >= condition.MinBits) &&
-                                (condition.MaxBits == 0 || amount <= condition.MaxBits))
-                            {
-                                score += (int)General.SCORES.SCORE_BADGE_MATCHED;
-                            }
-                            else
-                            {
-                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                                continueTesting = false;
-                            }
-                        }
-
-                        if (continueTesting && condition.IsSubscribed)
-                        {
-                            if ((condition.MinMonths == 0 || user.badges.subscribe_months >= condition.MinMonths) &&
-                                (condition.MaxMonths == 0 || user.badges.subscribe_months <= condition.MaxMonths))
-                            {
-                                score += (int)General.SCORES.SCORE_BADGE_MATCHED;
-                            }
-                            else
-                            {
-                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                                continueTesting = false;
-                            }
-                        }
-                    }
-
-                    // Then check usernames, keywords, and amount.
-                    if (continueTesting && !String.IsNullOrEmpty(condition.Usernames))
-                    {
-                        String username = user.user?.DisplayName.ToLower() ?? "anonymous";
-
-                        List<String> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
-                        if (names.Contains(username))
-                        {
-                            score += (int)General.SCORES.SCORE_NAME_MATCHED;
-                        }
-                        else
-                        {
-                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                            continueTesting = false;
-                        }
-                    }
-
-                    if (continueTesting && !String.IsNullOrEmpty(condition.Keywords))
-                    {
-                        bool matched = false;
-
-                        List<String> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
-
-                        foreach (String key in keywords)
-                        {
-                            String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
-                            if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase) != null)
-                            {
-                                matched = true;
-                                score += (int)General.SCORES.SCORE_KEYWORD_MATCHED;
-                            }
-                        }
-
-                        if (!matched)
-                        {
-                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                            continueTesting = false;
-                        }
-                    }
-
-                    if (continueTesting && (condition.MinAmount > 0 || condition.MaxAmount > 0))
-                    {
-                        if ((condition.MinAmount == 0 || amount >= condition.MinAmount) &&
-                            (condition.MaxAmount == 0 || amount <= condition.MaxAmount))
-                        {
-                            score += (int)General.SCORES.SCORE_WITHIN_AMOUNT;
-                        }
-                        else
-                        {
-                            score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                            continueTesting = false;
-                        }
-                    }
-                }
-
-                finalScore = Math.Max(finalScore, score);
+                finalScore = 1;
             }
+            else
+            {
+                foreach (TADAAlertCondition condition in alert.Conditions)
+                {
+                    bool continueTesting = true;
+                    int score = 0;
 
+                    if (condition.Empty)
+                    {
+                        score = (int)General.SCORES.SCORE_NO_CONDITIONS;
+                    }
+                    else
+                    {
+                        // This has to be rewritten to consider viewer tier separately from subscription tier.
+                        if (condition.HasViewerTier)
+                        {
+                            if ((condition.ViewerTierNoTier && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER) ||
+                                (condition.ViewerTierTierOne && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_ONE) ||
+                                (condition.ViewerTierTierTwo && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_TWO) ||
+                                (condition.ViewerTierTierThree && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_THREE))
+                            {
+                                score += (int)General.SCORES.SCORE_VIEWER_TIER_MATCHED;
+                            }
+                            else
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+
+                        if (continueTesting && condition.HasSubscriptionTier)
+                        {
+                            if ((condition.SubscriptionTierPrime && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TWITCH_PRIME) ||
+                                (condition.SubscriptionTierTierOne && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_ONE) ||
+                                (condition.SubscriptionTierTierTwo && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_TWO) ||
+                                (condition.SubscriptionTierTierThree && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_THREE))
+                            {
+                                score += (int)General.SCORES.SCORE_SUB_TIER_MATCHED;
+                            }
+                            else
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+
+                        if (continueTesting && condition.HasBadges)
+                        {
+                            CheckBasicBadge(condition.IsAdmin, user.badges.admin, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsPrime, user.badges.premium, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsStaff, user.badges.staff, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsTurbo, user.badges.turbo, ref score, ref continueTesting);
+
+                            if (continueTesting)
+                            {
+                                if (condition.IsBroadcaster && user.badges.broadcaster ||
+                                    condition.IsModerator && user.badges.moderator ||
+                                    condition.IsVIP && user.badges.vip)
+                                {
+                                    score += (int)General.SCORES.SCORE_BADGE_MATCHED;
+                                }
+                                else
+                                {
+                                    score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                    continueTesting = false;
+                                }
+                            }
+
+                            if (continueTesting && condition.IsBits)
+                            {
+                                if ((condition.MinBits == 0 || amount >= condition.MinBits) &&
+                                    (condition.MaxBits == 0 || amount <= condition.MaxBits))
+                                {
+                                    score += (int)General.SCORES.SCORE_BADGE_MATCHED;
+                                }
+                                else
+                                {
+                                    score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                    continueTesting = false;
+                                }
+                            }
+
+                            if (continueTesting && condition.IsSubscribed)
+                            {
+                                if ((condition.MinMonths == 0 || user.badges.subscribe_months >= condition.MinMonths) &&
+                                    (condition.MaxMonths == 0 || user.badges.subscribe_months <= condition.MaxMonths))
+                                {
+                                    score += (int)General.SCORES.SCORE_BADGE_MATCHED;
+                                }
+                                else
+                                {
+                                    score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                    continueTesting = false;
+                                }
+                            }
+                        }
+
+                        // Then check usernames, keywords, and amount.
+                        if (continueTesting && !String.IsNullOrEmpty(condition.Usernames))
+                        {
+                            String username = user.user?.DisplayName.ToLower() ?? "anonymous";
+
+                            List<String> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+                            if (names.Contains(username))
+                            {
+                                score += (int)General.SCORES.SCORE_NAME_MATCHED;
+                            }
+                            else
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+
+                        if (continueTesting && !String.IsNullOrEmpty(condition.Keywords))
+                        {
+                            bool matched = false;
+
+                            List<String> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+
+                            foreach (String key in keywords)
+                            {
+                                String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
+                                if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase) != null)
+                                {
+                                    matched = true;
+                                    score += (int)General.SCORES.SCORE_KEYWORD_MATCHED;
+                                }
+                            }
+
+                            if (!matched)
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+
+                        if (continueTesting && (condition.MinAmount > 0 || condition.MaxAmount > 0))
+                        {
+                            if ((condition.MinAmount == 0 || amount >= condition.MinAmount) &&
+                                (condition.MaxAmount == 0 || amount <= condition.MaxAmount))
+                            {
+                                score += (int)General.SCORES.SCORE_WITHIN_AMOUNT;
+                            }
+                            else
+                            {
+                                score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                continueTesting = false;
+                            }
+                        }
+                    }
+
+                    finalScore = Math.Max(finalScore, score);
+                }
+            }
             return finalScore;
         }
 

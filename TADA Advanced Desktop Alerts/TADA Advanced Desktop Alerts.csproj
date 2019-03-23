@@ -196,7 +196,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="TwitchLib.PubSub">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.PubSub\TwitchLib.PubSub\bin\Release\netstandard2.0\TwitchLib.PubSub.dll</HintPath>
+      <HintPath>..\..\..\TwitchLib\TwitchLib.PubSub\TwitchLib.PubSub\bin\Debug\netstandard2.0\TwitchLib.PubSub.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
