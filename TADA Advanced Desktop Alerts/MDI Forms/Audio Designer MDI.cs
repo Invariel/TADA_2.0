@@ -20,6 +20,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private bool mediaLoaded = false;
         private bool loadExisting = false;
 
+        ~Audio_Designer_MDI()
+        {
+            me.Stop();
+            eh_1.Dispose();
+        }
+
         internal Audio_Designer_MDI(TADAAlertAudio alertAudio, TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
@@ -91,7 +97,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             if (!txt_Filename.Focused)
             {
-                if (!String.IsNullOrEmpty(txt_Filename.Text))
+                if (!String.IsNullOrEmpty(txt_Filename.Text) && System.IO.File.Exists(txt_Filename.Text))
                 {
                     me.Source = new Uri(txt_Filename.Text);
                     me.Play();

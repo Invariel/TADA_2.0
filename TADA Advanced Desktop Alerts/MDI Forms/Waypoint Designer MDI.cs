@@ -58,6 +58,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             dg_Waypoints.CellValueChanged += WaypointContainerUpdateValues;
             dg_Waypoints.RowsAdded += WaypointContainerAddRows;
             dg_Waypoints.RowsRemoved += WaypointContainerRemoveRows;
+            dg_Waypoints.CurrentCellDirtyStateChanged += PresetsColumn;
 
             btn_ImportWaypointsFrom.Click += btn_ImportWaypointsFrom_Click;
             btn_CopySelected.Click += btn_CopySelected_Click;
@@ -422,6 +423,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             e.Row.Cells["readMessageDataGridViewCheckBoxColumn"].Value = false;
             e.Row.HeaderCell.Value = (e.Row.Index + 1).ToString();
             dg_Waypoints.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+
+            e.Row.Cells["col_Presets"].Value = "Custom";
+            (e.Row.Cells["col_Presets"] as DataGridViewComboBoxCell).DataSource = new String[] { "Custom", "Top Left", "Top Middle", "Top Right", "Center Left", "Center", "Center Right", "Bottom Left", "Bottom Middle", "Bottom Right" };
         }
 
         private void NumericInputsOnly(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -782,10 +786,67 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
+        protected void PresetsColumn(object sender, EventArgs e)
+        {
+            if (dg_Waypoints.IsCurrentCellDirty && dg_Waypoints.CurrentCell.ColumnIndex == dg_Waypoints.Columns["col_Presets"].Index)
+            {
+                dg_Waypoints.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
         protected void WaypointContainerUpdateValues(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && !dg_Waypoints.Rows[e.RowIndex].IsNewRow)
             {
+                if (dg_Waypoints.Columns[e.ColumnIndex].Name == "col_Presets")
+                {
+                    float right = MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Width - itemSize.Width;
+                    float bottom = MainTADAForm.mainTADAForm.AnimationWindow.ClientSize.Height - itemSize.Height;
+
+                    int row = e.RowIndex;
+                    int xCol = dg_Waypoints.Columns["xDataGridViewTextBoxColumn"].Index;
+                    int yCol = dg_Waypoints.Columns["yDataGridViewTextBoxColumn"].Index;
+
+                    float x = (float)dg_Waypoints[xCol, row].Value;
+                    float y = (float)dg_Waypoints[yCol, row].Value;
+
+                    switch (dg_Waypoints.Rows[e.RowIndex].Cells[e.ColumnIndex].Value)
+                    {
+                        case "Top Left":
+                            x = 0; y = 0;
+                            break;
+                        case "Top Middle":
+                            x = right / 2; y = 0;
+                            break;
+                        case "Top Right":
+                            x = right; y = 0;
+                            break;
+                        case "Center Left":
+                            x = 0; y = bottom / 2;
+                            break;
+                        case "Center":
+                            x = right / 2; y = bottom / 2;
+                            break;
+                        case "Center Right":
+                            x = right; y = bottom / 2;
+                            break;
+                        case "Bottom Left":
+                            x = 0; y = bottom;
+                            break;
+                        case "Bottom Middle":
+                            x = right / 2; y = bottom;
+                            break;
+                        case "Bottom Right":
+                            x = right; y = bottom;
+                            break;
+                        case "Custom":
+                            // Don't do anything.
+                            break;
+                    }
+
+                    dg_Waypoints[xCol, row].Value = x;
+                    dg_Waypoints[yCol, row].Value = y;
+                }
                 this._waypointContainer.Waypoints[e.RowIndex] = waypointBindingSource[e.RowIndex] as Waypoint;
             }
         }

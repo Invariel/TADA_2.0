@@ -21,6 +21,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private System.Windows.Controls.MediaElement mediaElement = new System.Windows.Controls.MediaElement();
 
+        ~Image_Designer_MDI()
+        {
+            mediaElement.Stop();
+            eh_1.Dispose();
+        }
+
         internal Image_Designer_MDI(TADAAlertImage alertImage, TADAAlert parentAlert = null) : base(parentAlert)
         {
             InitializeComponent();
@@ -392,71 +398,74 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             String filename = (sender as TextBox).Text;
             if (!String.IsNullOrEmpty(filename))
             {
-                int duration = 0;
-                bool isVideo = false;
-                try
+                if (System.IO.File.Exists (filename))
                 {
-                    if (previewBitmap != null)
-                    {
-                        previewBitmap.Dispose();
-                    }
-
-                    previewBitmap = new Bitmap(filename);
-
-                    if (ImageAnimator.CanAnimate(previewBitmap))   // Then it's an animated gif.
-                    {
-                        General.GetImageDuration(previewBitmap, out int[] timing, out duration);
-                    }
-                    else    // It's not an animated gif.
-                    {
-                        duration = 0;   // Reinforce this.
-                    }
-
-                    numud_ActualDimensionsX.Value = previewBitmap.Width;
-                    numud_ActualDimensionsY.Value = previewBitmap.Height;
-                    numud_DesiredDimensionsX.Value = previewBitmap.Width;
-                    numud_DesiredDimensionsY.Value = previewBitmap.Height;
-
-                    pb_ImagePreview.Image = previewBitmap;
-                    pb_ImagePreview.SizeMode = PictureBoxSizeMode.Zoom;
-                    pb_ImagePreview.Update();
-                }
-                catch (System.IO.FileNotFoundException) // The file doesn't exist in the first place.
-                {
-                    blocked = true;
-                    txt_Filename.Text = "";
-                    DisplayVideoControls(false, false);
-                    blocked = false;
-                }
-                catch (ArgumentException) // Apparently trying to load an invalid Bitmap causes an ArgumentException.  I am okay with this.
-                {
-                    // So try the file as a video.
-                    isVideo = true;
-
+                    int duration = 0;
+                    bool isVideo = false;
                     try
                     {
-                        mediaElement.Source = new Uri(filename);
-                        mediaElement.Play();
-                        mediaElement.Stop();
+                        if (previewBitmap != null)
+                        {
+                            previewBitmap.Dispose();
+                        }
+
+                        previewBitmap = new Bitmap(filename);
+
+                        if (ImageAnimator.CanAnimate(previewBitmap))   // Then it's an animated gif.
+                        {
+                            General.GetImageDuration(previewBitmap, out int[] timing, out duration);
+                        }
+                        else    // It's not an animated gif.
+                        {
+                            duration = 0;   // Reinforce this.
+                        }
+
+                        numud_ActualDimensionsX.Value = previewBitmap.Width;
+                        numud_ActualDimensionsY.Value = previewBitmap.Height;
+                        numud_DesiredDimensionsX.Value = previewBitmap.Width;
+                        numud_DesiredDimensionsY.Value = previewBitmap.Height;
+
+                        pb_ImagePreview.Image = previewBitmap;
+                        pb_ImagePreview.SizeMode = PictureBoxSizeMode.Zoom;
+                        pb_ImagePreview.Update();
                     }
-                    catch (UriFormatException)
+                    catch (System.IO.FileNotFoundException) // The file doesn't exist in the first place.
                     {
-                        // The file doesn't exist in the first place.  Which -should- be caught as the FileNotFound Exception above.
                         blocked = true;
                         txt_Filename.Text = "";
                         DisplayVideoControls(false, false);
                         blocked = false;
                     }
+                    catch (ArgumentException) // Apparently trying to load an invalid Bitmap causes an ArgumentException.  I am okay with this.
+                    {
+                        // So try the file as a video.
+                        isVideo = true;
+
+                        try
+                        {
+                            mediaElement.Source = new Uri(filename);
+                            mediaElement.Play();
+                            mediaElement.Stop();
+                        }
+                        catch (UriFormatException)
+                        {
+                            // The file doesn't exist in the first place.  Which -should- be caught as the FileNotFound Exception above.
+                            blocked = true;
+                            txt_Filename.Text = "";
+                            DisplayVideoControls(false, false);
+                            blocked = false;
+                        }
+                    }
+
+                    txt_Duration.Text = General.DurationFromTimeSpan(new TimeSpan(0, 0, 0, 0, duration));
+
+                    if (!String.IsNullOrEmpty(txt_Filename.Text) && !loading)
+                    {
+                        this.alertImage.Filename = txt_Filename.Text;
+                    }
+
+                    DisplayVideoControls(isVideo);
                 }
-
-                txt_Duration.Text = General.DurationFromTimeSpan(new TimeSpan(0, 0, 0, 0, duration));
-
-                if (!String.IsNullOrEmpty(txt_Filename.Text) && !loading)
-                {
-                    this.alertImage.Filename = txt_Filename.Text;
-                }
-
-                DisplayVideoControls(isVideo);
             }
         }
 

@@ -17,6 +17,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private System.Speech.Synthesis.SpeechSynthesizer talky = null;
 
+        ~Text_Designer_MDI()
+        {
+            talky.Dispose();
+        }
+
         internal Text_Designer_MDI(TADAAlertText alertText, TADAAlert parentAlert) : base(parentAlert)
         {
             InitializeComponent();
@@ -438,9 +443,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!loading)
             {
                 this.alertText.TTSVoice = cmb_TTSVoice.Text;
+                talky.SelectVoice(cmb_TTSVoice.Text);
             }
-
-            talky.SelectVoice(cmb_TTSVoice.Text);
         }
 
         private void UpdateVolume (object sender, EventArgs e)

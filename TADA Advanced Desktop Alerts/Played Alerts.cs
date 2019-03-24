@@ -917,13 +917,6 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 // This is the current way of figuring out that there's no subscription right now.  Thanks, Twitch.
             }
-            catch (Exception ex)
-            {
-                // Something really bad happened.  No idea why.  Let's find out.
-                // Together.
-                General.LogFile("An exception happened.  It wasn't very nice.");
-                General.LogFile(ex.Message);
-            }
 
             return subscription;
         }
