@@ -571,9 +571,13 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             {
                 audioTabPages.Remove(audioTabPages.Find(itp => itp.Item2 == (sender as Form).Tag as TabPage));
             }
-            else
+            else if (sender is MDI_Forms.Text_Designer_MDI)
             {
                 textTabPages.Remove(textTabPages.Find(itp => itp.Item2 == (sender as Form).Tag as TabPage));
+            }
+            else if (sender is MDI_Forms.Condition_Designer_MDI)
+            {
+                conditionTabPages.Remove(conditionTabPages.Find(itp => itp.Item2 == (sender as Form).Tag as TabPage));
             }
 
             ((sender as Form).Tag as TabPage).Dispose();

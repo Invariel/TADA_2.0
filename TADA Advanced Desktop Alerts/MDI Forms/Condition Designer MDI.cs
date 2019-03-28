@@ -63,8 +63,38 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void LoadValues ()
         {
-            // Go over them one by one.
+            chk_BadgeAdmin.Checked = condition.IsAdmin;
+            chk_BadgeBits.Checked = condition.IsBits;
+            chk_BadgeBroadcaster.Checked = condition.IsBroadcaster;
+            chk_BadgeGlobalMod.Checked = condition.IsGlobalMod;
+            chk_BadgeModerator.Checked = condition.IsModerator;
+            chk_BadgePrime.Checked = condition.IsPrime;
+            chk_BadgeSubscription.Checked = condition.IsSubscribed;
+            chk_BadgeTurbo.Checked = condition.IsTurbo;
+            chk_BadgeTwitchStaff.Checked = condition.IsStaff;
+            chk_BadgeVIP.Checked = condition.IsVIP;
 
+            cmb_BitBadgeMinimum.Text = condition.MinBits.ToString();
+            cmb_BitBadgeMaximum.Text = condition.MaxBits.ToString();
+
+            numud_SubscriptionMonthsMinimum.Value = condition.MinMonths;
+            numud_SubscriptionMonthsMaximum.Value = condition.MaxMonths;
+
+            numud_AmountMinimum.Value = condition.MinAmount;
+            numud_AmountMaximum.Value = condition.MaxAmount;
+
+            txt_MessageKeywords.Text = condition.Keywords;
+            txt_Users.Text = condition.Usernames;
+
+            chk_ViewerTierNotSubscribed.Checked = condition.ViewerTierNoTier;
+            chk_ViewerTierTierOne.Checked = condition.ViewerTierTierOne;
+            chk_ViewerTierTierTwo.Checked = condition.ViewerTierTierTwo;
+            chk_ViewerTierTierThree.Checked = condition.ViewerTierTierThree;
+
+            chk_SubscriptionTierTwitchPrime.Checked = condition.SubscriptionTierPrime;
+            chk_SubscriptionTierTierOne.Checked = condition.SubscriptionTierTierOne;
+            chk_SubscriptionTierTierTwo.Checked = condition.SubscriptionTierTierTwo;
+            chk_SubscriptionTierTierThree.Checked = condition.SubscriptionTierTierThree;
         }
 
         private void UpdateViewer (object sender, EventArgs e)
@@ -170,15 +200,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateAmounts (object sender, EventArgs e)
         {
-            if (sender == numud_AmountMinimum)
-            {
-                numud_AmountMaximum.Minimum = numud_AmountMinimum.Value;
-            }
-            else if (sender == numud_AmountMaximum)
-            {
-                numud_AmountMinimum.Maximum = numud_AmountMaximum.Value;
-            }
-
+            // There was code here to make sure that Max >= Min and such, but 0 needs to be valid for either.  So... fun.
             if (!loading)
             {
                 this.condition.MinAmount = Convert.ToInt32(numud_AmountMinimum.Value);

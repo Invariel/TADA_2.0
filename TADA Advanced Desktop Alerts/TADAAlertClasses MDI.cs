@@ -1226,7 +1226,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !(HasViewerTier || HasSubscriptionTier || HasBadges);
+                return !(HasViewerTier || HasSubscriptionTier || HasBadges || HasUsers || HasKeywords || HasAmounts);
             }
         }
 
@@ -1254,33 +1254,177 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public bool HasUsers
+        {
+            get
+            {
+                return !String.IsNullOrWhiteSpace(this.Usernames);
+            }
+        }
 
+        public bool HasKeywords
+        {
+            get
+            {
+                return !String.IsNullOrWhiteSpace(this.Keywords);
+            }
+        }
+
+        public bool HasAmounts
+        {
+            get
+            {
+                return !(this.MinAmount == 0 && this.MaxAmount == 0);
+            }
+        }
+               
         #region XML
         public override void ReadXml(XmlReader reader)
         {
             /*
-            if (reader.Name == "Condition")
+             <Condition>
+                <ViewerTier NoTier="true" TierOne="true" TierTwo="true" TierThree="true" />
+                <SubscriptionTier TwitchPrime="true" TierOne="true" TierTwo="True" TierThree="true" />
+                <Badges>
+                    <SubscribeMonths Min="1" Max="1" />
+                    <BitBadge Min="0" Max="1000000" />
+                </Badges>
+            </Condition>
+             */
+            Boolean closingTag = false;
+
+            if (reader.IsStartElement("Condition"))
             {
-                NoTier = XmlHelper.ReadAttribute(reader, "NoTier", false);
-                TwitchPrime = XmlHelper.ReadAttribute(reader, "TwitchPrime", false);
-                TierOne = XmlHelper.ReadAttribute(reader, "TierOne", false);
-                TierTwo = XmlHelper.ReadAttribute(reader, "TierTwo", false);
-                TierThree = XmlHelper.ReadAttribute(reader, "TierThree", false);
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement("ViewerTier"))
+                    {
+                        this.ViewerTierNoTier = XmlHelper.ReadAttribute(reader, "NoTier", false);
+                        this.ViewerTierTierOne = XmlHelper.ReadAttribute(reader, "TierOne", false);
+                        this.ViewerTierTierTwo = XmlHelper.ReadAttribute(reader, "TierTwo", false);
+                        this.ViewerTierTierThree = XmlHelper.ReadAttribute(reader, "TierThree", false);
 
-                VIP = XmlHelper.ReadAttribute(reader, "VIP", false);
+                        if (reader.NodeType != XmlNodeType.EndElement)
+                        {
+                            XmlHelper.ReadUntilClose(reader, "ViewerTier");
+                            if (reader.EOF)
+                            {
+                                throw new XmlException("Did not find a self-closing or closed ViewerTier tag.");
+                            }
+                        }
+                    }
+                    else if (reader.IsStartElement("SubscriptionTier"))
+                    {
+                        this.SubscriptionTierPrime = XmlHelper.ReadAttribute(reader, "Prime", false);
+                        this.SubscriptionTierTierOne = XmlHelper.ReadAttribute(reader, "TierOne", false);
+                        this.SubscriptionTierTierTwo = XmlHelper.ReadAttribute(reader, "TierTwo", false);
+                        this.SubscriptionTierTierThree = XmlHelper.ReadAttribute(reader, "TierThree", false);
 
-                Usernames = (String.IsNullOrEmpty(reader.GetAttribute("Usernames")) ? "" : reader.GetAttribute("Usernames"));
-                Keywords = (String.IsNullOrEmpty(reader.GetAttribute("Keywords")) ? "" : reader.GetAttribute("Keywords"));
-                Keypress = (String.IsNullOrEmpty(reader.GetAttribute("Keypress")) ? "" : reader.GetAttribute("Keypress"));
+                        if (reader.NodeType != XmlNodeType.EndElement)
+                        {
+                            XmlHelper.ReadUntilClose(reader, "SubscriptionTier");
+                            if (reader.EOF)
+                            {
+                                throw new XmlException("Did not find a self-closing or closed SubscriptionTier tag.");
+                            }
+                        }
+                    }
+                    else if (reader.IsStartElement("Badges"))
+                    {
+                        this.IsAdmin = XmlHelper.ReadAttribute(reader, "Admin", false);
+                        this.IsBroadcaster = XmlHelper.ReadAttribute(reader, "Broadcaster", false);
+                        this.IsGlobalMod = XmlHelper.ReadAttribute(reader, "GlobalMod", false);
+                        this.IsModerator = XmlHelper.ReadAttribute(reader, "Moderator", false);
+                        this.IsPrime = XmlHelper.ReadAttribute(reader, "Prime", false);
+                        this.IsTurbo = XmlHelper.ReadAttribute(reader, "Turbo", false);
+                        this.IsStaff = XmlHelper.ReadAttribute(reader, "Staff", false);
+                        this.IsVIP = XmlHelper.ReadAttribute(reader, "VIP", false);
 
-                Minimum = (Int32.TryParse(reader.GetAttribute("Minimum"), out int val) ? val : 0);
-                Maximum = (Int32.TryParse(reader.GetAttribute("Maximum"), out val) ? val : 0);
+                        if (reader.NodeType != XmlNodeType.EndElement)
+                        {
+                            while (reader.Read())
+                            {
+                                // Check for the Bits tag.
+                                if (reader.IsStartElement("Bits"))
+                                {
+                                    this.MinBits = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Min", 0));
+                                    this.MaxBits = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Max", 0));
+                                    this.IsBits = true;
+                                }
+                                else if (reader.IsStartElement("Subscription"))
+                                {
+                                    this.MinMonths = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Min", 0));
+                                    this.MaxMonths = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Max", 0));
+                                    this.IsSubscribed = true;
+                                }
+                                else if (reader.Name == "Badges" && reader.NodeType == XmlNodeType.EndElement)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (reader.IsStartElement("Usernames"))
+                    {
+                        this.Usernames = reader.ReadContentAsString();
+                        while (reader.NodeType != XmlNodeType.EndElement)
+                        {
+                            reader.Read();
+                        }
+                        if (reader.Name != "Usernames")
+                        {
+                            throw new XmlException("Did not find a closing Usernames tag.");
+                        }
+                    }
+                    else if (reader.IsStartElement("Keywords"))
+                    {
+                        this.Keywords = reader.ReadContentAsString();
+                        while (reader.NodeType != XmlNodeType.EndElement)
+                        {
+                            reader.Read();
+                        }
+                        if (reader.Name != "Keywords")
+                        {
+                            throw new XmlException("Did not find a closing Keywords tag.");
+                        }
+                    }
+                    else if (reader.IsStartElement("Time"))
+                    {
+                        /*
+                         * <Time>
+                         *  <Day Mon=true Tues=false Wed=false Thur=false Fri=true Sat=false Sun=true>
+                         *  <Hour Start=22:00 End=2:00> -- make it wrap from PM through AM somehow.
+                         *  <Date Start=YY?/MM/DD End=YY?MM/DD>
+                         * </Time>
+                         * 
+                         * Make this as configurable as possible -- Holiday repeating events, extra trigger conditions, birthdays, etc.
+                         */
+                    }
+                    else if (reader.Name == "Amount")
+                    {
+                        this.MinAmount = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Min", 0));
+                        this.MaxAmount = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Max", 0));
+                    }
+                    else if (reader.Name == "Conditions" && reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        closingTag = true;
+                        break;
+                    }
+                    else if (reader.EOF)
+                    {
+                        throw new XmlException("Did not find a closing <Conditions> tag.");
+                    }
+                }
             }
             else
             {
                 throw new XmlException("Reader was not pointed at a <Condition> tag when ReadXml() was called.");
             }
-            */
+
+            if (!closingTag)
+            {
+                throw new XmlException("Did not find a closing <Conditions> tag.");
+            }
         }
 
         public void WriteAttributes(XmlWriter writer, List<Tuple<Boolean, String>> tuples)
@@ -1296,20 +1440,19 @@ namespace TADA_Advanced_Desktop_Alerts
         
         public override void WriteXml(XmlWriter writer)
         {
-            /*
-             <Condition>
-                <ViewerTier NoTier="true" TierOne="true" TierTwo="true" TierThree="true" />
-                <SubscriptionTier TwitchPrime="true" TierOne="true" TierTwo="True" TierThree="true" />
-                <Badges>
-                    <SubscribeMonths Min="1" Max="1" />
-                    <BitBadge Min="0" Max="1000000" />
-                </Badges>
-            </Condition>
-             */
-
-
             if (!this.Empty)
             {
+                /*
+                 <Condition>
+                    <ViewerTier NoTier="true" TierOne="true" TierTwo="true" TierThree="true" />
+                    <SubscriptionTier TwitchPrime="true" TierOne="true" TierTwo="True" TierThree="true" />
+                    <Badges>
+                        <SubscribeMonths Min="1" Max="1" />
+                        <BitBadge Min="0" Max="1000000" />
+                    </Badges>
+                </Condition>
+                 */
+
                 writer.WriteStartElement("Condition");
 
                 if (HasViewerTier)
@@ -1344,61 +1487,64 @@ namespace TADA_Advanced_Desktop_Alerts
 
                 if (HasBadges)
                 {
+                    List<Tuple<Boolean, String>> simpleBadges = new List<Tuple<Boolean, String>>()
+                    {
+                        new Tuple<Boolean, String>(this.IsAdmin, "Admin"),
+                        new Tuple<Boolean, String>(this.IsBroadcaster, "Broadcaster"),
+                        new Tuple<Boolean, String>(this.IsGlobalMod, "GlobalMod"),
+                        new Tuple<Boolean, String>(this.IsModerator, "Moderator"),
+                        new Tuple<Boolean, String>(this.IsPrime, "Prime"),
+                        new Tuple<Boolean, String>(this.IsTurbo, "Turbo"),
+                        new Tuple<Boolean, String>(this.IsStaff, "Staff"),
+                        new Tuple<Boolean, String>(this.IsVIP, "VIP")
+                    };
 
+                    writer.WriteStartElement("Badges");
+                    WriteAttributes(writer, simpleBadges);
+
+                    if (this.IsBits)
+                    {
+                        writer.WriteStartElement("Bits");
+                        writer.WriteAttributeString("Min", this.MinBits.ToString());
+                        writer.WriteAttributeString("Max", this.MaxBits.ToString());
+                        writer.WriteEndElement();
+                    }
+
+                    if (this.IsSubscribed)
+                    {
+                        writer.WriteStartElement("Subscription");
+                        writer.WriteAttributeString("Min", this.MinMonths.ToString());
+                        writer.WriteAttributeString("Max", this.MaxMonths.ToString());
+                        writer.WriteEndElement();
+                    }
+
+                    writer.WriteEndElement();
                 }
-            }
 
-
-
-
-
-/*
-            List<Tuple<Boolean, String>> pairs = new List<Tuple<bool, string>>()
-            {
-                new Tuple<Boolean, String>(this.NoTier, "NoTier"),
-                new Tuple<Boolean, String>(this.TwitchPrime, "TwitchPrime"),
-                new Tuple<Boolean, String>(this.TierOne, "TierOne"),
-                new Tuple<Boolean, String>(this.TierTwo, "TierTwo"),
-                new Tuple<Boolean, String>(this.TierThree, "TierThree"),
-                new Tuple<Boolean, String>(this.VIP, "VIP")
-            };
-
-            writer.WriteStartElement("Condition");
-            foreach (Tuple<Boolean, String> pair in pairs)
-            {
-                if (pair.Item1)
+                if (!String.IsNullOrEmpty(this.Usernames) && !String.IsNullOrWhiteSpace(this.Usernames))
                 {
-                    writer.WriteAttributeString(pair.Item2, "true");
+                    writer.WriteStartElement("Usernames");
+                    writer.WriteString(this.Usernames);
+                    writer.WriteEndElement();
                 }
-            }
 
-            if (!String.IsNullOrEmpty(Usernames))
-            {
-                writer.WriteAttributeString("Usernames", this.Usernames);
-            }
+                if (!String.IsNullOrEmpty(this.Keywords) && !String.IsNullOrWhiteSpace(this.Keywords))
+                {
+                    writer.WriteStartElement("Keywords");
+                    writer.WriteString(this.Keywords);
+                    writer.WriteEndElement();
+                }
 
-            if (!String.IsNullOrEmpty(Keywords))
-            {
-                writer.WriteAttributeString("Keywords", this.Keywords);
-            }
+                if (this.MinAmount > 0 || this.MaxAmount > 0)
+                {
+                    writer.WriteStartElement("Amount");
+                    writer.WriteAttributeString("Min", this.MinAmount.ToString());
+                    writer.WriteAttributeString("Max", this.MaxAmount.ToString());
+                    writer.WriteEndElement();
+                }
 
-            if (this.Minimum > 0)
-            {
-                writer.WriteAttributeString("Minimum", this.Minimum.ToString());
+                writer.WriteEndElement();
             }
-
-            if (this.Maximum > 0)
-            {
-                writer.WriteAttributeString("Maximum", this.Maximum.ToString());
-            }
-
-            if (String.IsNullOrEmpty(this.Keypress))
-            {
-                writer.WriteAttributeString("Keypress", this.Keypress);
-            }
-
-            writer.WriteEndElement();
-*/
         }
         #endregion XML
     }

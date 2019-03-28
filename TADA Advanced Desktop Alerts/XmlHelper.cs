@@ -144,6 +144,18 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
+        public static void ReadUntilClose(XmlReader reader, String tagName)
+        {
+            do
+            {
+                if (reader.Name == tagName && !reader.IsStartElement())
+                {
+                    return;
+                }
+                reader.Read();
+            } while (!reader.EOF);
+        }
+
         public static void Write<T>(XmlWriter writer, String tag, List<T> elements, bool writeContainerElement = true) where T : IXmlSerializable
         {
             if (writeContainerElement)

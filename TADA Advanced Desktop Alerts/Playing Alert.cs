@@ -549,7 +549,14 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (w.TransitionTime > 0)
                 {
                     this.positionTimer.Interval = 1000.0 / this.fps;
-                    this.positionTimer.Start();
+                    try
+                    {
+                        this.positionTimer.Start();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // Don't do anything with this, just let it fail silently.
+                    }
                 }
             }
         }
