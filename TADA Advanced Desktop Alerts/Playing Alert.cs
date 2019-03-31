@@ -894,7 +894,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (!String.IsNullOrEmpty(alertText.Message))
             {
-                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage());
+                this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage(), alertText.BackgroundImage);
             }
 
             if (alertText.Waypoints.InitialVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.GetReadMessage()))

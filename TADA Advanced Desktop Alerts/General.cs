@@ -406,6 +406,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 LineAlignment = StringAlignment.Center
             };
 
+            if (String.IsNullOrWhiteSpace(backgroundImageLocation))
+            {
+                backgroundImageLocation = null;
+            }
+
             Bitmap outputBitmap = new Bitmap(bitmapDimensions.Width, bitmapDimensions.Height);
             Bitmap textBitmap = new Bitmap(bitmapDimensions.Width - 2 * padding.Width, bitmapDimensions.Height - 2 * padding.Height);
             Bitmap backgroundBitmap = null;

@@ -225,7 +225,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (!closingTag)
             {
-                throw new XmlException("Reader did not find a closing <Text> tag.");
+                throw new XmlException("Reader did not find a closing <Alert> tag.");
             }
         }
 
@@ -1405,7 +1405,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         this.MinAmount = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Min", 0));
                         this.MaxAmount = Convert.ToInt32(XmlHelper.ReadAttribute(reader, "Max", 0));
                     }
-                    else if (reader.Name == "Conditions" && reader.NodeType == XmlNodeType.EndElement)
+                    else if (reader.Name == "Condition" && reader.NodeType == XmlNodeType.EndElement)
                     {
                         closingTag = true;
                         break;

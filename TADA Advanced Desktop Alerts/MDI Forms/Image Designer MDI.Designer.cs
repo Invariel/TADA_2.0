@@ -221,9 +221,19 @@
             0,
             0,
             0});
+            this.numud_DesiredDimensionsY.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numud_DesiredDimensionsY.Name = "numud_DesiredDimensionsY";
             this.numud_DesiredDimensionsY.Size = new System.Drawing.Size(65, 20);
             this.numud_DesiredDimensionsY.TabIndex = 81;
+            this.numud_DesiredDimensionsY.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // numud_DesiredDimensionsX
             // 
@@ -233,9 +243,19 @@
             0,
             0,
             0});
+            this.numud_DesiredDimensionsX.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numud_DesiredDimensionsX.Name = "numud_DesiredDimensionsX";
             this.numud_DesiredDimensionsX.Size = new System.Drawing.Size(65, 20);
             this.numud_DesiredDimensionsX.TabIndex = 79;
+            this.numud_DesiredDimensionsX.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // numud_ActualDimensionsY
             // 
@@ -246,9 +266,19 @@
             0,
             0,
             0});
+            this.numud_ActualDimensionsY.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numud_ActualDimensionsY.Name = "numud_ActualDimensionsY";
             this.numud_ActualDimensionsY.Size = new System.Drawing.Size(65, 20);
             this.numud_ActualDimensionsY.TabIndex = 76;
+            this.numud_ActualDimensionsY.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // numud_ActualDimensionsX
             // 
@@ -259,9 +289,19 @@
             0,
             0,
             0});
+            this.numud_ActualDimensionsX.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numud_ActualDimensionsX.Name = "numud_ActualDimensionsX";
             this.numud_ActualDimensionsX.Size = new System.Drawing.Size(65, 20);
             this.numud_ActualDimensionsX.TabIndex = 74;
+            this.numud_ActualDimensionsX.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // pb_ImagePreview
             // 
