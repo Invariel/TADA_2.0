@@ -81,7 +81,7 @@ namespace TADA_Advanced_Desktop_Alerts
             numud_bgR.ValueChanged += UpdateARGB;
             numud_bgG.ValueChanged += UpdateARGB;
             numud_bgB.ValueChanged += UpdateARGB;
-            btn_ColourPicker.Click += (sender, e) => General.ColourPicker(numud_bgR, numud_bgG, numud_bgB, null);
+            btn_ColourPicker.Click += (sender, e) => General.ColourPicker(numud_bgR, numud_bgG, numud_bgB, null, txt_BackgroundARGB);
 
             txt_AccessToken.TextChanged += PasswordMask;
             txt_AccessToken.GotFocus += PasswordMaskText;

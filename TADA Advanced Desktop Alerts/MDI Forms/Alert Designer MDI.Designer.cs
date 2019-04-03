@@ -134,6 +134,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tab_ChildMDIForms = new System.Windows.Forms.TabControl();
             this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ViewerSubTier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubscriptionTier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BadgeString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -920,6 +923,9 @@
             this.dg_Conditions.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dg_Conditions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_Conditions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ViewerSubTier,
+            this.SubscriptionTier,
+            this.BadgeString,
             this.Edit});
             this.dg_Conditions.DataSource = this.alertConditionBindingSource;
             this.dg_Conditions.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1183,10 +1189,37 @@
             // 
             this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
             // 
+            // ViewerSubTier
+            // 
+            this.ViewerSubTier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ViewerSubTier.DataPropertyName = "ViewerSubTier";
+            this.ViewerSubTier.HeaderText = "Viewer\'s Sub Tier";
+            this.ViewerSubTier.Name = "ViewerSubTier";
+            this.ViewerSubTier.ReadOnly = true;
+            // 
+            // SubscriptionTier
+            // 
+            this.SubscriptionTier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.SubscriptionTier.DataPropertyName = "SubscriptionTier";
+            this.SubscriptionTier.HeaderText = "Active Subscription Tier";
+            this.SubscriptionTier.Name = "SubscriptionTier";
+            this.SubscriptionTier.ReadOnly = true;
+            // 
+            // BadgeString
+            // 
+            this.BadgeString.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BadgeString.DataPropertyName = "BadgeString";
+            this.BadgeString.HeaderText = "Badge Requirements";
+            this.BadgeString.Name = "BadgeString";
+            this.BadgeString.ReadOnly = true;
+            // 
             // Edit
             // 
+            this.Edit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Edit.FillWeight = 10F;
             this.Edit.HeaderText = "New / Edit";
             this.Edit.Name = "Edit";
+            this.Edit.Width = 64;
             // 
             // Alert_Designer_MDI
             // 
@@ -1362,6 +1395,9 @@
         private System.Windows.Forms.MaskedTextBox mtxt_GlobalCooldown;
         private System.Windows.Forms.MaskedTextBox mtxt_UserCooldown;
         private System.Windows.Forms.Label lbl_UserCooldown;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ViewerSubTier;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubscriptionTier;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BadgeString;
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -217,7 +218,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        internal static void ColourPicker(NumericUpDown red, NumericUpDown green, NumericUpDown blue, NumericUpDown alpha)
+        internal static void ColourPicker(NumericUpDown red = null, NumericUpDown green = null, NumericUpDown blue = null, NumericUpDown alpha = null, TextBox hexBox = null)
         {
             ColorDialog colorDialog = new ColorDialog()
             {
@@ -233,6 +234,29 @@ namespace TADA_Advanced_Desktop_Alerts
             if (result == DialogResult.OK)
             {
                 Color color = colorDialog.Color;
+
+                SetIfNotNull(red, color.R);
+                SetIfNotNull(green, color.G);
+                SetIfNotNull(blue, color.B);
+                SetIfNotNull(alpha, color.A);
+
+                SetIfNotNull(hexBox, color);
+            }
+        }
+
+        internal static void SetIfNotNull (NumericUpDown numud, Decimal d)
+        {
+            if (numud != null)
+            {
+                numud.Value = d;
+            }
+        }
+
+        internal static void SetIfNotNull (TextBox textBox, Color c)
+        {
+            if (textBox != null)
+            {
+                textBox.Text = General.StringFromColor(c);
             }
         }
 
@@ -432,7 +456,8 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             // Draw the textBitmap.
-            using (SolidBrush foreBrush = new SolidBrush(foreColor))
+            //using (LinearGradientBrush foreBrush = new LinearGradientBrush(new PointF(0, 0), new PointF(textBitmap.Width, textBitmap.Height), Color.Black, foreColor))
+            using (Brush foreBrush = new SolidBrush(foreColor))
             using (Graphics textGraphics = Graphics.FromImage(textBitmap))
             {
                 System.Drawing.Drawing2D.GraphicsPath textOutline = new System.Drawing.Drawing2D.GraphicsPath();

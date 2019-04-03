@@ -757,6 +757,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public override void ReadXml(XmlReader reader)
         {
             Boolean closingTag = false;
+            Boolean readNext = true;
 
             if (reader.IsStartElement("Text"))
             {
@@ -772,20 +773,30 @@ namespace TADA_Advanced_Desktop_Alerts
                 double initialBalance = XmlHelper.ReadAttribute(reader, "Balance", 0.0d);
                 double initialVolume = XmlHelper.ReadAttribute(reader, "Volume", 0.0d);
 
-                while (reader.Read())
+                while (!closingTag)
                 {
+                    if (readNext)
+                    {
+                        reader.Read();
+                    }
+
+                    readNext = true;
+
                     // Version 2.0 of the file writes Message and ReadMessage as elements with String content.
                     if (reader.IsStartElement("Message"))
                     {
                         this.Message = reader.ReadElementContentAsString();
+                        readNext = false;
                     }
                     else if (reader.IsStartElement("Read"))
                     {
                         this.ReadMessage = reader.ReadElementContentAsString();
+                        readNext = false;
                     }
                     else if (reader.IsStartElement("Background"))
                     {
                         this.BackgroundImage = reader.ReadElementContentAsString();
+                        readNext = false;
                     }
                     else if (reader.IsStartElement("Font"))
                     {
@@ -1292,11 +1303,19 @@ namespace TADA_Advanced_Desktop_Alerts
             </Condition>
              */
             Boolean closingTag = false;
+            Boolean readNext = true;
 
             if (reader.IsStartElement("Condition"))
             {
-                while (reader.Read())
+                while (!closingTag)
                 {
+                    if (readNext)
+                    {
+                        reader.Read();
+                    }
+
+                    readNext = true;
+
                     if (reader.IsStartElement("ViewerTier"))
                     {
                         this.ViewerTierNoTier = XmlHelper.ReadAttribute(reader, "NoTier", false);
@@ -1366,27 +1385,17 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                     else if (reader.IsStartElement("Usernames"))
                     {
-                        this.Usernames = reader.ReadContentAsString();
-                        while (reader.NodeType != XmlNodeType.EndElement)
-                        {
-                            reader.Read();
-                        }
-                        if (reader.Name != "Usernames")
-                        {
-                            throw new XmlException("Did not find a closing Usernames tag.");
-                        }
+                        this.Usernames = reader.ReadElementContentAsString();
+
+                        // This filthy hack is required for using XmlReader instead of turning it into an XMLDocument that I have no schema for.
+                        readNext = false;
                     }
                     else if (reader.IsStartElement("Keywords"))
                     {
-                        this.Keywords = reader.ReadContentAsString();
-                        while (reader.NodeType != XmlNodeType.EndElement)
-                        {
-                            reader.Read();
-                        }
-                        if (reader.Name != "Keywords")
-                        {
-                            throw new XmlException("Did not find a closing Keywords tag.");
-                        }
+                        this.Keywords = reader.ReadElementContentAsString();
+
+                        // This filthy hack is required for using XmlReader instead of turning it into an XMLDocument that I have no schema for.
+                        readNext = false;
                     }
                     else if (reader.IsStartElement("Time"))
                     {

@@ -347,7 +347,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.modifiedPosition = this.position;
 
-            if (this.angleEffect.change && this.angleEffect.aroundCenter)
+            if ((this.angleEffect.change && this.angleEffect.aroundCenter) ||
+                (this.magnificationEffect.change && this.magnificationEffect.aroundCenter))
             {
                 this.modifiedPosition.X += this.modifiedImage.Width / 2;
                 this.modifiedPosition.Y += this.modifiedImage.Height / 2;
@@ -357,7 +358,8 @@ namespace TADA_Advanced_Desktop_Alerts
             g.RotateTransform((float)this.DrawAngle);
 
             PointF destinationPoint = new PointF(0, 0);
-            if (this.angleEffect.change && this.angleEffect.aroundCenter)
+            if ((this.angleEffect.change && this.angleEffect.aroundCenter) ||
+                (this.magnificationEffect.change && this.magnificationEffect.aroundCenter))
             {
                 destinationPoint.X = -this.modifiedImage.Width / 2;
                 destinationPoint.Y = -this.modifiedImage.Height / 2;
