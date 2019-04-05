@@ -796,7 +796,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         protected void WaypointContainerUpdateValues(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && !dg_Waypoints.Rows[e.RowIndex].IsNewRow)
+            // This needs to not trigger when someone adds a waypoint from the preview window.
+            if (e.RowIndex >= 0 && !dg_Waypoints.Rows[e.RowIndex].IsNewRow && e.ColumnIndex >= 0)
             {
                 if (dg_Waypoints.Columns[e.ColumnIndex].Name == "col_Presets")
                 {
@@ -840,6 +841,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                             x = right; y = bottom;
                             break;
                         case "Custom":
+                        default:
                             // Don't do anything.
                             break;
                     }

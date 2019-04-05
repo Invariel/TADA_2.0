@@ -123,7 +123,6 @@
             this.btn_CopySelected = new System.Windows.Forms.Button();
             this.grp_Waypoints = new System.Windows.Forms.GroupBox();
             this.dg_Waypoints = new System.Windows.Forms.DataGridView();
-            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.col_Presets = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -131,6 +130,7 @@
             this.persistTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.behindImageDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.readMessageDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.waypointBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tab_Focus.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
             this.grp_InitialConditions.SuspendLayout();
@@ -1321,10 +1321,6 @@
             this.dg_Waypoints.Size = new System.Drawing.Size(590, 182);
             this.dg_Waypoints.TabIndex = 130;
             // 
-            // waypointBindingSource
-            // 
-            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
-            // 
             // col_Presets
             // 
             this.col_Presets.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -1398,6 +1394,10 @@
             this.readMessageDataGridViewCheckBoxColumn.HeaderText = "Read Message?";
             this.readMessageDataGridViewCheckBoxColumn.MinimumWidth = 85;
             this.readMessageDataGridViewCheckBoxColumn.Name = "readMessageDataGridViewCheckBoxColumn";
+            // 
+            // waypointBindingSource
+            // 
+            this.waypointBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Waypoint);
             // 
             // Waypoint_Designer_MDI
             // 

@@ -500,6 +500,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 405);
+            this.ControlBox = false;
             this.Controls.Add(this.txt_Description);
             this.Controls.Add(this.grp_RelevantQuantity);
             this.Controls.Add(this.grp_TriggerUsers);
@@ -507,9 +508,12 @@
             this.Controls.Add(this.grp_Badges);
             this.Controls.Add(this.grp_SubscriptionTier);
             this.Controls.Add(this.grp_ViewerTier);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximumSize = new System.Drawing.Size(777, 444);
             this.MinimumSize = new System.Drawing.Size(777, 444);
             this.Name = "Condition_Designer_MDI";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Alert Trigger Conditions";
             this.grp_ViewerTier.ResumeLayout(false);
             this.grp_ViewerTier.PerformLayout();

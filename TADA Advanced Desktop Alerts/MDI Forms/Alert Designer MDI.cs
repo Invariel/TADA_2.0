@@ -1010,7 +1010,6 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
                     DrawWaypoints(activeTab.GetWaypoints(), activeTab.PreviewItemSize, activeTab.PreviewBitmap, currentPosition, COLOR_TAB);
                 }
             }
-
         }
     }
 }

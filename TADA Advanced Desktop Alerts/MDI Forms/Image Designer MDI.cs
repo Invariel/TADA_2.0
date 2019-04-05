@@ -545,8 +545,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_AnimatedGifLoop.Value = alertImage.AnimationLoops;
 
             this.blocked = true;
-            numud_DesiredDimensionsX.Value = alertImage.Dimensions.Width;
-            numud_DesiredDimensionsY.Value = alertImage.Dimensions.Height;
+            numud_DesiredDimensionsX.Value = Math.Max(1, alertImage.Dimensions.Width);
+            numud_DesiredDimensionsY.Value = Math.Max(1, alertImage.Dimensions.Height);
 
             trk_Balance.Value = Convert.ToInt32(alertImage.Waypoints.InitialBalance / 100.0);
             trk_Volume.Value = Convert.ToInt32(alertImage.Waypoints.InitialVolume / 10.0);
