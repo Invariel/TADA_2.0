@@ -78,6 +78,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             trk_Volume.ValueChanged += UpdateVolume;
             trk_Balance.ValueChanged += UpdateBalance;
 
+            mtxt_PreviewPosition.TextChanged += UpdatePreview;
+            trk_Position.ValueChanged += UpdatePreview;
+
             dg_Waypoints.Columns["col_Presets"].Visible = false;
             dg_Waypoints.Columns["xDataGridViewTextBoxColumn"].Visible = false;
             dg_Waypoints.Columns["yDataGridViewTextBoxColumn"].Visible = false;
@@ -86,6 +89,37 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             dg_Waypoints.Columns["readMessageDataGridViewCheckBoxColumn"].Visible = false;
             dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].HeaderText = "Waypoint Duration";
             dg_Waypoints.Columns["persistTimeDataGridViewTextBoxColumn"].ToolTipText = "How long, in seconds, before the next volume change, balance change, or macro begins.";
+        }
+
+        private void UpdatePreview (object sender, EventArgs e)
+        {
+            if (!blocked)
+            {
+                blocked = true;
+                if (sender == mtxt_PreviewPosition)
+                {
+                    // Then send that to the trackbar and the previewer.
+                    TimeSpan positionTime = General.TimeSpanFromString(mtxt_PreviewPosition.Text);
+                    trk_Position.Value = Convert.ToInt32(positionTime.TotalMilliseconds);
+                    me.Position = positionTime;
+                }
+                else if (sender == trk_Position)
+                {
+                    // Then send that to the text field and the previewer.
+                    TimeSpan positionTime = new TimeSpan(0, 0, 0, 0, trk_Position.Value);
+                    mtxt_PreviewPosition.Text = General.StringFromTimeSpan(positionTime);
+                    me.Position = positionTime;
+                }
+                else
+                {
+                    // Then just update the trackbar and the text field.
+                    TimeSpan positionTime = me.Position;
+                    trk_Position.Value = Convert.ToInt32(positionTime.TotalMilliseconds);
+                    mtxt_PreviewPosition.Text = General.StringFromTimeSpan(positionTime);
+                }
+
+                blocked = false;
+            }
         }
 
         private void btn_FilenameBrowse_Click(object sender, EventArgs e)
@@ -256,14 +290,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdatePlayFor (object sender, EventArgs e)
         {
-            this.alertAudio.Duration = General.TimeSpanFromString(mtxt_StartAt.Text);
-            // And update the trackbar's position.
+            this.alertAudio.Duration = General.TimeSpanFromString(mtxt_PlayFor.Text);
         }
 
         private void UpdateStartAt(object sender, EventArgs e)
         {
             this.alertAudio.StartingPosition = General.TimeSpanFromString(mtxt_StartAt.Text);
-            // And update the trackbar's position.
         }
 
         private void UpdateLoopAt(object sender, EventArgs e)
