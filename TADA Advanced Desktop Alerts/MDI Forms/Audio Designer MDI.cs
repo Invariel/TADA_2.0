@@ -50,7 +50,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             this.Shown += new EventHandler((sender, e) =>
             {
                 this.Refresh();
-                this.loadExisting = true;
+                this.loadExisting = !String.IsNullOrEmpty(alertAudio.Filename);
                 loading = true;
                 txt_Filename.Text = alertAudio.Filename;
                 loading = false;
