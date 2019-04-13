@@ -85,7 +85,7 @@
             this.grp_ViewerTier.Location = new System.Drawing.Point(13, 13);
             this.grp_ViewerTier.Name = "grp_ViewerTier";
             this.grp_ViewerTier.Size = new System.Drawing.Size(367, 50);
-            this.grp_ViewerTier.TabIndex = 0;
+            this.grp_ViewerTier.TabIndex = 1;
             this.grp_ViewerTier.TabStop = false;
             this.grp_ViewerTier.Text = "Viewer\'s Tier";
             // 
@@ -95,7 +95,7 @@
             this.chk_ViewerTierTierThree.Location = new System.Drawing.Point(286, 19);
             this.chk_ViewerTierTierThree.Name = "chk_ViewerTierTierThree";
             this.chk_ViewerTierTierThree.Size = new System.Drawing.Size(75, 17);
-            this.chk_ViewerTierTierThree.TabIndex = 4;
+            this.chk_ViewerTierTierThree.TabIndex = 5;
             this.chk_ViewerTierTierThree.Text = "Tier Three";
             this.chk_ViewerTierTierThree.UseVisualStyleBackColor = true;
             // 
@@ -105,7 +105,7 @@
             this.chk_ViewerTierTierTwo.Location = new System.Drawing.Point(203, 19);
             this.chk_ViewerTierTierTwo.Name = "chk_ViewerTierTierTwo";
             this.chk_ViewerTierTierTwo.Size = new System.Drawing.Size(68, 17);
-            this.chk_ViewerTierTierTwo.TabIndex = 3;
+            this.chk_ViewerTierTierTwo.TabIndex = 4;
             this.chk_ViewerTierTierTwo.Text = "Tier Two";
             this.chk_ViewerTierTierTwo.UseVisualStyleBackColor = true;
             // 
@@ -115,7 +115,7 @@
             this.chk_ViewerTierTierOne.Location = new System.Drawing.Point(121, 19);
             this.chk_ViewerTierTierOne.Name = "chk_ViewerTierTierOne";
             this.chk_ViewerTierTierOne.Size = new System.Drawing.Size(67, 17);
-            this.chk_ViewerTierTierOne.TabIndex = 2;
+            this.chk_ViewerTierTierOne.TabIndex = 3;
             this.chk_ViewerTierTierOne.Text = "Tier One";
             this.chk_ViewerTierTierOne.UseVisualStyleBackColor = true;
             // 
@@ -125,7 +125,7 @@
             this.chk_ViewerTierNotSubscribed.Location = new System.Drawing.Point(7, 19);
             this.chk_ViewerTierNotSubscribed.Name = "chk_ViewerTierNotSubscribed";
             this.chk_ViewerTierNotSubscribed.Size = new System.Drawing.Size(99, 17);
-            this.chk_ViewerTierNotSubscribed.TabIndex = 0;
+            this.chk_ViewerTierNotSubscribed.TabIndex = 2;
             this.chk_ViewerTierNotSubscribed.Text = "Not Subscribed";
             this.chk_ViewerTierNotSubscribed.UseVisualStyleBackColor = true;
             // 
@@ -138,7 +138,7 @@
             this.grp_SubscriptionTier.Location = new System.Drawing.Point(382, 13);
             this.grp_SubscriptionTier.Name = "grp_SubscriptionTier";
             this.grp_SubscriptionTier.Size = new System.Drawing.Size(367, 50);
-            this.grp_SubscriptionTier.TabIndex = 1;
+            this.grp_SubscriptionTier.TabIndex = 10;
             this.grp_SubscriptionTier.TabStop = false;
             this.grp_SubscriptionTier.Text = "Subscription Tier";
             // 
@@ -148,7 +148,7 @@
             this.chk_SubscriptionTierTierThree.Location = new System.Drawing.Point(286, 19);
             this.chk_SubscriptionTierTierThree.Name = "chk_SubscriptionTierTierThree";
             this.chk_SubscriptionTierTierThree.Size = new System.Drawing.Size(75, 17);
-            this.chk_SubscriptionTierTierThree.TabIndex = 8;
+            this.chk_SubscriptionTierTierThree.TabIndex = 14;
             this.chk_SubscriptionTierTierThree.Text = "Tier Three";
             this.chk_SubscriptionTierTierThree.UseVisualStyleBackColor = true;
             // 
@@ -158,7 +158,7 @@
             this.chk_SubscriptionTierTwitchPrime.Location = new System.Drawing.Point(7, 19);
             this.chk_SubscriptionTierTwitchPrime.Name = "chk_SubscriptionTierTwitchPrime";
             this.chk_SubscriptionTierTwitchPrime.Size = new System.Drawing.Size(87, 17);
-            this.chk_SubscriptionTierTwitchPrime.TabIndex = 5;
+            this.chk_SubscriptionTierTwitchPrime.TabIndex = 11;
             this.chk_SubscriptionTierTwitchPrime.Text = "Twitch Prime";
             this.chk_SubscriptionTierTwitchPrime.UseVisualStyleBackColor = true;
             // 
@@ -168,7 +168,7 @@
             this.chk_SubscriptionTierTierTwo.Location = new System.Drawing.Point(203, 19);
             this.chk_SubscriptionTierTierTwo.Name = "chk_SubscriptionTierTierTwo";
             this.chk_SubscriptionTierTierTwo.Size = new System.Drawing.Size(68, 17);
-            this.chk_SubscriptionTierTierTwo.TabIndex = 7;
+            this.chk_SubscriptionTierTierTwo.TabIndex = 13;
             this.chk_SubscriptionTierTierTwo.Text = "Tier Two";
             this.chk_SubscriptionTierTierTwo.UseVisualStyleBackColor = true;
             // 
@@ -178,7 +178,7 @@
             this.chk_SubscriptionTierTierOne.Location = new System.Drawing.Point(121, 19);
             this.chk_SubscriptionTierTierOne.Name = "chk_SubscriptionTierTierOne";
             this.chk_SubscriptionTierTierOne.Size = new System.Drawing.Size(67, 17);
-            this.chk_SubscriptionTierTierOne.TabIndex = 6;
+            this.chk_SubscriptionTierTierOne.TabIndex = 12;
             this.chk_SubscriptionTierTierOne.Text = "Tier One";
             this.chk_SubscriptionTierTierOne.UseVisualStyleBackColor = true;
             // 
@@ -201,7 +201,7 @@
             this.grp_Badges.Location = new System.Drawing.Point(13, 69);
             this.grp_Badges.Name = "grp_Badges";
             this.grp_Badges.Size = new System.Drawing.Size(736, 153);
-            this.grp_Badges.TabIndex = 2;
+            this.grp_Badges.TabIndex = 20;
             this.grp_Badges.TabStop = false;
             this.grp_Badges.Text = "Viewer Properties";
             // 
@@ -211,7 +211,7 @@
             this.chk_BadgePrime.Location = new System.Drawing.Point(121, 43);
             this.chk_BadgePrime.Name = "chk_BadgePrime";
             this.chk_BadgePrime.Size = new System.Drawing.Size(77, 17);
-            this.chk_BadgePrime.TabIndex = 11;
+            this.chk_BadgePrime.TabIndex = 25;
             this.chk_BadgePrime.Text = "Prime User";
             this.chk_BadgePrime.UseVisualStyleBackColor = true;
             // 
@@ -225,7 +225,7 @@
             0});
             this.numud_SubscriptionMonthsMaximum.Name = "numud_SubscriptionMonthsMaximum";
             this.numud_SubscriptionMonthsMaximum.Size = new System.Drawing.Size(77, 20);
-            this.numud_SubscriptionMonthsMaximum.TabIndex = 10;
+            this.numud_SubscriptionMonthsMaximum.TabIndex = 34;
             // 
             // numud_SubscriptionMonthsMinimum
             // 
@@ -237,7 +237,7 @@
             0});
             this.numud_SubscriptionMonthsMinimum.Name = "numud_SubscriptionMonthsMinimum";
             this.numud_SubscriptionMonthsMinimum.Size = new System.Drawing.Size(77, 20);
-            this.numud_SubscriptionMonthsMinimum.TabIndex = 10;
+            this.numud_SubscriptionMonthsMinimum.TabIndex = 33;
             // 
             // cmb_BitBadgeMaximum
             // 
@@ -264,7 +264,7 @@
             this.cmb_BitBadgeMaximum.Location = new System.Drawing.Point(653, 18);
             this.cmb_BitBadgeMaximum.Name = "cmb_BitBadgeMaximum";
             this.cmb_BitBadgeMaximum.Size = new System.Drawing.Size(77, 21);
-            this.cmb_BitBadgeMaximum.TabIndex = 9;
+            this.cmb_BitBadgeMaximum.TabIndex = 31;
             this.cmb_BitBadgeMaximum.Text = "1";
             // 
             // cmb_BitBadgeMinimum
@@ -293,7 +293,7 @@
             this.cmb_BitBadgeMinimum.Location = new System.Drawing.Point(571, 18);
             this.cmb_BitBadgeMinimum.Name = "cmb_BitBadgeMinimum";
             this.cmb_BitBadgeMinimum.Size = new System.Drawing.Size(77, 21);
-            this.cmb_BitBadgeMinimum.TabIndex = 9;
+            this.cmb_BitBadgeMinimum.TabIndex = 30;
             this.cmb_BitBadgeMinimum.Text = "0";
             // 
             // chk_BadgeTurbo
@@ -302,7 +302,7 @@
             this.chk_BadgeTurbo.Location = new System.Drawing.Point(121, 20);
             this.chk_BadgeTurbo.Name = "chk_BadgeTurbo";
             this.chk_BadgeTurbo.Size = new System.Drawing.Size(79, 17);
-            this.chk_BadgeTurbo.TabIndex = 8;
+            this.chk_BadgeTurbo.TabIndex = 24;
             this.chk_BadgeTurbo.Text = "Turbo User";
             this.chk_BadgeTurbo.UseVisualStyleBackColor = true;
             // 
@@ -312,7 +312,7 @@
             this.chk_BadgeSubscription.Location = new System.Drawing.Point(449, 43);
             this.chk_BadgeSubscription.Name = "chk_BadgeSubscription";
             this.chk_BadgeSubscription.Size = new System.Drawing.Size(122, 17);
-            this.chk_BadgeSubscription.TabIndex = 7;
+            this.chk_BadgeSubscription.TabIndex = 32;
             this.chk_BadgeSubscription.Text = "Subscription Months";
             this.chk_BadgeSubscription.UseVisualStyleBackColor = true;
             // 
@@ -322,7 +322,7 @@
             this.chk_BadgeBits.Location = new System.Drawing.Point(449, 20);
             this.chk_BadgeBits.Name = "chk_BadgeBits";
             this.chk_BadgeBits.Size = new System.Drawing.Size(72, 17);
-            this.chk_BadgeBits.TabIndex = 6;
+            this.chk_BadgeBits.TabIndex = 29;
             this.chk_BadgeBits.Text = "Bit Badge";
             this.chk_BadgeBits.UseVisualStyleBackColor = true;
             // 
@@ -332,7 +332,7 @@
             this.chk_BadgeVIP.Location = new System.Drawing.Point(235, 66);
             this.chk_BadgeVIP.Name = "chk_BadgeVIP";
             this.chk_BadgeVIP.Size = new System.Drawing.Size(43, 17);
-            this.chk_BadgeVIP.TabIndex = 5;
+            this.chk_BadgeVIP.TabIndex = 28;
             this.chk_BadgeVIP.Text = "VIP";
             this.chk_BadgeVIP.UseVisualStyleBackColor = true;
             // 
@@ -342,7 +342,7 @@
             this.chk_BadgeModerator.Location = new System.Drawing.Point(235, 43);
             this.chk_BadgeModerator.Name = "chk_BadgeModerator";
             this.chk_BadgeModerator.Size = new System.Drawing.Size(74, 17);
-            this.chk_BadgeModerator.TabIndex = 4;
+            this.chk_BadgeModerator.TabIndex = 27;
             this.chk_BadgeModerator.Text = "Moderator";
             this.chk_BadgeModerator.UseVisualStyleBackColor = true;
             // 
@@ -352,7 +352,7 @@
             this.chk_BadgeBroadcaster.Location = new System.Drawing.Point(235, 20);
             this.chk_BadgeBroadcaster.Name = "chk_BadgeBroadcaster";
             this.chk_BadgeBroadcaster.Size = new System.Drawing.Size(83, 17);
-            this.chk_BadgeBroadcaster.TabIndex = 3;
+            this.chk_BadgeBroadcaster.TabIndex = 26;
             this.chk_BadgeBroadcaster.Text = "Broadcaster";
             this.chk_BadgeBroadcaster.UseVisualStyleBackColor = true;
             // 
@@ -362,7 +362,7 @@
             this.chk_BadgeTwitchStaff.Location = new System.Drawing.Point(7, 66);
             this.chk_BadgeTwitchStaff.Name = "chk_BadgeTwitchStaff";
             this.chk_BadgeTwitchStaff.Size = new System.Drawing.Size(83, 17);
-            this.chk_BadgeTwitchStaff.TabIndex = 2;
+            this.chk_BadgeTwitchStaff.TabIndex = 23;
             this.chk_BadgeTwitchStaff.Text = "Twitch Staff";
             this.chk_BadgeTwitchStaff.UseVisualStyleBackColor = true;
             // 
@@ -372,7 +372,7 @@
             this.chk_BadgeGlobalMod.Location = new System.Drawing.Point(7, 43);
             this.chk_BadgeGlobalMod.Name = "chk_BadgeGlobalMod";
             this.chk_BadgeGlobalMod.Size = new System.Drawing.Size(107, 17);
-            this.chk_BadgeGlobalMod.TabIndex = 1;
+            this.chk_BadgeGlobalMod.TabIndex = 22;
             this.chk_BadgeGlobalMod.Text = "Global Moderator";
             this.chk_BadgeGlobalMod.UseVisualStyleBackColor = true;
             // 
@@ -382,17 +382,17 @@
             this.chk_BadgeAdmin.Location = new System.Drawing.Point(7, 20);
             this.chk_BadgeAdmin.Name = "chk_BadgeAdmin";
             this.chk_BadgeAdmin.Size = new System.Drawing.Size(55, 17);
-            this.chk_BadgeAdmin.TabIndex = 0;
+            this.chk_BadgeAdmin.TabIndex = 21;
             this.chk_BadgeAdmin.Text = "Admin";
             this.chk_BadgeAdmin.UseVisualStyleBackColor = true;
             // 
             // grp_MessageKeywords
             // 
             this.grp_MessageKeywords.Controls.Add(this.txt_MessageKeywords);
-            this.grp_MessageKeywords.Location = new System.Drawing.Point(13, 229);
+            this.grp_MessageKeywords.Location = new System.Drawing.Point(13, 283);
             this.grp_MessageKeywords.Name = "grp_MessageKeywords";
             this.grp_MessageKeywords.Size = new System.Drawing.Size(327, 47);
-            this.grp_MessageKeywords.TabIndex = 3;
+            this.grp_MessageKeywords.TabIndex = 50;
             this.grp_MessageKeywords.TabStop = false;
             this.grp_MessageKeywords.Text = "Message Keywords (comma-separated)";
             // 
@@ -401,15 +401,15 @@
             this.txt_MessageKeywords.Location = new System.Drawing.Point(7, 20);
             this.txt_MessageKeywords.Name = "txt_MessageKeywords";
             this.txt_MessageKeywords.Size = new System.Drawing.Size(311, 20);
-            this.txt_MessageKeywords.TabIndex = 0;
+            this.txt_MessageKeywords.TabIndex = 51;
             // 
             // grp_TriggerUsers
             // 
             this.grp_TriggerUsers.Controls.Add(this.txt_Users);
-            this.grp_TriggerUsers.Location = new System.Drawing.Point(13, 283);
+            this.grp_TriggerUsers.Location = new System.Drawing.Point(13, 229);
             this.grp_TriggerUsers.Name = "grp_TriggerUsers";
             this.grp_TriggerUsers.Size = new System.Drawing.Size(327, 47);
-            this.grp_TriggerUsers.TabIndex = 4;
+            this.grp_TriggerUsers.TabIndex = 40;
             this.grp_TriggerUsers.TabStop = false;
             this.grp_TriggerUsers.Text = "Users that can Trigger this Alert (comma-separated)";
             // 
@@ -418,7 +418,7 @@
             this.txt_Users.Location = new System.Drawing.Point(7, 20);
             this.txt_Users.Name = "txt_Users";
             this.txt_Users.Size = new System.Drawing.Size(311, 20);
-            this.txt_Users.TabIndex = 0;
+            this.txt_Users.TabIndex = 41;
             // 
             // grp_RelevantQuantity
             // 
@@ -430,7 +430,7 @@
             this.grp_RelevantQuantity.Location = new System.Drawing.Point(13, 337);
             this.grp_RelevantQuantity.Name = "grp_RelevantQuantity";
             this.grp_RelevantQuantity.Size = new System.Drawing.Size(327, 56);
-            this.grp_RelevantQuantity.TabIndex = 5;
+            this.grp_RelevantQuantity.TabIndex = 60;
             this.grp_RelevantQuantity.TabStop = false;
             this.grp_RelevantQuantity.Text = "Relevant Quantity";
             // 
@@ -440,7 +440,7 @@
             this.lbl_QuantityThings.Location = new System.Drawing.Point(233, 27);
             this.lbl_QuantityThings.Name = "lbl_QuantityThings";
             this.lbl_QuantityThings.Size = new System.Drawing.Size(85, 13);
-            this.lbl_QuantityThings.TabIndex = 3;
+            this.lbl_QuantityThings.TabIndex = 65;
             this.lbl_QuantityThings.Text = "Relevant Things";
             // 
             // lbl_QuantityTo
@@ -449,7 +449,7 @@
             this.lbl_QuantityTo.Location = new System.Drawing.Point(127, 27);
             this.lbl_QuantityTo.Name = "lbl_QuantityTo";
             this.lbl_QuantityTo.Size = new System.Drawing.Size(16, 13);
-            this.lbl_QuantityTo.TabIndex = 2;
+            this.lbl_QuantityTo.TabIndex = 63;
             this.lbl_QuantityTo.Text = "to";
             // 
             // numud_AmountMaximum
@@ -462,7 +462,7 @@
             0});
             this.numud_AmountMaximum.Name = "numud_AmountMaximum";
             this.numud_AmountMaximum.Size = new System.Drawing.Size(77, 20);
-            this.numud_AmountMaximum.TabIndex = 1;
+            this.numud_AmountMaximum.TabIndex = 64;
             // 
             // numud_AmountMinimum
             // 
@@ -474,7 +474,7 @@
             0});
             this.numud_AmountMinimum.Name = "numud_AmountMinimum";
             this.numud_AmountMinimum.Size = new System.Drawing.Size(77, 20);
-            this.numud_AmountMinimum.TabIndex = 1;
+            this.numud_AmountMinimum.TabIndex = 62;
             // 
             // lbl_QuantityFrom
             // 
@@ -482,7 +482,7 @@
             this.lbl_QuantityFrom.Location = new System.Drawing.Point(7, 27);
             this.lbl_QuantityFrom.Name = "lbl_QuantityFrom";
             this.lbl_QuantityFrom.Size = new System.Drawing.Size(30, 13);
-            this.lbl_QuantityFrom.TabIndex = 0;
+            this.lbl_QuantityFrom.TabIndex = 61;
             this.lbl_QuantityFrom.Text = "From";
             // 
             // txt_Description
@@ -493,7 +493,7 @@
             this.txt_Description.Multiline = true;
             this.txt_Description.Name = "txt_Description";
             this.txt_Description.Size = new System.Drawing.Size(402, 164);
-            this.txt_Description.TabIndex = 6;
+            this.txt_Description.TabIndex = 70;
             // 
             // Condition_Designer_MDI
             // 

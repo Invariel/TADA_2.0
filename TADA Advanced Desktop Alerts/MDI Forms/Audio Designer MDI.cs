@@ -11,12 +11,13 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
     public partial class Audio_Designer_MDI : TADA_Advanced_Desktop_Alerts.MDI_Forms.Waypoint_Designer_MDI
     {
         internal TADAAlertAudio alertAudio;
-        private System.Windows.Controls.MediaElement me;
+        private System.Windows.Controls.MediaElement me = new System.Windows.Controls.MediaElement();
 
         private bool blocked = false;
         private bool loading = false;
 
         private bool isPlaying = false;
+        private bool isScrolling = false;
         private bool mediaLoaded = false;
         private bool loadExisting = false;
 
@@ -30,7 +31,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             InitializeComponent();
 
-            me = new System.Windows.Controls.MediaElement();
             eh_1.Child = me;
             me.LoadedBehavior = System.Windows.Controls.MediaState.Manual;
             me.MediaOpened += LoadedMediaFile;
@@ -175,21 +175,22 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 trk_Balance.Value = Convert.ToInt32(alertAudio.Balance * 100.0);
                 trk_Volume.Value = Convert.ToInt32(alertAudio.Volume * 10.0);
-
-                this.loadExisting = false;
             }
             else
             {
                 mtxt_Delay.Text = "0";
                 mtxt_PlayFor.Text = "0";
                 mtxt_StartAt.Text = "0";
-                mtxt_LoopAt.Text = "0";
+
+                mtxt_LoopAt.Text = General.StringFromTimeSpan(mediaDuration);
+                trk_LoopAt.Value = trk_LoopAt.Maximum;
 
                 trk_Balance.Value = 0;
                 trk_Volume.Value = 0;
             }
 
 
+            this.loadExisting = false;
             DisplayControls(true);
         }
 
@@ -252,6 +253,27 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 me.Position = General.TimeSpanFromString(mtxt_PreviewPosition.Text);
                 me.Play();
                 this.isPlaying = true;
+            }
+        }
+
+        private void DisablePlayback(object sender, EventArgs e)
+        {
+            if (isPlaying)
+            {
+                isPlaying = false;
+                isScrolling = true;
+                me.Pause();
+            }
+        }
+
+        private void EnablePlayback(object sender, EventArgs e)
+        {
+            if (isScrolling)
+            {
+                isPlaying = true;
+                isScrolling = false;
+                me.Position = new TimeSpan(0, 0, 0, 0, trk_Position.Value);
+                me.Play();
             }
         }
 

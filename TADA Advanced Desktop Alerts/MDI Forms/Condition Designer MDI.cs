@@ -56,6 +56,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_AmountMinimum.LostFocus += UpdateAmounts;
             numud_AmountMaximum.LostFocus += UpdateAmounts;
 
+            txt_Users.LostFocus += delegate { UpdateDescription(); };
+            txt_MessageKeywords.LostFocus += delegate { UpdateDescription(); };
+
             loading = true;
             LoadValues();
             loading = false;
@@ -231,6 +234,52 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 if (condition.HasBadges)
                 {
                     txt_Description.Text += condition.BadgeString + " ";
+                }
+
+                if (condition.HasUsers)
+                {
+                    String[] users = condition.Usernames.Split(',');
+
+                    if (users.Count() == 1)
+                    {
+                        txt_Description.Text += $"Only {users[0]} can trigger this alert. ";
+                    }
+                    else
+                    {
+                        users = users.Select(user => user.Trim()).ToArray<String>();
+                        txt_Description.Text += $"Specifically {(String.Join(", ", users, 0, users.Count() - 1))}{(users.Count() == 2 ? "" : ",")} and {users[users.Count() - 1]} can trigger this alert. ";
+                    }
+                }
+
+                if (condition.HasKeywords)
+                {
+                    String[] keywords = condition.Keywords.Split(',');
+
+                    if (keywords.Count() == 1)
+                    {
+                        txt_Description.Text += $"Only messages containing {keywords[0]} can trigger this alert. ";
+                    }
+                    else
+                    {
+                        keywords = keywords.Select(keyword => $"'{keyword.Trim()}'").ToArray<String>();
+                        txt_Description.Text += $"Messages containing one of the following strings: {String.Join(", ", keywords, 0, keywords.Count() - 1)}{(keywords.Count() == 2 ? "" : ",")} and {keywords[keywords.Count() - 1]} can trigger this alert.";
+                    }
+                }
+
+                if (condition.HasAmounts)
+                {
+                    if (condition.MinAmount > 0 && condition.MaxAmount > 0)
+                    {
+                        txt_Description.Text += $"Between {condition.MinAmount} and {condition.MaxAmount} inclusive ... things ... must happen to trigger this alert.";
+                    }
+                    else if (condition.MaxAmount == 0)
+                    {
+                        txt_Description.Text += $"At least {condition.MinAmount} ... things ... must happen to trigger this alert.";
+                    }
+                    else
+                    {
+                        txt_Description.Text += $"At most {condition.MaxAmount} ... things ... must happen to trigger this alert.";
+                    }
                 }
             }
         }

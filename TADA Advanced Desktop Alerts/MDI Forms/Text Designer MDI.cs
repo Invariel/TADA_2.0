@@ -226,12 +226,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             try
             {
                 System.Speech.Synthesis.PromptBuilder prompt = new System.Speech.Synthesis.PromptBuilder(talky.Voice.Culture);
-                String baseText = txt_DisplayedText.Text;
-
-                if (String.IsNullOrEmpty(baseText))
-                {
-                    baseText = txt_NarratedText.Text;
-                }
+                String baseText = this.alertText.GetReadMessage();
 
                 if (String.IsNullOrEmpty(baseText))
                 {

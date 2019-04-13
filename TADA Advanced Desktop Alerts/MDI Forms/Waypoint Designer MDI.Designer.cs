@@ -183,7 +183,7 @@
             this.tab_Focus.Name = "tab_Focus";
             this.tab_Focus.SelectedIndex = 0;
             this.tab_Focus.Size = new System.Drawing.Size(761, 438);
-            this.tab_Focus.TabIndex = 223;
+            this.tab_Focus.TabIndex = 1;
             // 
             // tab_Element
             // 
@@ -232,7 +232,7 @@
             this.grp_InitialConditions.Location = new System.Drawing.Point(7, 224);
             this.grp_InitialConditions.Name = "grp_InitialConditions";
             this.grp_InitialConditions.Size = new System.Drawing.Size(744, 46);
-            this.grp_InitialConditions.TabIndex = 139;
+            this.grp_InitialConditions.TabIndex = 520;
             this.grp_InitialConditions.TabStop = false;
             this.grp_InitialConditions.Text = "Initial Conditions";
             // 
@@ -242,7 +242,7 @@
             this.lbl_InitialOpacityPercent.Location = new System.Drawing.Point(662, 22);
             this.lbl_InitialOpacityPercent.Name = "lbl_InitialOpacityPercent";
             this.lbl_InitialOpacityPercent.Size = new System.Drawing.Size(15, 13);
-            this.lbl_InitialOpacityPercent.TabIndex = 150;
+            this.lbl_InitialOpacityPercent.TabIndex = 531;
             this.lbl_InitialOpacityPercent.Text = "%";
             // 
             // lbl_InitialMagnification
@@ -251,7 +251,7 @@
             this.lbl_InitialMagnification.Location = new System.Drawing.Point(280, 22);
             this.lbl_InitialMagnification.Name = "lbl_InitialMagnification";
             this.lbl_InitialMagnification.Size = new System.Drawing.Size(97, 13);
-            this.lbl_InitialMagnification.TabIndex = 144;
+            this.lbl_InitialMagnification.TabIndex = 525;
             this.lbl_InitialMagnification.Text = "Initial Magnification";
             // 
             // lbl_Separator2
@@ -263,7 +263,7 @@
             this.lbl_Separator2.Location = new System.Drawing.Point(248, 12);
             this.lbl_Separator2.Name = "lbl_Separator2";
             this.lbl_Separator2.Size = new System.Drawing.Size(17, 25);
-            this.lbl_Separator2.TabIndex = 143;
+            this.lbl_Separator2.TabIndex = 524;
             this.lbl_Separator2.Text = "|";
             // 
             // numud_InitialOpacity
@@ -272,7 +272,7 @@
             this.numud_InitialOpacity.Location = new System.Drawing.Point(603, 18);
             this.numud_InitialOpacity.Name = "numud_InitialOpacity";
             this.numud_InitialOpacity.Size = new System.Drawing.Size(59, 20);
-            this.numud_InitialOpacity.TabIndex = 149;
+            this.numud_InitialOpacity.TabIndex = 530;
             this.numud_InitialOpacity.Value = new decimal(new int[] {
             100,
             0,
@@ -290,7 +290,7 @@
             131072});
             this.numud_InitialMagnification.Name = "numud_InitialMagnification";
             this.numud_InitialMagnification.Size = new System.Drawing.Size(59, 20);
-            this.numud_InitialMagnification.TabIndex = 145;
+            this.numud_InitialMagnification.TabIndex = 526;
             this.numud_InitialMagnification.Value = new decimal(new int[] {
             1,
             0,
@@ -303,7 +303,7 @@
             this.lbl_InitialOpacity.Location = new System.Drawing.Point(528, 22);
             this.lbl_InitialOpacity.Name = "lbl_InitialOpacity";
             this.lbl_InitialOpacity.Size = new System.Drawing.Size(70, 13);
-            this.lbl_InitialOpacity.TabIndex = 148;
+            this.lbl_InitialOpacity.TabIndex = 529;
             this.lbl_InitialOpacity.Text = "Initial Opacity";
             // 
             // lbl_AngleDegrees
@@ -313,7 +313,7 @@
             this.lbl_AngleDegrees.Location = new System.Drawing.Point(138, 14);
             this.lbl_AngleDegrees.Name = "lbl_AngleDegrees";
             this.lbl_AngleDegrees.Size = new System.Drawing.Size(16, 24);
-            this.lbl_AngleDegrees.TabIndex = 142;
+            this.lbl_AngleDegrees.TabIndex = 523;
             this.lbl_AngleDegrees.Text = "°";
             // 
             // numud_InitialAngle
@@ -327,7 +327,7 @@
             0});
             this.numud_InitialAngle.Name = "numud_InitialAngle";
             this.numud_InitialAngle.Size = new System.Drawing.Size(59, 20);
-            this.numud_InitialAngle.TabIndex = 141;
+            this.numud_InitialAngle.TabIndex = 522;
             // 
             // lbl_Separator3
             // 
@@ -338,7 +338,7 @@
             this.lbl_Separator3.Location = new System.Drawing.Point(496, 12);
             this.lbl_Separator3.Name = "lbl_Separator3";
             this.lbl_Separator3.Size = new System.Drawing.Size(17, 25);
-            this.lbl_Separator3.TabIndex = 147;
+            this.lbl_Separator3.TabIndex = 528;
             this.lbl_Separator3.Text = "|";
             // 
             // lbl_InitialAngle
@@ -348,7 +348,7 @@
             this.lbl_InitialAngle.Margin = new System.Windows.Forms.Padding(0);
             this.lbl_InitialAngle.Name = "lbl_InitialAngle";
             this.lbl_InitialAngle.Size = new System.Drawing.Size(61, 13);
-            this.lbl_InitialAngle.TabIndex = 140;
+            this.lbl_InitialAngle.TabIndex = 521;
             this.lbl_InitialAngle.Text = "Initial Angle";
             // 
             // lbl_InitialMagnificationX
@@ -357,7 +357,7 @@
             this.lbl_InitialMagnificationX.Location = new System.Drawing.Point(441, 22);
             this.lbl_InitialMagnificationX.Name = "lbl_InitialMagnificationX";
             this.lbl_InitialMagnificationX.Size = new System.Drawing.Size(12, 13);
-            this.lbl_InitialMagnificationX.TabIndex = 146;
+            this.lbl_InitialMagnificationX.TabIndex = 527;
             this.lbl_InitialMagnificationX.Text = "x";
             // 
             // tab_AdvancedWaypointControls
@@ -372,7 +372,7 @@
             this.tab_AdvancedWaypointControls.Name = "tab_AdvancedWaypointControls";
             this.tab_AdvancedWaypointControls.SelectedIndex = 0;
             this.tab_AdvancedWaypointControls.Size = new System.Drawing.Size(744, 100);
-            this.tab_AdvancedWaypointControls.TabIndex = 151;
+            this.tab_AdvancedWaypointControls.TabIndex = 540;
             // 
             // tab_Advanced
             // 
@@ -430,7 +430,7 @@
             this.lbl_C1Comma.Location = new System.Drawing.Point(645, 40);
             this.lbl_C1Comma.Name = "lbl_C1Comma";
             this.lbl_C1Comma.Size = new System.Drawing.Size(10, 13);
-            this.lbl_C1Comma.TabIndex = 168;
+            this.lbl_C1Comma.TabIndex = 592;
             this.lbl_C1Comma.Text = ",";
             // 
             // lbl_P1Comma
@@ -439,7 +439,7 @@
             this.lbl_P1Comma.Location = new System.Drawing.Point(266, 40);
             this.lbl_P1Comma.Name = "lbl_P1Comma";
             this.lbl_P1Comma.Size = new System.Drawing.Size(10, 13);
-            this.lbl_P1Comma.TabIndex = 160;
+            this.lbl_P1Comma.TabIndex = 572;
             this.lbl_P1Comma.Text = ",";
             // 
             // lbl_C0Comma
@@ -448,7 +448,7 @@
             this.lbl_C0Comma.Location = new System.Drawing.Point(645, 14);
             this.lbl_C0Comma.Name = "lbl_C0Comma";
             this.lbl_C0Comma.Size = new System.Drawing.Size(10, 13);
-            this.lbl_C0Comma.TabIndex = 164;
+            this.lbl_C0Comma.TabIndex = 582;
             this.lbl_C0Comma.Text = ",";
             // 
             // lbl_P0Comma
@@ -457,7 +457,7 @@
             this.lbl_P0Comma.Location = new System.Drawing.Point(266, 11);
             this.lbl_P0Comma.Name = "lbl_P0Comma";
             this.lbl_P0Comma.Size = new System.Drawing.Size(10, 13);
-            this.lbl_P0Comma.TabIndex = 156;
+            this.lbl_P0Comma.TabIndex = 562;
             this.lbl_P0Comma.Text = ",";
             // 
             // numud_C1Y
@@ -476,7 +476,7 @@
             -2147483648});
             this.numud_C1Y.Name = "numud_C1Y";
             this.numud_C1Y.Size = new System.Drawing.Size(70, 20);
-            this.numud_C1Y.TabIndex = 169;
+            this.numud_C1Y.TabIndex = 593;
             // 
             // numud_P1Y
             // 
@@ -494,7 +494,7 @@
             -2147483648});
             this.numud_P1Y.Name = "numud_P1Y";
             this.numud_P1Y.Size = new System.Drawing.Size(70, 20);
-            this.numud_P1Y.TabIndex = 161;
+            this.numud_P1Y.TabIndex = 573;
             // 
             // numud_C1X
             // 
@@ -512,7 +512,7 @@
             -2147483648});
             this.numud_C1X.Name = "numud_C1X";
             this.numud_C1X.Size = new System.Drawing.Size(70, 20);
-            this.numud_C1X.TabIndex = 167;
+            this.numud_C1X.TabIndex = 591;
             // 
             // numud_P1X
             // 
@@ -530,7 +530,7 @@
             -2147483648});
             this.numud_P1X.Name = "numud_P1X";
             this.numud_P1X.Size = new System.Drawing.Size(70, 20);
-            this.numud_P1X.TabIndex = 159;
+            this.numud_P1X.TabIndex = 571;
             // 
             // numud_C0Y
             // 
@@ -548,7 +548,7 @@
             -2147483648});
             this.numud_C0Y.Name = "numud_C0Y";
             this.numud_C0Y.Size = new System.Drawing.Size(70, 20);
-            this.numud_C0Y.TabIndex = 165;
+            this.numud_C0Y.TabIndex = 583;
             // 
             // numud_P0Y
             // 
@@ -566,7 +566,7 @@
             -2147483648});
             this.numud_P0Y.Name = "numud_P0Y";
             this.numud_P0Y.Size = new System.Drawing.Size(70, 20);
-            this.numud_P0Y.TabIndex = 157;
+            this.numud_P0Y.TabIndex = 563;
             // 
             // numud_C0X
             // 
@@ -584,7 +584,7 @@
             -2147483648});
             this.numud_C0X.Name = "numud_C0X";
             this.numud_C0X.Size = new System.Drawing.Size(70, 20);
-            this.numud_C0X.TabIndex = 163;
+            this.numud_C0X.TabIndex = 581;
             // 
             // numud_P0X
             // 
@@ -602,7 +602,7 @@
             -2147483648});
             this.numud_P0X.Name = "numud_P0X";
             this.numud_P0X.Size = new System.Drawing.Size(70, 20);
-            this.numud_P0X.TabIndex = 155;
+            this.numud_P0X.TabIndex = 561;
             // 
             // lbl_C1
             // 
@@ -610,7 +610,7 @@
             this.lbl_C1.Location = new System.Drawing.Point(451, 37);
             this.lbl_C1.Name = "lbl_C1";
             this.lbl_C1.Size = new System.Drawing.Size(118, 13);
-            this.lbl_C1.TabIndex = 166;
+            this.lbl_C1.TabIndex = 590;
             this.lbl_C1.Text = "Second Influence Point";
             // 
             // lbl_P1
@@ -619,7 +619,7 @@
             this.lbl_P1.Location = new System.Drawing.Point(130, 37);
             this.lbl_P1.Name = "lbl_P1";
             this.lbl_P1.Size = new System.Drawing.Size(60, 13);
-            this.lbl_P1.TabIndex = 158;
+            this.lbl_P1.TabIndex = 570;
             this.lbl_P1.Text = "Destination";
             // 
             // lbl_C0
@@ -628,7 +628,7 @@
             this.lbl_C0.Location = new System.Drawing.Point(469, 11);
             this.lbl_C0.Name = "lbl_C0";
             this.lbl_C0.Size = new System.Drawing.Size(100, 13);
-            this.lbl_C0.TabIndex = 162;
+            this.lbl_C0.TabIndex = 580;
             this.lbl_C0.Text = "First Influence Point";
             // 
             // lbl_P0
@@ -637,7 +637,7 @@
             this.lbl_P0.Location = new System.Drawing.Point(130, 11);
             this.lbl_P0.Name = "lbl_P0";
             this.lbl_P0.Size = new System.Drawing.Size(61, 13);
-            this.lbl_P0.TabIndex = 154;
+            this.lbl_P0.TabIndex = 560;
             this.lbl_P0.Text = "Origin Point";
             // 
             // radio_Curve
@@ -646,7 +646,7 @@
             this.radio_Curve.Location = new System.Drawing.Point(7, 30);
             this.radio_Curve.Name = "radio_Curve";
             this.radio_Curve.Size = new System.Drawing.Size(53, 17);
-            this.radio_Curve.TabIndex = 153;
+            this.radio_Curve.TabIndex = 551;
             this.radio_Curve.TabStop = true;
             this.radio_Curve.Text = "Curve";
             this.radio_Curve.UseVisualStyleBackColor = true;
@@ -658,7 +658,7 @@
             this.radio_Line.Location = new System.Drawing.Point(7, 7);
             this.radio_Line.Name = "radio_Line";
             this.radio_Line.Size = new System.Drawing.Size(84, 17);
-            this.radio_Line.TabIndex = 152;
+            this.radio_Line.TabIndex = 550;
             this.radio_Line.TabStop = true;
             this.radio_Line.Text = "Straight Line";
             this.radio_Line.UseVisualStyleBackColor = true;
@@ -694,7 +694,7 @@
             this.radio_FromTopLeft.Location = new System.Drawing.Point(345, 7);
             this.radio_FromTopLeft.Name = "radio_FromTopLeft";
             this.radio_FromTopLeft.Size = new System.Drawing.Size(154, 17);
-            this.radio_FromTopLeft.TabIndex = 171;
+            this.radio_FromTopLeft.TabIndex = 601;
             this.radio_FromTopLeft.Text = "Adjust from Top Left Corner";
             this.radio_FromTopLeft.UseVisualStyleBackColor = true;
             // 
@@ -704,7 +704,7 @@
             this.lbl_MagnificationDuration.Location = new System.Drawing.Point(546, 55);
             this.lbl_MagnificationDuration.Name = "lbl_MagnificationDuration";
             this.lbl_MagnificationDuration.Size = new System.Drawing.Size(113, 13);
-            this.lbl_MagnificationDuration.TabIndex = 184;
+            this.lbl_MagnificationDuration.TabIndex = 625;
             this.lbl_MagnificationDuration.Text = "Magnification Duration";
             // 
             // lbl_AngleDuration
@@ -713,7 +713,7 @@
             this.lbl_AngleDuration.Location = new System.Drawing.Point(569, 34);
             this.lbl_AngleDuration.Name = "lbl_AngleDuration";
             this.lbl_AngleDuration.Size = new System.Drawing.Size(90, 13);
-            this.lbl_AngleDuration.TabIndex = 177;
+            this.lbl_AngleDuration.TabIndex = 615;
             this.lbl_AngleDuration.Text = "Rotation Duration";
             // 
             // radio_FromCenter
@@ -723,7 +723,7 @@
             this.radio_FromCenter.Location = new System.Drawing.Point(226, 7);
             this.radio_FromCenter.Name = "radio_FromCenter";
             this.radio_FromCenter.Size = new System.Drawing.Size(111, 17);
-            this.radio_FromCenter.TabIndex = 170;
+            this.radio_FromCenter.TabIndex = 600;
             this.radio_FromCenter.TabStop = true;
             this.radio_FromCenter.Text = "Adjust from Center";
             this.radio_FromCenter.UseVisualStyleBackColor = true;
@@ -734,7 +734,7 @@
             this.lbl_MagnificationFrames.Location = new System.Drawing.Point(356, 55);
             this.lbl_MagnificationFrames.Name = "lbl_MagnificationFrames";
             this.lbl_MagnificationFrames.Size = new System.Drawing.Size(107, 13);
-            this.lbl_MagnificationFrames.TabIndex = 182;
+            this.lbl_MagnificationFrames.TabIndex = 623;
             this.lbl_MagnificationFrames.Text = "Magnification Frames";
             // 
             // lbl_AngleFrames
@@ -743,7 +743,7 @@
             this.lbl_AngleFrames.Location = new System.Drawing.Point(379, 34);
             this.lbl_AngleFrames.Name = "lbl_AngleFrames";
             this.lbl_AngleFrames.Size = new System.Drawing.Size(84, 13);
-            this.lbl_AngleFrames.TabIndex = 175;
+            this.lbl_AngleFrames.TabIndex = 613;
             this.lbl_AngleFrames.Text = "Rotation Frames";
             // 
             // numud_MagnificationDuration
@@ -756,7 +756,7 @@
             0});
             this.numud_MagnificationDuration.Name = "numud_MagnificationDuration";
             this.numud_MagnificationDuration.Size = new System.Drawing.Size(59, 20);
-            this.numud_MagnificationDuration.TabIndex = 185;
+            this.numud_MagnificationDuration.TabIndex = 626;
             // 
             // numud_MagnificationFrames
             // 
@@ -768,7 +768,7 @@
             0});
             this.numud_MagnificationFrames.Name = "numud_MagnificationFrames";
             this.numud_MagnificationFrames.Size = new System.Drawing.Size(59, 20);
-            this.numud_MagnificationFrames.TabIndex = 183;
+            this.numud_MagnificationFrames.TabIndex = 624;
             // 
             // numud_DesiredMagnification
             // 
@@ -781,7 +781,7 @@
             0});
             this.numud_DesiredMagnification.Name = "numud_DesiredMagnification";
             this.numud_DesiredMagnification.Size = new System.Drawing.Size(74, 20);
-            this.numud_DesiredMagnification.TabIndex = 181;
+            this.numud_DesiredMagnification.TabIndex = 622;
             this.numud_DesiredMagnification.Value = new decimal(new int[] {
             1,
             0,
@@ -798,7 +798,7 @@
             0});
             this.numud_AngleDuration.Name = "numud_AngleDuration";
             this.numud_AngleDuration.Size = new System.Drawing.Size(59, 20);
-            this.numud_AngleDuration.TabIndex = 178;
+            this.numud_AngleDuration.TabIndex = 616;
             // 
             // numud_AngleFrames
             // 
@@ -810,7 +810,7 @@
             0});
             this.numud_AngleFrames.Name = "numud_AngleFrames";
             this.numud_AngleFrames.Size = new System.Drawing.Size(59, 20);
-            this.numud_AngleFrames.TabIndex = 176;
+            this.numud_AngleFrames.TabIndex = 614;
             // 
             // numud_DesiredAngle
             // 
@@ -828,7 +828,7 @@
             -2147483648});
             this.numud_DesiredAngle.Name = "numud_DesiredAngle";
             this.numud_DesiredAngle.Size = new System.Drawing.Size(74, 20);
-            this.numud_DesiredAngle.TabIndex = 174;
+            this.numud_DesiredAngle.TabIndex = 612;
             this.numud_DesiredAngle.Value = new decimal(new int[] {
             10000,
             0,
@@ -841,7 +841,7 @@
             this.lbl_DesiredMagnification.Location = new System.Drawing.Point(149, 55);
             this.lbl_DesiredMagnification.Name = "lbl_DesiredMagnification";
             this.lbl_DesiredMagnification.Size = new System.Drawing.Size(109, 13);
-            this.lbl_DesiredMagnification.TabIndex = 180;
+            this.lbl_DesiredMagnification.TabIndex = 621;
             this.lbl_DesiredMagnification.Text = "Desired Magnification";
             // 
             // lbl_DesiredAngle
@@ -850,7 +850,7 @@
             this.lbl_DesiredAngle.Location = new System.Drawing.Point(185, 34);
             this.lbl_DesiredAngle.Name = "lbl_DesiredAngle";
             this.lbl_DesiredAngle.Size = new System.Drawing.Size(73, 13);
-            this.lbl_DesiredAngle.TabIndex = 173;
+            this.lbl_DesiredAngle.TabIndex = 611;
             this.lbl_DesiredAngle.Text = "Desired Angle";
             // 
             // chk_Magnification
@@ -859,7 +859,7 @@
             this.chk_Magnification.Location = new System.Drawing.Point(11, 53);
             this.chk_Magnification.Name = "chk_Magnification";
             this.chk_Magnification.Size = new System.Drawing.Size(121, 17);
-            this.chk_Magnification.TabIndex = 179;
+            this.chk_Magnification.TabIndex = 620;
             this.chk_Magnification.Text = "Adjust Magnification";
             this.chk_Magnification.UseVisualStyleBackColor = true;
             // 
@@ -869,7 +869,7 @@
             this.chk_Angle.Location = new System.Drawing.Point(11, 30);
             this.chk_Angle.Name = "chk_Angle";
             this.chk_Angle.Size = new System.Drawing.Size(85, 17);
-            this.chk_Angle.TabIndex = 172;
+            this.chk_Angle.TabIndex = 610;
             this.chk_Angle.Text = "Adjust Angle";
             this.chk_Angle.UseVisualStyleBackColor = true;
             // 
@@ -895,7 +895,7 @@
             this.lbl_OpacityDuration.Location = new System.Drawing.Point(563, 34);
             this.lbl_OpacityDuration.Name = "lbl_OpacityDuration";
             this.lbl_OpacityDuration.Size = new System.Drawing.Size(96, 13);
-            this.lbl_OpacityDuration.TabIndex = 191;
+            this.lbl_OpacityDuration.TabIndex = 635;
             this.lbl_OpacityDuration.Text = "Transition Duration";
             // 
             // lbl_OpacityFrames
@@ -904,7 +904,7 @@
             this.lbl_OpacityFrames.Location = new System.Drawing.Point(373, 34);
             this.lbl_OpacityFrames.Name = "lbl_OpacityFrames";
             this.lbl_OpacityFrames.Size = new System.Drawing.Size(90, 13);
-            this.lbl_OpacityFrames.TabIndex = 189;
+            this.lbl_OpacityFrames.TabIndex = 633;
             this.lbl_OpacityFrames.Text = "Transition Frames";
             // 
             // numud_OpacityDuration
@@ -917,7 +917,7 @@
             0});
             this.numud_OpacityDuration.Name = "numud_OpacityDuration";
             this.numud_OpacityDuration.Size = new System.Drawing.Size(59, 20);
-            this.numud_OpacityDuration.TabIndex = 192;
+            this.numud_OpacityDuration.TabIndex = 636;
             // 
             // numud_OpacityFrames
             // 
@@ -929,7 +929,7 @@
             0});
             this.numud_OpacityFrames.Name = "numud_OpacityFrames";
             this.numud_OpacityFrames.Size = new System.Drawing.Size(59, 20);
-            this.numud_OpacityFrames.TabIndex = 190;
+            this.numud_OpacityFrames.TabIndex = 634;
             // 
             // numud_DesiredOpacity
             // 
@@ -937,7 +937,7 @@
             this.numud_DesiredOpacity.Location = new System.Drawing.Point(263, 30);
             this.numud_DesiredOpacity.Name = "numud_DesiredOpacity";
             this.numud_DesiredOpacity.Size = new System.Drawing.Size(74, 20);
-            this.numud_DesiredOpacity.TabIndex = 188;
+            this.numud_DesiredOpacity.TabIndex = 632;
             // 
             // lbl_DesiredOpacity
             // 
@@ -945,7 +945,7 @@
             this.lbl_DesiredOpacity.Location = new System.Drawing.Point(176, 34);
             this.lbl_DesiredOpacity.Name = "lbl_DesiredOpacity";
             this.lbl_DesiredOpacity.Size = new System.Drawing.Size(82, 13);
-            this.lbl_DesiredOpacity.TabIndex = 187;
+            this.lbl_DesiredOpacity.TabIndex = 631;
             this.lbl_DesiredOpacity.Text = "Desired Opacity";
             // 
             // chk_Opacity
@@ -954,7 +954,7 @@
             this.chk_Opacity.Location = new System.Drawing.Point(11, 30);
             this.chk_Opacity.Name = "chk_Opacity";
             this.chk_Opacity.Size = new System.Drawing.Size(94, 17);
-            this.chk_Opacity.TabIndex = 186;
+            this.chk_Opacity.TabIndex = 630;
             this.chk_Opacity.Text = "Adjust Opacity";
             this.chk_Opacity.UseVisualStyleBackColor = true;
             // 
@@ -987,7 +987,7 @@
             this.lbl_VolumeDuration.Location = new System.Drawing.Point(534, 55);
             this.lbl_VolumeDuration.Name = "lbl_VolumeDuration";
             this.lbl_VolumeDuration.Size = new System.Drawing.Size(125, 13);
-            this.lbl_VolumeDuration.TabIndex = 205;
+            this.lbl_VolumeDuration.TabIndex = 655;
             this.lbl_VolumeDuration.Text = "Volume Change Duration";
             // 
             // lbl_BalanceDuration
@@ -996,7 +996,7 @@
             this.lbl_BalanceDuration.Location = new System.Drawing.Point(530, 34);
             this.lbl_BalanceDuration.Name = "lbl_BalanceDuration";
             this.lbl_BalanceDuration.Size = new System.Drawing.Size(129, 13);
-            this.lbl_BalanceDuration.TabIndex = 198;
+            this.lbl_BalanceDuration.TabIndex = 645;
             this.lbl_BalanceDuration.Text = "Balance Change Duration";
             // 
             // lbl_VolumeFrames
@@ -1005,7 +1005,7 @@
             this.lbl_VolumeFrames.Location = new System.Drawing.Point(376, 55);
             this.lbl_VolumeFrames.Name = "lbl_VolumeFrames";
             this.lbl_VolumeFrames.Size = new System.Drawing.Size(87, 13);
-            this.lbl_VolumeFrames.TabIndex = 203;
+            this.lbl_VolumeFrames.TabIndex = 653;
             this.lbl_VolumeFrames.Text = "Volume Changes";
             // 
             // lbl_BalanceFrames
@@ -1014,7 +1014,7 @@
             this.lbl_BalanceFrames.Location = new System.Drawing.Point(372, 34);
             this.lbl_BalanceFrames.Name = "lbl_BalanceFrames";
             this.lbl_BalanceFrames.Size = new System.Drawing.Size(91, 13);
-            this.lbl_BalanceFrames.TabIndex = 196;
+            this.lbl_BalanceFrames.TabIndex = 643;
             this.lbl_BalanceFrames.Text = "Balance Changes";
             // 
             // numud_VolumeDuration
@@ -1027,7 +1027,7 @@
             0});
             this.numud_VolumeDuration.Name = "numud_VolumeDuration";
             this.numud_VolumeDuration.Size = new System.Drawing.Size(59, 20);
-            this.numud_VolumeDuration.TabIndex = 206;
+            this.numud_VolumeDuration.TabIndex = 656;
             // 
             // numud_VolumeFrames
             // 
@@ -1039,7 +1039,7 @@
             0});
             this.numud_VolumeFrames.Name = "numud_VolumeFrames";
             this.numud_VolumeFrames.Size = new System.Drawing.Size(59, 20);
-            this.numud_VolumeFrames.TabIndex = 204;
+            this.numud_VolumeFrames.TabIndex = 654;
             // 
             // numud_DesiredVolume
             // 
@@ -1052,7 +1052,7 @@
             0});
             this.numud_DesiredVolume.Name = "numud_DesiredVolume";
             this.numud_DesiredVolume.Size = new System.Drawing.Size(74, 20);
-            this.numud_DesiredVolume.TabIndex = 202;
+            this.numud_DesiredVolume.TabIndex = 652;
             this.numud_DesiredVolume.Value = new decimal(new int[] {
             1,
             0,
@@ -1069,7 +1069,7 @@
             0});
             this.numud_BalanceDuration.Name = "numud_BalanceDuration";
             this.numud_BalanceDuration.Size = new System.Drawing.Size(59, 20);
-            this.numud_BalanceDuration.TabIndex = 199;
+            this.numud_BalanceDuration.TabIndex = 646;
             // 
             // numud_BalanceFrames
             // 
@@ -1081,7 +1081,7 @@
             0});
             this.numud_BalanceFrames.Name = "numud_BalanceFrames";
             this.numud_BalanceFrames.Size = new System.Drawing.Size(59, 20);
-            this.numud_BalanceFrames.TabIndex = 197;
+            this.numud_BalanceFrames.TabIndex = 644;
             // 
             // numud_DesiredBalance
             // 
@@ -1099,7 +1099,7 @@
             -2147483648});
             this.numud_DesiredBalance.Name = "numud_DesiredBalance";
             this.numud_DesiredBalance.Size = new System.Drawing.Size(74, 20);
-            this.numud_DesiredBalance.TabIndex = 195;
+            this.numud_DesiredBalance.TabIndex = 642;
             this.numud_DesiredBalance.Value = new decimal(new int[] {
             10000,
             0,
@@ -1112,7 +1112,7 @@
             this.lbl_DesiredVolume.Location = new System.Drawing.Point(177, 55);
             this.lbl_DesiredVolume.Name = "lbl_DesiredVolume";
             this.lbl_DesiredVolume.Size = new System.Drawing.Size(81, 13);
-            this.lbl_DesiredVolume.TabIndex = 201;
+            this.lbl_DesiredVolume.TabIndex = 651;
             this.lbl_DesiredVolume.Text = "Desired Volume";
             // 
             // lbl_DesiredBalance
@@ -1121,7 +1121,7 @@
             this.lbl_DesiredBalance.Location = new System.Drawing.Point(173, 34);
             this.lbl_DesiredBalance.Name = "lbl_DesiredBalance";
             this.lbl_DesiredBalance.Size = new System.Drawing.Size(85, 13);
-            this.lbl_DesiredBalance.TabIndex = 194;
+            this.lbl_DesiredBalance.TabIndex = 641;
             this.lbl_DesiredBalance.Text = "Desired Balance";
             // 
             // chk_Volume
@@ -1130,7 +1130,7 @@
             this.chk_Volume.Location = new System.Drawing.Point(11, 53);
             this.chk_Volume.Name = "chk_Volume";
             this.chk_Volume.Size = new System.Drawing.Size(93, 17);
-            this.chk_Volume.TabIndex = 200;
+            this.chk_Volume.TabIndex = 650;
             this.chk_Volume.Text = "Adjust Volume";
             this.chk_Volume.UseVisualStyleBackColor = true;
             // 
@@ -1140,7 +1140,7 @@
             this.chk_Balance.Location = new System.Drawing.Point(11, 30);
             this.chk_Balance.Name = "chk_Balance";
             this.chk_Balance.Size = new System.Drawing.Size(131, 17);
-            this.chk_Balance.TabIndex = 193;
+            this.chk_Balance.TabIndex = 640;
             this.chk_Balance.Text = "Adjust Sound Balance";
             this.chk_Balance.UseVisualStyleBackColor = true;
             // 
@@ -1163,7 +1163,7 @@
             this.btn_TextMacroCheatsheet.Location = new System.Drawing.Point(581, 51);
             this.btn_TextMacroCheatsheet.Name = "btn_TextMacroCheatsheet";
             this.btn_TextMacroCheatsheet.Size = new System.Drawing.Size(140, 23);
-            this.btn_TextMacroCheatsheet.TabIndex = 211;
+            this.btn_TextMacroCheatsheet.TabIndex = 680;
             this.btn_TextMacroCheatsheet.Text = "Open Macro Cheatsheet";
             this.btn_TextMacroCheatsheet.UseVisualStyleBackColor = true;
             // 
@@ -1173,7 +1173,7 @@
             this.txt_Keypresses.Location = new System.Drawing.Point(97, 29);
             this.txt_Keypresses.Name = "txt_Keypresses";
             this.txt_Keypresses.Size = new System.Drawing.Size(624, 20);
-            this.txt_Keypresses.TabIndex = 210;
+            this.txt_Keypresses.TabIndex = 671;
             // 
             // txt_WindowTarget
             // 
@@ -1181,7 +1181,7 @@
             this.txt_WindowTarget.Location = new System.Drawing.Point(97, 3);
             this.txt_WindowTarget.Name = "txt_WindowTarget";
             this.txt_WindowTarget.Size = new System.Drawing.Size(624, 20);
-            this.txt_WindowTarget.TabIndex = 208;
+            this.txt_WindowTarget.TabIndex = 661;
             // 
             // lbl_Keypresses
             // 
@@ -1190,7 +1190,7 @@
             this.lbl_Keypresses.Location = new System.Drawing.Point(29, 33);
             this.lbl_Keypresses.Name = "lbl_Keypresses";
             this.lbl_Keypresses.Size = new System.Drawing.Size(61, 13);
-            this.lbl_Keypresses.TabIndex = 209;
+            this.lbl_Keypresses.TabIndex = 670;
             this.lbl_Keypresses.Text = "Keypresses";
             // 
             // lbl_WindowTarget
@@ -1200,7 +1200,7 @@
             this.lbl_WindowTarget.Location = new System.Drawing.Point(10, 7);
             this.lbl_WindowTarget.Name = "lbl_WindowTarget";
             this.lbl_WindowTarget.Size = new System.Drawing.Size(80, 13);
-            this.lbl_WindowTarget.TabIndex = 207;
+            this.lbl_WindowTarget.TabIndex = 660;
             this.lbl_WindowTarget.Text = "Window Target";
             // 
             // lbl_WaypointDuration
@@ -1209,7 +1209,7 @@
             this.lbl_WaypointDuration.Location = new System.Drawing.Point(229, 209);
             this.lbl_WaypointDuration.Name = "lbl_WaypointDuration";
             this.lbl_WaypointDuration.Size = new System.Drawing.Size(139, 13);
-            this.lbl_WaypointDuration.TabIndex = 138;
+            this.lbl_WaypointDuration.TabIndex = 517;
             this.lbl_WaypointDuration.Text = "Total Waypoint Duration: 0s";
             // 
             // lbl_ShiftWaypointsX
@@ -1218,7 +1218,7 @@
             this.lbl_ShiftWaypointsX.Location = new System.Drawing.Point(670, 187);
             this.lbl_ShiftWaypointsX.Name = "lbl_ShiftWaypointsX";
             this.lbl_ShiftWaypointsX.Size = new System.Drawing.Size(12, 13);
-            this.lbl_ShiftWaypointsX.TabIndex = 136;
+            this.lbl_ShiftWaypointsX.TabIndex = 515;
             this.lbl_ShiftWaypointsX.Text = "x";
             // 
             // numud_ShiftY
@@ -1237,7 +1237,7 @@
             -2147483648});
             this.numud_ShiftY.Name = "numud_ShiftY";
             this.numud_ShiftY.Size = new System.Drawing.Size(62, 20);
-            this.numud_ShiftY.TabIndex = 137;
+            this.numud_ShiftY.TabIndex = 516;
             // 
             // numud_ShiftX
             // 
@@ -1255,14 +1255,14 @@
             -2147483648});
             this.numud_ShiftX.Name = "numud_ShiftX";
             this.numud_ShiftX.Size = new System.Drawing.Size(62, 20);
-            this.numud_ShiftX.TabIndex = 135;
+            this.numud_ShiftX.TabIndex = 514;
             // 
             // btn_ImportWaypointsFrom
             // 
             this.btn_ImportWaypointsFrom.Location = new System.Drawing.Point(606, 21);
             this.btn_ImportWaypointsFrom.Name = "btn_ImportWaypointsFrom";
             this.btn_ImportWaypointsFrom.Size = new System.Drawing.Size(140, 23);
-            this.btn_ImportWaypointsFrom.TabIndex = 131;
+            this.btn_ImportWaypointsFrom.TabIndex = 510;
             this.btn_ImportWaypointsFrom.Text = "Import Waypoints From:";
             this.btn_ImportWaypointsFrom.UseVisualStyleBackColor = true;
             // 
@@ -1272,14 +1272,14 @@
             this.cmb_ImportWaypoints.Location = new System.Drawing.Point(606, 50);
             this.cmb_ImportWaypoints.Name = "cmb_ImportWaypoints";
             this.cmb_ImportWaypoints.Size = new System.Drawing.Size(140, 21);
-            this.cmb_ImportWaypoints.TabIndex = 132;
+            this.cmb_ImportWaypoints.TabIndex = 511;
             // 
             // btn_ShiftSelected
             // 
             this.btn_ShiftSelected.Location = new System.Drawing.Point(606, 154);
             this.btn_ShiftSelected.Name = "btn_ShiftSelected";
             this.btn_ShiftSelected.Size = new System.Drawing.Size(140, 23);
-            this.btn_ShiftSelected.TabIndex = 134;
+            this.btn_ShiftSelected.TabIndex = 513;
             this.btn_ShiftSelected.Text = "Shift Selected Waypoints";
             this.btn_ShiftSelected.UseVisualStyleBackColor = true;
             // 
@@ -1288,7 +1288,7 @@
             this.btn_CopySelected.Location = new System.Drawing.Point(606, 102);
             this.btn_CopySelected.Name = "btn_CopySelected";
             this.btn_CopySelected.Size = new System.Drawing.Size(140, 23);
-            this.btn_CopySelected.TabIndex = 133;
+            this.btn_CopySelected.TabIndex = 512;
             this.btn_CopySelected.Text = "Copy Selected Waypoints";
             this.btn_CopySelected.UseVisualStyleBackColor = true;
             // 
@@ -1298,7 +1298,7 @@
             this.grp_Waypoints.Location = new System.Drawing.Point(7, 5);
             this.grp_Waypoints.Name = "grp_Waypoints";
             this.grp_Waypoints.Size = new System.Drawing.Size(596, 201);
-            this.grp_Waypoints.TabIndex = 129;
+            this.grp_Waypoints.TabIndex = 500;
             this.grp_Waypoints.TabStop = false;
             this.grp_Waypoints.Text = "Waypoints";
             // 

@@ -47,10 +47,7 @@
             this.btn_LoadManifest = new System.Windows.Forms.Button();
             this.btn_MergeManifest = new System.Windows.Forms.Button();
             this.dg_Alerts = new System.Windows.Forms.DataGridView();
-            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_LoadChannelDetails = new System.Windows.Forms.Button();
             this.btn_SaveChannelDetails = new System.Windows.Forms.Button();
@@ -83,13 +80,15 @@
             this.rad_30FPS = new System.Windows.Forms.RadioButton();
             this.rad_60FPS = new System.Windows.Forms.RadioButton();
             this.btn_Update = new System.Windows.Forms.Button();
+            this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.tab_Main.SuspendLayout();
             this.tab_Manifest.SuspendLayout();
@@ -97,6 +96,7 @@
             this.tab_AlertSettings.SuspendLayout();
             this.tab_Configuration.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // numud_bgB
@@ -109,7 +109,7 @@
             0});
             this.numud_bgB.Name = "numud_bgB";
             this.numud_bgB.Size = new System.Drawing.Size(42, 20);
-            this.numud_bgB.TabIndex = 14;
+            this.numud_bgB.TabIndex = 79;
             this.numud_bgB.Value = new decimal(new int[] {
             255,
             0,
@@ -126,7 +126,7 @@
             0});
             this.numud_bgG.Name = "numud_bgG";
             this.numud_bgG.Size = new System.Drawing.Size(42, 20);
-            this.numud_bgG.TabIndex = 13;
+            this.numud_bgG.TabIndex = 75;
             this.numud_bgG.Value = new decimal(new int[] {
             255,
             0,
@@ -139,7 +139,7 @@
             this.label6.Location = new System.Drawing.Point(144, 54);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(14, 13);
-            this.label6.TabIndex = 5;
+            this.label6.TabIndex = 77;
             this.label6.Text = "B";
             // 
             // label5
@@ -148,7 +148,7 @@
             this.label5.Location = new System.Drawing.Point(75, 54);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(15, 13);
-            this.label5.TabIndex = 5;
+            this.label5.TabIndex = 73;
             this.label5.Text = "G";
             // 
             // numud_bgR
@@ -161,7 +161,7 @@
             0});
             this.numud_bgR.Name = "numud_bgR";
             this.numud_bgR.Size = new System.Drawing.Size(42, 20);
-            this.numud_bgR.TabIndex = 12;
+            this.numud_bgR.TabIndex = 71;
             this.numud_bgR.Value = new decimal(new int[] {
             255,
             0,
@@ -174,7 +174,7 @@
             this.label4.Location = new System.Drawing.Point(6, 54);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(15, 13);
-            this.label4.TabIndex = 5;
+            this.label4.TabIndex = 69;
             this.label4.Text = "R";
             // 
             // btn_ShowHideAnimationWindow
@@ -182,7 +182,7 @@
             this.btn_ShowHideAnimationWindow.Location = new System.Drawing.Point(326, 53);
             this.btn_ShowHideAnimationWindow.Name = "btn_ShowHideAnimationWindow";
             this.btn_ShowHideAnimationWindow.Size = new System.Drawing.Size(156, 23);
-            this.btn_ShowHideAnimationWindow.TabIndex = 15;
+            this.btn_ShowHideAnimationWindow.TabIndex = 89;
             this.btn_ShowHideAnimationWindow.Text = "Hide &Animation Window";
             this.btn_ShowHideAnimationWindow.UseVisualStyleBackColor = true;
             this.btn_ShowHideAnimationWindow.Click += new System.EventHandler(this.HideAnimationWindow);
@@ -192,7 +192,7 @@
             this.txt_BackgroundARGB.Location = new System.Drawing.Point(110, 23);
             this.txt_BackgroundARGB.Name = "txt_BackgroundARGB";
             this.txt_BackgroundARGB.Size = new System.Drawing.Size(67, 20);
-            this.txt_BackgroundARGB.TabIndex = 11;
+            this.txt_BackgroundARGB.TabIndex = 67;
             this.txt_BackgroundARGB.Text = "#FFFFFF";
             // 
             // numud_AnimationWindowSizeY
@@ -210,7 +210,7 @@
             0});
             this.numud_AnimationWindowSizeY.Name = "numud_AnimationWindowSizeY";
             this.numud_AnimationWindowSizeY.Size = new System.Drawing.Size(72, 20);
-            this.numud_AnimationWindowSizeY.TabIndex = 9;
+            this.numud_AnimationWindowSizeY.TabIndex = 87;
             this.numud_AnimationWindowSizeY.Value = new decimal(new int[] {
             250,
             0,
@@ -223,7 +223,7 @@
             this.label2.Location = new System.Drawing.Point(219, 27);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(103, 13);
-            this.label2.TabIndex = 7;
+            this.label2.TabIndex = 81;
             this.label2.Text = "&Window Dimensions";
             // 
             // label3
@@ -232,7 +232,7 @@
             this.label3.Location = new System.Drawing.Point(6, 27);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(98, 13);
-            this.label3.TabIndex = 10;
+            this.label3.TabIndex = 63;
             this.label3.Text = "&Background Colour";
             // 
             // numud_AnimationWindowSizeX
@@ -250,7 +250,7 @@
             0});
             this.numud_AnimationWindowSizeX.Name = "numud_AnimationWindowSizeX";
             this.numud_AnimationWindowSizeX.Size = new System.Drawing.Size(72, 20);
-            this.numud_AnimationWindowSizeX.TabIndex = 8;
+            this.numud_AnimationWindowSizeX.TabIndex = 83;
             this.numud_AnimationWindowSizeX.Value = new decimal(new int[] {
             250,
             0,
@@ -263,7 +263,7 @@
             this.label1.Location = new System.Drawing.Point(398, 27);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(12, 13);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 85;
             this.label1.Text = "x";
             // 
             // btn_SaveManifest
@@ -271,7 +271,7 @@
             this.btn_SaveManifest.Location = new System.Drawing.Point(8, 196);
             this.btn_SaveManifest.Name = "btn_SaveManifest";
             this.btn_SaveManifest.Size = new System.Drawing.Size(120, 23);
-            this.btn_SaveManifest.TabIndex = 2;
+            this.btn_SaveManifest.TabIndex = 5;
             this.btn_SaveManifest.Text = "Save Alerts";
             this.btn_SaveManifest.UseVisualStyleBackColor = true;
             // 
@@ -280,7 +280,7 @@
             this.btn_LoadManifest.Location = new System.Drawing.Point(133, 196);
             this.btn_LoadManifest.Name = "btn_LoadManifest";
             this.btn_LoadManifest.Size = new System.Drawing.Size(120, 23);
-            this.btn_LoadManifest.TabIndex = 3;
+            this.btn_LoadManifest.TabIndex = 7;
             this.btn_LoadManifest.Text = "Load Alerts";
             this.btn_LoadManifest.UseVisualStyleBackColor = true;
             // 
@@ -289,7 +289,7 @@
             this.btn_MergeManifest.Location = new System.Drawing.Point(258, 196);
             this.btn_MergeManifest.Name = "btn_MergeManifest";
             this.btn_MergeManifest.Size = new System.Drawing.Size(120, 23);
-            this.btn_MergeManifest.TabIndex = 4;
+            this.btn_MergeManifest.TabIndex = 9;
             this.btn_MergeManifest.Text = "Merge Alerts";
             this.btn_MergeManifest.UseVisualStyleBackColor = true;
             // 
@@ -305,23 +305,7 @@
             this.dg_Alerts.Location = new System.Drawing.Point(8, 6);
             this.dg_Alerts.Name = "dg_Alerts";
             this.dg_Alerts.Size = new System.Drawing.Size(494, 184);
-            this.dg_Alerts.TabIndex = 5;
-            // 
-            // alertNameDataGridViewTextBoxColumn
-            // 
-            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
-            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
-            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
-            // 
-            // alertTypeDataGridViewTextBoxColumn
-            // 
-            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
-            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
-            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
-            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
-            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            this.dg_Alerts.TabIndex = 3;
             // 
             // Edit
             // 
@@ -331,10 +315,6 @@
             this.Edit.Text = "Edit";
             this.Edit.UseColumnTextForButtonValue = true;
             this.Edit.Width = 75;
-            // 
-            // alertBindingSource
-            // 
-            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // groupBox2
             // 
@@ -348,7 +328,7 @@
             this.groupBox2.Location = new System.Drawing.Point(8, 98);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(493, 127);
-            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabIndex = 91;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Twitch Settings";
             // 
@@ -357,7 +337,7 @@
             this.btn_LoadChannelDetails.Location = new System.Drawing.Point(326, 73);
             this.btn_LoadChannelDetails.Name = "btn_LoadChannelDetails";
             this.btn_LoadChannelDetails.Size = new System.Drawing.Size(156, 23);
-            this.btn_LoadChannelDetails.TabIndex = 23;
+            this.btn_LoadChannelDetails.TabIndex = 105;
             this.btn_LoadChannelDetails.Text = "Load Channel Details";
             this.btn_LoadChannelDetails.UseVisualStyleBackColor = true;
             // 
@@ -366,7 +346,7 @@
             this.btn_SaveChannelDetails.Location = new System.Drawing.Point(10, 73);
             this.btn_SaveChannelDetails.Name = "btn_SaveChannelDetails";
             this.btn_SaveChannelDetails.Size = new System.Drawing.Size(156, 23);
-            this.btn_SaveChannelDetails.TabIndex = 22;
+            this.btn_SaveChannelDetails.TabIndex = 103;
             this.btn_SaveChannelDetails.Text = "Save Channel Details";
             this.btn_SaveChannelDetails.UseVisualStyleBackColor = true;
             // 
@@ -375,7 +355,7 @@
             this.btn_RevokeAccessToken.Location = new System.Drawing.Point(372, 43);
             this.btn_RevokeAccessToken.Name = "btn_RevokeAccessToken";
             this.btn_RevokeAccessToken.Size = new System.Drawing.Size(110, 23);
-            this.btn_RevokeAccessToken.TabIndex = 21;
+            this.btn_RevokeAccessToken.TabIndex = 101;
             this.btn_RevokeAccessToken.Text = "Revoke Token";
             this.btn_RevokeAccessToken.UseVisualStyleBackColor = true;
             // 
@@ -384,7 +364,7 @@
             this.txt_AccessToken.Location = new System.Drawing.Point(127, 44);
             this.txt_AccessToken.Name = "txt_AccessToken";
             this.txt_AccessToken.Size = new System.Drawing.Size(239, 20);
-            this.txt_AccessToken.TabIndex = 20;
+            this.txt_AccessToken.TabIndex = 99;
             this.txt_AccessToken.Text = "Paste Access Token Here";
             // 
             // btn_GetAccessToken
@@ -392,7 +372,7 @@
             this.btn_GetAccessToken.Location = new System.Drawing.Point(10, 43);
             this.btn_GetAccessToken.Name = "btn_GetAccessToken";
             this.btn_GetAccessToken.Size = new System.Drawing.Size(110, 23);
-            this.btn_GetAccessToken.TabIndex = 19;
+            this.btn_GetAccessToken.TabIndex = 97;
             this.btn_GetAccessToken.Text = "Get Access Token";
             this.btn_GetAccessToken.UseVisualStyleBackColor = true;
             // 
@@ -401,7 +381,7 @@
             this.txt_ChannelName.Location = new System.Drawing.Point(127, 17);
             this.txt_ChannelName.Name = "txt_ChannelName";
             this.txt_ChannelName.Size = new System.Drawing.Size(355, 20);
-            this.txt_ChannelName.TabIndex = 18;
+            this.txt_ChannelName.TabIndex = 95;
             // 
             // label7
             // 
@@ -409,7 +389,7 @@
             this.label7.Location = new System.Drawing.Point(43, 21);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(77, 13);
-            this.label7.TabIndex = 17;
+            this.label7.TabIndex = 93;
             this.label7.Text = "Channel Name";
             // 
             // btn_Connect
@@ -417,7 +397,7 @@
             this.btn_Connect.Location = new System.Drawing.Point(383, 196);
             this.btn_Connect.Name = "btn_Connect";
             this.btn_Connect.Size = new System.Drawing.Size(120, 23);
-            this.btn_Connect.TabIndex = 17;
+            this.btn_Connect.TabIndex = 11;
             this.btn_Connect.Text = "Connect!";
             this.btn_Connect.UseVisualStyleBackColor = true;
             // 
@@ -431,7 +411,7 @@
             this.tab_Main.Name = "tab_Main";
             this.tab_Main.SelectedIndex = 0;
             this.tab_Main.Size = new System.Drawing.Size(516, 254);
-            this.tab_Main.TabIndex = 19;
+            this.tab_Main.TabIndex = 1;
             // 
             // tab_Manifest
             // 
@@ -466,7 +446,7 @@
             this.lbl_Banned.Location = new System.Drawing.Point(6, 3);
             this.lbl_Banned.Name = "lbl_Banned";
             this.lbl_Banned.Size = new System.Drawing.Size(422, 13);
-            this.lbl_Banned.TabIndex = 1;
+            this.lbl_Banned.TabIndex = 21;
             this.lbl_Banned.Text = "A space-separated list of words you don\'t want to have appear in viewer alert mes" +
     "sages.";
             // 
@@ -476,7 +456,7 @@
             this.txt_BlockedWords.Multiline = true;
             this.txt_BlockedWords.Name = "txt_BlockedWords";
             this.txt_BlockedWords.Size = new System.Drawing.Size(494, 203);
-            this.txt_BlockedWords.TabIndex = 0;
+            this.txt_BlockedWords.TabIndex = 23;
             // 
             // tab_AlertSettings
             // 
@@ -505,7 +485,7 @@
             this.mtxt_TimeBetweenTTS.Name = "mtxt_TimeBetweenTTS";
             this.mtxt_TimeBetweenTTS.PromptChar = '0';
             this.mtxt_TimeBetweenTTS.Size = new System.Drawing.Size(60, 20);
-            this.mtxt_TimeBetweenTTS.TabIndex = 2;
+            this.mtxt_TimeBetweenTTS.TabIndex = 45;
             this.mtxt_TimeBetweenTTS.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             // 
             // lbl_MuteTTS2
@@ -514,7 +494,7 @@
             this.lbl_MuteTTS2.Location = new System.Drawing.Point(28, 152);
             this.lbl_MuteTTS2.Name = "lbl_MuteTTS2";
             this.lbl_MuteTTS2.Size = new System.Drawing.Size(365, 13);
-            this.lbl_MuteTTS2.TabIndex = 12;
+            this.lbl_MuteTTS2.TabIndex = 49;
             this.lbl_MuteTTS2.Text = "Messages received before this time will be displayed on screen but not read.";
             // 
             // label8
@@ -522,7 +502,7 @@
             this.label8.Location = new System.Drawing.Point(202, 13);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(300, 40);
-            this.label8.TabIndex = 11;
+            this.label8.TabIndex = 51;
             this.label8.Text = "While these settings will prevent Twitch emotes from being read by the text-to-sp" +
     "eech voice, it will not catch third party emotes. (Better Twitch TV, FrankerFace" +
     "Z, etc.)";
@@ -534,7 +514,7 @@
             this.chk_DoReadMyEmotes.Location = new System.Drawing.Point(28, 36);
             this.chk_DoReadMyEmotes.Name = "chk_DoReadMyEmotes";
             this.chk_DoReadMyEmotes.Size = new System.Drawing.Size(163, 17);
-            this.chk_DoReadMyEmotes.TabIndex = 10;
+            this.chk_DoReadMyEmotes.TabIndex = 33;
             this.chk_DoReadMyEmotes.Text = "Except my channel\'s emotes.";
             this.chk_DoReadMyEmotes.UseVisualStyleBackColor = true;
             // 
@@ -545,7 +525,7 @@
             this.chk_DoReadMyCheermote.Location = new System.Drawing.Point(28, 82);
             this.chk_DoReadMyCheermote.Name = "chk_DoReadMyCheermote";
             this.chk_DoReadMyCheermote.Size = new System.Drawing.Size(240, 17);
-            this.chk_DoReadMyCheermote.TabIndex = 9;
+            this.chk_DoReadMyCheermote.TabIndex = 37;
             this.chk_DoReadMyCheermote.Text = "Except my Cheermote. (Twitch Partners only.)";
             this.chk_DoReadMyCheermote.UseVisualStyleBackColor = true;
             // 
@@ -556,7 +536,7 @@
             this.chk_DontReadGlobalCheermotes.Location = new System.Drawing.Point(8, 59);
             this.chk_DontReadGlobalCheermotes.Name = "chk_DontReadGlobalCheermotes";
             this.chk_DontReadGlobalCheermotes.Size = new System.Drawing.Size(113, 17);
-            this.chk_DontReadGlobalCheermotes.TabIndex = 8;
+            this.chk_DontReadGlobalCheermotes.TabIndex = 35;
             this.chk_DontReadGlobalCheermotes.Text = "Don\'t read cheers.";
             this.chk_DontReadGlobalCheermotes.UseVisualStyleBackColor = true;
             // 
@@ -567,7 +547,7 @@
             this.chk_DontReadGlobalEmotes.Location = new System.Drawing.Point(8, 13);
             this.chk_DontReadGlobalEmotes.Name = "chk_DontReadGlobalEmotes";
             this.chk_DontReadGlobalEmotes.Size = new System.Drawing.Size(115, 17);
-            this.chk_DontReadGlobalEmotes.TabIndex = 7;
+            this.chk_DontReadGlobalEmotes.TabIndex = 31;
             this.chk_DontReadGlobalEmotes.Text = "Don\'t read emotes.";
             this.chk_DontReadGlobalEmotes.UseVisualStyleBackColor = true;
             // 
@@ -578,7 +558,7 @@
             this.mtxt_FollowCalloutLurkers.Name = "mtxt_FollowCalloutLurkers";
             this.mtxt_FollowCalloutLurkers.PromptChar = '0';
             this.mtxt_FollowCalloutLurkers.Size = new System.Drawing.Size(60, 20);
-            this.mtxt_FollowCalloutLurkers.TabIndex = 6;
+            this.mtxt_FollowCalloutLurkers.TabIndex = 41;
             this.mtxt_FollowCalloutLurkers.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             // 
             // chk_FollowCalloutLurkers
@@ -587,7 +567,7 @@
             this.chk_FollowCalloutLurkers.Location = new System.Drawing.Point(8, 105);
             this.chk_FollowCalloutLurkers.Name = "chk_FollowCalloutLurkers";
             this.chk_FollowCalloutLurkers.Size = new System.Drawing.Size(344, 17);
-            this.chk_FollowCalloutLurkers.TabIndex = 5;
+            this.chk_FollowCalloutLurkers.TabIndex = 39;
             this.chk_FollowCalloutLurkers.Text = "Don\'t play Follow alerts for users that have been silent for more than";
             this.chk_FollowCalloutLurkers.UseVisualStyleBackColor = true;
             // 
@@ -597,7 +577,7 @@
             this.chk_TimeBetweenTTS.Location = new System.Drawing.Point(8, 128);
             this.chk_TimeBetweenTTS.Name = "chk_TimeBetweenTTS";
             this.chk_TimeBetweenTTS.Size = new System.Drawing.Size(96, 17);
-            this.chk_TimeBetweenTTS.TabIndex = 4;
+            this.chk_TimeBetweenTTS.TabIndex = 43;
             this.chk_TimeBetweenTTS.Text = "Ensure at least";
             this.chk_TimeBetweenTTS.UseVisualStyleBackColor = true;
             // 
@@ -607,7 +587,7 @@
             this.lbl_MuteTTS1.Location = new System.Drawing.Point(161, 130);
             this.lbl_MuteTTS1.Name = "lbl_MuteTTS1";
             this.lbl_MuteTTS1.Size = new System.Drawing.Size(217, 13);
-            this.lbl_MuteTTS1.TabIndex = 3;
+            this.lbl_MuteTTS1.TabIndex = 47;
             this.lbl_MuteTTS1.Text = "between TTS messages from the same user.";
             // 
             // tab_Configuration
@@ -640,7 +620,7 @@
             this.groupBox1.Location = new System.Drawing.Point(8, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(493, 82);
-            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabIndex = 61;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Animation Window Settings";
             // 
@@ -650,7 +630,7 @@
             this.btn_ColourPicker.Location = new System.Drawing.Point(184, 23);
             this.btn_ColourPicker.Name = "btn_ColourPicker";
             this.btn_ColourPicker.Size = new System.Drawing.Size(22, 23);
-            this.btn_ColourPicker.TabIndex = 16;
+            this.btn_ColourPicker.TabIndex = 65;
             this.btn_ColourPicker.UseVisualStyleBackColor = true;
             // 
             // rad_30FPS
@@ -660,7 +640,7 @@
             this.rad_30FPS.Location = new System.Drawing.Point(392, 269);
             this.rad_30FPS.Name = "rad_30FPS";
             this.rad_30FPS.Size = new System.Drawing.Size(60, 17);
-            this.rad_30FPS.TabIndex = 20;
+            this.rad_30FPS.TabIndex = 15;
             this.rad_30FPS.TabStop = true;
             this.rad_30FPS.Text = "30 FPS";
             this.rad_30FPS.UseVisualStyleBackColor = true;
@@ -671,7 +651,7 @@
             this.rad_60FPS.Location = new System.Drawing.Point(459, 269);
             this.rad_60FPS.Name = "rad_60FPS";
             this.rad_60FPS.Size = new System.Drawing.Size(60, 17);
-            this.rad_60FPS.TabIndex = 21;
+            this.rad_60FPS.TabIndex = 17;
             this.rad_60FPS.Text = "60 FPS";
             this.rad_60FPS.UseVisualStyleBackColor = true;
             // 
@@ -680,10 +660,30 @@
             this.btn_Update.Location = new System.Drawing.Point(25, 270);
             this.btn_Update.Name = "btn_Update";
             this.btn_Update.Size = new System.Drawing.Size(120, 23);
-            this.btn_Update.TabIndex = 22;
+            this.btn_Update.TabIndex = 13;
             this.btn_Update.Text = "Newest Version";
             this.btn_Update.UseVisualStyleBackColor = true;
             this.btn_Update.Visible = false;
+            // 
+            // alertNameDataGridViewTextBoxColumn
+            // 
+            this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.alertNameDataGridViewTextBoxColumn.DataPropertyName = "AlertName";
+            this.alertNameDataGridViewTextBoxColumn.HeaderText = "Alert Nickname";
+            this.alertNameDataGridViewTextBoxColumn.Name = "alertNameDataGridViewTextBoxColumn";
+            // 
+            // alertTypeDataGridViewTextBoxColumn
+            // 
+            this.alertTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.alertTypeDataGridViewTextBoxColumn.DataPropertyName = "AlertType";
+            this.alertTypeDataGridViewTextBoxColumn.HeaderText = "Alert Type";
+            this.alertTypeDataGridViewTextBoxColumn.MinimumWidth = 80;
+            this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
+            this.alertTypeDataGridViewTextBoxColumn.Width = 80;
+            // 
+            // alertBindingSource
+            // 
+            this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
             // MainTADAForm
             // 
@@ -703,7 +703,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AnimationWindowSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Alerts)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tab_Main.ResumeLayout(false);
@@ -715,6 +714,7 @@
             this.tab_Configuration.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

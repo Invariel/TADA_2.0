@@ -511,7 +511,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             CreateMDIForm(newAlertAudio, GetCaption("Audio", alertAudioBindingSource.Count - 1));
         }
 
-        private void NewStreamerTextForm (object sender = null, EventArgs e = null)
+private void NewStreamerTextForm (object sender = null, EventArgs e = null)
         {
             TADAAlertText newAlertText = streamerAlertTextBindingSource.AddNew() as TADAAlertText;
             this.mainAlert.StreamerTexts.Add(newAlertText);
@@ -996,7 +996,7 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                     if (currentPosition != null)
                     {
-                        DrawWaypoints(waypointContainer, alertText.Dimensions, null, currentPosition, COLOR_STREAMER_TEXT);
+                        DrawWaypoints(waypointContainer, alertText.Dimensions, null, currentPosition, COLOR_VIEWER_TEXT);
                     }
                 }
             }

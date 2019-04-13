@@ -23,14 +23,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private static MainTADAForm _mainTADAForm;
         internal Played_Alerts playedAlerts = null;
-        private static TADAConfigurationSettings _configurationSettings;
+        private TADAConfigurationSettings _configurationSettings;
 
         public static MainTADAForm mainTADAForm
         {
             get { return _mainTADAForm; }
         }
 
-        public static TADAConfigurationSettings configurationSettings
+        public TADAConfigurationSettings configurationSettings
         {
             get { return _configurationSettings; }
         }
@@ -151,7 +151,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void StopWebSocketServer(object sender, FormClosingEventArgs e)
         {
-            webSocketServer.StopListening();
+            webSocketServer?.StopListening();
         }
 
         private void GetAccessToken(object sender, EventArgs e)
@@ -333,7 +333,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 DefaultExt = "tada",
                 Filter = "TADA Configuration Files (*.tada)|*.tada|All Files (*.*)|*.*",
                 FilterIndex = 0,
-                InitialDirectory = Environment.CurrentDirectory,
+                InitialDirectory = Environment.CurrentDirectory + @"\config",
                 RestoreDirectory = true,
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -373,36 +373,8 @@ namespace TADA_Advanced_Desktop_Alerts
                     xmlWriter.WriteAttributeString("Value", (rad_60FPS.Checked ? "60" : "30"));
                     xmlWriter.WriteEndElement();
 
-                    xmlWriter.WriteStartElement("Options");
-                    if (chk_DontReadGlobalEmotes.Checked)
-                    {
-                        xmlWriter.WriteAttributeString("DontReadGlobalEmotes", "true");
-                        if (chk_DoReadMyEmotes.Checked)
-                        {
-                            xmlWriter.WriteAttributeString("DoReadMyEmotes", "true");
-                        }
-                    }
+                    this._configurationSettings.WriteXml(xmlWriter);
 
-                    if (chk_DontReadGlobalCheermotes.Checked)
-                    {
-                        xmlWriter.WriteAttributeString("DontReadGlobalCheermotes", "true");
-                        if (chk_DoReadMyCheermote.Checked)
-                        {
-                            xmlWriter.WriteAttributeString("DoReadMyCheermote", "true");
-                        }
-                    }
-
-                    if (chk_FollowCalloutLurkers.Checked)
-                    {
-                        xmlWriter.WriteAttributeString("LurkerTime", mtxt_FollowCalloutLurkers.Text);
-                    }
-
-                    if (chk_TimeBetweenTTS.Checked)
-                    {
-                        xmlWriter.WriteAttributeString("TTSTime", mtxt_TimeBetweenTTS.Text);
-                    }
-                    xmlWriter.WriteEndElement();
-                    
                     BindingSource b = dg_Alerts.DataSource as BindingSource;
 
                     foreach (TADAAlert a in b)
@@ -424,7 +396,7 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 Filter = "TADA Configuration Files (*.tada)|*.tada|All Files (*.*)|*.*",
                 FilterIndex = 0,
-                InitialDirectory = Environment.CurrentDirectory,
+                InitialDirectory = Environment.CurrentDirectory + @"\config",
                 CheckFileExists = true,
                 RestoreDirectory = true
             };
@@ -505,35 +477,31 @@ namespace TADA_Advanced_Desktop_Alerts
                                 break;
                         }
                     }
-                    else if (xmlReader.IsStartElement("Options"))
+                    else if (xmlReader.IsStartElement("GlobalSettings"))
                     {
-                        Boolean dontReadGlobalEmotes = XmlHelper.ReadAttribute(xmlReader, "DontReadGlobalEmotes", false);
-                        Boolean doReadMyEmotes = XmlHelper.ReadAttribute(xmlReader, "DoReadMyEmotes", false);
-                        Boolean dontReadGlobalCheermotes = XmlHelper.ReadAttribute(xmlReader, "DontReadGlobalCheermotes", false);
-                        Boolean doReadMyCheermotes = XmlHelper.ReadAttribute(xmlReader, "DoReadMyCheermotes", false);
-                        String followIdleTime = xmlReader.GetAttribute("LurkerTime");
-                        String ttsTime = xmlReader.GetAttribute("TTSTime");
+                        this.configurationSettings.ReadXml(xmlReader);
 
+                        blockUpdates = true;
                         // Then do a bunch of magic.
-                        chk_DontReadGlobalEmotes.Checked = dontReadGlobalEmotes;
-                        chk_DoReadMyEmotes.Checked = dontReadGlobalEmotes && doReadMyEmotes;
-                        chk_DontReadGlobalCheermotes.Checked = dontReadGlobalCheermotes;
-                        chk_DoReadMyCheermote.Checked = dontReadGlobalCheermotes && doReadMyCheermotes;
+                        chk_DontReadGlobalEmotes.Checked = this.configurationSettings.dontReadEmotes;
+                        chk_DoReadMyEmotes.Checked = this.configurationSettings.allowMyEmotes;
+                        chk_DontReadGlobalCheermotes.Checked = this.configurationSettings.dontReadCheers;
+                        chk_DoReadMyCheermote.Checked = this.configurationSettings.allowMyCheer;
 
-                        TimeSpan followIdleTimespan = (String.IsNullOrEmpty(followIdleTime) ? new TimeSpan(0) : General.TimeSpanFromString(followIdleTime));
-                        TimeSpan ttsTimespan = (String.IsNullOrEmpty(ttsTime) ? new TimeSpan(0) : General.TimeSpanFromString(ttsTime));
-
-                        if (followIdleTimespan.TotalMilliseconds > 0)
+                        if (this.configurationSettings.lurkingFollowerTime != TimeSpan.Zero)
                         {
                             chk_FollowCalloutLurkers.Checked = true;
-                            mtxt_FollowCalloutLurkers.Text = General.StringFromTimeSpan(followIdleTimespan);
+                            mtxt_FollowCalloutLurkers.Text = General.StringFromTimeSpan(this.configurationSettings.lurkingFollowerTime);
                         }
 
-                        if (ttsTimespan.TotalMilliseconds > 0)
+                        if (this.configurationSettings.spammyTTSTime != TimeSpan.Zero)
                         {
                             chk_TimeBetweenTTS.Checked = true;
-                            mtxt_TimeBetweenTTS.Text = General.StringFromTimeSpan(ttsTimespan);
+                            mtxt_TimeBetweenTTS.Text = General.StringFromTimeSpan(this.configurationSettings.spammyTTSTime);
                         }
+
+                        txt_BlockedWords.Text = this.configurationSettings.blockedWords;
+                        blockUpdates = false;
                     }
                     else if (xmlReader.IsStartElement("TADAConfiguration"))
                     {
@@ -550,7 +518,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 DefaultExt = "cfg",
                 Filter = "Channel Configuration Files (*.cfg)|*.cfg|All Files (*.*)|*.*",
                 FilterIndex = 0,
-                InitialDirectory = Environment.CurrentDirectory,
+                InitialDirectory = Environment.CurrentDirectory + @"\config",
                 RestoreDirectory = true,
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -575,7 +543,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 Filter = "Channel Configuration Files(*.cfg)|*.cfg|All Files (*.*)|*.*",
                 DefaultExt = ".cfg",
                 FilterIndex = 0,
-                InitialDirectory = Environment.CurrentDirectory,
+                InitialDirectory = Environment.CurrentDirectory + @"\config",
                 CheckFileExists = true,
                 RestoreDirectory = true
             };
@@ -647,11 +615,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void UpdateConfiguration (object sender, EventArgs e)
         {
-            configurationSettings.dontReadEmotes = chk_DontReadGlobalEmotes.Checked;
-            configurationSettings.allowMyEmotes = chk_DoReadMyEmotes.Checked;
+            if (!blockUpdates)
+            {
+                configurationSettings.dontReadEmotes = chk_DontReadGlobalEmotes.Checked;
+                configurationSettings.allowMyEmotes = chk_DoReadMyEmotes.Checked;
 
-            configurationSettings.dontReadCheers = chk_DontReadGlobalCheermotes.Checked;
-            configurationSettings.allowMyCheer = chk_DoReadMyCheermote.Checked;
+                configurationSettings.dontReadCheers = chk_DontReadGlobalCheermotes.Checked;
+                configurationSettings.allowMyCheer = chk_DoReadMyCheermote.Checked;
+            }
         }
 
         private void UpdateFollowCallout (object sender, EventArgs e)
@@ -659,11 +630,18 @@ namespace TADA_Advanced_Desktop_Alerts
             if (chk_FollowCalloutLurkers.Checked)
             {
                 configurationSettings.dontToastLurkingFollowers = true;
-                configurationSettings.lurkingFollowerTime = General.TimeSpanFromString(mtxt_FollowCalloutLurkers.Text);
+                if (!blockUpdates)
+                {
+                    configurationSettings.lurkingFollowerTime = General.TimeSpanFromString(mtxt_FollowCalloutLurkers.Text);
+                }
             }
             else
             {
                 configurationSettings.dontToastLurkingFollowers = false;
+                if (!blockUpdates)
+                {
+                    configurationSettings.lurkingFollowerTime = new TimeSpan(0);
+                }
             }
         }
 
@@ -672,16 +650,23 @@ namespace TADA_Advanced_Desktop_Alerts
             if (chk_TimeBetweenTTS.Checked)
             {
                 configurationSettings.disallowSpammyTTS = true;
-                configurationSettings.spammyTTSTime = General.TimeSpanFromString(mtxt_TimeBetweenTTS.Text);
+                if (!blockUpdates)
+                {
+                    configurationSettings.spammyTTSTime = General.TimeSpanFromString(mtxt_TimeBetweenTTS.Text);
+                }
             }
             else
             {
                 configurationSettings.disallowSpammyTTS = false;
+                if (!blockUpdates)
+                {
+                    configurationSettings.spammyTTSTime = new TimeSpan(0);
+                }
             }
         }
     }
 
-    public class TADAConfigurationSettings
+    public class TADAConfigurationSettings : PropertyAndXML
     {
         public String blockedWords = "";
 
@@ -696,5 +681,93 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public bool disallowSpammyTTS = false;
         public TimeSpan spammyTTSTime = new TimeSpan(0);
+
+        public override void ReadXml(XmlReader reader)
+        {
+            XmlHelper.ExpectTag(reader, "GlobalSettings");
+
+            dontReadEmotes = XmlHelper.ReadAttribute(reader, "IgnoreEmotes", false);
+            allowMyEmotes = dontReadEmotes && XmlHelper.ReadAttribute(reader, "AllowMyEmotes", false);
+
+            dontReadCheers = XmlHelper.ReadAttribute(reader, "IgnoreCheermotes", false);
+            allowMyCheer = dontReadCheers && XmlHelper.ReadAttribute(reader, "AllowMyCheermote", false);
+
+            String followTime = reader.GetAttribute("FollowerActiveTime");
+            if (!String.IsNullOrEmpty(followTime))
+            {
+                lurkingFollowerTime = General.TimeSpanFromString(followTime);
+                if (lurkingFollowerTime != TimeSpan.Zero)
+                {
+                    dontToastLurkingFollowers = true;
+                }
+            }
+
+            String repeatTime = reader.GetAttribute("DisallowTTSSpam");
+            if (!String.IsNullOrEmpty(repeatTime))
+            {
+                spammyTTSTime = General.TimeSpanFromString(repeatTime);
+                if (spammyTTSTime != TimeSpan.Zero)
+                {
+                    disallowSpammyTTS = true;
+                }
+            }
+
+            reader.Read();
+
+            if (reader.Name == "BlockedWords")
+            {
+                blockedWords = reader.ReadElementContentAsString();
+            }
+
+            while (reader.Name != "GlobalSettings" && !reader.IsStartElement())
+            {
+                if (reader.EOF)
+                {
+                    throw new XmlException("Did not find a closing GlobalSettings tag.");
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("GlobalSettings");
+            
+            if (dontReadEmotes)
+            {
+                writer.WriteAttributeString("IgnoreEmotes", "true");
+                if (allowMyEmotes)
+                {
+                    writer.WriteAttributeString("AllowMyEmotes", "true");
+                }
+            }
+
+            if (dontReadCheers)
+            {
+                writer.WriteAttributeString("IgnoreCheermotes", "true");
+                if (allowMyCheer)
+                {
+                    writer.WriteAttributeString("AllowMyCheermote", "true");
+                }
+            }
+
+            if (dontToastLurkingFollowers)
+            {
+                writer.WriteAttributeString("FollowerActiveTime", General.StringFromTimeSpan(lurkingFollowerTime));
+            }
+
+            if (disallowSpammyTTS)
+            {
+                writer.WriteAttributeString("DisallowTTSSpam", General.StringFromTimeSpan(spammyTTSTime));
+            }
+
+            if (!String.IsNullOrEmpty(blockedWords))
+            {
+                writer.WriteStartElement("BlockedWords");
+                writer.WriteString(blockedWords);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
     }
 }

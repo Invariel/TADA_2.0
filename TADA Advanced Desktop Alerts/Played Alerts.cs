@@ -511,8 +511,8 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
 
                         // If we don't want to toast idle people, and the user hasn't spoken in the specified time, then don't toast.
-                        if (MainTADAForm.configurationSettings.dontToastLurkingFollowers &&
-                            DateTime.Now - MainTADAForm.configurationSettings.lurkingFollowerTime > user.lastSpoke)
+                        if (MainTADAForm.mainTADAForm.configurationSettings.dontToastLurkingFollowers &&
+                            DateTime.Now - MainTADAForm.mainTADAForm.configurationSettings.lurkingFollowerTime > user.lastSpoke)
                         {
                             alertType = General.ALERTTYPES.NONE;
                         }
@@ -698,17 +698,17 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (!String.IsNullOrEmpty(message))
                 {
                     // Remove blocked words.
-                    foreach (String blockedWord in MainTADAForm.configurationSettings.blockedWords.Split(' '))
+                    foreach (String blockedWord in MainTADAForm.mainTADAForm.configurationSettings.blockedWords.Split(' '))
                     {
                         message = General.ReplaceCaseInsensitive(message, blockedWord, null);
                     }
 
-                    if (MainTADAForm.configurationSettings.dontReadEmotes)
+                    if (MainTADAForm.mainTADAForm.configurationSettings.dontReadEmotes)
                     {
                         // Figure out what the emote words are.  Remove them.
                     }
 
-                    if (MainTADAForm.configurationSettings.dontReadCheers)
+                    if (MainTADAForm.mainTADAForm.configurationSettings.dontReadCheers)
                     {
                         // Figure out what the cheer words are.  Remove them and the amounts.
                     }
@@ -722,8 +722,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (hasReadMessage)
                 {
                     // Then, make sure they aren't TTS'ing too much.
-                    if (!MainTADAForm.configurationSettings.disallowSpammyTTS ||
-                        DateTime.Now - MainTADAForm.configurationSettings.spammyTTSTime >= user.lastTTS)
+                    if (!MainTADAForm.mainTADAForm.configurationSettings.disallowSpammyTTS ||
+                        DateTime.Now - MainTADAForm.mainTADAForm.configurationSettings.spammyTTSTime >= user.lastTTS)
                     {
                         alertResponse.SetReadMessage(message);
                         user.lastTTS = DateTime.Now;

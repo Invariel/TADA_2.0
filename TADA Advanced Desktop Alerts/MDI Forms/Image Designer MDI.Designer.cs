@@ -168,7 +168,7 @@
             this.lbl_Balance.Location = new System.Drawing.Point(265, 241);
             this.lbl_Balance.Name = "lbl_Balance";
             this.lbl_Balance.Size = new System.Drawing.Size(58, 13);
-            this.lbl_Balance.TabIndex = 121;
+            this.lbl_Balance.TabIndex = 61;
             this.lbl_Balance.Text = "Balance: 0";
             this.lbl_Balance.Visible = false;
             // 
@@ -180,7 +180,7 @@
             this.grp_ImagePreview.Location = new System.Drawing.Point(349, 318);
             this.grp_ImagePreview.Name = "grp_ImagePreview";
             this.grp_ImagePreview.Size = new System.Drawing.Size(400, 58);
-            this.grp_ImagePreview.TabIndex = 117;
+            this.grp_ImagePreview.TabIndex = 80;
             this.grp_ImagePreview.TabStop = false;
             this.grp_ImagePreview.Text = "Preview Controls";
             // 
@@ -191,7 +191,7 @@
             this.mtxt_PreviewPosition.Name = "mtxt_PreviewPosition";
             this.mtxt_PreviewPosition.PromptChar = '0';
             this.mtxt_PreviewPosition.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_PreviewPosition.TabIndex = 122;
+            this.mtxt_PreviewPosition.TabIndex = 82;
             this.mtxt_PreviewPosition.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             // 
             // trk_Position
@@ -200,7 +200,7 @@
             this.trk_Position.Location = new System.Drawing.Point(6, 13);
             this.trk_Position.Name = "trk_Position";
             this.trk_Position.Size = new System.Drawing.Size(187, 45);
-            this.trk_Position.TabIndex = 52;
+            this.trk_Position.TabIndex = 81;
             this.trk_Position.TickFrequency = 1000;
             this.trk_Position.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             // 
@@ -209,7 +209,7 @@
             this.btn_PlayPause.Location = new System.Drawing.Point(316, 17);
             this.btn_PlayPause.Name = "btn_PlayPause";
             this.btn_PlayPause.Size = new System.Drawing.Size(81, 23);
-            this.btn_PlayPause.TabIndex = 61;
+            this.btn_PlayPause.TabIndex = 83;
             this.btn_PlayPause.Text = "Play / Pause";
             this.btn_PlayPause.UseVisualStyleBackColor = true;
             // 
@@ -228,7 +228,7 @@
             0});
             this.numud_DesiredDimensionsY.Name = "numud_DesiredDimensionsY";
             this.numud_DesiredDimensionsY.Size = new System.Drawing.Size(65, 20);
-            this.numud_DesiredDimensionsY.TabIndex = 81;
+            this.numud_DesiredDimensionsY.TabIndex = 26;
             this.numud_DesiredDimensionsY.Value = new decimal(new int[] {
             1,
             0,
@@ -250,7 +250,7 @@
             0});
             this.numud_DesiredDimensionsX.Name = "numud_DesiredDimensionsX";
             this.numud_DesiredDimensionsX.Size = new System.Drawing.Size(65, 20);
-            this.numud_DesiredDimensionsX.TabIndex = 79;
+            this.numud_DesiredDimensionsX.TabIndex = 24;
             this.numud_DesiredDimensionsX.Value = new decimal(new int[] {
             1,
             0,
@@ -273,7 +273,7 @@
             0});
             this.numud_ActualDimensionsY.Name = "numud_ActualDimensionsY";
             this.numud_ActualDimensionsY.Size = new System.Drawing.Size(65, 20);
-            this.numud_ActualDimensionsY.TabIndex = 76;
+            this.numud_ActualDimensionsY.TabIndex = 21;
             this.numud_ActualDimensionsY.Value = new decimal(new int[] {
             1,
             0,
@@ -296,7 +296,7 @@
             0});
             this.numud_ActualDimensionsX.Name = "numud_ActualDimensionsX";
             this.numud_ActualDimensionsX.Size = new System.Drawing.Size(65, 20);
-            this.numud_ActualDimensionsX.TabIndex = 74;
+            this.numud_ActualDimensionsX.TabIndex = 19;
             this.numud_ActualDimensionsX.Value = new decimal(new int[] {
             1,
             0,
@@ -328,7 +328,7 @@
             this.lbl_AnimatedGifTimes.Location = new System.Drawing.Point(295, 37);
             this.lbl_AnimatedGifTimes.Name = "lbl_AnimatedGifTimes";
             this.lbl_AnimatedGifTimes.Size = new System.Drawing.Size(31, 13);
-            this.lbl_AnimatedGifTimes.TabIndex = 72;
+            this.lbl_AnimatedGifTimes.TabIndex = 17;
             this.lbl_AnimatedGifTimes.Text = "times";
             this.lbl_AnimatedGifTimes.Visible = false;
             // 
@@ -337,7 +337,7 @@
             this.numud_AnimatedGifLoop.Location = new System.Drawing.Point(246, 33);
             this.numud_AnimatedGifLoop.Name = "numud_AnimatedGifLoop";
             this.numud_AnimatedGifLoop.Size = new System.Drawing.Size(46, 20);
-            this.numud_AnimatedGifLoop.TabIndex = 71;
+            this.numud_AnimatedGifLoop.TabIndex = 16;
             this.numud_AnimatedGifLoop.Visible = false;
             // 
             // lbl_AnimatedGifLoop
@@ -346,7 +346,7 @@
             this.lbl_AnimatedGifLoop.Location = new System.Drawing.Point(213, 37);
             this.lbl_AnimatedGifLoop.Name = "lbl_AnimatedGifLoop";
             this.lbl_AnimatedGifLoop.Size = new System.Drawing.Size(31, 13);
-            this.lbl_AnimatedGifLoop.TabIndex = 70;
+            this.lbl_AnimatedGifLoop.TabIndex = 15;
             this.lbl_AnimatedGifLoop.Text = "&Loop";
             this.lbl_AnimatedGifLoop.Visible = false;
             // 
@@ -356,7 +356,7 @@
             this.lbl_Volume.Location = new System.Drawing.Point(265, 290);
             this.lbl_Volume.Name = "lbl_Volume";
             this.lbl_Volume.Size = new System.Drawing.Size(54, 13);
-            this.lbl_Volume.TabIndex = 120;
+            this.lbl_Volume.TabIndex = 71;
             this.lbl_Volume.Text = "Volume: 0";
             this.lbl_Volume.Visible = false;
             // 
@@ -367,7 +367,7 @@
             this.trk_Volume.Maximum = 1000;
             this.trk_Volume.Name = "trk_Volume";
             this.trk_Volume.Size = new System.Drawing.Size(248, 45);
-            this.trk_Volume.TabIndex = 118;
+            this.trk_Volume.TabIndex = 70;
             this.trk_Volume.TickFrequency = 50;
             this.trk_Volume.Visible = false;
             // 
@@ -377,7 +377,7 @@
             this.lbl_LoopAt.Location = new System.Drawing.Point(10, 171);
             this.lbl_LoopAt.Name = "lbl_LoopAt";
             this.lbl_LoopAt.Size = new System.Drawing.Size(44, 13);
-            this.lbl_LoopAt.TabIndex = 109;
+            this.lbl_LoopAt.TabIndex = 50;
             this.lbl_LoopAt.Text = "Loop At";
             this.lbl_LoopAt.Visible = false;
             // 
@@ -387,7 +387,7 @@
             this.lbl_PlayFor.Location = new System.Drawing.Point(181, 90);
             this.lbl_PlayFor.Name = "lbl_PlayFor";
             this.lbl_PlayFor.Size = new System.Drawing.Size(45, 13);
-            this.lbl_PlayFor.TabIndex = 93;
+            this.lbl_PlayFor.TabIndex = 28;
             this.lbl_PlayFor.Text = "Play For";
             this.lbl_PlayFor.Visible = false;
             // 
@@ -397,7 +397,7 @@
             this.lbl_StartAt.Location = new System.Drawing.Point(12, 142);
             this.lbl_StartAt.Name = "lbl_StartAt";
             this.lbl_StartAt.Size = new System.Drawing.Size(42, 13);
-            this.lbl_StartAt.TabIndex = 101;
+            this.lbl_StartAt.TabIndex = 40;
             this.lbl_StartAt.Text = "Start At";
             this.lbl_StartAt.Visible = false;
             // 
@@ -407,7 +407,7 @@
             this.chk_AspectRatio.Location = new System.Drawing.Point(613, 62);
             this.chk_AspectRatio.Name = "chk_AspectRatio";
             this.chk_AspectRatio.Size = new System.Drawing.Size(130, 17);
-            this.chk_AspectRatio.TabIndex = 82;
+            this.chk_AspectRatio.TabIndex = 22;
             this.chk_AspectRatio.Text = "&Maintain Aspect Ratio";
             this.chk_AspectRatio.UseVisualStyleBackColor = true;
             // 
@@ -416,7 +416,7 @@
             this.btn_RestoreDimensions.Location = new System.Drawing.Point(613, 32);
             this.btn_RestoreDimensions.Name = "btn_RestoreDimensions";
             this.btn_RestoreDimensions.Size = new System.Drawing.Size(136, 23);
-            this.btn_RestoreDimensions.TabIndex = 77;
+            this.btn_RestoreDimensions.TabIndex = 27;
             this.btn_RestoreDimensions.Text = "&Original Size";
             this.btn_RestoreDimensions.UseVisualStyleBackColor = true;
             // 
@@ -426,7 +426,7 @@
             this.label21.Location = new System.Drawing.Point(529, 64);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(12, 13);
-            this.label21.TabIndex = 80;
+            this.label21.TabIndex = 25;
             this.label21.Text = "x";
             // 
             // label19
@@ -435,7 +435,7 @@
             this.label19.Location = new System.Drawing.Point(529, 37);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(12, 13);
-            this.label19.TabIndex = 75;
+            this.label19.TabIndex = 20;
             this.label19.Text = "x";
             // 
             // lbl_DesiredDimensions
@@ -444,7 +444,7 @@
             this.lbl_DesiredDimensions.Location = new System.Drawing.Point(356, 64);
             this.lbl_DesiredDimensions.Name = "lbl_DesiredDimensions";
             this.lbl_DesiredDimensions.Size = new System.Drawing.Size(100, 13);
-            this.lbl_DesiredDimensions.TabIndex = 78;
+            this.lbl_DesiredDimensions.TabIndex = 23;
             this.lbl_DesiredDimensions.Text = "&Desired Dimensions";
             // 
             // lbl_ActualDimensions
@@ -453,7 +453,7 @@
             this.lbl_ActualDimensions.Location = new System.Drawing.Point(362, 37);
             this.lbl_ActualDimensions.Name = "lbl_ActualDimensions";
             this.lbl_ActualDimensions.Size = new System.Drawing.Size(94, 13);
-            this.lbl_ActualDimensions.TabIndex = 73;
+            this.lbl_ActualDimensions.TabIndex = 18;
             this.lbl_ActualDimensions.Text = "Actual Dimensions";
             // 
             // txt_Duration
@@ -462,7 +462,7 @@
             this.txt_Duration.Location = new System.Drawing.Point(58, 33);
             this.txt_Duration.Name = "txt_Duration";
             this.txt_Duration.Size = new System.Drawing.Size(111, 20);
-            this.txt_Duration.TabIndex = 69;
+            this.txt_Duration.TabIndex = 14;
             // 
             // lbl_Duration
             // 
@@ -470,7 +470,7 @@
             this.lbl_Duration.Location = new System.Drawing.Point(4, 37);
             this.lbl_Duration.Name = "lbl_Duration";
             this.lbl_Duration.Size = new System.Drawing.Size(47, 13);
-            this.lbl_Duration.TabIndex = 68;
+            this.lbl_Duration.TabIndex = 13;
             this.lbl_Duration.Text = "Duration";
             // 
             // btn_FilenameBrowse
@@ -478,7 +478,7 @@
             this.btn_FilenameBrowse.Location = new System.Drawing.Point(613, 5);
             this.btn_FilenameBrowse.Name = "btn_FilenameBrowse";
             this.btn_FilenameBrowse.Size = new System.Drawing.Size(136, 23);
-            this.btn_FilenameBrowse.TabIndex = 67;
+            this.btn_FilenameBrowse.TabIndex = 12;
             this.btn_FilenameBrowse.Text = "&Browse";
             this.btn_FilenameBrowse.UseVisualStyleBackColor = true;
             // 
@@ -487,7 +487,7 @@
             this.txt_Filename.Location = new System.Drawing.Point(58, 6);
             this.txt_Filename.Name = "txt_Filename";
             this.txt_Filename.Size = new System.Drawing.Size(549, 20);
-            this.txt_Filename.TabIndex = 66;
+            this.txt_Filename.TabIndex = 11;
             // 
             // lbl_Filename
             // 
@@ -495,7 +495,7 @@
             this.lbl_Filename.Location = new System.Drawing.Point(2, 10);
             this.lbl_Filename.Name = "lbl_Filename";
             this.lbl_Filename.Size = new System.Drawing.Size(49, 13);
-            this.lbl_Filename.TabIndex = 65;
+            this.lbl_Filename.TabIndex = 10;
             this.lbl_Filename.Text = "&Filename";
             // 
             // trk_Balance
@@ -506,7 +506,7 @@
             this.trk_Balance.Minimum = -100;
             this.trk_Balance.Name = "trk_Balance";
             this.trk_Balance.Size = new System.Drawing.Size(248, 45);
-            this.trk_Balance.TabIndex = 119;
+            this.trk_Balance.TabIndex = 60;
             this.trk_Balance.TickFrequency = 10;
             this.trk_Balance.Visible = false;
             // 
@@ -517,7 +517,7 @@
             this.mtxt_PlayFor.Name = "mtxt_PlayFor";
             this.mtxt_PlayFor.PromptChar = '0';
             this.mtxt_PlayFor.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_PlayFor.TabIndex = 122;
+            this.mtxt_PlayFor.TabIndex = 29;
             this.mtxt_PlayFor.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_PlayFor.Visible = false;
             // 
@@ -528,7 +528,7 @@
             this.mtxt_StartAt.Name = "mtxt_StartAt";
             this.mtxt_StartAt.PromptChar = '0';
             this.mtxt_StartAt.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_StartAt.TabIndex = 122;
+            this.mtxt_StartAt.TabIndex = 42;
             this.mtxt_StartAt.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_StartAt.Visible = false;
             // 
@@ -539,7 +539,7 @@
             this.mtxt_LoopAt.Name = "mtxt_LoopAt";
             this.mtxt_LoopAt.PromptChar = '0';
             this.mtxt_LoopAt.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_LoopAt.TabIndex = 122;
+            this.mtxt_LoopAt.TabIndex = 52;
             this.mtxt_LoopAt.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_LoopAt.Visible = false;
             // 
@@ -548,7 +548,7 @@
             this.trk_StartAt.Location = new System.Drawing.Point(60, 139);
             this.trk_StartAt.Name = "trk_StartAt";
             this.trk_StartAt.Size = new System.Drawing.Size(166, 45);
-            this.trk_StartAt.TabIndex = 123;
+            this.trk_StartAt.TabIndex = 41;
             this.trk_StartAt.Visible = false;
             // 
             // trk_LoopAt
@@ -556,7 +556,7 @@
             this.trk_LoopAt.Location = new System.Drawing.Point(60, 159);
             this.trk_LoopAt.Name = "trk_LoopAt";
             this.trk_LoopAt.Size = new System.Drawing.Size(166, 45);
-            this.trk_LoopAt.TabIndex = 124;
+            this.trk_LoopAt.TabIndex = 51;
             this.trk_LoopAt.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.trk_LoopAt.Visible = false;
             // 

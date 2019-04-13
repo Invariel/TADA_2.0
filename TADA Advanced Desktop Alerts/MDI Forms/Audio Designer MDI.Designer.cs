@@ -99,6 +99,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.trk_Balance)).BeginInit();
             this.SuspendLayout();
             // 
+            // tab_Focus
+            // 
+            this.tab_Focus.Size = new System.Drawing.Size(761, 405);
+            // 
             // tab_Element
             // 
             this.tab_Element.Controls.Add(this.trk_LoopAt);
@@ -122,6 +126,11 @@
             this.tab_Element.Controls.Add(this.txt_Duration);
             this.tab_Element.Controls.Add(this.lbl_Duration);
             this.tab_Element.Controls.Add(this.trk_StartAt);
+            this.tab_Element.Size = new System.Drawing.Size(753, 379);
+            // 
+            // tab_Waypoints
+            // 
+            this.tab_Waypoints.Size = new System.Drawing.Size(753, 379);
             // 
             // lbl_Filename
             // 
@@ -129,7 +138,7 @@
             this.lbl_Filename.Location = new System.Drawing.Point(3, 11);
             this.lbl_Filename.Name = "lbl_Filename";
             this.lbl_Filename.Size = new System.Drawing.Size(49, 13);
-            this.lbl_Filename.TabIndex = 224;
+            this.lbl_Filename.TabIndex = 10;
             this.lbl_Filename.Text = "&Filename";
             // 
             // txt_Filename
@@ -137,14 +146,14 @@
             this.txt_Filename.Location = new System.Drawing.Point(59, 7);
             this.txt_Filename.Name = "txt_Filename";
             this.txt_Filename.Size = new System.Drawing.Size(549, 20);
-            this.txt_Filename.TabIndex = 225;
+            this.txt_Filename.TabIndex = 11;
             // 
             // btn_FilenameBrowse
             // 
             this.btn_FilenameBrowse.Location = new System.Drawing.Point(614, 6);
             this.btn_FilenameBrowse.Name = "btn_FilenameBrowse";
             this.btn_FilenameBrowse.Size = new System.Drawing.Size(136, 23);
-            this.btn_FilenameBrowse.TabIndex = 226;
+            this.btn_FilenameBrowse.TabIndex = 12;
             this.btn_FilenameBrowse.Text = "&Browse";
             this.btn_FilenameBrowse.UseVisualStyleBackColor = true;
             // 
@@ -154,7 +163,7 @@
             this.lbl_Duration.Location = new System.Drawing.Point(5, 38);
             this.lbl_Duration.Name = "lbl_Duration";
             this.lbl_Duration.Size = new System.Drawing.Size(47, 13);
-            this.lbl_Duration.TabIndex = 227;
+            this.lbl_Duration.TabIndex = 13;
             this.lbl_Duration.Text = "Duration";
             // 
             // txt_Duration
@@ -163,14 +172,14 @@
             this.txt_Duration.Location = new System.Drawing.Point(59, 34);
             this.txt_Duration.Name = "txt_Duration";
             this.txt_Duration.Size = new System.Drawing.Size(111, 20);
-            this.txt_Duration.TabIndex = 228;
+            this.txt_Duration.TabIndex = 14;
             // 
             // trk_LoopAt
             // 
             this.trk_LoopAt.Location = new System.Drawing.Point(82, 124);
             this.trk_LoopAt.Name = "trk_LoopAt";
             this.trk_LoopAt.Size = new System.Drawing.Size(551, 45);
-            this.trk_LoopAt.TabIndex = 241;
+            this.trk_LoopAt.TabIndex = 31;
             this.trk_LoopAt.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.trk_LoopAt.Visible = false;
             // 
@@ -179,7 +188,7 @@
             this.trk_StartAt.Location = new System.Drawing.Point(82, 104);
             this.trk_StartAt.Name = "trk_StartAt";
             this.trk_StartAt.Size = new System.Drawing.Size(551, 45);
-            this.trk_StartAt.TabIndex = 240;
+            this.trk_StartAt.TabIndex = 21;
             this.trk_StartAt.Visible = false;
             // 
             // mtxt_LoopAt
@@ -189,7 +198,7 @@
             this.mtxt_LoopAt.Name = "mtxt_LoopAt";
             this.mtxt_LoopAt.PromptChar = '0';
             this.mtxt_LoopAt.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_LoopAt.TabIndex = 237;
+            this.mtxt_LoopAt.TabIndex = 32;
             this.mtxt_LoopAt.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_LoopAt.Visible = false;
             // 
@@ -200,7 +209,7 @@
             this.mtxt_StartAt.Name = "mtxt_StartAt";
             this.mtxt_StartAt.PromptChar = '0';
             this.mtxt_StartAt.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_StartAt.TabIndex = 238;
+            this.mtxt_StartAt.TabIndex = 22;
             this.mtxt_StartAt.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_StartAt.Visible = false;
             // 
@@ -211,7 +220,7 @@
             this.mtxt_PlayFor.Name = "mtxt_PlayFor";
             this.mtxt_PlayFor.PromptChar = '0';
             this.mtxt_PlayFor.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_PlayFor.TabIndex = 239;
+            this.mtxt_PlayFor.TabIndex = 18;
             this.mtxt_PlayFor.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_PlayFor.Visible = false;
             // 
@@ -221,7 +230,7 @@
             this.lbl_Balance.Location = new System.Drawing.Point(4, 179);
             this.lbl_Balance.Name = "lbl_Balance";
             this.lbl_Balance.Size = new System.Drawing.Size(58, 13);
-            this.lbl_Balance.TabIndex = 236;
+            this.lbl_Balance.TabIndex = 40;
             this.lbl_Balance.Text = "Balance: 0";
             this.lbl_Balance.Visible = false;
             // 
@@ -233,7 +242,7 @@
             this.grp_ImagePreview.Location = new System.Drawing.Point(3, 288);
             this.grp_ImagePreview.Name = "grp_ImagePreview";
             this.grp_ImagePreview.Size = new System.Drawing.Size(747, 83);
-            this.grp_ImagePreview.TabIndex = 232;
+            this.grp_ImagePreview.TabIndex = 60;
             this.grp_ImagePreview.TabStop = false;
             this.grp_ImagePreview.Text = "Preview Controls";
             // 
@@ -244,7 +253,7 @@
             this.mtxt_PreviewPosition.Name = "mtxt_PreviewPosition";
             this.mtxt_PreviewPosition.PromptChar = '0';
             this.mtxt_PreviewPosition.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_PreviewPosition.TabIndex = 122;
+            this.mtxt_PreviewPosition.TabIndex = 62;
             this.mtxt_PreviewPosition.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             // 
             // trk_Position
@@ -253,7 +262,7 @@
             this.trk_Position.Location = new System.Drawing.Point(78, 28);
             this.trk_Position.Name = "trk_Position";
             this.trk_Position.Size = new System.Drawing.Size(551, 45);
-            this.trk_Position.TabIndex = 52;
+            this.trk_Position.TabIndex = 61;
             this.trk_Position.TickFrequency = 1000;
             this.trk_Position.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             // 
@@ -262,7 +271,7 @@
             this.btn_PlayPause.Location = new System.Drawing.Point(633, 54);
             this.btn_PlayPause.Name = "btn_PlayPause";
             this.btn_PlayPause.Size = new System.Drawing.Size(111, 23);
-            this.btn_PlayPause.TabIndex = 61;
+            this.btn_PlayPause.TabIndex = 63;
             this.btn_PlayPause.Text = "Play / Pause";
             this.btn_PlayPause.UseVisualStyleBackColor = true;
             // 
@@ -272,7 +281,7 @@
             this.lbl_Volume.Location = new System.Drawing.Point(8, 242);
             this.lbl_Volume.Name = "lbl_Volume";
             this.lbl_Volume.Size = new System.Drawing.Size(54, 13);
-            this.lbl_Volume.TabIndex = 235;
+            this.lbl_Volume.TabIndex = 50;
             this.lbl_Volume.Text = "Volume: 0";
             this.lbl_Volume.Visible = false;
             // 
@@ -283,7 +292,7 @@
             this.trk_Volume.Maximum = 1000;
             this.trk_Volume.Name = "trk_Volume";
             this.trk_Volume.Size = new System.Drawing.Size(551, 45);
-            this.trk_Volume.TabIndex = 233;
+            this.trk_Volume.TabIndex = 51;
             this.trk_Volume.TickFrequency = 50;
             this.trk_Volume.Visible = false;
             // 
@@ -293,7 +302,7 @@
             this.lbl_LoopAt.Location = new System.Drawing.Point(18, 140);
             this.lbl_LoopAt.Name = "lbl_LoopAt";
             this.lbl_LoopAt.Size = new System.Drawing.Size(44, 13);
-            this.lbl_LoopAt.TabIndex = 231;
+            this.lbl_LoopAt.TabIndex = 30;
             this.lbl_LoopAt.Text = "Loop At";
             this.lbl_LoopAt.Visible = false;
             // 
@@ -303,7 +312,7 @@
             this.lbl_PlayFor.Location = new System.Drawing.Point(585, 64);
             this.lbl_PlayFor.Name = "lbl_PlayFor";
             this.lbl_PlayFor.Size = new System.Drawing.Size(45, 13);
-            this.lbl_PlayFor.TabIndex = 229;
+            this.lbl_PlayFor.TabIndex = 17;
             this.lbl_PlayFor.Text = "Play For";
             this.lbl_PlayFor.Visible = false;
             // 
@@ -313,7 +322,7 @@
             this.lbl_StartAt.Location = new System.Drawing.Point(20, 109);
             this.lbl_StartAt.Name = "lbl_StartAt";
             this.lbl_StartAt.Size = new System.Drawing.Size(42, 13);
-            this.lbl_StartAt.TabIndex = 230;
+            this.lbl_StartAt.TabIndex = 20;
             this.lbl_StartAt.Text = "Start At";
             this.lbl_StartAt.Visible = false;
             // 
@@ -325,7 +334,7 @@
             this.trk_Balance.Minimum = -100;
             this.trk_Balance.Name = "trk_Balance";
             this.trk_Balance.Size = new System.Drawing.Size(551, 45);
-            this.trk_Balance.TabIndex = 234;
+            this.trk_Balance.TabIndex = 41;
             this.trk_Balance.TickFrequency = 10;
             this.trk_Balance.Visible = false;
             // 
@@ -345,7 +354,7 @@
             this.mtxt_Delay.Name = "mtxt_Delay";
             this.mtxt_Delay.PromptChar = '0';
             this.mtxt_Delay.Size = new System.Drawing.Size(111, 20);
-            this.mtxt_Delay.TabIndex = 244;
+            this.mtxt_Delay.TabIndex = 16;
             this.mtxt_Delay.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
             this.mtxt_Delay.Visible = false;
             // 
@@ -355,7 +364,7 @@
             this.lbl_Delay.Location = new System.Drawing.Point(585, 38);
             this.lbl_Delay.Name = "lbl_Delay";
             this.lbl_Delay.Size = new System.Drawing.Size(47, 13);
-            this.lbl_Delay.TabIndex = 243;
+            this.lbl_Delay.TabIndex = 15;
             this.lbl_Delay.Text = "Wait For";
             this.lbl_Delay.Visible = false;
             // 

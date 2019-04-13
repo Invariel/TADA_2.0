@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using TwitchLib;
 
 /**********************************************************************************************
  * WARNING!
@@ -171,7 +172,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public override void ReadXml(XmlReader reader)
         {
             Boolean closingTag = false;
-            var error = false;
+            Boolean error = false;
 
             this.alertName = reader.GetAttribute("Name");
             this.alertType = General.alertStrings[reader.GetAttribute("Type")];
@@ -1572,12 +1573,6 @@ namespace TADA_Advanced_Desktop_Alerts
         public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;
 
         public void SetPlan(TwitchLib.Client.Enums.SubscriptionPlan plan)
-        {
-            Plan = TierAndPlanConverter.NormalizePlanName(plan);
-            Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
-        }
-
-        public void SetPlan(TwitchLib.PubSub.Enums.SubscriptionPlan plan)
         {
             Plan = TierAndPlanConverter.NormalizePlanName(plan);
             Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);

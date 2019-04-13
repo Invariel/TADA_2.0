@@ -151,7 +151,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void StopListening()
         {
-            httpListener.Close();
+            httpListener?.Close();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public const String DEFAULT_OAUTH = @"oauth.cfg";
         public const String DEFAULT_ALERTS = @"default.tada";
 
-        public const String MASKED_TEXTBOX_MASK = "{0,3}:{1,2}:{2,2}.{3,3}";
+        public const String MASKED_TEXTBOX_MASK = "{0,3:D3}:{1,2:D2}:{2,2:D2}.{3,3:D3}";
         public const String COLOR_FORMAT = "#{0:X2}{1:X2}{2:X2}{3:X2}";
 
         public const double INITIAL_ANGLE = 0;
@@ -399,10 +399,17 @@ namespace TADA_Advanced_Desktop_Alerts
                 milliseconds = 0;
 
             var sec = explode[explode.Length - 1].Split('.');
-            Int32.TryParse(sec[1], out milliseconds);
-            Int32.TryParse(sec[0], out seconds);
-            if (explode.Length >= 2) { Int32.TryParse(explode[explode.Length - 2], out minutes); }
-            if (explode.Length >= 3) { Int32.TryParse(explode[explode.Length - 3], out hours); }
+            if (sec.Length == 1)
+            {
+                Int32.TryParse(sec[0], out seconds);
+            }
+            else
+            {
+                Int32.TryParse(sec[1], out milliseconds);
+                Int32.TryParse(sec[0], out seconds);
+                if (explode.Length >= 2) { Int32.TryParse(explode[explode.Length - 2], out minutes); }
+                if (explode.Length >= 3) { Int32.TryParse(explode[explode.Length - 3], out hours); }
+            }
 
             return new TimeSpan(0, hours, minutes, seconds, milliseconds);
         }

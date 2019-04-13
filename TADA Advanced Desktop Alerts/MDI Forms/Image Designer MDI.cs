@@ -17,6 +17,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private bool justLoaded = false;
         private bool playing = false;
+        private bool trackbarScrolling = false;
         private bool isVideo = false;
 
         private System.Windows.Controls.MediaElement mediaElement = new System.Windows.Controls.MediaElement();
@@ -43,6 +44,9 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             // Even if alertImage is new, things should be initialized inside it.
             loading = true;
             LoadExisting(this.alertImage);
+
+            UpdateVolume(null, null);
+            UpdateBalance(null, null);
             loading = false;
 
             FillImportComboBox();
@@ -61,14 +65,16 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             numud_DesiredDimensionsX.ValueChanged += UpdateDesiredSize;
             numud_DesiredDimensionsY.ValueChanged += UpdateDesiredSize;
 
-            trk_Balance.ValueChanged += new EventHandler((sender, e) => { mediaElement.Balance = trk_Balance.Value / 100.0; lbl_Balance.Text = String.Format("Balance: {0,2}", trk_Balance.Value / 100.0); });
+            trk_Balance.ValueChanged += UpdateBalance;
             trk_Balance.ValueChanged += UpdateInitialBalance;
 
-            trk_Volume.ValueChanged += new EventHandler((sender, e) => { mediaElement.Volume = trk_Volume.Value / 1000.0; lbl_Volume.Text = String.Format("Volume: {0,2}", trk_Volume.Value / 10.0); });
+            trk_Volume.ValueChanged += UpdateVolume;
             trk_Volume.ValueChanged += UpdateInitialVolume;
 
             btn_PlayPause.Click += btn_PlayPause_Click;
 
+            trk_Position.MouseDown += DisablePlayback;
+            trk_Position.MouseUp += EnablePlayback;
             trk_Position.ValueChanged += UpdatePosition;
             mtxt_PreviewPosition.LostFocus += UpdatePositionTracker;
 
@@ -79,7 +85,17 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             mtxt_PlayFor.LostFocus += UpdateTimestamps;
 
+            numud_AnimatedGifLoop.ValueChanged += UpdateLoops;
+
             dg_Waypoints.CellValueChanged += delegate { UpdatePreview(); };
+        }
+
+        private void UpdateLoops (object sender, EventArgs e)
+        {
+            if (!blocked && !loading)
+            {
+                this.alertImage.AnimationLoops = Convert.ToInt32(numud_AnimatedGifLoop.Value);
+            }
         }
 
         private void UpdateTimestamps(object sender, EventArgs e)
@@ -136,6 +152,18 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
+        private void UpdateBalance(object sender, EventArgs e)
+        {
+            mediaElement.Balance = trk_Balance.Value / 100.0;
+            lbl_Balance.Text = String.Format("Balance: {0,2}", trk_Balance.Value / 100.0);
+        }
+
+        private void UpdateVolume(object sender, EventArgs e)
+        {
+            mediaElement.Volume = trk_Volume.Value / 1000.0;
+            lbl_Volume.Text = String.Format("Volume: {0,2}", trk_Volume.Value / 10.0);
+        }
+
         private void UpdatePosition(object sender, EventArgs e)
         {
             if (!blocked)
@@ -174,6 +202,27 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 }
 
                 blocked = false;
+            }
+        }
+
+        private void DisablePlayback(object sender, EventArgs e)
+        {
+            if (playing)
+            {
+                playing = false;
+                trackbarScrolling = true;
+                mediaElement.Pause();
+            }
+        }
+
+        private void EnablePlayback(object sender, EventArgs e)
+        {
+            if (trackbarScrolling)
+            {
+                playing = true;
+                trackbarScrolling = false;
+                mediaElement.Position = new TimeSpan(0, 0, 0, 0, trk_Position.Value);
+                mediaElement.Play();
             }
         }
 
@@ -268,6 +317,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 trk_StartAt.LargeChange = 60000;
 
                 trk_LoopAt.Maximum = Convert.ToInt32(Math.Floor(actualDuration.TotalMilliseconds));
+                trk_LoopAt.Value = trk_LoopAt.Maximum;
                 trk_LoopAt.TickFrequency = 60;
                 trk_LoopAt.SmallChange = 1000;
                 trk_LoopAt.LargeChange = 60000;
@@ -276,6 +326,10 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     numud_DesiredDimensionsX.Value = width;
                     numud_DesiredDimensionsY.Value = height;
+
+                    blocked = false;
+                    UpdateTimestamps(trk_LoopAt, null);
+                    blocked = true;
                 }
                 else
                 {

@@ -12,6 +12,14 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     class XmlHelper
     {
+        public static void ExpectTag(XmlReader reader, String elementTag)
+        {
+            if (reader.Name != elementTag)
+            {
+                throw new XmlException($"Expected {elementTag} tag, found {reader.Name} instead.");
+            }
+        }
+
         public static void Read<T>(XmlReader reader, String elementTag, String collectionTag, List<T> listT) where T : IXmlSerializable, new()
         {
             while (reader.Read())
