@@ -65,10 +65,10 @@ namespace TADA_Advanced_Desktop_Alerts
             ANONYMOUS_GIFT,
             AUTOHOST,
             BITS,
-            COMMERCE,
             COMMUNITY,
             FIRSTMESSAGE,
             FOLLOW,
+            GAMEPURCHASE,
             HOST,
             JOIN,
             MACRO,
@@ -86,10 +86,10 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
             { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
-            { ALERTTYPES.COMMERCE, "Game Purchase" },
             { ALERTTYPES.COMMUNITY, "Community Gift Subs" },
             { ALERTTYPES.FIRSTMESSAGE, "First Message" },
             { ALERTTYPES.FOLLOW, "Follow" },
+            { ALERTTYPES.GAMEPURCHASE, "Game Purchase" },
             { ALERTTYPES.HOST, "Host" },
             { ALERTTYPES.JOIN, "Join" },
             { ALERTTYPES.MACRO, "Macro" },
@@ -107,10 +107,10 @@ namespace TADA_Advanced_Desktop_Alerts
             { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
             { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS_GIFT },
             { "Bits", ALERTTYPES.BITS },
-            { "Game Purchase", ALERTTYPES.COMMERCE },
             { "Community Gift Subs", ALERTTYPES.COMMUNITY },
             { "First Message", ALERTTYPES.FIRSTMESSAGE },
             { "Follow", ALERTTYPES.FOLLOW },
+            { "Game Purchase", ALERTTYPES.GAMEPURCHASE },
             { "Host", ALERTTYPES.HOST },
             { "Join", ALERTTYPES.JOIN },
             { "Macro", ALERTTYPES.MACRO },
@@ -466,6 +466,8 @@ namespace TADA_Advanced_Desktop_Alerts
             //using (LinearGradientBrush foreBrush = new LinearGradientBrush(new PointF(0, 0), new PointF(textBitmap.Width, textBitmap.Height), Color.Black, foreColor))
             using (Brush foreBrush = new SolidBrush(foreColor))
             using (Graphics textGraphics = Graphics.FromImage(textBitmap))
+            using (SolidBrush backBrush = new SolidBrush(backColor))
+            using (Graphics outputGraphics = Graphics.FromImage(outputBitmap))
             {
                 System.Drawing.Drawing2D.GraphicsPath textOutline = new System.Drawing.Drawing2D.GraphicsPath();
                 textOutline.AddString(text, textFont.FontFamily, (int)textFont.Style, textFont.Size, new Rectangle(Point.Empty, textBitmap.Size), textFormat);
@@ -479,11 +481,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
 
                 textGraphics.FillPath(foreBrush, textOutline);
-            }
 
-            using (SolidBrush backBrush = new SolidBrush(backColor))
-            using (Graphics outputGraphics = Graphics.FromImage(outputBitmap))
-            {
                 outputGraphics.FillRectangle(backBrush, new Rectangle(0, 0, outputBitmap.Width, outputBitmap.Height));
 
                 if (backgroundBitmap != null)

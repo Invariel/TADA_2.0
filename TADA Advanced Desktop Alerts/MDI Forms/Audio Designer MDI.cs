@@ -57,6 +57,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             });
 
             FillImportComboBox();
+            UpdateWarning();
         }
 
         private void InitializeCallbacks()
@@ -194,6 +195,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             DisplayControls(true);
         }
 
+        private void UpdateWarning()
+        {
+            lbl_Warning.Text = this.alertAudio.Warnings;
+        }
+
         private void FailedMediaFile(object sender, EventArgs e)
         {
             MessageBox.Show(null, "The chosen file was not recognized as a valid audio file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -313,6 +319,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private void UpdatePlayFor (object sender, EventArgs e)
         {
             this.alertAudio.Duration = General.TimeSpanFromString(mtxt_PlayFor.Text);
+            UpdateWarning();
         }
 
         private void UpdateStartAt(object sender, EventArgs e)
@@ -371,6 +378,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 blocked = false;
             }
+
+            UpdateWarning();
         }
     }
 }

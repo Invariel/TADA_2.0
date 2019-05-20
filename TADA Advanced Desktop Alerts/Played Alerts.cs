@@ -127,7 +127,7 @@ namespace TADA_Advanced_Desktop_Alerts
             
             pubSub = new TwitchPubSub();
             pubSub.OnBitsReceivedV2 += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
-            pubSub.OnChannelCommerceReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.COMMERCE, e);
+            pubSub.OnChannelCommerceReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.GAMEPURCHASE, e);
             pubSub.OnFollow += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
             pubSub.OnChannelSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
             pubSub.OnListenResponse += (sender, e) =>
@@ -402,7 +402,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                     }
                     break;
-                case General.ALERTTYPES.COMMERCE:
+                case General.ALERTTYPES.GAMEPURCHASE:
                     {
                         OnChannelCommerceReceivedArgs eCommerce = eventDetails as OnChannelCommerceReceivedArgs;
 
@@ -806,42 +806,6 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private bool UndocumentedVIPRequest (String userId)
-        {
-            // Get a user's information from a channel with the following undocumented endpoint: https://api.twitch.tv/kraken/users/user_id/chat/channels/channel_id
-
-            //twitchAPI.Undocumented.GetChatUserAsync(userId, channelId);
-
-            bool retval = false;
-
-            System.Net.Http.HttpClient twitchAPIRequest = new System.Net.Http.HttpClient();
-            twitchAPIRequest.DefaultRequestHeaders.Add("Client-ID", General.CLIENT_ID);
-            twitchAPIRequest.DefaultRequestHeaders.Add("Authorization", "Oauth " + twitchAPI.Settings.AccessToken);
-            twitchAPIRequest.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
-
-            System.Net.Http.HttpResponseMessage twitchAPIResponse = twitchAPIRequest.GetAsync(new Uri(String.Format(@"https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}", userId, this.channelID))).Result;
-
-            if (twitchAPIResponse.IsSuccessStatusCode)
-            {
-                System.Net.Http.HttpContent content = twitchAPIResponse.Content;
-                Newtonsoft.Json.Linq.JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(content.ReadAsStringAsync().Result);
-                
-                if (jObject["badges"] != null)
-                {
-                    for (int c = 0; c < jObject["badges"].Count(); ++ c)
-                    {
-                        if ((String)jObject["badges"][c]["id"] == "vip")
-                        {
-                            retval = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            return retval;
-        }
-
         private void GetBadgesUndocumented (User user)
         {
             if (user != null)
@@ -1172,7 +1136,9 @@ namespace TADA_Advanced_Desktop_Alerts
             ListedAlert alertInTransition = (ListedAlert)pendingAlertBindingSource[0];
 
             dg_Pending.Invoke((Action)(() => { pendingAlertBindingSource.RemoveAt(0); }));
-            dg_Played.Invoke((Action)(() => { playedAlertBindingSource.Add(alertInTransition); }));
+
+            // Put the most recently played alerts at the top of the screen.
+            dg_Played.Invoke((Action)(() => { playedAlertBindingSource.Insert(0, alertInTransition); }));
 
             return alertInTransition;
         }

@@ -52,6 +52,7 @@
             this.eh_1 = new System.Windows.Forms.Integration.ElementHost();
             this.mtxt_Delay = new System.Windows.Forms.MaskedTextBox();
             this.lbl_Delay = new System.Windows.Forms.Label();
+            this.lbl_Warning = new System.Windows.Forms.Label();
             this.tab_Focus.SuspendLayout();
             this.tab_Element.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
@@ -105,6 +106,7 @@
             // 
             // tab_Element
             // 
+            this.tab_Element.Controls.Add(this.lbl_Warning);
             this.tab_Element.Controls.Add(this.trk_LoopAt);
             this.tab_Element.Controls.Add(this.mtxt_Delay);
             this.tab_Element.Controls.Add(this.lbl_Delay);
@@ -241,14 +243,14 @@
             this.grp_ImagePreview.Controls.Add(this.btn_PlayPause);
             this.grp_ImagePreview.Location = new System.Drawing.Point(3, 288);
             this.grp_ImagePreview.Name = "grp_ImagePreview";
-            this.grp_ImagePreview.Size = new System.Drawing.Size(747, 83);
+            this.grp_ImagePreview.Size = new System.Drawing.Size(747, 60);
             this.grp_ImagePreview.TabIndex = 60;
             this.grp_ImagePreview.TabStop = false;
             this.grp_ImagePreview.Text = "Preview Controls";
             // 
             // mtxt_PreviewPosition
             // 
-            this.mtxt_PreviewPosition.Location = new System.Drawing.Point(633, 19);
+            this.mtxt_PreviewPosition.Location = new System.Drawing.Point(633, 11);
             this.mtxt_PreviewPosition.Mask = "###:##:##.###";
             this.mtxt_PreviewPosition.Name = "mtxt_PreviewPosition";
             this.mtxt_PreviewPosition.PromptChar = '0';
@@ -259,7 +261,7 @@
             // trk_Position
             // 
             this.trk_Position.LargeChange = 50;
-            this.trk_Position.Location = new System.Drawing.Point(78, 28);
+            this.trk_Position.Location = new System.Drawing.Point(78, 11);
             this.trk_Position.Name = "trk_Position";
             this.trk_Position.Size = new System.Drawing.Size(551, 45);
             this.trk_Position.TabIndex = 61;
@@ -268,7 +270,7 @@
             // 
             // btn_PlayPause
             // 
-            this.btn_PlayPause.Location = new System.Drawing.Point(633, 54);
+            this.btn_PlayPause.Location = new System.Drawing.Point(633, 33);
             this.btn_PlayPause.Name = "btn_PlayPause";
             this.btn_PlayPause.Size = new System.Drawing.Size(111, 23);
             this.btn_PlayPause.TabIndex = 63;
@@ -368,6 +370,14 @@
             this.lbl_Delay.Text = "Wait For";
             this.lbl_Delay.Visible = false;
             // 
+            // lbl_Warning
+            // 
+            this.lbl_Warning.AutoSize = true;
+            this.lbl_Warning.Location = new System.Drawing.Point(3, 358);
+            this.lbl_Warning.Name = "lbl_Warning";
+            this.lbl_Warning.Size = new System.Drawing.Size(0, 13);
+            this.lbl_Warning.TabIndex = 243;
+            // 
             // Audio_Designer_MDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,5 +467,6 @@
         private System.Windows.Forms.Integration.ElementHost eh_1;
         private System.Windows.Forms.MaskedTextBox mtxt_Delay;
         private System.Windows.Forms.Label lbl_Delay;
+        private System.Windows.Forms.Label lbl_Warning;
     }
 }

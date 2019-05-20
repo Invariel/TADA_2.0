@@ -64,6 +64,7 @@
             this.mtxt_LoopAt = new System.Windows.Forms.MaskedTextBox();
             this.trk_StartAt = new System.Windows.Forms.TrackBar();
             this.trk_LoopAt = new System.Windows.Forms.TrackBar();
+            this.lbl_Warning = new System.Windows.Forms.Label();
             this.tab_Focus.SuspendLayout();
             this.tab_Element.SuspendLayout();
             this.tab_Waypoints.SuspendLayout();
@@ -123,6 +124,7 @@
             // 
             // tab_Element
             // 
+            this.tab_Element.Controls.Add(this.lbl_Warning);
             this.tab_Element.Controls.Add(this.trk_LoopAt);
             this.tab_Element.Controls.Add(this.trk_StartAt);
             this.tab_Element.Controls.Add(this.mtxt_LoopAt);
@@ -560,6 +562,14 @@
             this.trk_LoopAt.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.trk_LoopAt.Visible = false;
             // 
+            // lbl_Warning
+            // 
+            this.lbl_Warning.AutoSize = true;
+            this.lbl_Warning.Location = new System.Drawing.Point(6, 358);
+            this.lbl_Warning.Name = "lbl_Warning";
+            this.lbl_Warning.Size = new System.Drawing.Size(0, 13);
+            this.lbl_Warning.TabIndex = 86;
+            // 
             // Image_Designer_MDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -666,5 +676,6 @@
         private System.Windows.Forms.TrackBar trk_LoopAt;
         private System.Windows.Forms.TrackBar trk_StartAt;
         private System.Windows.Forms.MaskedTextBox mtxt_PreviewPosition;
+        private System.Windows.Forms.Label lbl_Warning;
     }
 }

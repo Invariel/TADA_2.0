@@ -50,6 +50,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             loading = false;
 
             FillImportComboBox();
+            UpdateWarning();
         }
 
         private void InitializeCallbacks()
@@ -150,6 +151,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 blocked = false;
             }
+
+            UpdateWarning();
         }
 
         private void UpdateBalance(object sender, EventArgs e)
@@ -441,6 +444,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             this.alertImage.IsVideo = false;
             blocked = false;
+        }
+
+        private void UpdateWarning()
+        {
+            lbl_Warning.Text = this.alertImage.Warnings;
         }
 
         private void TestSuppliedFile(object sender, EventArgs e)

@@ -53,6 +53,15 @@ namespace TADA_Advanced_Desktop_Alerts
         public double duration = 0;
         public bool aroundCenter = false;
 
+        public bool Empty
+        {
+            get
+            {
+                return this.change == false && this.frames == 1 && this.target == 0 && this.duration == 0;
+            }
+        }
+
+
         public virtual void Copy(Effect e)
         {
             this.change = e.change;
@@ -262,6 +271,28 @@ namespace TADA_Advanced_Desktop_Alerts
             set { this.keypresses = value; }
         }
 
+        public Boolean Empty
+        {
+            get
+            {
+                return (this.angle.Empty &&
+                        this.magnification.Empty &&
+                        this.opacity.Empty &&
+                        this.balance.Empty &&
+                        this.volume.Empty &&
+                        this.p1 == Point.Empty &&
+                        this.c0 == Point.Empty &&
+                        this.c1 == Point.Empty &&
+                        this.transitionTime == 0 &&
+                        this.persistTime == 0 &&
+                        !this.leaveScreen &&
+                        !this.behindImage &&
+                        !this.readMessage &&
+                        String.IsNullOrEmpty(this.windowTarget) &&
+                        String.IsNullOrEmpty(this.keypresses));
+            }
+        }
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -356,33 +387,36 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteStartElement("Waypoint");
-            writer.WriteAttributeString("TransitionTime", this.transitionTime.ToString());
-            writer.WriteAttributeString("StickAround", this.persistTime.ToString());
-            writer.WriteAttributeString("LeaveScreen", this.leaveScreen.ToString());
-            writer.WriteAttributeString("BehindImage", this.behindImage.ToString());
-            writer.WriteAttributeString("ReadMessage", this.readMessage.ToString());
-            writer.WriteAttributeString("IsCurve", this.isCurve.ToString());
-
-            XmlHelper.WritePoint(writer, p1, "P1");
-            XmlHelper.WritePoint(writer, c0, "C0");
-            XmlHelper.WritePoint(writer, c1, "C1");
-
-            if (this.angle.change)          this.angle.WriteXml(writer, "Angle");
-            if (this.magnification.change)  this.magnification.WriteXml(writer, "Magnification");
-            if (this.opacity.change)        this.opacity.WriteXml(writer, "Opacity");
-            if (this.volume.change)         this.volume.WriteXml(writer, "Volume");
-            if (this.balance.change)        this.balance.WriteXml(writer, "Balance");
-
-            if (!String.IsNullOrEmpty(this.windowTarget) && !String.IsNullOrEmpty(this.keypresses))
+            if (!this.Empty)
             {
-                writer.WriteStartElement("Macro");
-                writer.WriteAttributeString("Window", this.windowTarget);
-                writer.WriteAttributeString("Keys", this.keypresses);
+                writer.WriteStartElement("Waypoint");
+                writer.WriteAttributeString("TransitionTime", this.transitionTime.ToString());
+                writer.WriteAttributeString("StickAround", this.persistTime.ToString());
+                writer.WriteAttributeString("LeaveScreen", this.leaveScreen.ToString());
+                writer.WriteAttributeString("BehindImage", this.behindImage.ToString());
+                writer.WriteAttributeString("ReadMessage", this.readMessage.ToString());
+                writer.WriteAttributeString("IsCurve", this.isCurve.ToString());
+
+                XmlHelper.WritePoint(writer, p1, "P1");
+                XmlHelper.WritePoint(writer, c0, "C0");
+                XmlHelper.WritePoint(writer, c1, "C1");
+
+                if (this.angle.change) this.angle.WriteXml(writer, "Angle");
+                if (this.magnification.change) this.magnification.WriteXml(writer, "Magnification");
+                if (this.opacity.change) this.opacity.WriteXml(writer, "Opacity");
+                if (this.volume.change) this.volume.WriteXml(writer, "Volume");
+                if (this.balance.change) this.balance.WriteXml(writer, "Balance");
+
+                if (!String.IsNullOrEmpty(this.windowTarget) && !String.IsNullOrEmpty(this.keypresses))
+                {
+                    writer.WriteStartElement("Macro");
+                    writer.WriteAttributeString("Window", this.windowTarget);
+                    writer.WriteAttributeString("Keys", this.keypresses);
+                    writer.WriteEndElement();
+                }
+
                 writer.WriteEndElement();
             }
-
-            writer.WriteEndElement();
         }
 
         public Waypoint()

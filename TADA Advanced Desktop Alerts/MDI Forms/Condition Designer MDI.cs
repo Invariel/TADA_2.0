@@ -102,87 +102,96 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateViewer (object sender, EventArgs e)
         {
-            if (grp_ViewerTier.Visible)
+            if (!loading)
             {
-                condition.ViewerTierNoTier = chk_ViewerTierNotSubscribed.Checked;
-                condition.ViewerTierTierOne = chk_ViewerTierTierOne.Checked;
-                condition.ViewerTierTierTwo = chk_ViewerTierTierTwo.Checked;
-                condition.ViewerTierTierThree = chk_ViewerTierTierThree.Checked;
-            }
-            else
-            {
-                condition.ViewerTierNoTier = false;
-                condition.ViewerTierTierOne = false;
-                condition.ViewerTierTierTwo = false;
-                condition.ViewerTierTierThree = false;
-            }
+                if (grp_ViewerTier.Visible)
+                {
+                    condition.ViewerTierNoTier = chk_ViewerTierNotSubscribed.Checked;
+                    condition.ViewerTierTierOne = chk_ViewerTierTierOne.Checked;
+                    condition.ViewerTierTierTwo = chk_ViewerTierTierTwo.Checked;
+                    condition.ViewerTierTierThree = chk_ViewerTierTierThree.Checked;
+                }
+                else
+                {
+                    condition.ViewerTierNoTier = false;
+                    condition.ViewerTierTierOne = false;
+                    condition.ViewerTierTierTwo = false;
+                    condition.ViewerTierTierThree = false;
+                }
 
-            UpdateDescription();
+                UpdateDescription();
+            }
         }
 
         private void UpdateSubscription(object sender, EventArgs e)
         {
-            if (grp_SubscriptionTier.Visible)
+            if (!loading)
             {
-                condition.SubscriptionTierPrime = chk_SubscriptionTierTwitchPrime.Checked;
-                condition.SubscriptionTierTierOne = chk_SubscriptionTierTierOne.Checked;
-                condition.SubscriptionTierTierTwo = chk_SubscriptionTierTierTwo.Checked;
-                condition.SubscriptionTierTierThree = chk_SubscriptionTierTierThree.Checked;
-            }
-            else
-            {
-                condition.SubscriptionTierPrime = false;
-                condition.SubscriptionTierTierOne = false;
-                condition.SubscriptionTierTierTwo = false;
-                condition.SubscriptionTierTierThree = false;
-            }
+                if (grp_SubscriptionTier.Visible)
+                {
+                    condition.SubscriptionTierPrime = chk_SubscriptionTierTwitchPrime.Checked;
+                    condition.SubscriptionTierTierOne = chk_SubscriptionTierTierOne.Checked;
+                    condition.SubscriptionTierTierTwo = chk_SubscriptionTierTierTwo.Checked;
+                    condition.SubscriptionTierTierThree = chk_SubscriptionTierTierThree.Checked;
+                }
+                else
+                {
+                    condition.SubscriptionTierPrime = false;
+                    condition.SubscriptionTierTierOne = false;
+                    condition.SubscriptionTierTierTwo = false;
+                    condition.SubscriptionTierTierThree = false;
+                }
 
-            UpdateDescription();
+                UpdateDescription();
+            }
         }
 
         private void UpdateBadges (object sender, EventArgs e)
         {
-            if (grp_Badges.Visible)
+            if (!loading)
             {
-                condition.IsAdmin = chk_BadgeAdmin.Checked;
-                condition.IsBits = chk_BadgeBits.Checked;
-                condition.IsBroadcaster = chk_BadgeBroadcaster.Checked;
-                condition.IsGlobalMod = chk_BadgeGlobalMod.Checked;
-                condition.IsModerator = chk_BadgeModerator.Checked;
-                condition.IsPrime = chk_BadgePrime.Checked;
-                condition.IsStaff = chk_BadgeTwitchStaff.Checked;
-                condition.IsSubscribed = chk_BadgeSubscription.Checked;
-                condition.IsTurbo = chk_BadgeTurbo.Checked;
-                condition.IsVIP = chk_BadgeVIP.Checked;
+                if (grp_Badges.Visible)
+                {
+                    condition.IsAdmin = chk_BadgeAdmin.Checked;
+                    condition.IsBits = chk_BadgeBits.Checked;
+                    condition.IsBroadcaster = chk_BadgeBroadcaster.Checked;
+                    condition.IsGlobalMod = chk_BadgeGlobalMod.Checked;
+                    condition.IsModerator = chk_BadgeModerator.Checked;
+                    condition.IsPrime = chk_BadgePrime.Checked;
+                    condition.IsStaff = chk_BadgeTwitchStaff.Checked;
+                    condition.IsSubscribed = chk_BadgeSubscription.Checked;
+                    condition.IsTurbo = chk_BadgeTurbo.Checked;
+                    condition.IsVIP = chk_BadgeVIP.Checked;
 
-                // Remember to swap the two if max > min.
-                condition.MinBits = chk_BadgeBits.Checked ? Int32.Parse(cmb_BitBadgeMinimum.Text) : 0;
-                condition.MaxBits = chk_BadgeBits.Checked ? Int32.Parse(cmb_BitBadgeMaximum.Text) : 0;
+                    // Remember to swap the two if max > min.
+                    condition.MinBits = chk_BadgeBits.Checked ? Int32.Parse(cmb_BitBadgeMinimum.Text) : 0;
+                    condition.MaxBits = chk_BadgeBits.Checked ? Int32.Parse(cmb_BitBadgeMaximum.Text) : 0;
 
-                condition.MinMonths = chk_BadgeSubscription.Checked ? Convert.ToInt32(numud_SubscriptionMonthsMinimum.Value) : 0;
-                condition.MaxMonths = chk_BadgeSubscription.Checked ? Convert.ToInt32(numud_SubscriptionMonthsMaximum.Value) : 0;
+                    condition.MinMonths = chk_BadgeSubscription.Checked ? Convert.ToInt32(numud_SubscriptionMonthsMinimum.Value) : 0;
+                    condition.MaxMonths = chk_BadgeSubscription.Checked ? Convert.ToInt32(numud_SubscriptionMonthsMaximum.Value) : 0;
+                }
+                else
+                {
+                    condition.IsAdmin = false;
+                    condition.IsBits = false;
+                    condition.IsBroadcaster = false;
+                    condition.IsGlobalMod = false;
+                    condition.IsModerator = false;
+                    condition.IsPrime = false;
+                    condition.IsStaff = false;
+                    condition.IsSubscribed = false;
+                    condition.IsTurbo = false;
+                    condition.IsVIP = false;
+
+                    condition.MinBits = 0;
+                    condition.MaxBits = 0;
+
+                    condition.MinMonths = 0;
+                    condition.MaxMonths = 0;
+                }
+
+                UpdateDescription();
             }
-            else
-            {
-                condition.IsAdmin = false;
-                condition.IsBits = false;
-                condition.IsBroadcaster = false;
-                condition.IsGlobalMod = false;
-                condition.IsModerator = false;
-                condition.IsPrime = false;
-                condition.IsStaff = false;
-                condition.IsSubscribed = false;
-                condition.IsTurbo = false;
-                condition.IsVIP = false;
-
-                condition.MinBits = 0;
-                condition.MaxBits = 0;
-
-                condition.MinMonths = 0;
-                condition.MaxMonths = 0;
-            }
-
-            UpdateDescription();
         }
 
         private void UpdateKeywords(object sender, EventArgs e)
@@ -325,7 +334,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 grp_RelevantQuantity.Visible = (alertType != General.ALERTTYPES.ANONYMOUS_GIFT &&
                                                 alertType != General.ALERTTYPES.AUTOHOST &&
-                                                alertType != General.ALERTTYPES.COMMERCE &&
+                                                alertType != General.ALERTTYPES.GAMEPURCHASE &&
                                                 alertType != General.ALERTTYPES.FIRSTMESSAGE &&
                                                 alertType != General.ALERTTYPES.FOLLOW &&
                                                 alertType != General.ALERTTYPES.JOIN &&
@@ -334,7 +343,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 grp_MessageKeywords.Visible = !(alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY ||
                                                 alertType == General.ALERTTYPES.ANONYMOUS_GIFT ||
                                                 alertType == General.ALERTTYPES.AUTOHOST ||
-                                                alertType == General.ALERTTYPES.COMMERCE ||
+                                                alertType == General.ALERTTYPES.GAMEPURCHASE ||
                                                 alertType == General.ALERTTYPES.FOLLOW ||
                                                 alertType == General.ALERTTYPES.HOST ||
                                                 alertType == General.ALERTTYPES.JOIN ||

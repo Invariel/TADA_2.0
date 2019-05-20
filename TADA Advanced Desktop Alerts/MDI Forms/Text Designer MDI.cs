@@ -71,13 +71,26 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             // Voices
             List<String> installedVoices = new List<string>();
+            installedVoices.Add("None");
+            installedVoices.Add("Random");
             using (System.Speech.Synthesis.SpeechSynthesizer talky = new System.Speech.Synthesis.SpeechSynthesizer())
             {
                 foreach (System.Speech.Synthesis.InstalledVoice voice in talky.GetInstalledVoices())
                 {
                     if (voice.Enabled)
                     {
-                        installedVoices.Add(voice.VoiceInfo.Name);
+                        try
+                        {
+                            talky.SelectVoice(voice.VoiceInfo.Name);
+                            installedVoices.Add(voice.VoiceInfo.Name);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        finally
+                        {
+                            talky.SelectVoice("Microsoft David Desktop");
+                        }
                     }
                 }
             }
@@ -438,7 +451,19 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             if (!loading)
             {
                 this.alertText.TTSVoice = cmb_TTSVoice.Text;
-                talky.SelectVoice(cmb_TTSVoice.Text);
+                if (this.cmb_TTSVoice.Text != "None" && this.cmb_TTSVoice.Text != "Random")
+                {
+                    var currentVoice = talky.Voice;
+                    try
+                    {
+                        talky.SelectVoice(cmb_TTSVoice.Text);
+                    }
+                    catch (ArgumentException)
+                    {
+                        MessageBox.Show($"The selected voice, {cmb_TTSVoice.Text}, is invalid.", "Error: Invalid Voice", MessageBoxButtons.OK);
+                        talky.SelectVoice (currentVoice.Name);
+                    }
+                }
             }
         }
 

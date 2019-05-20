@@ -741,7 +741,22 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.mediaElement.Source = new Uri(this.mediaFile);
                 this.mediaElement.Balance = this.balance;
                 this.mediaElement.Volume = this.volume;
+
+                MainTADAForm.mainTADAForm.AnimationWindow.Controls.Add(this.elementHost);
             }));
+
+            // If start and end are the same, do not play this file.
+            if (this.startingPosition == this.endingPosition)
+            {
+                this.isPlaying = false;
+                this.Dispose();
+                return;
+            }
+
+            if (this.duration == TimeSpan.Zero)
+            {
+                this.duration = this.endingPosition.Subtract(this.startingPosition);
+            }
 
             // Waypoint volume is from 0 to 100, while mediaElement volume is from 0 to 1.
             this.volume /= 100.0;
@@ -770,8 +785,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
             this.mediaElement.Play();
             this.mediaElement.Pause();
-
-            MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() => { MainTADAForm.mainTADAForm.AnimationWindow.Controls.Add(this.elementHost); }));
 
             this.waypoints.FirstWaypoint();
 
@@ -899,22 +912,55 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.mainImage = General.GenerateMessageBitmap(alertText.Foreground, alertText.Background, alertText.Outline, alertText.ChosenFont, alertText.OutlineWidth, alertText.Dimensions, alertText.Padding, alertText.GetMessage(), alertText.BackgroundImage);
             }
 
-            if (alertText.Waypoints.InitialVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && !String.IsNullOrEmpty(alertText.GetReadMessage()))
+            if (alertText.Waypoints.InitialVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && alertText.TTSVoice != "None" && !String.IsNullOrEmpty(alertText.GetReadMessage()))
             {
                 talky = new System.Speech.Synthesis.SpeechSynthesizer();
                 try
                 {
-                    talky.SelectVoice(alertText.TTSVoice);
+                    Boolean success = false;
 
-                    // Gotta specify the culture so that numbers get translated and such.
-                    prompt = new System.Speech.Synthesis.PromptBuilder(talky.Voice.Culture);
-                    prompt.AppendText(alertText.GetReadMessage());
-
-                    talky.SpeakCompleted += (sender, e) =>
+                    if (alertText.TTSVoice == "Random")
                     {
-                        this.talkingCompleted = true;
-                        this.Dispose();
-                    };
+                        // Then get the installed voices and keep trying them at random until one works.
+                        var voices = talky.GetInstalledVoices();
+                        Random random = new Random();
+
+                        int attempts = 0;
+
+                        while (!success && attempts < 50)
+                        {
+                            try
+                            {
+                                talky.SelectVoice(voices[random.Next(voices.Count)].VoiceInfo.Name);
+                                success = true;
+                            }
+                            catch (ArgumentException)
+                            {
+                            }
+                            finally
+                            {
+                                ++attempts;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        talky.SelectVoice(alertText.TTSVoice);
+                        success = true;
+                    }
+
+                    if (success)
+                    {
+                        // Gotta specify the culture so that numbers get translated and such.
+                        prompt = new System.Speech.Synthesis.PromptBuilder(talky.Voice.Culture);
+                        prompt.AppendText(alertText.GetReadMessage());
+
+                        talky.SpeakCompleted += (sender, e) =>
+                        {
+                            this.talkingCompleted = true;
+                            this.Dispose();
+                        };
+                    }
                 }
                 catch (Exception)
                 {

@@ -228,6 +228,38 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 throw new XmlException("Reader did not find a closing <Alert> tag.");
             }
+
+            int imageCount = 0;
+            String imageWarning = "";
+
+            int audioCount = 0;
+            String audioWarning = "";
+
+            for (int image = 0; image < this.ImageCount; ++ image)
+            {
+                if (!String.IsNullOrEmpty(this.images[image].Warnings))
+                {
+                    imageWarning += $"Image {image}: {this.images[image].Warnings}" + System.Environment.NewLine;
+                    ++imageCount;
+                }
+            }
+
+            for (int audio = 0; audio < this.AudioCount; ++ audio)
+            {
+                if (!String.IsNullOrEmpty(this.audios[audio].Warnings))
+                {
+                    audioWarning += $"Audio {audio}: {this.audios[audio].Warnings}" + System.Environment.NewLine;
+                    ++audioCount;
+                }
+            }
+
+            if (imageCount > 0 || audioCount > 0)
+            {
+                MessageBox.Show($"The following issues were found loading {this.alertName}: {System.Environment.NewLine}" +
+                                $"{imageWarning}{(imageCount > 0 && audioCount > 0 ? System.Environment.NewLine : "")}{audioWarning}" +
+                                $"{System.Environment.NewLine}{System.Environment.NewLine}" +
+                                $"TADA will still run, but you will be warned about these issues every time you load this alert manifest.", "Alert Issues", MessageBoxButtons.OK);
+            }
         }
 
         public override void WriteXml(XmlWriter writer)
@@ -344,6 +376,38 @@ namespace TADA_Advanced_Desktop_Alerts
             get
             {
                 return (this.isVideo ? Math.Max(this.Duration.TotalSeconds, this.Waypoints.TotalDuration) : this.Waypoints.TotalDuration);
+            }
+        }
+
+        public string Warnings
+        {
+            get
+            {
+                String warningString = "";
+
+                if (this.IsVideo)
+                {
+                    if (this.Duration == TimeSpan.Zero)
+                    {
+                        warningString += "Total duration is set to 0. ";
+                    }
+
+                    if (this.EndingPosition < this.StartingPosition)
+                    {
+                        warningString += "Ending point is before starting point.  TADA will swap these values for you. ";
+                    }
+
+                    if (this.StartingPosition == this.EndingPosition)
+                    {
+                        warningString += "Start position and end position are the same.  TADA will not play this file like this.";
+                    }
+                    else if (!String.IsNullOrEmpty(warningString))
+                    {
+                        warningString += "TADA will do its best to play this for you.";
+                    }
+                }
+
+                return warningString;
             }
         }
         #endregion Properties
@@ -528,6 +592,34 @@ namespace TADA_Advanced_Desktop_Alerts
             get
             {
                 return this.Delay.TotalSeconds + this.Duration.TotalSeconds;
+            }
+        }
+
+        public string Warnings
+        {
+            get
+            {
+                String warningString = "";
+
+                if (this.Duration == TimeSpan.Zero)
+                {
+                    warningString += "Total duration is set to 0. ";
+                }
+
+                if (this.EndingPosition < this.StartingPosition)
+                {
+                    warningString += "Ending point is before starting point.  TADA will swap these values for you. ";
+                }
+
+                if (this.StartingPosition == this.EndingPosition)
+                {
+                    warningString += "Start position and end position are the same.  TADA will not play this file like this.";
+                }
+                else if (!String.IsNullOrEmpty(warningString))
+                {
+                    warningString += "TADA will do its best to play this for you.";
+                }
+                return warningString;
             }
         }
         #endregion Properties
@@ -732,7 +824,26 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public String GetReadMessage()
         {
-            return String.IsNullOrEmpty(this.substitutedReadMessage) ? this.message : this.substitutedReadMessage;
+            String outputMessage = "";
+
+            if (!String.IsNullOrEmpty(this.substitutedReadMessage))
+            {
+                outputMessage = this.substitutedReadMessage;
+            }
+            else if (!String.IsNullOrEmpty(this.readMessage))
+            {
+                outputMessage = this.readMessage;
+            }
+            else if (!String.IsNullOrEmpty(this.substitutedMessage))
+            {
+                outputMessage = this.substitutedMessage;
+            }
+            else
+            {
+                outputMessage = this.message;
+            }
+
+            return outputMessage;
         }
 
         public String GetReadMessage(Boolean raw)
@@ -1306,7 +1417,7 @@ namespace TADA_Advanced_Desktop_Alerts
             Boolean closingTag = false;
             Boolean readNext = true;
 
-            if (reader.IsStartElement("Condition"))
+            if (reader.IsStartElement("Condition") && !reader.IsEmptyElement)
             {
                 while (!closingTag)
                 {
@@ -1360,7 +1471,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         this.IsStaff = XmlHelper.ReadAttribute(reader, "Staff", false);
                         this.IsVIP = XmlHelper.ReadAttribute(reader, "VIP", false);
 
-                        if (reader.NodeType != XmlNodeType.EndElement)
+                        if (!reader.IsEmptyElement)
                         {
                             while (reader.Read())
                             {
@@ -1431,7 +1542,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 throw new XmlException("Reader was not pointed at a <Condition> tag when ReadXml() was called.");
             }
 
-            if (!closingTag)
+            if (!closingTag && !reader.IsEmptyElement)
             {
                 throw new XmlException("Did not find a closing <Conditions> tag.");
             }

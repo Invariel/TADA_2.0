@@ -477,7 +477,7 @@ namespace TADA_Advanced_Desktop_Alerts
                                 break;
                         }
                     }
-                    else if (xmlReader.IsStartElement("GlobalSettings"))
+                    else if (xmlReader.IsStartElement("GlobalSettings") && !xmlReader.IsEmptyElement)
                     {
                         this.configurationSettings.ReadXml(xmlReader);
 
