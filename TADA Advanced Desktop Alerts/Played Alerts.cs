@@ -950,12 +950,19 @@ namespace TADA_Advanced_Desktop_Alerts
             return returnedAlert;
         }
 
-        private void CheckBasicBadge(bool condition, bool userState, ref int score, ref bool continueTesting)
+        private void CheckBasicBadge(bool condition, bool userState, bool matchFalse, ref int score, ref bool continueTesting)
         {
+            // If matchFalse is set, then we care about condition being false.
             if (continueTesting)
             {
-                score = (condition == userState) ? score + (int)General.SCORES.SCORE_BADGE_MATCHED : (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
-                continueTesting = (condition == userState);
+                // Then we haven't short circuited.
+                // If matchFalse is set, then we DO want to check when condition is false.  We always want to check when condition is true.
+                // This needs to be replaced by ternary buttons.  Damn it.
+                if ((matchFalse && !condition) || condition)
+                {
+                    score = (condition == userState) ? score + (int)General.SCORES.SCORE_BADGE_MATCHED : (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                    continueTesting = (condition == userState);
+                }
             }
         }
 
@@ -1015,10 +1022,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         if (continueTesting && condition.HasBadges)
                         {
-                            CheckBasicBadge(condition.IsAdmin, user.badges.admin, ref score, ref continueTesting);
-                            CheckBasicBadge(condition.IsPrime, user.badges.premium, ref score, ref continueTesting);
-                            CheckBasicBadge(condition.IsStaff, user.badges.staff, ref score, ref continueTesting);
-                            CheckBasicBadge(condition.IsTurbo, user.badges.turbo, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsAdmin, user.badges.admin, false, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsPrime, user.badges.premium, false, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsStaff, user.badges.staff, false, ref score, ref continueTesting);
+                            CheckBasicBadge(condition.IsTurbo, user.badges.turbo, false, ref score, ref continueTesting);
 
                             if (continueTesting)
                             {
