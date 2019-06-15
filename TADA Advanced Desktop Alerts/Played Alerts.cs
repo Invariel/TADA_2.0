@@ -74,7 +74,14 @@ namespace TADA_Advanced_Desktop_Alerts
             btn_Stop.Click += StopAlert;
 
             (dg_Pending.DataSource as BindingSource).AddingNew += PendingAlertAdded;
-            Connect();
+            try
+            {
+                Connect();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private void PauseAlerts(object sender, EventArgs e)
@@ -113,8 +120,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("No Twitch user was found with the name '" + channelName + "'.", "Unrecognized Twitch User", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                throw new Exception($"No user was found with the name '{channelName}'.");
             }
 
             /*

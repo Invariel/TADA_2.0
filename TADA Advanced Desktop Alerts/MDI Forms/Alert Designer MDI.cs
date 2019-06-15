@@ -928,6 +928,8 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
             if (numud_TestViewerMessage.Value > 0)
             {
                 response = viewerAlertTextBindingSource[Convert.ToInt32(numud_TestViewerMessage.Value - 1)] as TADAAlertText;
+                response.SetMessage(txt_ViewerMessage.Text);
+                response.SetReadMessage(txt_ViewerMessage.Text);
             }
 
             PlayingAlert testAlert = new PlayingAlert(image, audio, text, response);

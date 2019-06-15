@@ -42,6 +42,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (this.animationWindow == null || this.animationWindow.IsDisposed)
                 {
                     this.animationWindow = new TADAAnimationWindow();
+                    InitializeAnimationWindow();
+                    this.animationWindow.Show();
                 }
 
                 return this.animationWindow;
@@ -129,12 +131,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 LoadChannelConfiguration(General.SUBDIRECTORY + General.DEFAULT_OAUTH);
             }
 
-            blockUpdates = true;
-            Size animationWindowSize = this.animationWindow.GetClientSize();
-            numud_AnimationWindowSizeX.Value = animationWindowSize.Width;
-            numud_AnimationWindowSizeY.Value = animationWindowSize.Height;
-            this.animationWindow.BackColor = Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
-            blockUpdates = false;
+            InitializeAnimationWindow();
 
             new TimePeriod(1);
 
@@ -142,6 +139,16 @@ namespace TADA_Advanced_Desktop_Alerts
             webSocketServer = new WebSocketServer(21573);   // Let the user set this, and then auto-increment if the port is unavailable, maybe?
 
             // Ping invariel.ca/tada/VERSION and compare that string to TADAVersion.  If greater, reveal Update and point that button at /downloads.php
+        }
+
+        private void InitializeAnimationWindow()
+        {
+            blockUpdates = true;
+            Size animationWindowSize = this.animationWindow.GetClientSize();
+            numud_AnimationWindowSizeX.Value = animationWindowSize.Width;
+            numud_AnimationWindowSizeY.Value = animationWindowSize.Height;
+            this.animationWindow.BackColor = Color.FromArgb(255, Convert.ToInt32(numud_bgR.Value), Convert.ToInt32(numud_bgG.Value), Convert.ToInt32(numud_bgB.Value));
+            blockUpdates = false;
         }
 
         private void OpenDownloadPage(object sender, EventArgs e)
@@ -567,7 +574,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void ConnectToTwitch(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(txt_ChannelName.Text) && !String.IsNullOrEmpty(txt_AccessToken.Text))
+            if (!String.IsNullOrEmpty(txt_ChannelName.Text) && (!String.IsNullOrEmpty(txt_AccessToken.Text) || txt_AccessToken.Text == "Paste Access Token Here"))
             {
                 rad_30FPS.Enabled = false;
                 rad_60FPS.Enabled = false;
@@ -575,10 +582,20 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (playedAlerts == null || playedAlerts.IsDisposed)
                 {
                     // Make an object containing the banned words, and the other settings?
-                    playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+                    try
+                    {
+                        playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
 
-                playedAlerts.Show();
+                if (playedAlerts != null && !playedAlerts.IsDisposed)
+                {
+                    playedAlerts.Show();
+                }
             }
             else if (String.IsNullOrEmpty(txt_ChannelName.Text))
             {
