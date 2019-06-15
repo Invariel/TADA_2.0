@@ -612,101 +612,104 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         {
             disableUpdates = true;
 
-            tab_AdvancedWaypointControls.Enabled = !((sender as DataGridView).CurrentCell.OwningRow.IsNewRow);
+            tab_AdvancedWaypointControls.Enabled = !((sender as DataGridView)?.CurrentCell?.OwningRow?.IsNewRow) ?? false;
 
-            Waypoint w = waypointBindingSource.Current as Waypoint;
-
-            if (waypointBindingSource.Position == 0)
+            if (waypointBindingSource.Position > -1)
             {
-                // Dealing with the first Waypoint.  Set P0 and not P1.
-                numud_P0X.Value = Convert.ToDecimal(w.X);
-                numud_P0Y.Value = Convert.ToDecimal(w.Y);
+                Waypoint w = waypointBindingSource.Current as Waypoint;
 
-                if (waypointBindingSource.Count > 1)
+                if (waypointBindingSource.Position == 0)
                 {
-                    Waypoint w2 = waypointBindingSource[1] as Waypoint;
-                    numud_P1X.Value = Convert.ToDecimal(w2.P1.X);
-                    numud_P1Y.Value = Convert.ToDecimal(w2.P1.Y);
-                    numud_C0X.Value = Convert.ToDecimal(w2.C0.X);
-                    numud_C0Y.Value = Convert.ToDecimal(w2.C0.Y);
-                    numud_C1X.Value = Convert.ToDecimal(w2.C1.X);
-                    numud_C1Y.Value = Convert.ToDecimal(w2.C1.Y);
+                    // Dealing with the first Waypoint.  Set P0 and not P1.
+                    numud_P0X.Value = Convert.ToDecimal(w.X);
+                    numud_P0Y.Value = Convert.ToDecimal(w.Y);
+
+                    if (waypointBindingSource.Count > 1)
+                    {
+                        Waypoint w2 = waypointBindingSource[1] as Waypoint;
+                        numud_P1X.Value = Convert.ToDecimal(w2.P1.X);
+                        numud_P1Y.Value = Convert.ToDecimal(w2.P1.Y);
+                        numud_C0X.Value = Convert.ToDecimal(w2.C0.X);
+                        numud_C0Y.Value = Convert.ToDecimal(w2.C0.Y);
+                        numud_C1X.Value = Convert.ToDecimal(w2.C1.X);
+                        numud_C1Y.Value = Convert.ToDecimal(w2.C1.Y);
+                    }
+
+                    radio_Curve.Enabled = false;
+                    radio_Line.Enabled = false;
+
+                    numud_P0X.Enabled = true;
+                    numud_P0Y.Enabled = true;
+                    numud_P1X.Enabled = false;
+                    numud_P1Y.Enabled = false;
+                    numud_C0X.Enabled = false;
+                    numud_C0Y.Enabled = false;
+                    numud_C1X.Enabled = false;
+                    numud_C1Y.Enabled = false;
+                }
+                else
+                {
+                    // Dealing with any Waypoint after the first one.
+                    Waypoint w2 = waypointBindingSource[waypointBindingSource.Position - 1] as Waypoint;
+                    numud_P0X.Value = Convert.ToDecimal(w2.X);
+                    numud_P0Y.Value = Convert.ToDecimal(w2.Y);
+
+                    numud_C0X.Value = Convert.ToDecimal(w.C0.X);
+                    numud_C0Y.Value = Convert.ToDecimal(w.C0.Y);
+                    numud_C1X.Value = Convert.ToDecimal(w.C1.X);
+                    numud_C1Y.Value = Convert.ToDecimal(w.C1.Y);
+                    numud_P1X.Value = Convert.ToDecimal(w.P1.X);
+                    numud_P1Y.Value = Convert.ToDecimal(w.P1.Y);
+
+                    radio_Curve.Enabled = true;
+                    radio_Line.Enabled = true;
+
+                    numud_P0X.Enabled = false;
+                    numud_P0Y.Enabled = false;
+                    numud_P1X.Enabled = true;
+                    numud_P1Y.Enabled = true;
+                    numud_C0X.Enabled = w.IsCurve;
+                    numud_C0Y.Enabled = w.IsCurve;
+                    numud_C1X.Enabled = w.IsCurve;
+                    numud_C1Y.Enabled = w.IsCurve;
                 }
 
-                radio_Curve.Enabled = false;
-                radio_Line.Enabled = false;
+                radio_Curve.Checked = w.IsCurve;
+                radio_Line.Checked = !w.IsCurve;
 
-                numud_P0X.Enabled = true;
-                numud_P0Y.Enabled = true;
-                numud_P1X.Enabled = false;
-                numud_P1Y.Enabled = false;
-                numud_C0X.Enabled = false;
-                numud_C0Y.Enabled = false;
-                numud_C1X.Enabled = false;
-                numud_C1Y.Enabled = false;
+                chk_Angle.Checked = w.Angle.change;
+                numud_DesiredAngle.Value = Convert.ToDecimal(w.Angle.target);
+                numud_AngleFrames.Value = Convert.ToInt32(w.Angle.frames);
+                numud_AngleDuration.Value = Convert.ToDecimal(w.Angle.duration);
+                radio_FromCenter.Checked = w.Angle.aroundCenter;
+                radio_FromTopLeft.Checked = !w.Angle.aroundCenter;
+
+                chk_Magnification.Checked = w.Magnification.change;
+                numud_DesiredMagnification.Value = Convert.ToDecimal(w.Magnification.target);
+                numud_MagnificationFrames.Value = Convert.ToDecimal(w.Magnification.frames);
+                numud_MagnificationDuration.Value = Convert.ToDecimal(w.Magnification.duration);
+
+                chk_Opacity.Checked = w.Opacity.change;
+                numud_DesiredOpacity.Value = Convert.ToDecimal(w.Opacity.target);
+                numud_OpacityFrames.Value = Convert.ToDecimal(w.Opacity.frames);
+                numud_OpacityDuration.Value = Convert.ToDecimal(w.Opacity.duration);
+
+                chk_Balance.Checked = w.Balance.change;
+                numud_DesiredBalance.Value = Convert.ToDecimal(w.Balance.target);
+                numud_BalanceFrames.Value = Convert.ToDecimal(w.Balance.frames);
+                numud_BalanceDuration.Value = Convert.ToDecimal(w.Balance.duration);
+
+                chk_Volume.Checked = w.Volume.change;
+                numud_DesiredVolume.Value = Convert.ToDecimal(w.Volume.target);
+                numud_VolumeFrames.Value = Convert.ToDecimal(w.Volume.frames);
+                numud_VolumeDuration.Value = Convert.ToDecimal(w.Volume.duration);
+
+                txt_WindowTarget.Text = w.WindowTarget;
+                txt_Keypresses.Text = w.Keypresses;
+
+                SumWaypoints();
+                CheckChecked();
             }
-            else
-            {
-                // Dealing with any Waypoint after the first one.
-                Waypoint w2 = waypointBindingSource[waypointBindingSource.Position - 1] as Waypoint;
-                numud_P0X.Value = Convert.ToDecimal(w2.X);
-                numud_P0Y.Value = Convert.ToDecimal(w2.Y);
-
-                numud_C0X.Value = Convert.ToDecimal(w.C0.X);
-                numud_C0Y.Value = Convert.ToDecimal(w.C0.Y);
-                numud_C1X.Value = Convert.ToDecimal(w.C1.X);
-                numud_C1Y.Value = Convert.ToDecimal(w.C1.Y);
-                numud_P1X.Value = Convert.ToDecimal(w.P1.X);
-                numud_P1Y.Value = Convert.ToDecimal(w.P1.Y);
-
-                radio_Curve.Enabled = true;
-                radio_Line.Enabled = true;
-
-                numud_P0X.Enabled = false;
-                numud_P0Y.Enabled = false;
-                numud_P1X.Enabled = true;
-                numud_P1Y.Enabled = true;
-                numud_C0X.Enabled = w.IsCurve;
-                numud_C0Y.Enabled = w.IsCurve;
-                numud_C1X.Enabled = w.IsCurve;
-                numud_C1Y.Enabled = w.IsCurve;
-            }
-
-            radio_Curve.Checked = w.IsCurve;
-            radio_Line.Checked = !w.IsCurve;
-
-            chk_Angle.Checked = w.Angle.change;
-            numud_DesiredAngle.Value = Convert.ToDecimal(w.Angle.target);
-            numud_AngleFrames.Value = Convert.ToInt32(w.Angle.frames);
-            numud_AngleDuration.Value = Convert.ToDecimal(w.Angle.duration);
-            radio_FromCenter.Checked = w.Angle.aroundCenter;
-            radio_FromTopLeft.Checked = !w.Angle.aroundCenter;
-
-            chk_Magnification.Checked = w.Magnification.change;
-            numud_DesiredMagnification.Value = Convert.ToDecimal(w.Magnification.target);
-            numud_MagnificationFrames.Value = Convert.ToDecimal(w.Magnification.frames);
-            numud_MagnificationDuration.Value = Convert.ToDecimal(w.Magnification.duration);
-
-            chk_Opacity.Checked = w.Opacity.change;
-            numud_DesiredOpacity.Value = Convert.ToDecimal(w.Opacity.target);
-            numud_OpacityFrames.Value = Convert.ToDecimal(w.Opacity.frames);
-            numud_OpacityDuration.Value = Convert.ToDecimal(w.Opacity.duration);
-
-            chk_Balance.Checked = w.Balance.change;
-            numud_DesiredBalance.Value = Convert.ToDecimal(w.Balance.target);
-            numud_BalanceFrames.Value = Convert.ToDecimal(w.Balance.frames);
-            numud_BalanceDuration.Value = Convert.ToDecimal(w.Balance.duration);
-
-            chk_Volume.Checked = w.Volume.change;
-            numud_DesiredVolume.Value = Convert.ToDecimal(w.Volume.target);
-            numud_VolumeFrames.Value = Convert.ToDecimal(w.Volume.frames);
-            numud_VolumeDuration.Value = Convert.ToDecimal(w.Volume.duration);
-
-            txt_WindowTarget.Text = w.WindowTarget;
-            txt_Keypresses.Text = w.Keypresses;
-
-            SumWaypoints();
-            CheckChecked();
 
             disableUpdates = false;
         }
