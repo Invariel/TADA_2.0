@@ -395,7 +395,9 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 
                     if (existingTabPage == null || isNewObject)
                     {
-                        CreateMDIForm(editObject as TADAAlertText, GetCaption((dataGrid == dg_StreamerMessages ? "Streamer" : "Viewer"), e.RowIndex));
+                        Boolean isViewer = (dataGrid == dg_ViewerMessages);
+
+                        CreateMDIForm(editObject as TADAAlertText, GetCaption((isViewer ? "Viewer" : "Streamer"), e.RowIndex), isViewer);
                     }
                 }
                 else if (dataGrid == dg_Conditions)
@@ -515,14 +517,14 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
         {
             TADAAlertText newAlertText = streamerAlertTextBindingSource.AddNew() as TADAAlertText;
             this.mainAlert.StreamerTexts.Add(newAlertText);
-            CreateMDIForm(newAlertText, GetCaption("Streamer", streamerAlertTextBindingSource.Count - 1));
+            CreateMDIForm(newAlertText, GetCaption("Streamer", streamerAlertTextBindingSource.Count - 1), false);
         }
 
         private void NewViewerTextForm (object sender = null, EventArgs e = null)
         {
             TADAAlertText newAlertText = viewerAlertTextBindingSource.AddNew() as TADAAlertText;
             this.mainAlert.ViewerTexts.Add(newAlertText);
-            CreateMDIForm(newAlertText, GetCaption("Viewer", viewerAlertTextBindingSource.Count - 1));
+            CreateMDIForm(newAlertText, GetCaption("Viewer", viewerAlertTextBindingSource.Count - 1), true);
         }
 
         private void NewConditionForm (object sender = null, EventArgs e = null)
@@ -546,9 +548,9 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
             audioTabPages.Add(new Tuple<TADAAlertAudio, TabPage>(newAlertAudio, surroundingTabPage));
         }
 
-        private void CreateMDIForm (TADAAlertText newAlertText, String caption)
+        private void CreateMDIForm (TADAAlertText newAlertText, String caption, Boolean isViewerAlert = false)
         {
-            Form newTextForm = new MDI_Forms.Text_Designer_MDI(newAlertText, this.mainAlert);
+            Form newTextForm = new MDI_Forms.Text_Designer_MDI(newAlertText, this.mainAlert, isViewerAlert);
             TabPage surroundingTabPage = EncapsulateWithTab(newTextForm, caption);
             textTabPages.Add(new Tuple<TADAAlertText, TabPage>(newAlertText, surroundingTabPage));
         }

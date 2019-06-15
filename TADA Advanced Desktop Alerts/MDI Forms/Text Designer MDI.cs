@@ -22,7 +22,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             talky.Dispose();
         }
 
-        internal Text_Designer_MDI(TADAAlertText alertText, TADAAlert parentAlert) : base(parentAlert)
+        internal Text_Designer_MDI(TADAAlertText alertText, TADAAlert parentAlert, Boolean isViewer) : base(parentAlert)
         {
             InitializeComponent();
 
@@ -117,6 +117,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             GeneratePreview();
             FillImportComboBox();
+
+            if (isViewer)
+            {
+                txt_DisplayedText.Enabled = false;
+                txt_NarratedText.Enabled = false;
+            }
         }
 
         private void InitializeCallbacks()
