@@ -60,10 +60,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
                 String textMessage = alertText.GetMessage(true);
                 String textAudio = alertText.GetReadMessage(true);
-                General.PerformSubstitutions(ref textMessage, subObject);
-                General.PerformSubstitutions(ref textAudio, subObject);
-                alertText.SetMessage(textMessage);
-                alertText.SetReadMessage(textAudio);
 
                 this.playingObjects.Add(new PlayingText(this, alertText));
             }
@@ -73,6 +69,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.alertResponse = alertResponse;
                 this.playingObjects.Add(new PlayingText(this, alertResponse));
             }
+
+            this.subObject = subObject;
         }
 
         public void RemoveObject(PlayingObject playingObject)

@@ -586,7 +586,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     try
                     {
                         playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
-                        playedAlerts.SetBlockedWords(txt_BlockedWords.Text.Split(' '));
                     }
                     catch (Exception ex)
                     {

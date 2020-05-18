@@ -133,7 +133,6 @@ namespace TADA_Advanced_Desktop_Alerts
             
             pubSub = new TwitchPubSub();
             pubSub.OnBitsReceivedV2 += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
-            pubSub.OnChannelCommerceReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.GAMEPURCHASE, e);
             pubSub.OnFollow += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
             pubSub.OnChannelSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
             pubSub.OnListenResponse += (sender, e) =>
@@ -179,7 +178,6 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 // Even if there are no events of the chosen type specified, listening to them is important in case one is added later.
                 pubSub.ListenToBitsEventsV2(channelID);
-                pubSub.ListenToCommerce(channelID);
                 pubSub.ListenToFollows(channelID);
                 pubSub.SendTopics(twitchAPI.Settings.AccessToken);
 
@@ -406,16 +404,6 @@ namespace TADA_Advanced_Desktop_Alerts
                         {
                             user = await GetUser(eBits?.UserId);
                         }
-                    }
-                    break;
-                case General.ALERTTYPES.GAMEPURCHASE:
-                    {
-                        OnChannelCommerceReceivedArgs eCommerce = eventDetails as OnChannelCommerceReceivedArgs;
-
-                        subObject.Message = eCommerce.PurchaseMessage;
-                        subObject.ViewerName = eCommerce.Username;
-
-                        user = await GetUser(eCommerce.UserId);
                     }
                     break;
                 case General.ALERTTYPES.COMMUNITY:
@@ -743,7 +731,8 @@ namespace TADA_Advanced_Desktop_Alerts
                                                 alertImage,
                                                 alertAudio,
                                                 alertText,
-                                                alertResponse);
+                                                alertResponse,
+                                                subObject);
             dg_Pending.Invoke((Action)(() => { pendingAlertBindingSource.Add(alert); }));
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() => { MainTADAForm.mainTADAForm.AnimationWindow.PendingAlert(); }));
         }
@@ -1297,7 +1286,9 @@ namespace TADA_Advanced_Desktop_Alerts
         internal TADAAlertText alertStreamerText = null;
         internal TADAAlertText alertViewerText = null;
 
-        internal ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText)
+        internal SubstitutionObject subObject = null;
+
+        internal ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText, SubstitutionObject subObject)
         {
             this.ViewerName = viewerName;
             this.AlertMessage = alertMessage;
@@ -1306,6 +1297,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.alertAudio = alertAudio;
             this.alertStreamerText = alertStreamerText;
             this.alertViewerText = alertViewerText;
+            this.subObject = subObject;
         }
 
         public override string ToString()
