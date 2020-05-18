@@ -11,17 +11,19 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     internal class PlayingAlert
     {
-        List<PlayingObject> playingObjects = new List<PlayingObject>();
-        List<PlayingObject> completedObjects = new List<PlayingObject>();
+        private List<PlayingObject> playingObjects = new List<PlayingObject>();
+        private List<PlayingObject> completedObjects = new List<PlayingObject>();
 
-        TADAAlertImage alertImage;
-        TADAAlertAudio alertAudio;
-        TADAAlertText alertText;
-        TADAAlertText alertResponse;
+        internal TADAAlertImage alertImage;
+        internal TADAAlertAudio alertAudio;
+        internal TADAAlertText alertText;
+        internal TADAAlertText alertResponse;
+
+        internal SubstitutionObject subObject;
 
         Graphics graphics = MainTADAForm.mainTADAForm.AnimationWindow.graphics;
 
-        internal PlayingAlert(TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse)
+        internal PlayingAlert(TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertText, TADAAlertText alertResponse, SubstitutionObject subObject)
         {
             if (alertImage != null)
             {
@@ -55,6 +57,14 @@ namespace TADA_Advanced_Desktop_Alerts
             if (alertText != null)
             {
                 this.alertText = alertText;
+
+                String textMessage = alertText.GetMessage(true);
+                String textAudio = alertText.GetReadMessage(true);
+                General.PerformSubstitutions(ref textMessage, subObject);
+                General.PerformSubstitutions(ref textAudio, subObject);
+                alertText.SetMessage(textMessage);
+                alertText.SetReadMessage(textAudio);
+
                 this.playingObjects.Add(new PlayingText(this, alertText));
             }
 

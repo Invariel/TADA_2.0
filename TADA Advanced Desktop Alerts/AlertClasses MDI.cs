@@ -457,7 +457,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 // It had better be, since this is supposed to only be called by <Alert> when it's time to add an image or video.
                 this.Filename = reader.GetAttribute("Filename");
                 this.IsVideo = Boolean.Parse(reader.GetAttribute("IsVideo"));
-                this.AnimationLoops = Int32.Parse(reader.GetAttribute("Loops") ?? "0.0");
+                this.AnimationLoops = Int32.Parse(reader.GetAttribute("Loops") ?? "0");
 
                 // Have to read all of the 1.0-written properties.
                 double initialAngle = XmlHelper.ReadAttribute(reader, "Angle", 0.0d);

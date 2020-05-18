@@ -170,7 +170,7 @@ namespace TADA_Advanced_Desktop_Alerts
                          "&redirect_uri=" +
                          General.AUTH_URI +
                          "&response_type=token&" +
-                         "scope=chat_login channel_subscriptions channel_check_subscription user_read bits:read chat:read";
+                         "scope=channel_subscriptions channel_check_subscription user_read bits:read chat:read channel:read:redemptions";    // chat_login was deprecated.
             System.Diagnostics.Process.Start(uri);
         }
 
@@ -582,9 +582,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 if (playedAlerts == null || playedAlerts.IsDisposed)
                 {
                     // Make an object containing the banned words, and the other settings?
+
                     try
                     {
                         playedAlerts = new Played_Alerts(txt_ChannelName.Text, txt_AccessToken.Text);
+                        playedAlerts.SetBlockedWords(txt_BlockedWords.Text.Split(' '));
                     }
                     catch (Exception ex)
                     {

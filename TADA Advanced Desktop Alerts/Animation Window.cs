@@ -99,7 +99,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     this.nowPlaying.DrawElements(e.Graphics);
                 }
-                catch (System.ArgumentException)
+                catch (System.ArgumentException ex)
                 {
                     // Just catch this possibility.  Let it go.
                 }
@@ -137,20 +137,23 @@ namespace TADA_Advanced_Desktop_Alerts
                     // Then we've got to play the macro.
                     this.nowPlaying = keyboardAlerts[0];
                     keyboardAlerts.RemoveAt(0);
-                    this.nowPlaying.Play();
                 }
                 else if (pendingAlerts.Count > 0)
                 {
                     this.nowPlaying = pendingAlerts[0];
                     pendingAlerts.RemoveAt(0);
-                    this.nowPlaying.Play();
                 }
                 else if (this.playedAlerts != null && this.playedAlerts.HasAlertsWaiting())
                 {
                     ListedAlert alertToPlay = this.playedAlerts.PlayFirstPendingAlert();
-                    this.nowPlaying = new PlayingAlert(alertToPlay.alertImage ?? null, alertToPlay.alertAudio ?? null, alertToPlay.alertStreamerText ?? null, alertToPlay.alertViewerText ?? null);
+                    this.nowPlaying = new PlayingAlert(alertToPlay.alertImage ?? null, alertToPlay.alertAudio ?? null, alertToPlay.alertStreamerText ?? null, alertToPlay.alertViewerText ?? null, alertToPlay.subObject);
+                }
+
+                if (this.nowPlaying != null)
+                {
                     this.nowPlaying.Play();
                 }
+
             }
         }
     }

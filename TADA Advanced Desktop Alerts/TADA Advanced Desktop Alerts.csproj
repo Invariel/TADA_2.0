@@ -72,7 +72,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -199,48 +199,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TwitchLib.Api">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.Core">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.Core.Enums">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.Core.Enums.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.Core.Interfaces">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.Core.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.Core.Models">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.Core.Models.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.Helix">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.Helix.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.Helix.Models">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.Helix.Models.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.V5">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.V5.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Api.V5.Models">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\bin\Release\netstandard2.0\TwitchLib.Api.V5.Models.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Client">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Client\TwitchLib.Client\bin\Release\netstandard2.0\TwitchLib.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Client.Enums">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Client\TwitchLib.Client\bin\Release\netstandard2.0\TwitchLib.Client.Enums.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Client.Models">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.Client\TwitchLib.Client\bin\Release\netstandard2.0\TwitchLib.Client.Models.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.Communication">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.PubSub\TwitchLib.PubSub\bin\Release\netstandard2.0\TwitchLib.Communication.dll</HintPath>
-    </Reference>
-    <Reference Include="TwitchLib.PubSub">
-      <HintPath>..\..\..\TwitchLib\TwitchLib.PubSub\TwitchLib.PubSub\bin\Release\netstandard2.0\TwitchLib.PubSub.dll</HintPath>
-    </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
@@ -340,6 +298,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Played Alerts.resx">
       <DependentUpon>Played Alerts.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -401,6 +360,64 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.Core.Enums\TwitchLib.Api.Core.Enums.csproj">
+      <Project>{88436ca0-e6ed-4182-9ada-a26309a6fbc9}</Project>
+      <Name>TwitchLib.Api.Core.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.Core.Interfaces\TwitchLib.Api.Core.Interfaces.csproj">
+      <Project>{94d043ff-b25a-40b1-b5eb-ea9b5b4088bf}</Project>
+      <Name>TwitchLib.Api.Core.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.Core.Models\TwitchLib.Api.Core.Models.csproj">
+      <Project>{9c82b7e1-a088-4fa2-a105-28a8d2946e51}</Project>
+      <Name>TwitchLib.Api.Core.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.Core\TwitchLib.Api.Core.csproj">
+      <Project>{45cf4a08-337f-4fea-a87b-de089533b104}</Project>
+      <Name>TwitchLib.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.Helix.Models\TwitchLib.Api.Helix.Models.csproj">
+      <Project>{dbcec5d3-759a-4403-a4aa-741632513762}</Project>
+      <Name>TwitchLib.Api.Helix.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.Helix\TwitchLib.Api.Helix.csproj">
+      <Project>{65a8a6ea-1303-421f-b3a4-e2059a819c62}</Project>
+      <Name>TwitchLib.Api.Helix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.V5.Models\TwitchLib.Api.V5.Models.csproj">
+      <Project>{5fee3c9e-6cbe-4d72-9c26-59d8e43399b5}</Project>
+      <Name>TwitchLib.Api.V5.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api.V5\TwitchLib.Api.V5.csproj">
+      <Project>{50b0eb20-e7b4-49e0-99f5-7dc96f5c9690}</Project>
+      <Name>TwitchLib.Api.V5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Api\TwitchLib.Api\TwitchLib.Api.csproj">
+      <Project>{1b3984fd-7910-45d9-a6ba-f8381a81e359}</Project>
+      <Name>TwitchLib.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Client\TwitchLib.Client.Enums\TwitchLib.Client.Enums.csproj">
+      <Project>{421de70d-95af-44dd-ad07-136abab56516}</Project>
+      <Name>TwitchLib.Client.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Client\TwitchLib.Client.Models\TwitchLib.Client.Models.csproj">
+      <Project>{1585ae24-595e-4c84-8850-ace4fd9f7182}</Project>
+      <Name>TwitchLib.Client.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.Client\TwitchLib.Client\TwitchLib.Client.csproj">
+      <Project>{2b52ee5e-546d-4d9e-b94a-00ac7d6324a4}</Project>
+      <Name>TwitchLib.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.PubSub\TwitchLib.Communication\src\TwitchLib.Communication\TwitchLib.Communication.csproj">
+      <Project>{11327489-0f43-460e-a790-805151a046d1}</Project>
+      <Name>TwitchLib.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TwitchLib\TwitchLib.PubSub\TwitchLib.PubSub\TwitchLib.PubSub.csproj">
+      <Project>{b99f18a5-927a-45cc-82cc-e3f576edddfc}</Project>
+      <Name>TwitchLib.PubSub</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

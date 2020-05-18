@@ -68,7 +68,6 @@ namespace TADA_Advanced_Desktop_Alerts
             COMMUNITY,
             FIRSTMESSAGE,
             FOLLOW,
-            GAMEPURCHASE,
             HOST,
             JOIN,
             MACRO,
@@ -89,7 +88,6 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.COMMUNITY, "Community Gift Subs" },
             { ALERTTYPES.FIRSTMESSAGE, "First Message" },
             { ALERTTYPES.FOLLOW, "Follow" },
-            { ALERTTYPES.GAMEPURCHASE, "Game Purchase" },
             { ALERTTYPES.HOST, "Host" },
             { ALERTTYPES.JOIN, "Join" },
             { ALERTTYPES.MACRO, "Macro" },
@@ -110,7 +108,6 @@ namespace TADA_Advanced_Desktop_Alerts
             { "Community Gift Subs", ALERTTYPES.COMMUNITY },
             { "First Message", ALERTTYPES.FIRSTMESSAGE },
             { "Follow", ALERTTYPES.FOLLOW },
-            { "Game Purchase", ALERTTYPES.GAMEPURCHASE },
             { "Host", ALERTTYPES.HOST },
             { "Join", ALERTTYPES.JOIN },
             { "Macro", ALERTTYPES.MACRO },
@@ -512,8 +509,8 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             string result = Regex.Replace(
                 input,
-                Regex.Escape(search),
-                replacement.Replace("$", "$$"),
+                $"{search}",
+                replacement,
                 RegexOptions.IgnoreCase
             );
             return result;

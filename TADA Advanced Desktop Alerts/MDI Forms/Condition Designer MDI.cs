@@ -334,7 +334,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 grp_RelevantQuantity.Visible = (alertType != General.ALERTTYPES.ANONYMOUS_GIFT &&
                                                 alertType != General.ALERTTYPES.AUTOHOST &&
-                                                alertType != General.ALERTTYPES.GAMEPURCHASE &&
                                                 alertType != General.ALERTTYPES.FIRSTMESSAGE &&
                                                 alertType != General.ALERTTYPES.FOLLOW &&
                                                 alertType != General.ALERTTYPES.JOIN &&
@@ -343,7 +342,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 grp_MessageKeywords.Visible = !(alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY ||
                                                 alertType == General.ALERTTYPES.ANONYMOUS_GIFT ||
                                                 alertType == General.ALERTTYPES.AUTOHOST ||
-                                                alertType == General.ALERTTYPES.GAMEPURCHASE ||
                                                 alertType == General.ALERTTYPES.FOLLOW ||
                                                 alertType == General.ALERTTYPES.HOST ||
                                                 alertType == General.ALERTTYPES.JOIN ||
