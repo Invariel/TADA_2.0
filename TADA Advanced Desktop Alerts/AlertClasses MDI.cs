@@ -786,7 +786,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public WaypointContainer Waypoints { get; set; } = new WaypointContainer();
 
-        public TADAAlertText () { }
+        public TADAAlertText() { }
 
         public TADAAlertText(String message, String readMessage, String ttsVoice, Font font, float outlineWidth, Color foreground, Color background, Color outline, Size dimensions, Size padding, WaypointContainer waypoints)
         {
@@ -817,9 +817,14 @@ namespace TADA_Advanced_Desktop_Alerts
             return (raw ? this.message : GetMessage());
         }
 
-        public void SetMessage (String message)
+        public void SetMessage(String message, bool viewerMessage = false)
         {
             this.substitutedMessage = message;
+
+            if (viewerMessage)
+            {
+                this.Message = message;
+            }
         }
 
         public String GetReadMessage()

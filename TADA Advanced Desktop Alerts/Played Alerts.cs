@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -41,6 +42,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
         // Need something for storing messages.  <alert, last procced, <user, last procced>>  Need an object for this probably.
         private Dictionary<TADAAlert, RecentlyPlayed> recentlyPlayed = new Dictionary<TADAAlert, RecentlyPlayed>();
+
+        private Mutex addingAlert = new Mutex();
 
 
         // Need a thing for storing community gift subs that are being compiled.
@@ -203,7 +206,7 @@ namespace TADA_Advanced_Desktop_Alerts
             };
             twitchClient.OnConnectionError += (sender, e) =>
             {
-                General.LogFile(e.Error.Message, "twitchClient.txt");
+                General.LogFile($"A connection error happened, causing hosts, raids, and messages to stop being tracked.{Environment.NewLine}{e.Error.Message}", "twitchClient.txt");
                 this.Invoke((Action)(() =>
                 {
                     this.pb_TwitchApi.Image = this.redLight;
@@ -212,7 +215,7 @@ namespace TADA_Advanced_Desktop_Alerts
             };
             twitchClient.OnIncorrectLogin += (sender, e) =>
             {
-                General.LogFile(e.Exception.Message, "twitchClient.txt");
+                General.LogFile($"The credentials were incorrect.{Environment.NewLine}{e.Exception.Message}", "twitchClient.txt");
                 this.Invoke((Action)(() =>
                 {
                     this.pb_TwitchApi.Image = this.redLight;
@@ -650,8 +653,11 @@ namespace TADA_Advanced_Desktop_Alerts
                     recentlyPlayed[alertToUse].AddTriggerer(user);
                 }
 
-                PrepareAndPlayAlert(alertToUse, user, subObject, alertType);
-                MainTADAForm.mainTADAForm.webSocketServer.TellConnectedSockets(subObject);
+                lock (addingAlert)
+                {
+                    PrepareAndPlayAlert(alertToUse, user, subObject, alertType);
+                    MainTADAForm.mainTADAForm.webSocketServer.TellConnectedSockets(subObject);
+                }
             }
         }
 
@@ -694,7 +700,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     // Remove blocked words.
                     foreach (String blockedWord in MainTADAForm.mainTADAForm.configurationSettings.blockedWords.Split(' '))
                     {
-                        message = General.ReplaceCaseInsensitive(message, blockedWord, null);
+                        message = General.ReplaceCaseInsensitive(message, blockedWord, "");
                     }
 
                     if (MainTADAForm.mainTADAForm.configurationSettings.dontReadEmotes)
@@ -708,7 +714,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                 }
 
-                alertResponse.SetMessage(message);
+                alertResponse.SetMessage(message, true);
 
                 // Search through alertResponse to see if any waypoint has readMessage checked.
                 var hasReadMessage = (alertResponse.Waypoints.Waypoints.Any(x => x.ReadMessage));
@@ -726,7 +732,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
 
             ListedAlert alert = new ListedAlert(subObject.ViewerName,
-                                                alertText.GetMessage() ?? alertText.GetReadMessage() ?? "no message",
+                                                alertText?.GetMessage() ?? alertText?.GetReadMessage() ?? alertResponse?.GetMessage() ?? alertResponse?.GetReadMessage() ?? "no message",
                                                 General.alertTypes[alertType],
                                                 alertImage,
                                                 alertAudio,
@@ -1092,7 +1098,7 @@ namespace TADA_Advanced_Desktop_Alerts
                             foreach (String key in keywords)
                             {
                                 String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
-                                if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase) != null)
+                                if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase).Success)
                                 {
                                     matched = true;
                                     score += (int)General.SCORES.SCORE_KEYWORD_MATCHED;
@@ -1281,7 +1287,7 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Alert Type")]
         public String AlertType { get; set; }
 
-        [DisplayName("Time")]
+        [DisplayName("Received Time")]
         public DateTime ReceivedTime { get; set; }
 
         internal TADAAlertImage alertImage = null;
