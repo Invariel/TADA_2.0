@@ -33,10 +33,8 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dg_Played = new System.Windows.Forms.DataGridView();
-            this.playedAlertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dg_Pending = new System.Windows.Forms.DataGridView();
-            this.pendingAlertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btn_Pause = new System.Windows.Forms.Button();
             this.btn_Replay = new System.Windows.Forms.Button();
             this.btn_Stop = new System.Windows.Forms.Button();
@@ -49,26 +47,28 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pb_PubSub = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.playedAlertBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pendingAlertBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.viewerNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ReceivedTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertMessageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewerNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateReceived = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertMessageDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dg_Pending)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_FollowerList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Websocket)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_TwitchApi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_PubSub)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -112,7 +112,7 @@
             this.dg_Played.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.viewerNameDataGridViewTextBoxColumn1,
             this.alertTypeDataGridViewTextBoxColumn1,
-            this.DateReceived,
+            this.dataGridViewTextBoxColumn2,
             this.alertMessageDataGridViewTextBoxColumn1});
             this.dg_Played.DataSource = this.playedAlertBindingSource;
             this.dg_Played.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -121,11 +121,6 @@
             this.dg_Played.Name = "dg_Played";
             this.dg_Played.Size = new System.Drawing.Size(548, 115);
             this.dg_Played.TabIndex = 0;
-            // 
-            // playedAlertBindingSource
-            // 
-            this.playedAlertBindingSource.AllowNew = true;
-            this.playedAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
             // 
             // groupBox2
             // 
@@ -147,7 +142,7 @@
             this.dg_Pending.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.viewerNameDataGridViewTextBoxColumn,
             this.alertTypeDataGridViewTextBoxColumn,
-            this.dataGridViewTextBoxColumn1,
+            this.ReceivedTime,
             this.alertMessageDataGridViewTextBoxColumn});
             this.dg_Pending.DataSource = this.pendingAlertBindingSource;
             this.dg_Pending.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -156,11 +151,6 @@
             this.dg_Pending.Name = "dg_Pending";
             this.dg_Pending.Size = new System.Drawing.Size(548, 115);
             this.dg_Pending.TabIndex = 0;
-            // 
-            // pendingAlertBindingSource
-            // 
-            this.pendingAlertBindingSource.AllowNew = true;
-            this.pendingAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
             // 
             // btn_Pause
             // 
@@ -286,6 +276,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Bits, Follows, Game Purchases, Subscriptions";
             // 
+            // playedAlertBindingSource
+            // 
+            this.playedAlertBindingSource.AllowNew = true;
+            this.playedAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
+            // 
+            // pendingAlertBindingSource
+            // 
+            this.pendingAlertBindingSource.AllowNew = true;
+            this.pendingAlertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.ListedAlert);
+            // 
             // viewerNameDataGridViewTextBoxColumn
             // 
             this.viewerNameDataGridViewTextBoxColumn.DataPropertyName = "ViewerName";
@@ -301,12 +301,14 @@
             this.alertTypeDataGridViewTextBoxColumn.Name = "alertTypeDataGridViewTextBoxColumn";
             this.alertTypeDataGridViewTextBoxColumn.Width = 80;
             // 
-            // dataGridViewTextBoxColumn1
+            // ReceivedTime
             // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "DateReceived";
-            this.dataGridViewTextBoxColumn1.HeaderText = "DateReceived";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 100;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.ReceivedTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ReceivedTime.DataPropertyName = "ReceivedTime";
+            this.ReceivedTime.HeaderText = "Received Time";
+            this.ReceivedTime.MinimumWidth = 110;
+            this.ReceivedTime.Name = "ReceivedTime";
+            this.ReceivedTime.Width = 110;
             // 
             // alertMessageDataGridViewTextBoxColumn
             // 
@@ -330,12 +332,14 @@
             this.alertTypeDataGridViewTextBoxColumn1.Name = "alertTypeDataGridViewTextBoxColumn1";
             this.alertTypeDataGridViewTextBoxColumn1.Width = 80;
             // 
-            // DateReceived
+            // dataGridViewTextBoxColumn2
             // 
-            this.DateReceived.DataPropertyName = "DateReceived";
-            this.DateReceived.HeaderText = "DateReceived";
-            this.DateReceived.MinimumWidth = 100;
-            this.DateReceived.Name = "DateReceived";
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "ReceivedTime";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Received Time";
+            this.dataGridViewTextBoxColumn2.MinimumWidth = 110;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.Width = 110;
             // 
             // alertMessageDataGridViewTextBoxColumn1
             // 
@@ -356,16 +360,16 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_Played)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dg_Pending)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_FollowerList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Websocket)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_TwitchApi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_PubSub)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.playedAlertBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pendingAlertBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -391,13 +395,14 @@
         private System.Windows.Forms.PictureBox pb_PubSub;
         private System.Windows.Forms.Label lbl_Websocket;
         private System.Windows.Forms.PictureBox pb_Websocket;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn viewerNameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertTypeDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateReceived;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertMessageDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn viewerNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertTypeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ReceivedTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn alertMessageDataGridViewTextBoxColumn;
     }
 }

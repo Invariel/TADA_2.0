@@ -1281,6 +1281,9 @@ namespace TADA_Advanced_Desktop_Alerts
         [DisplayName("Alert Type")]
         public String AlertType { get; set; }
 
+        [DisplayName("Time")]
+        public DateTime ReceivedTime { get; set; }
+
         internal TADAAlertImage alertImage = null;
         internal TADAAlertAudio alertAudio = null;
         internal TADAAlertText alertStreamerText = null;
@@ -1298,6 +1301,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.alertStreamerText = alertStreamerText;
             this.alertViewerText = alertViewerText;
             this.subObject = subObject;
+            this.ReceivedTime = DateTime.Now;
         }
 
         public override string ToString()
