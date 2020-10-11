@@ -791,8 +791,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 await (Task.Delay(this.delay));
             }
 
-            this.mediaElement.Play();
-            this.mediaElement.Pause();
+            mediaElement.Dispatcher.Invoke(() =>
+            {
+                this.mediaElement.Play();
+                this.mediaElement.Pause();
+            });
 
             this.waypoints.FirstWaypoint();
 
@@ -815,15 +818,23 @@ namespace TADA_Advanced_Desktop_Alerts
                 TimeSpan thisRun = (this.duration > playDuration) ? playDuration : this.duration;
                 this.duration = this.duration.Subtract(thisRun);
 
-                this.mediaElement.Position = this.startingPosition;
-                this.mediaElement.Play();
+                mediaElement.Dispatcher.Invoke(() =>
+                {
+                    this.mediaElement.Position = this.startingPosition;
+                    this.mediaElement.Play();
+                });
+
                 await (Task.Delay(thisRun));
             } while (this.duration.Ticks > 0);
 
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
             {
-                this.mediaElement.Stop();
-                this.mediaElement.ClearValue(System.Windows.Controls.MediaElement.SourceProperty);
+                mediaElement.Dispatcher.Invoke(() =>
+                {
+                    this.mediaElement.Stop();
+                    this.mediaElement.ClearValue(System.Windows.Controls.MediaElement.SourceProperty);
+                });
+
                 this.isPlaying = false;
                 this.Dispose();
             }));
@@ -833,8 +844,12 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() =>
             {
-                this.mediaElement.Stop();
-                this.mediaElement.ClearValue(System.Windows.Controls.MediaElement.SourceProperty);
+                mediaElement.Dispatcher.Invoke(() =>
+                {
+                    this.mediaElement.Stop();
+                    this.mediaElement.ClearValue(System.Windows.Controls.MediaElement.SourceProperty);
+                });
+
                 this.isPlaying = false;
                 this.Dispose();
             }));

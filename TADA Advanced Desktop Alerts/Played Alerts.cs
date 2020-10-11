@@ -347,7 +347,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task GetFollowers(String after)
         {
-            TwitchLib.Api.Helix.Models.Users.GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, channelID);
+            TwitchLib.Api.Helix.Models.Users.GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, null, channelID);
             if (followers.Follows.Length > 0)
             {
                 List<String> followerList = new List<String>();
@@ -357,7 +357,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
                 AddFollowers(followerList);
 
-                if (followers.Pagination != null)
+                if (followers.Pagination != null && followers.Pagination.Cursor != null)
                 {
                     System.Threading.Thread.Sleep(1000);
                     await GetFollowers(followers.Pagination.Cursor);
@@ -541,15 +541,13 @@ namespace TADA_Advanced_Desktop_Alerts
                         subObject.ViewerName = eGift.GiftedSubscription.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
 
                         bool isAnonymousGift = (subObject.ViewerName == General.ANONYMOUS_SUB_GIFT_NAME);
-                        bool communityGiftSub = communityGiftSubs.Exists(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
+                        comGift = communityGiftSubs.FirstOrDefault(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
 
                         user = isAnonymousGift ? AnonymousUser : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
                         UpdateUserSubscription(await GetUser(eGift.GiftedSubscription.MsgParamRecipientId));
 
-                        if (communityGiftSub)
+                        if (comGift != null)
                         {
-                            // Have to use Exists above and Find now because Find returns an empty object if it doesn't Find anything.
-                            comGift = communityGiftSubs.Find(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
                             comGift.giftees.Add(subObject.RecipientName);
                             comGift.subObject.Tier = subObject.Tier;   // Overwriting from the Client version.
                             comGift.subObject.TierName = subObject.TierName;
