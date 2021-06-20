@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -732,11 +733,13 @@ namespace TADA_Advanced_Desktop_Alerts
 
     internal class TADAAlertText : PropertyAndXML
     {
-        private String message = "";
-        private String readMessage = "";
+        private string message = "";
+        private string readMessage = "";
 
-        private String substitutedMessage = "";
-        private String substitutedReadMessage = "";
+        private string substitutedMessage = "";
+        private string substitutedReadMessage = "";
+
+        private PromptBuilder voicedMessage = null;
 
         #region Properties
         [DisplayName("Displayed Message")]
@@ -865,10 +868,13 @@ namespace TADA_Advanced_Desktop_Alerts
             return outString;
         }
 
-        public void SetReadMessage (String message)
+        public void SetReadMessage (string message)
         {
             this.substitutedReadMessage = message;
         }
+
+        public void SetVoicedMessage(PromptBuilder prompt) => this.voicedMessage = prompt;
+        public PromptBuilder GetVoicedMessage() => this.voicedMessage;
 
         #region XML
         public override void ReadXml(XmlReader reader)
@@ -1338,8 +1344,8 @@ namespace TADA_Advanced_Desktop_Alerts
         public bool IsTurbo;
         public bool IsVIP;
 
-        public String Usernames;
-        public String Keywords;
+        public string Usernames;
+        public string Keywords;
 
         public int MinBits;
         public int MaxBits;
@@ -1386,7 +1392,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !String.IsNullOrWhiteSpace(this.Usernames);
+                return !string.IsNullOrWhiteSpace(this.Usernames);
             }
         }
 
@@ -1394,7 +1400,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !String.IsNullOrWhiteSpace(this.Keywords);
+                return !string.IsNullOrWhiteSpace(this.Keywords);
             }
         }
 
@@ -1677,13 +1683,13 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public class SubstitutionObject
     {
-        public String AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
+        public string AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
         public int Amount { get; set; } = 0;
         public bool VIP { get; set; } = false;
-        public String Message { get; set; } = "";
-        public String RecipientName { get; set; } = "";
-        public String ViewerName { get; set; } = "";
-        public String TierName { get; set; } = "";
+        public string Message { get; set; } = "";
+        public string RecipientName { get; set; } = "";
+        public string ViewerName { get; set; } = "";
+        public string TierName { get; set; } = "";
 
         public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }
         public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;

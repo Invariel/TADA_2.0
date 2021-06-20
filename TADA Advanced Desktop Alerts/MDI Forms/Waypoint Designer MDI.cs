@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
-    public partial class Waypoint_Designer_MDI : Form, IDisposable
+    public partial class Waypoint_Designer_MDI : Form
     {
         protected internal bool disableUpdates = false;
 

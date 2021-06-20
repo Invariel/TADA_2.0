@@ -170,7 +170,7 @@ namespace TADA_Advanced_Desktop_Alerts
                          "&redirect_uri=" +
                          General.AUTH_URI +
                          "&response_type=token&" +
-                         "scope=channel_subscriptions channel_check_subscription user_read bits:read chat:read channel:read:redemptions";    // chat_login was deprecated.
+                         "scope=channel_subscriptions channel_check_subscription user_read bits:read chat:read channel:moderate channel:read:redemptions";
             System.Diagnostics.Process.Start(uri);
         }
 

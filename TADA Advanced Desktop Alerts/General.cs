@@ -538,7 +538,7 @@ namespace TADA_Advanced_Desktop_Alerts
             message = General.ReplaceCaseInsensitive(message, "{es}", substitutionObject.Amount == 1 ? "" : "es");
 
             // Now figure out [a|b]
-            String pattern = @"\[([^|]+)\|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.
+            string pattern = @"\[([^|]+)\|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.
             Regex regex = new Regex(pattern);
             Match match;
             while ((match = regex.Match(message)) != Match.Empty)
@@ -564,6 +564,78 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 message = regex.Replace(message, match.Groups[tierNumber].ToString(), 1);
             }
+        }
+
+        internal static System.Speech.Synthesis.PromptBuilder PerformTTSSubstitutions (string message, SubstitutionObject substitutionObject)
+        {
+            Dictionary<string, string> ipaDictionary = new Dictionary<string, string>();
+            ipaDictionary.Add("wrexadecimal", "rɛksʌˈdɛsəməl");
+            ipaDictionary.Add("tsukiakariusagi", "sukiʌkɑrrijuˈsɑgi");
+            ipaDictionary.Add("dinosaurceress", "ˈdaɪnəˌsɔrsɜrɛs");
+            ipaDictionary.Add("reddempshun", "rɛddɛmpʃən");
+
+            System.Speech.Synthesis.PromptBuilder ttsPrompt = new System.Speech.Synthesis.PromptBuilder();
+
+            // Thank you, {name}, for the raid.
+            // {giftee} just gave {name} a subscription.
+
+            // Scenario 1: has name, does not have giftee.
+            // Scenario 2: has giftee, does not have name.
+            // Scenario 3: has both.
+            // Scenario 4: has neither.
+
+            bool hasName = message.Contains("{name}");
+            bool hasGiftee = message.Contains("{giftee}");
+
+            string name = ipaDictionary.ContainsKey(substitutionObject.ViewerName.ToLower()) ? ipaDictionary[substitutionObject.ViewerName.ToLower()] : substitutionObject.ViewerName;
+            string giftee = ipaDictionary.ContainsKey(substitutionObject.RecipientName.ToLower()) ? ipaDictionary[substitutionObject.RecipientName.ToLower()] : substitutionObject.RecipientName;
+
+            if (hasName && hasGiftee)
+            {
+                string[] withoutName = message.Split(new string[] { "{name}" }, StringSplitOptions.None);
+                for (int i = 0; i < withoutName.Length; ++ i)
+                {
+                    string[] withoutGiftee = withoutName[i].Split(new string[] { "{giftee}" }, StringSplitOptions.None);
+
+                    for (int j = 0; j < withoutGiftee.Length; ++ j)
+                    {
+                        ttsPrompt.AppendText(withoutGiftee[j]);
+
+                        if (j != withoutGiftee.Length - 1)
+                        {
+                            ttsPrompt.AppendTextWithPronunciation(substitutionObject.RecipientName, giftee);
+                        }
+                    }
+
+                    if (i != withoutName.Length - 1)
+                    {
+                        ttsPrompt.AppendTextWithPronunciation(substitutionObject.ViewerName, name);
+                    }
+                }
+            }
+            else if (hasName || hasGiftee)
+            {
+                string[] withoutText = message.Split(new string[] { hasName ? "{name}" : "{giftee}" }, StringSplitOptions.None);
+
+                string replacementWord = hasName ? substitutionObject.ViewerName : substitutionObject.RecipientName;
+                string replacementText = ipaDictionary.ContainsKey(replacementWord.ToLower()) ? ipaDictionary[replacementWord.ToLower()] : replacementWord;
+
+                for (int i = 0; i < withoutText.Length; ++ i)
+                {
+                    ttsPrompt.AppendText(withoutText[i]);
+
+                    if (i != withoutText.Length - 1)
+                    {
+                        ttsPrompt.AppendTextWithPronunciation(replacementWord, replacementText);
+                    }
+                }
+            }
+            else
+            {
+                ttsPrompt.AppendText(message);
+            }
+
+            return ttsPrompt;
         }
     }
 

@@ -80,9 +80,11 @@
             this.rad_30FPS = new System.Windows.Forms.RadioButton();
             this.rad_60FPS = new System.Windows.Forms.RadioButton();
             this.btn_Update = new System.Windows.Forms.Button();
+            this.tab_ChannelFriends = new System.Windows.Forms.TabPage();
             this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.txt_Pronunciation = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
@@ -96,6 +98,7 @@
             this.tab_AlertSettings.SuspendLayout();
             this.tab_Configuration.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tab_ChannelFriends.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -406,6 +409,7 @@
             this.tab_Main.Controls.Add(this.tab_Manifest);
             this.tab_Main.Controls.Add(this.tab_Banned);
             this.tab_Main.Controls.Add(this.tab_AlertSettings);
+            this.tab_Main.Controls.Add(this.tab_ChannelFriends);
             this.tab_Main.Controls.Add(this.tab_Configuration);
             this.tab_Main.Location = new System.Drawing.Point(13, 13);
             this.tab_Main.Name = "tab_Main";
@@ -665,6 +669,17 @@
             this.btn_Update.UseVisualStyleBackColor = true;
             this.btn_Update.Visible = false;
             // 
+            // tab_ChannelFriends
+            // 
+            this.tab_ChannelFriends.Controls.Add(this.txt_Pronunciation);
+            this.tab_ChannelFriends.Location = new System.Drawing.Point(4, 22);
+            this.tab_ChannelFriends.Name = "tab_ChannelFriends";
+            this.tab_ChannelFriends.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_ChannelFriends.Size = new System.Drawing.Size(508, 228);
+            this.tab_ChannelFriends.TabIndex = 5;
+            this.tab_ChannelFriends.Text = "Friends of the Channel";
+            this.tab_ChannelFriends.UseVisualStyleBackColor = true;
+            // 
             // alertNameDataGridViewTextBoxColumn
             // 
             this.alertNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -684,6 +699,16 @@
             // alertBindingSource
             // 
             this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
+            // 
+            // txt_Pronunciation
+            // 
+            this.txt_Pronunciation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_Pronunciation.Location = new System.Drawing.Point(3, 3);
+            this.txt_Pronunciation.Multiline = true;
+            this.txt_Pronunciation.Name = "txt_Pronunciation";
+            this.txt_Pronunciation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txt_Pronunciation.Size = new System.Drawing.Size(502, 222);
+            this.txt_Pronunciation.TabIndex = 0;
             // 
             // MainTADAForm
             // 
@@ -714,6 +739,8 @@
             this.tab_Configuration.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tab_ChannelFriends.ResumeLayout(false);
+            this.tab_ChannelFriends.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -774,6 +801,8 @@
         private System.Windows.Forms.Label lbl_MuteTTS1;
         private System.Windows.Forms.Label lbl_Banned;
         private System.Windows.Forms.TextBox txt_BlockedWords;
+        private System.Windows.Forms.TabPage tab_ChannelFriends;
+        private System.Windows.Forms.TextBox txt_Pronunciation;
     }
 }
 

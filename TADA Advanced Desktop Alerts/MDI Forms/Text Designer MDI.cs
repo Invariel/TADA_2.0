@@ -258,7 +258,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     return;
                 }
 
-                // Normally, substitutions would be made, but what gets substituted?  Easier to let that happen in the actual test tab.
                 prompt.AppendText(baseText);
                 talky.SpeakAsync(prompt);
             }

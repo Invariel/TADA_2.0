@@ -919,6 +919,10 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
             if (numud_TestStreamerMessage.Value > 0)
             {
                 text = streamerAlertTextBindingSource[Convert.ToInt32(numud_TestStreamerMessage.Value - 1)] as TADAAlertText;
+
+                text.SetMessage(text.Message);
+                text.SetReadMessage(text.ReadMessage);
+                text.SetVoicedMessage(General.PerformTTSSubstitutions(text.ReadMessage, subObject));
             }
 
             if (numud_TestViewerMessage.Value > 0)
@@ -927,6 +931,7 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
 
                 response.SetMessage(txt_ViewerMessage.Text);
                 response.SetReadMessage(txt_ViewerMessage.Text);
+                response.SetVoicedMessage(General.PerformTTSSubstitutions(txt_ViewerMessage.Text, subObject));
             }
 
             PlayingAlert testAlert = new PlayingAlert(image, audio, text, response, subObject);

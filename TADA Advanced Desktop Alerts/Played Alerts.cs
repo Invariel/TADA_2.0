@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -680,8 +681,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 General.PerformSubstitutions(ref alertTextMessage, subObject);
                 General.PerformSubstitutions(ref alertReadMessage, subObject);
 
+                PromptBuilder ttsPrompt = General.PerformTTSSubstitutions(alertReadMessage, subObject);
+
                 alertText.SetMessage(alertTextMessage);
                 alertText.SetReadMessage(alertReadMessage);
+                alertText.SetVoicedMessage(ttsPrompt);
 
                 if (!String.IsNullOrEmpty(alertTextMessage) || !String.IsNullOrEmpty(alertReadMessage))
                 {
