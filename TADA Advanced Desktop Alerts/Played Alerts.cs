@@ -36,6 +36,8 @@ namespace TADA_Advanced_Desktop_Alerts
         private bool followerFileWritten = false;
         private String missingFollowers = "";
 
+        private Dictionary<string, string> ipaDictionary = MainTADAForm.mainTADAForm.IpaDictionary();
+
         private Dictionary<String, List<TADAAlert>> currentAlerts = new Dictionary<string, List<TADAAlert>>();
         private Dictionary<KeyHandler, TADAAlert> currentMacros = new Dictionary<KeyHandler, TADAAlert>();
 
@@ -45,7 +47,6 @@ namespace TADA_Advanced_Desktop_Alerts
         private Dictionary<TADAAlert, RecentlyPlayed> recentlyPlayed = new Dictionary<TADAAlert, RecentlyPlayed>();
 
         private Mutex addingAlert = new Mutex();
-
 
         // Need a thing for storing community gift subs that are being compiled.
         private List<CommunityGiftSub> communityGiftSubs = new List<CommunityGiftSub>();
@@ -677,11 +678,10 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 String alertTextMessage = alertText.GetMessage(true);
                 String alertReadMessage = alertText.GetReadMessage(true);
+                PromptBuilder ttsPrompt = General.PerformTTSSubstitutions(alertReadMessage, subObject, ipaDictionary);
 
                 General.PerformSubstitutions(ref alertTextMessage, subObject);
                 General.PerformSubstitutions(ref alertReadMessage, subObject);
-
-                PromptBuilder ttsPrompt = General.PerformTTSSubstitutions(alertReadMessage, subObject);
 
                 alertText.SetMessage(alertTextMessage);
                 alertText.SetReadMessage(alertReadMessage);

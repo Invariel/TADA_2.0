@@ -74,17 +74,24 @@
             this.chk_FollowCalloutLurkers = new System.Windows.Forms.CheckBox();
             this.chk_TimeBetweenTTS = new System.Windows.Forms.CheckBox();
             this.lbl_MuteTTS1 = new System.Windows.Forms.Label();
+            this.tab_ChannelFriends = new System.Windows.Forms.TabPage();
+            this.txt_Pronunciation = new System.Windows.Forms.TextBox();
             this.tab_Configuration = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btn_ColourPicker = new System.Windows.Forms.Button();
             this.rad_30FPS = new System.Windows.Forms.RadioButton();
             this.rad_60FPS = new System.Windows.Forms.RadioButton();
             this.btn_Update = new System.Windows.Forms.Button();
-            this.tab_ChannelFriends = new System.Windows.Forms.TabPage();
+            this.split_1 = new System.Windows.Forms.SplitContainer();
+            this.dg_ipaWords = new System.Windows.Forms.DataGridView();
             this.alertNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.txt_Pronunciation = new System.Windows.Forms.TextBox();
+            this.iPADescriptionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.wordDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pronunciationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txt_ipaWords = new System.Windows.Forms.TextBox();
+            this.btn_TestWord = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_bgR)).BeginInit();
@@ -96,10 +103,16 @@
             this.tab_Manifest.SuspendLayout();
             this.tab_Banned.SuspendLayout();
             this.tab_AlertSettings.SuspendLayout();
+            this.tab_ChannelFriends.SuspendLayout();
             this.tab_Configuration.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tab_ChannelFriends.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.split_1)).BeginInit();
+            this.split_1.Panel1.SuspendLayout();
+            this.split_1.Panel2.SuspendLayout();
+            this.split_1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dg_ipaWords)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iPADescriptionBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // numud_bgB
@@ -594,6 +607,28 @@
             this.lbl_MuteTTS1.TabIndex = 47;
             this.lbl_MuteTTS1.Text = "between TTS messages from the same user.";
             // 
+            // tab_ChannelFriends
+            // 
+            this.tab_ChannelFriends.Controls.Add(this.split_1);
+            this.tab_ChannelFriends.Controls.Add(this.txt_Pronunciation);
+            this.tab_ChannelFriends.Location = new System.Drawing.Point(4, 22);
+            this.tab_ChannelFriends.Name = "tab_ChannelFriends";
+            this.tab_ChannelFriends.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_ChannelFriends.Size = new System.Drawing.Size(508, 228);
+            this.tab_ChannelFriends.TabIndex = 5;
+            this.tab_ChannelFriends.Text = "Friends of the Channel";
+            this.tab_ChannelFriends.UseVisualStyleBackColor = true;
+            // 
+            // txt_Pronunciation
+            // 
+            this.txt_Pronunciation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_Pronunciation.Location = new System.Drawing.Point(3, 3);
+            this.txt_Pronunciation.Multiline = true;
+            this.txt_Pronunciation.Name = "txt_Pronunciation";
+            this.txt_Pronunciation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txt_Pronunciation.Size = new System.Drawing.Size(502, 222);
+            this.txt_Pronunciation.TabIndex = 0;
+            // 
             // tab_Configuration
             // 
             this.tab_Configuration.BackColor = System.Drawing.SystemColors.Control;
@@ -669,16 +704,39 @@
             this.btn_Update.UseVisualStyleBackColor = true;
             this.btn_Update.Visible = false;
             // 
-            // tab_ChannelFriends
+            // split_1
             // 
-            this.tab_ChannelFriends.Controls.Add(this.txt_Pronunciation);
-            this.tab_ChannelFriends.Location = new System.Drawing.Point(4, 22);
-            this.tab_ChannelFriends.Name = "tab_ChannelFriends";
-            this.tab_ChannelFriends.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_ChannelFriends.Size = new System.Drawing.Size(508, 228);
-            this.tab_ChannelFriends.TabIndex = 5;
-            this.tab_ChannelFriends.Text = "Friends of the Channel";
-            this.tab_ChannelFriends.UseVisualStyleBackColor = true;
+            this.split_1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.split_1.Location = new System.Drawing.Point(3, 3);
+            this.split_1.Name = "split_1";
+            this.split_1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // split_1.Panel1
+            // 
+            this.split_1.Panel1.Controls.Add(this.txt_ipaWords);
+            // 
+            // split_1.Panel2
+            // 
+            this.split_1.Panel2.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.split_1.Panel2.Controls.Add(this.btn_TestWord);
+            this.split_1.Panel2.Controls.Add(this.dg_ipaWords);
+            this.split_1.Size = new System.Drawing.Size(502, 222);
+            this.split_1.SplitterDistance = 37;
+            this.split_1.TabIndex = 1;
+            // 
+            // dg_ipaWords
+            // 
+            this.dg_ipaWords.AutoGenerateColumns = false;
+            this.dg_ipaWords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg_ipaWords.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.wordDataGridViewTextBoxColumn,
+            this.pronunciationDataGridViewTextBoxColumn});
+            this.dg_ipaWords.DataSource = this.iPADescriptionBindingSource;
+            this.dg_ipaWords.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dg_ipaWords.Location = new System.Drawing.Point(0, 0);
+            this.dg_ipaWords.Name = "dg_ipaWords";
+            this.dg_ipaWords.Size = new System.Drawing.Size(502, 150);
+            this.dg_ipaWords.TabIndex = 0;
             // 
             // alertNameDataGridViewTextBoxColumn
             // 
@@ -700,15 +758,44 @@
             // 
             this.alertBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.TADAAlert);
             // 
-            // txt_Pronunciation
+            // iPADescriptionBindingSource
             // 
-            this.txt_Pronunciation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txt_Pronunciation.Location = new System.Drawing.Point(3, 3);
-            this.txt_Pronunciation.Multiline = true;
-            this.txt_Pronunciation.Name = "txt_Pronunciation";
-            this.txt_Pronunciation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txt_Pronunciation.Size = new System.Drawing.Size(502, 222);
-            this.txt_Pronunciation.TabIndex = 0;
+            this.iPADescriptionBindingSource.DataSource = typeof(TADA_Advanced_Desktop_Alerts.Classes.IPADescription);
+            // 
+            // wordDataGridViewTextBoxColumn
+            // 
+            this.wordDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.wordDataGridViewTextBoxColumn.DataPropertyName = "Word";
+            this.wordDataGridViewTextBoxColumn.HeaderText = "Word";
+            this.wordDataGridViewTextBoxColumn.Name = "wordDataGridViewTextBoxColumn";
+            // 
+            // pronunciationDataGridViewTextBoxColumn
+            // 
+            this.pronunciationDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.pronunciationDataGridViewTextBoxColumn.DataPropertyName = "Pronunciation";
+            this.pronunciationDataGridViewTextBoxColumn.HeaderText = "Pronunciation";
+            this.pronunciationDataGridViewTextBoxColumn.Name = "pronunciationDataGridViewTextBoxColumn";
+            // 
+            // txt_ipaWords
+            // 
+            this.txt_ipaWords.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_ipaWords.Location = new System.Drawing.Point(0, 0);
+            this.txt_ipaWords.Multiline = true;
+            this.txt_ipaWords.Name = "txt_ipaWords";
+            this.txt_ipaWords.Size = new System.Drawing.Size(502, 37);
+            this.txt_ipaWords.TabIndex = 0;
+            this.txt_ipaWords.Text = "     Enter the word and its IPA pronunciation (https://www.phon.ucl.ac.uk/home/we" +
+    "lls/ipa-unicode.htm) without spaces.  Highlight a row and test the word to make " +
+    "sure that it plays as you expect it to.";
+            // 
+            // btn_TestWord
+            // 
+            this.btn_TestWord.Location = new System.Drawing.Point(423, 155);
+            this.btn_TestWord.Name = "btn_TestWord";
+            this.btn_TestWord.Size = new System.Drawing.Size(75, 23);
+            this.btn_TestWord.TabIndex = 1;
+            this.btn_TestWord.Text = "Test Word";
+            this.btn_TestWord.UseVisualStyleBackColor = true;
             // 
             // MainTADAForm
             // 
@@ -736,12 +823,19 @@
             this.tab_Banned.PerformLayout();
             this.tab_AlertSettings.ResumeLayout(false);
             this.tab_AlertSettings.PerformLayout();
+            this.tab_ChannelFriends.ResumeLayout(false);
+            this.tab_ChannelFriends.PerformLayout();
             this.tab_Configuration.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.tab_ChannelFriends.ResumeLayout(false);
-            this.tab_ChannelFriends.PerformLayout();
+            this.split_1.Panel1.ResumeLayout(false);
+            this.split_1.Panel1.PerformLayout();
+            this.split_1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.split_1)).EndInit();
+            this.split_1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dg_ipaWords)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.alertBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iPADescriptionBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -803,6 +897,13 @@
         private System.Windows.Forms.TextBox txt_BlockedWords;
         private System.Windows.Forms.TabPage tab_ChannelFriends;
         private System.Windows.Forms.TextBox txt_Pronunciation;
+        private System.Windows.Forms.SplitContainer split_1;
+        private System.Windows.Forms.DataGridView dg_ipaWords;
+        private System.Windows.Forms.TextBox txt_ipaWords;
+        private System.Windows.Forms.Button btn_TestWord;
+        private System.Windows.Forms.DataGridViewTextBoxColumn wordDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pronunciationDataGridViewTextBoxColumn;
+        private System.Windows.Forms.BindingSource iPADescriptionBindingSource;
     }
 }
 

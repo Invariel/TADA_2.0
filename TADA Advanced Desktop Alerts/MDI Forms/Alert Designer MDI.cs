@@ -28,6 +28,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private List <Tuple <TADAAlertText, TabPage>> textTabPages = new List<Tuple<TADAAlertText, TabPage>>();
         private List<Tuple<TADAAlertCondition, TabPage>> conditionTabPages = new List<Tuple<TADAAlertCondition, TabPage>>();
 
+        private Dictionary<string, string> ipaDictionary = MainTADAForm.mainTADAForm.IpaDictionary();
+        
         internal Alert_Designer_MDI(TADAAlert originalAlert)
         {
             InitializeComponent();
@@ -922,7 +924,7 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
 
                 text.SetMessage(text.Message);
                 text.SetReadMessage(text.ReadMessage);
-                text.SetVoicedMessage(General.PerformTTSSubstitutions(text.ReadMessage, subObject));
+                text.SetVoicedMessage(General.PerformTTSSubstitutions(text.ReadMessage, subObject, ipaDictionary));
             }
 
             if (numud_TestViewerMessage.Value > 0)
@@ -931,7 +933,7 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
 
                 response.SetMessage(txt_ViewerMessage.Text);
                 response.SetReadMessage(txt_ViewerMessage.Text);
-                response.SetVoicedMessage(General.PerformTTSSubstitutions(txt_ViewerMessage.Text, subObject));
+                response.SetVoicedMessage(General.PerformTTSSubstitutions(txt_ViewerMessage.Text, subObject, ipaDictionary));
             }
 
             PlayingAlert testAlert = new PlayingAlert(image, audio, text, response, subObject);

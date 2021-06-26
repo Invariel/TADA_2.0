@@ -25,6 +25,14 @@ namespace TADA_Advanced_Desktop_Alerts
         internal Played_Alerts playedAlerts = null;
         private TADAConfigurationSettings _configurationSettings;
 
+        private List<Classes.IPADescription> ipaWords = new List<Classes.IPADescription>()
+        {
+            new Classes.IPADescription("wrexadecimal", "rɛksʌˈdɛsəməl"),
+            new Classes.IPADescription("tsukiakariusagi", "sukiʌkɑrrijuˈsɑgi"),
+            new Classes.IPADescription("dinosaurceress", "ˈdaɪnəˌsɔrsɜrɛs"),
+            new Classes.IPADescription("reddempshun", "rɛddɛmpʃən"),
+        };
+
         public static MainTADAForm mainTADAForm
         {
             get { return _mainTADAForm; }
@@ -34,7 +42,29 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get { return _configurationSettings; }
         }
-        
+
+        public Dictionary<string, string> IpaDictionary()
+        {
+            Dictionary<string, string> ipaDictionary = new Dictionary<string, string>();
+
+            foreach (Classes.IPADescription ipaWord in ipaWords)
+            {
+                ipaDictionary.Add(ipaWord.Word, ipaWord.Pronunciation);
+            }
+
+            BindingSource ipaBindings = dg_ipaWords.DataSource as BindingSource;
+
+            foreach (Classes.IPADescription ipa in ipaBindings)
+            {
+                if (!ipaDictionary.ContainsKey(ipa.Word))
+                {
+                    ipaDictionary.Add(ipa.Word, ipa.Pronunciation);
+                }
+            }
+
+            return ipaDictionary;
+        }
+
         public TADAAnimationWindow AnimationWindow
         {
             get

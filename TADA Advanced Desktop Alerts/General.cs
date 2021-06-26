@@ -566,14 +566,8 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        internal static System.Speech.Synthesis.PromptBuilder PerformTTSSubstitutions (string message, SubstitutionObject substitutionObject)
+        internal static System.Speech.Synthesis.PromptBuilder PerformTTSSubstitutions (string message, SubstitutionObject substitutionObject, Dictionary<string, string> ipaDictionary)
         {
-            Dictionary<string, string> ipaDictionary = new Dictionary<string, string>();
-            ipaDictionary.Add("wrexadecimal", "rɛksʌˈdɛsəməl");
-            ipaDictionary.Add("tsukiakariusagi", "sukiʌkɑrrijuˈsɑgi");
-            ipaDictionary.Add("dinosaurceress", "ˈdaɪnəˌsɔrsɜrɛs");
-            ipaDictionary.Add("reddempshun", "rɛddɛmpʃən");
-
             System.Speech.Synthesis.PromptBuilder ttsPrompt = new System.Speech.Synthesis.PromptBuilder();
 
             // Thank you, {name}, for the raid.
@@ -587,8 +581,11 @@ namespace TADA_Advanced_Desktop_Alerts
             bool hasName = message.Contains("{name}");
             bool hasGiftee = message.Contains("{giftee}");
 
-            string name = ipaDictionary.ContainsKey(substitutionObject.ViewerName.ToLower()) ? ipaDictionary[substitutionObject.ViewerName.ToLower()] : substitutionObject.ViewerName;
-            string giftee = ipaDictionary.ContainsKey(substitutionObject.RecipientName.ToLower()) ? ipaDictionary[substitutionObject.RecipientName.ToLower()] : substitutionObject.RecipientName;
+            bool nameSubstitution = ipaDictionary.ContainsKey(substitutionObject.ViewerName.ToLower());
+            bool gifteeSubstitution = ipaDictionary.ContainsKey(substitutionObject.RecipientName.ToLower());
+
+            string name = nameSubstitution ? ipaDictionary[substitutionObject.ViewerName.ToLower()] : substitutionObject.ViewerName;
+            string giftee = gifteeSubstitution ? ipaDictionary[substitutionObject.RecipientName.ToLower()] : substitutionObject.RecipientName;
 
             if (hasName && hasGiftee)
             {
@@ -603,13 +600,27 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         if (j != withoutGiftee.Length - 1)
                         {
-                            ttsPrompt.AppendTextWithPronunciation(substitutionObject.RecipientName, giftee);
+                            if (gifteeSubstitution)
+                            {
+                                ttsPrompt.AppendTextWithPronunciation(substitutionObject.RecipientName, giftee);
+                            }
+                            else
+                            {
+                                ttsPrompt.AppendText(giftee);
+                            }
                         }
                     }
 
                     if (i != withoutName.Length - 1)
                     {
-                        ttsPrompt.AppendTextWithPronunciation(substitutionObject.ViewerName, name);
+                        if (nameSubstitution)
+                        {
+                            ttsPrompt.AppendTextWithPronunciation(substitutionObject.ViewerName, name);
+                        }
+                        else
+                        {
+                            ttsPrompt.AppendText(name);
+                        }
                     }
                 }
             }
@@ -626,7 +637,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     if (i != withoutText.Length - 1)
                     {
-                        ttsPrompt.AppendTextWithPronunciation(replacementWord, replacementText);
+                        if (hasName && nameSubstitution || hasGiftee && gifteeSubstitution)
+                        {
+                            ttsPrompt.AppendTextWithPronunciation(replacementWord, replacementText);
+                        }
+                        else
+                        {
+                            ttsPrompt.AppendText(replacementText);
+                        }
                     }
                 }
             }

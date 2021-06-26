@@ -214,6 +214,7 @@
       <DependentUpon>Animation Window.cs</DependentUpon>
     </Compile>
     <Compile Include="Bezier.cs" />
+    <Compile Include="Classes\IPADescription.cs" />
     <Compile Include="MDI Forms\Alert Designer MDI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -317,6 +318,7 @@
     <None Include="Properties\DataSources\TADAAlertCondition.datasource" />
     <None Include="Properties\DataSources\TADAAlertImage.datasource" />
     <None Include="Properties\DataSources\TADAAlertText.datasource" />
+    <None Include="Properties\DataSources\TADA_Advanced_Desktop_Alerts.Classes.IPADescription.datasource" />
     <None Include="Properties\DataSources\TADA_Advanced_Desktop_Alerts.Waypoints.Waypoint.datasource" />
     <None Include="Properties\DataSources\_TADAAlertAudio.datasource" />
     <None Include="Properties\DataSources\_TADAAlertCondition.datasource" />
@@ -419,6 +421,7 @@
       <Name>TwitchLib.PubSub</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir lib
