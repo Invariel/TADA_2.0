@@ -28,20 +28,20 @@ namespace TADA_Advanced_Desktop_Alerts
         private TwitchPubSub pubSub;
         private TwitchClient twitchClient;
 
-        private String accessToken;
-        private String channelID;
-        private String channelName;
+        private string accessToken;
+        private string channelID;
+        private string channelName;
 
-        private Dictionary<String, List<String>> followers;
+        private Dictionary<string, List<string>> followers;
         private bool followerFileWritten = false;
-        private String missingFollowers = "";
+        private string missingFollowers = "";
 
         private Dictionary<string, string> ipaDictionary = MainTADAForm.mainTADAForm.IpaDictionary();
 
-        private Dictionary<String, List<TADAAlert>> currentAlerts = new Dictionary<string, List<TADAAlert>>();
+        private Dictionary<string, List<TADAAlert>> currentAlerts = new Dictionary<string, List<TADAAlert>>();
         private Dictionary<KeyHandler, TADAAlert> currentMacros = new Dictionary<KeyHandler, TADAAlert>();
 
-        private Dictionary<String, User> viewers = new Dictionary<String, User>();
+        private Dictionary<string, User> viewers = new Dictionary<string, User>();
 
         // Need something for storing messages.  <alert, last procced, <user, last procced>>  Need an object for this probably.
         private Dictionary<TADAAlert, RecentlyPlayed> recentlyPlayed = new Dictionary<TADAAlert, RecentlyPlayed>();
@@ -51,7 +51,7 @@ namespace TADA_Advanced_Desktop_Alerts
         // Need a thing for storing community gift subs that are being compiled.
         private List<CommunityGiftSub> communityGiftSubs = new List<CommunityGiftSub>();
 
-        private List<String> cheermotes = new List<String>();
+        private List<string> cheermotes = new List<string>();
 
         private User AnonymousUser = new User
         {
@@ -63,7 +63,7 @@ namespace TADA_Advanced_Desktop_Alerts
             user = null
         };
 
-        public Played_Alerts(String channelName, String accessToken)
+        public Played_Alerts(string channelName, string accessToken)
         {
             InitializeComponent();
 
@@ -152,9 +152,11 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
                 else
                 {
-                    General.LogFile(e.Response.Error);
+                    General.LogFile($"Failed to connect to Twitch.{Environment.NewLine}{e.Response.Error}");
                     System.Windows.Forms.MessageBox.Show("Failed to connect to Twitch to listen to bits, follows, game purchases, or subscriptions.");
-                    this.Invoke((Action)(() => { General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked."); }));
+                    this.Invoke((Action)(() => { General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting."); }));
+
+                    this.pubSub.Connect();
                 }
             };
 
@@ -163,8 +165,10 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 this.Invoke((Action)(() =>
                 {
+                    General.LogFile($"PubSub service closed unexpectedly.");
+
                     this.pb_PubSub.Image = this.redLight;
-                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.");
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting.");
                     this.pubSub.Connect();
                 }));
             };
@@ -173,8 +177,10 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 this.Invoke((Action)(() =>
                 {
+                    General.LogFile($"PubSub service error.");
+
                     this.pb_PubSub.Image = this.redLight;
-                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.");
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting.");
                     this.pubSub.Connect();
                 }));
             };
@@ -212,7 +218,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 this.Invoke((Action)(() =>
                 {
                     this.pb_TwitchApi.Image = this.redLight;
-                    General.ConfigureToolTip(this.pb_TwitchApi, "Hosts, Raids, and Messages are not being tracked.");
+                    General.ConfigureToolTip(this.pb_TwitchApi, "Hosts, Raids, and Messages are not being tracked.  Reconnecting.");
+
+                    twitchClient.Connect();
                 }));
             };
             twitchClient.OnIncorrectLogin += (sender, e) =>
@@ -242,6 +250,9 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnNewSubscriber += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
             twitchClient.OnReSubscriber += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
             twitchClient.OnGiftedSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBGIFT, e);
+
+            // [7:21 PM] Defender1031: But the point is that I noticed that anytime anyone hosts, EVEN if it's a smaller host not pushed by the API, I get a PM from "jtv" saying "YarlRagan31 is now hosting you."
+            // twitchClient.OnWhisperReceived -> check whispers for messages from jtv, parse the message, there's no number of viewers though.
 
             GetAllFollowers();
 
@@ -278,12 +289,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async void GetAllFollowers()
         {
-            this.followers = new Dictionary<String, List<string>>();
+            this.followers = new Dictionary<string, List<string>>();
 
             if (System.IO.File.Exists("followers.txt"))
             {
-                String text = System.IO.File.ReadAllText("followers.txt");
-                AddFollowers(text.Split(' ').ToList<String>());
+                string text = System.IO.File.ReadAllText("followers.txt");
+                AddFollowers(text.Split(' ').ToList<string>());
                 followerFileWritten = true;
             }
 
@@ -304,9 +315,9 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter("followers.txt"))
             {
-                foreach (String userList in this.followers.Keys)
+                foreach (string userList in this.followers.Keys)
                 {
-                    foreach (String userId in followers[userList])
+                    foreach (string userId in followers[userList])
                     {
                         file.Write("{0} ", userId);
                     }
@@ -314,9 +325,9 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private bool FindFollower(String userId)
+        private bool FindFollower(string userId)
         {
-            String substr = "0";
+            string substr = "0";
             if (userId.Length > 5)
             {
                 substr = userId.Substring(0, 5);
@@ -324,11 +335,11 @@ namespace TADA_Advanced_Desktop_Alerts
             return this.followers.ContainsKey(substr) && this.followers[substr].Contains(userId);
         }
 
-        private void AddFollowers(List<String> followerList)
+        private void AddFollowers(List<string> followerList)
         {
-            foreach (String follower in followerList)
+            foreach (string follower in followerList)
             {
-                String substr = "0";
+                string substr = "0";
 
                 if (follower.Length > 5)
                 {
@@ -340,19 +351,19 @@ namespace TADA_Advanced_Desktop_Alerts
                     this.followers.Add(substr, new List<string>());
                 }
 
-                if (!String.IsNullOrWhiteSpace(follower) && !this.followers[substr].Contains(follower))
+                if (!string.IsNullOrWhiteSpace(follower) && !this.followers[substr].Contains(follower))
                 {
                     this.followers[substr].Add(follower);
                 }
             }
         }
 
-        private async Task GetFollowers(String after)
+        private async Task GetFollowers(string after)
         {
             TwitchLib.Api.Helix.Models.Users.GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, null, channelID);
             if (followers.Follows.Length > 0)
             {
-                List<String> followerList = new List<String>();
+                List<string> followerList = new List<string>();
                 foreach (TwitchLib.Api.Helix.Models.Users.Follow follower in followers.Follows)
                 {
                     followerList.Add(follower.FromUserId);
@@ -433,6 +444,17 @@ namespace TADA_Advanced_Desktop_Alerts
                         subObject.SetPlan(eCommunity.GiftedSubscription.MsgParamSubPlan);
                         subObject.ViewerName = anonymous ? General.ANONYMOUS_SUB_GIFT_NAME : user?.user.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
 
+                        CommunityGiftSub defaultGiftSub;
+
+                        if (user == null || anonymous)
+                        {
+                            defaultGiftSub = new CommunityGiftSub(subObject);
+                        }
+                        else
+                        {
+                            defaultGiftSub = new CommunityGiftSub(user, subObject);
+                        }
+
                         CommunityGiftSub communityGiftSub = null;
 
                         if (anonymous && FindSuitableAlert(General.ALERTTYPES.ANONYMOUS_COMMUNITY, user, subObject) != null)
@@ -442,6 +464,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                         else if (FindSuitableAlert (General.ALERTTYPES.COMMUNITY, user, subObject) != null)
                         {
+                            communityGiftSub = null;
                             if (user != null)
                             {
                                 communityGiftSub = new CommunityGiftSub(user, subObject);
@@ -495,7 +518,7 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                         else
                         {
-                            AddFollowers(new List<String> { eFollow.UserId });
+                            AddFollowers(new List<string> { eFollow.UserId });
 
                             // And then add them to the followers file.
                             this.missingFollowers += eFollow.UserId + " ";
@@ -543,7 +566,16 @@ namespace TADA_Advanced_Desktop_Alerts
                         subObject.ViewerName = eGift.GiftedSubscription.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
 
                         bool isAnonymousGift = (subObject.ViewerName == General.ANONYMOUS_SUB_GIFT_NAME);
-                        comGift = communityGiftSubs.FirstOrDefault(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
+
+                        /*
+                         * So, here's the further problem.
+                         * There's no way to tell if a particular sub is part of a community gift sub or not without that event firing.
+                         * So, maybe we just delay this by a few seconds, with the hope that IRC gets to catch up?
+                         */
+
+                        Thread.Sleep(5000);
+
+                        comGift = communityGiftSubs.DefaultIfEmpty(null).First(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
 
                         user = isAnonymousGift ? AnonymousUser : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
                         UpdateUserSubscription(await GetUser(eGift.GiftedSubscription.MsgParamRecipientId));
@@ -579,7 +611,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.SUBSCRIPTION:
                     {
-                        String userId = null;
+                        string userId = null;
 
                         if (eventDetails is OnNewSubscriberArgs)
                         {
@@ -676,8 +708,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
             if (alertText != null)
             {
-                String alertTextMessage = alertText.GetMessage(true);
-                String alertReadMessage = alertText.GetReadMessage(true);
+                string alertTextMessage = alertText.GetMessage(true);
+                string alertReadMessage = alertText.GetReadMessage(true);
                 PromptBuilder ttsPrompt = General.PerformTTSSubstitutions(alertReadMessage, subObject, ipaDictionary);
 
                 General.PerformSubstitutions(ref alertTextMessage, subObject);
@@ -687,20 +719,20 @@ namespace TADA_Advanced_Desktop_Alerts
                 alertText.SetReadMessage(alertReadMessage);
                 alertText.SetVoicedMessage(ttsPrompt);
 
-                if (!String.IsNullOrEmpty(alertTextMessage) || !String.IsNullOrEmpty(alertReadMessage))
+                if (!string.IsNullOrEmpty(alertTextMessage) || !string.IsNullOrEmpty(alertReadMessage))
                 {
-                    General.LogFile(String.Format("{0}; {1}", alertTextMessage ?? "(nil)", alertReadMessage ?? "(nil)"));
+                    General.LogFile(string.Format("{0}; {1}", alertTextMessage ?? "(nil)", alertReadMessage ?? "(nil)"));
                 }
             }
 
             if (alertResponse != null)
             {
-                String message = subObject.Message ?? "";
+                string message = subObject.Message ?? "";
 
-                if (!String.IsNullOrEmpty(message))
+                if (!string.IsNullOrEmpty(message))
                 {
                     // Remove blocked words.
-                    foreach (String blockedWord in MainTADAForm.mainTADAForm.configurationSettings.blockedWords.Split(' '))
+                    foreach (string blockedWord in MainTADAForm.mainTADAForm.configurationSettings.blockedWords.Split(' '))
                     {
                         message = General.ReplaceCaseInsensitive(message, blockedWord, "");
                     }
@@ -745,9 +777,9 @@ namespace TADA_Advanced_Desktop_Alerts
             MainTADAForm.mainTADAForm.AnimationWindow.Invoke((Action)(() => { MainTADAForm.mainTADAForm.AnimationWindow.PendingAlert(); }));
         }
 
-        #region UserStuff
+#region UserStuff
         // These "User" functions aren't part of the User class because it doesn't know anything about TwitchLib or those parts.
-        private async Task<User> GetUser(String userId)
+        private async Task<User> GetUser(string userId)
         {
             User user;
 
@@ -799,7 +831,7 @@ namespace TADA_Advanced_Desktop_Alerts
             user.UpdateSubscription(await GetUserSubscription(user.user.Id));
         }
 
-        private async Task UpdateUserSubscription(String userId, bool forceUpdate = false)
+        private async Task UpdateUserSubscription(string userId, bool forceUpdate = false)
         {
             User user = await GetUser(userId);
 
@@ -818,7 +850,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 twitchAPIRequest.DefaultRequestHeaders.Add("Authorization", "Oauth " + twitchAPI.Settings.AccessToken);
                 twitchAPIRequest.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
 
-                System.Net.Http.HttpResponseMessage twitchAPIResponse = twitchAPIRequest.GetAsync(new Uri(String.Format(@"https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}", user.UserID, this.channelID))).Result;
+                System.Net.Http.HttpResponseMessage twitchAPIResponse = twitchAPIRequest.GetAsync(new Uri(string.Format(@"https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}", user.UserID, this.channelID))).Result;
 
                 if (twitchAPIResponse.IsSuccessStatusCode)
                 {
@@ -829,14 +861,14 @@ namespace TADA_Advanced_Desktop_Alerts
                     {
                         for (int c = 0; c < jObject["badges"].Count(); ++c)
                         {
-                            switch ((String)jObject["badges"][c]["id"])
+                            switch ((string)jObject["badges"][c]["id"])
                             {
                                 case "admin":
                                     user.badges.admin = true;
                                     break;
                                 case "bits":
                                     user.badges.bits = true;
-                                    user.badges.bit_badge = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
+                                    user.badges.bit_badge = Convert.ToUInt32((string)jObject["badges"][c]["version"]);
                                     break;
                                 case "broadcaster":
                                     user.badges.broadcaster = true;
@@ -852,7 +884,7 @@ namespace TADA_Advanced_Desktop_Alerts
                                     break;
                                 case "subscriber":
                                     user.badges.subscriber = true;
-                                    user.badges.subscribe_months = Convert.ToUInt32((String)jObject["badges"][c]["version"]);
+                                    user.badges.subscribe_months = Convert.ToUInt32((string)jObject["badges"][c]["version"]);
                                     break;
                                 case "staff":
                                     user.badges.staff = true;
@@ -869,9 +901,9 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
             }
         }
-        #endregion
+#endregion
 
-        private async Task<TwitchLib.Api.V5.Models.Subscriptions.Subscription> GetUserSubscription(String userId)
+        private async Task<TwitchLib.Api.V5.Models.Subscriptions.Subscription> GetUserSubscription(string userId)
         {
             TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription = null;
 
@@ -888,9 +920,9 @@ namespace TADA_Advanced_Desktop_Alerts
             return subscription;
         }
 
-        private async Task<string> GetUserIdFromUsername(String username)
+        private async Task<string> GetUserIdFromUsername(string username)
         {
-            return (await twitchAPI.Helix.Users.GetUsersAsync(null, new List<String> { username }, accessToken)).Users[0].Id;
+            return (await twitchAPI.Helix.Users.GetUsersAsync(null, new List<string> { username }, accessToken)).Users[0].Id;
         }
 
         private void AddSubscriptionDetailsToSubstitutionObject(User user, SubstitutionObject subObject)
@@ -909,10 +941,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
             int alertScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
 
-            String alertTypeString = General.alertTypes[alertType];
-            String viewerName = subObject.ViewerName;
+            string alertTypeString = General.alertTypes[alertType];
+            string viewerName = subObject.ViewerName;
             int amount = subObject.Amount;
-            String message = subObject.Message;
+            string message = subObject.Message;
             TierAndPlanConverter.SUBSCRIPTION_PLANS plan = subObject.Plan;
 
             if (currentAlerts.ContainsKey(alertTypeString))
@@ -969,7 +1001,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private int ScoreAlert (TADAAlert alert, User user, int amount, String message, TierAndPlanConverter.SUBSCRIPTION_PLANS plan)
+        private int ScoreAlert (TADAAlert alert, User user, int amount, string message, TierAndPlanConverter.SUBSCRIPTION_PLANS plan)
         {
             int finalScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
 
@@ -1074,12 +1106,30 @@ namespace TADA_Advanced_Desktop_Alerts
                             }
                         }
 
-                        // Then check usernames, keywords, and amount.
-                        if (continueTesting && !String.IsNullOrEmpty(condition.Usernames))
+                        // Check to see if the username is not allowed to trigger this alert.
+                        if (continueTesting && !string.IsNullOrEmpty(condition.BannedNames))
                         {
-                            String username = user.user?.DisplayName.ToLower() ?? "anonymous";
+                            string username = user.user?.DisplayName.ToLower() ?? "anonymous";
 
-                            List<String> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+                            List<string> bannedNames = condition.BannedNames.Split(',').Select(n => n.Trim().ToLower()).ToList();
+                            
+                            foreach (string bannedName in bannedNames)
+                            {
+                                if (username.Contains(bannedName))
+                                {
+                                    score = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
+                                    continueTesting = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Then check usernames, keywords, and amount.
+                        if (continueTesting && !string.IsNullOrEmpty(condition.Usernames))
+                        {
+                            string username = user.user?.DisplayName.ToLower() ?? "anonymous";
+
+                            List<string> names = condition.Usernames.Split(',').Select(n => n.Trim().ToLower()).ToList<string>();
                             if (names.Contains(username))
                             {
                                 score += (int)General.SCORES.SCORE_NAME_MATCHED;
@@ -1091,15 +1141,15 @@ namespace TADA_Advanced_Desktop_Alerts
                             }
                         }
 
-                        if (continueTesting && !String.IsNullOrEmpty(condition.Keywords))
+                        if (continueTesting && !string.IsNullOrEmpty(condition.Keywords))
                         {
                             bool matched = false;
 
-                            List<String> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<String>();
+                            List<string> keywords = condition.Keywords.Split(',').Select(n => n.Trim().ToLower()).ToList<string>();
 
-                            foreach (String key in keywords)
+                            foreach (string key in keywords)
                             {
-                                String keyPattern = String.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
+                                string keyPattern = string.Format("\\b{0}\\b", key); // Word boundary, test word/phrase, word boundary.  Will not play nicely with punctuation because regex.
                                 if (System.Text.RegularExpressions.Regex.Match(message, keyPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase).Success)
                                 {
                                     matched = true;
@@ -1190,7 +1240,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public bool firstMessage;                   // Only gets set if the user -has- a first message of the day and if it triggers.
         public Badges badges = new Badges();        // The badges a user has.
 
-        public String UserID
+        public string UserID
         {
             get { return user?.Id; }
         }
@@ -1200,7 +1250,7 @@ namespace TADA_Advanced_Desktop_Alerts
             get { return TierAndPlanConverter.SubscriptionTierFromPlan(TierAndPlanConverter.StringToSubscriptionPlan(subscription?.SubPlan)); }
         }
 
-        public String SubscriptionTierName
+        public string SubscriptionTierName
         {
             get { return subscription?.SubPlanName ?? "None"; }
         }
@@ -1218,7 +1268,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override string ToString()
         {
-            return String.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.SubPlan);
+            return string.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.SubPlan);
         }
     }
 
@@ -1226,7 +1276,7 @@ namespace TADA_Advanced_Desktop_Alerts
     {
         public User communityGifter;
         public int numberOfSubs;
-        public List<String> giftees;
+        public List<string> giftees;
         public SubstitutionObject subObject;
         public bool is_anonymous;
         public bool use_anonymous_alert = false;
@@ -1248,7 +1298,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             this.numberOfSubs = subObject.Amount;
             this.subObject = subObject;
-            this.giftees = new List<String>();
+            this.giftees = new List<string>();
         }
 
         public bool Ready ()
@@ -1269,11 +1319,11 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else if (numberOfSubs == 2)
             {
-                return String.Join(" and ", giftees);
+                return string.Join(" and ", giftees);
             }
             else
             {
-                return String.Format("{0} and {1}", String.Join(", ", giftees.GetRange(0, giftees.Count - 1)), giftees.Last());
+                return string.Format("{0} and {1}", string.Join(", ", giftees.GetRange(0, giftees.Count - 1)), giftees.Last());
             }
         }
     }
@@ -1281,13 +1331,13 @@ namespace TADA_Advanced_Desktop_Alerts
     public class ListedAlert
     {
         [DisplayName("Viewer Name")]
-        public String ViewerName { get; set; }
+        public string ViewerName { get; set; }
 
         [DisplayName("Alert Message")]
-        public String AlertMessage { get; set; }
+        public string AlertMessage { get; set; }
 
         [DisplayName("Alert Type")]
-        public String AlertType { get; set; }
+        public string AlertType { get; set; }
 
         [DisplayName("Received Time")]
         public DateTime ReceivedTime { get; set; }
@@ -1299,7 +1349,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         internal SubstitutionObject subObject = null;
 
-        internal ListedAlert(String viewerName, String alertMessage, String alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText, SubstitutionObject subObject)
+        internal ListedAlert(string viewerName, string alertMessage, string alertType, TADAAlertImage alertImage, TADAAlertAudio alertAudio, TADAAlertText alertStreamerText, TADAAlertText alertViewerText, SubstitutionObject subObject)
         {
             this.ViewerName = viewerName;
             this.AlertMessage = alertMessage;
@@ -1314,7 +1364,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override string ToString()
         {
-            return String.Format("{0} - {1} : {2}", this.AlertType, this.ViewerName, this.AlertMessage);
+            return string.Format("{0} - {1} : {2}", this.AlertType, this.ViewerName, this.AlertMessage);
         }
     }
 

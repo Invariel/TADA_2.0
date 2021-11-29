@@ -238,7 +238,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             for (int image = 0; image < this.ImageCount; ++ image)
             {
-                if (!String.IsNullOrEmpty(this.images[image].Warnings))
+                if (!string.IsNullOrEmpty(this.images[image].Warnings))
                 {
                     imageWarning += $"Image {image}: {this.images[image].Warnings}" + System.Environment.NewLine;
                     ++imageCount;
@@ -247,7 +247,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             for (int audio = 0; audio < this.AudioCount; ++ audio)
             {
-                if (!String.IsNullOrEmpty(this.audios[audio].Warnings))
+                if (!string.IsNullOrEmpty(this.audios[audio].Warnings))
                 {
                     audioWarning += $"Audio {audio}: {this.audios[audio].Warnings}" + System.Environment.NewLine;
                     ++audioCount;
@@ -402,7 +402,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     {
                         warningString += "Start position and end position are the same.  TADA will not play this file like this.";
                     }
-                    else if (!String.IsNullOrEmpty(warningString))
+                    else if (!string.IsNullOrEmpty(warningString))
                     {
                         warningString += "TADA will do its best to play this for you.";
                     }
@@ -616,7 +616,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     warningString += "Start position and end position are the same.  TADA will not play this file like this.";
                 }
-                else if (!String.IsNullOrEmpty(warningString))
+                else if (!string.IsNullOrEmpty(warningString))
                 {
                     warningString += "TADA will do its best to play this for you.";
                 }
@@ -834,15 +834,15 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             String outputMessage = "";
 
-            if (!String.IsNullOrEmpty(this.substitutedReadMessage))
+            if (!string.IsNullOrEmpty(this.substitutedReadMessage))
             {
                 outputMessage = this.substitutedReadMessage;
             }
-            else if (!String.IsNullOrEmpty(this.readMessage))
+            else if (!string.IsNullOrEmpty(this.readMessage))
             {
                 outputMessage = this.readMessage;
             }
-            else if (!String.IsNullOrEmpty(this.substitutedMessage))
+            else if (!string.IsNullOrEmpty(this.substitutedMessage))
             {
                 outputMessage = this.substitutedMessage;
             }
@@ -996,7 +996,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             writer.WriteElementString("Message", this.Message);
             writer.WriteElementString("Read", this.ReadMessage);
-            if (!String.IsNullOrEmpty(this.BackgroundImage))
+            if (!string.IsNullOrEmpty(this.BackgroundImage))
             {
                 writer.WriteElementString("Background", this.BackgroundImage);
             }
@@ -1345,6 +1345,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public bool IsVIP;
 
         public string Usernames;
+        public string BannedNames;
         public string Keywords;
 
         public int MinBits;
@@ -1360,7 +1361,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !(HasViewerTier || HasSubscriptionTier || HasBadges || HasUsers || HasKeywords || HasAmounts);
+                return !(HasViewerTier || HasSubscriptionTier || HasBadges || HasUsers || HasBannedNames || HasKeywords || HasAmounts);
             }
         }
 
@@ -1393,6 +1394,14 @@ namespace TADA_Advanced_Desktop_Alerts
             get
             {
                 return !string.IsNullOrWhiteSpace(this.Usernames);
+            }
+        }
+
+        public bool HasBannedNames
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(this.BannedNames);
             }
         }
 
@@ -1509,6 +1518,13 @@ namespace TADA_Advanced_Desktop_Alerts
                     else if (reader.IsStartElement("Usernames"))
                     {
                         this.Usernames = reader.ReadElementContentAsString();
+
+                        // This filthy hack is required for using XmlReader instead of turning it into an XMLDocument that I have no schema for.
+                        readNext = false;
+                    }
+                    else if (reader.IsStartElement("BannedNames"))
+                    {
+                        this.BannedNames = reader.ReadElementContentAsString();
 
                         // This filthy hack is required for using XmlReader instead of turning it into an XMLDocument that I have no schema for.
                         readNext = false;
@@ -1653,14 +1669,21 @@ namespace TADA_Advanced_Desktop_Alerts
                     writer.WriteEndElement();
                 }
 
-                if (!String.IsNullOrEmpty(this.Usernames) && !String.IsNullOrWhiteSpace(this.Usernames))
+                if (!string.IsNullOrEmpty(this.Usernames) && !string.IsNullOrWhiteSpace(this.Usernames))
                 {
                     writer.WriteStartElement("Usernames");
                     writer.WriteString(this.Usernames);
                     writer.WriteEndElement();
                 }
 
-                if (!String.IsNullOrEmpty(this.Keywords) && !String.IsNullOrWhiteSpace(this.Keywords))
+                if (!string.IsNullOrEmpty(this.BannedNames) && !string.IsNullOrWhiteSpace(this.BannedNames))
+                {
+                    writer.WriteStartElement("BannedNames");
+                    writer.WriteString(this.BannedNames);
+                    writer.WriteEndElement();
+                }
+
+                if (!string.IsNullOrEmpty(this.Keywords) && !string.IsNullOrWhiteSpace(this.Keywords))
                 {
                     writer.WriteStartElement("Keywords");
                     writer.WriteString(this.Keywords);

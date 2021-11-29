@@ -31,6 +31,7 @@ namespace TADA_Advanced_Desktop_Alerts
             new Classes.IPADescription("tsukiakariusagi", "sukiʌkɑrrijuˈsɑgi"),
             new Classes.IPADescription("dinosaurceress", "ˈdaɪnəˌsɔrsɜrɛs"),
             new Classes.IPADescription("reddempshun", "rɛddɛmpʃən"),
+            new Classes.IPADescription("huginnplays", "hyugɪn"),
         };
 
         public static MainTADAForm mainTADAForm

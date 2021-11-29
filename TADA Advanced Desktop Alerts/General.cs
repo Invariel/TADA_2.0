@@ -578,6 +578,10 @@ namespace TADA_Advanced_Desktop_Alerts
             // Scenario 3: has both.
             // Scenario 4: has neither.
 
+            // Okay...
+
+
+
             bool hasName = message.Contains("{name}");
             bool hasGiftee = message.Contains("{giftee}");
 
@@ -596,6 +600,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
                     for (int j = 0; j < withoutGiftee.Length; ++ j)
                     {
+                        PerformSubstitutions(ref withoutGiftee[j], substitutionObject);
                         ttsPrompt.AppendText(withoutGiftee[j]);
 
                         if (j != withoutGiftee.Length - 1)
@@ -633,6 +638,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
                 for (int i = 0; i < withoutText.Length; ++ i)
                 {
+                    PerformSubstitutions(ref withoutText[i], substitutionObject);
+
                     ttsPrompt.AppendText(withoutText[i]);
 
                     if (i != withoutText.Length - 1)
@@ -650,6 +657,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
             else
             {
+                PerformSubstitutions(ref message, substitutionObject);
                 ttsPrompt.AppendText(message);
             }
 
