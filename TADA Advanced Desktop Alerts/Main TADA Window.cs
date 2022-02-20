@@ -196,13 +196,19 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             // channel_subscription - for PubSub to be able to read when someone subscribes
             // channel_check_subscription - to check if a user is subscribed
-            String uri = "https://api.twitch.tv/kraken/oauth2/authorize?client_id=" +
+            string uri = "https://id.twitch.tv/oauth2/authorize?client_id=" +
                          General.CLIENT_ID +
                          "&redirect_uri=" +
                          General.AUTH_URI +
-                         "&response_type=token&" +
-                         "scope=channel_subscriptions channel_check_subscription user_read bits:read chat:read channel:moderate channel:read:redemptions";
-            System.Diagnostics.Process.Start(uri);
+                         "&response_type=token" +
+                         "&scope=bits:read channel:read:redemptions channel:read:subscriptions chat:read user:read:email user:read:follows user:read:subscriptions" +
+                         "&state=" +
+                         General.GenerateStateString();
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = uri,
+                UseShellExecute = true
+            });
         }
 
         private void PasswordMask(object sender, EventArgs e)

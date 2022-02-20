@@ -21,17 +21,17 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public sealed class General
     {
-        public const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
-        public const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
+        public const string CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
+        public const string AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
 
-        public const String PASSWORD_FIELD_DEFAULT_TEXT = "Paste Access Token Here";
+        public const string PASSWORD_FIELD_DEFAULT_TEXT = "Paste Access Token Here";
 
-        public const String SUBDIRECTORY = @"config/";
-        public const String DEFAULT_OAUTH = @"oauth.cfg";
-        public const String DEFAULT_ALERTS = @"default.tada";
+        public const string SUBDIRECTORY = @"config/";
+        public const string DEFAULT_OAUTH = @"oauth.cfg";
+        public const string DEFAULT_ALERTS = @"default.tada";
 
-        public const String MASKED_TEXTBOX_MASK = "{0,3:D3}:{1,2:D2}:{2,2:D2}.{3,3:D3}";
-        public const String COLOR_FORMAT = "#{0:X2}{1:X2}{2:X2}{3:X2}";
+        public const string MASKED_TEXTBOX_MASK = "{0,3:D3}:{1,2:D2}:{2,2:D2}.{3,3:D3}";
+        public const string COLOR_FORMAT = "#{0:X2}{1:X2}{2:X2}{3:X2}";
 
         public const double INITIAL_ANGLE = 0;
         public const double INITIAL_MAGNIFICATION = 1;
@@ -135,6 +135,22 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 file.WriteLine(String.Format("[{0}] : {1}", DateTime.Now, message));
             }
+        }
+
+        public const string STATE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+
+        public static string GenerateStateString()
+        {
+            Random random = new Random();
+
+            string stateString = "TADA_";
+
+            for (int i = 0; i < 40; ++ i)
+            {
+                stateString += STATE_CHARACTERS[random.Next(STATE_CHARACTERS.Length)];
+            }
+
+            return stateString;
         }
 
         public static void ConfigureToolTip(List<Control> controls, String text)

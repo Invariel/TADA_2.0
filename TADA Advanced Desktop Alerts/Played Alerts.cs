@@ -433,30 +433,12 @@ namespace TADA_Advanced_Desktop_Alerts
                         bool anonymous = eCommunity.GiftedSubscription.UserId == null;
                         int giftCount = eCommunity.GiftedSubscription.MsgParamMassGiftCount;
 
-                        if (!anonymous)
-                        {
-                            user = await GetUser(eCommunity.GiftedSubscription.UserId);
-                        }
-                        else
-                        {
-                            user = AnonymousUser;
-                        }
+                        user = anonymous ? AnonymousUser : await GetUser(eCommunity.GiftedSubscription.UserId);
 
                         // Fill in Tier and Tier Name from the SubGift / AnonSubGift messages that come in.
                         subObject.Amount = giftCount;
                         subObject.SetPlan(eCommunity.GiftedSubscription.MsgParamSubPlan);
                         subObject.ViewerName = anonymous ? General.ANONYMOUS_SUB_GIFT_NAME : user?.user.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
-
-                        CommunityGiftSub defaultGiftSub;
-
-                        if (user == null || anonymous)
-                        {
-                            defaultGiftSub = new CommunityGiftSub(subObject);
-                        }
-                        else
-                        {
-                            defaultGiftSub = new CommunityGiftSub(user, subObject);
-                        }
 
                         CommunityGiftSub communityGiftSub = null;
 
@@ -467,23 +449,16 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                         else if (FindSuitableAlert (General.ALERTTYPES.COMMUNITY, user, subObject) != null)
                         {
-                            communityGiftSub = null;
-                            if (user != null)
-                            {
-                                communityGiftSub = new CommunityGiftSub(user, subObject);
-                            }
-                            else
-                            {
-                                communityGiftSub = new CommunityGiftSub(subObject);
-                            }
+                            communityGiftSub = user == null ? new CommunityGiftSub(subObject) : new CommunityGiftSub(subObject, user);
                         }
 
+                        // communityGiftSub can be null here: if community gift subs haven't been configured, or if the gift did not meet the minimum amount.
                         if (communityGiftSub != null)
                         {
                             communityGiftSubs.Add(communityGiftSub);
                         }
                     }
-
+                    // Whether the community gift is added or not, we return because we do not want this alert type to continue.
                     return;
                 case General.ALERTTYPES.FIRSTMESSAGE:
                 case General.ALERTTYPES.MESSAGE:
@@ -578,7 +553,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         Thread.Sleep(5000);
 
-                        comGift = communityGiftSubs.DefaultIfEmpty(null).First(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
+                        if (communityGiftSubs.Count > 0)
+                        {
+                            comGift = communityGiftSubs.Where(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName)?.First() ?? null;
+                        }
 
                         user = isAnonymousGift ? AnonymousUser : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
                         UpdateUserSubscription(await GetUser(eGift.GiftedSubscription.MsgParamRecipientId));
@@ -595,6 +573,8 @@ namespace TADA_Advanced_Desktop_Alerts
 
                                 searchAlerts.Clear();
                                 searchAlerts.Insert(0, comGift.use_anonymous_alert ? General.ALERTTYPES.ANONYMOUS_COMMUNITY : General.ALERTTYPES.COMMUNITY);
+
+                                communityGiftSubs.Remove(comGift);
                             }
                             else
                             {
@@ -609,7 +589,6 @@ namespace TADA_Advanced_Desktop_Alerts
                                 searchAlerts.Insert(0, General.ALERTTYPES.ANONYMOUS_GIFT);
                             }
                         }
-
                     }
                     break;
                 case General.ALERTTYPES.SUBSCRIPTION:
@@ -911,7 +890,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task<Subscription> GetUserSubscription(string userId)
         {
-            CheckUserSubscriptionResponse subscription = await twitchAPI.Helix.Subscriptions.CheckUserSubscriptionAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            GetUserSubscriptionsResponse subscription = await twitchAPI.Helix.Subscriptions.GetUserSubscriptionsAsync(channelID, new List<string>() { userId }, twitchAPI.Settings.AccessToken);
             return subscription.Data[0];
         }
 
@@ -1276,17 +1255,11 @@ namespace TADA_Advanced_Desktop_Alerts
         public bool is_anonymous;
         public bool use_anonymous_alert = false;
 
-        public CommunityGiftSub(User gifter, SubstitutionObject subObject)
+        public CommunityGiftSub (SubstitutionObject subObject, User gifter = null)
         {
             this.communityGifter = gifter;
             this.CombinedSetup(subObject);
-            this.is_anonymous = false;
-        }
-
-        public CommunityGiftSub (SubstitutionObject subObject)
-        {
-            this.CombinedSetup(subObject);
-            this.is_anonymous = true;
+            this.is_anonymous = (gifter == null);
         }
 
         private void CombinedSetup (SubstitutionObject subObject)
