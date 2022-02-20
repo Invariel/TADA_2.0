@@ -891,7 +891,7 @@ namespace TADA_Advanced_Desktop_Alerts
         private async Task<Subscription> GetUserSubscription(string userId)
         {
             GetUserSubscriptionsResponse subscription = await twitchAPI.Helix.Subscriptions.GetUserSubscriptionsAsync(channelID, new List<string>() { userId }, twitchAPI.Settings.AccessToken);
-            return subscription.Data[0];
+            return subscription.Data.Count() > 0 ? subscription.Data[0] : null;
         }
 
         private async Task<string> GetUserIdFromUsername(string username)
