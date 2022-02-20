@@ -1714,12 +1714,20 @@ namespace TADA_Advanced_Desktop_Alerts
         public string ViewerName { get; set; } = "";
         public string TierName { get; set; } = "";
 
-        public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }
-        public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;
+        /*
+         * Subscription plan from PubSub *ONLY* is "Prime", "1000", "2000", "3000".
+         * Subscription plan from Helix is the "plan name".
+         */
+
+
+
+
+        public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }     // Plans are actual subscription names?  So, rethink this.
+        public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;        // 1000, 2000, 3000.
 
         public void SetPlan(TwitchLib.Client.Enums.SubscriptionPlan plan)
         {
-            Plan = TierAndPlanConverter.NormalizePlanName(plan);
+            Plan = TierAndPlanConverter.NormalizeTwitchLibPlan(plan);
             Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
         }
 

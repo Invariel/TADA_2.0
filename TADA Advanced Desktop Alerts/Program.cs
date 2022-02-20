@@ -16,6 +16,7 @@ namespace TADA_Advanced_Desktop_Alerts
         static void Main()
         {
             Application.EnableVisualStyles();
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.SetCompatibleTextRenderingDefault(false);
 
             AppDomain currentDomain = AppDomain.CurrentDomain;

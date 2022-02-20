@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Shell;
 using TwitchLib.Api;
+using TwitchLib.Api.Helix.Models.Subscriptions;
+using TwitchLib.Api.Helix.Models.Users.GetUserFollows;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.PubSub;
@@ -360,11 +362,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task GetFollowers(string after)
         {
-            TwitchLib.Api.Helix.Models.Users.GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, null, channelID);
+            GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, null, channelID);
+
             if (followers.Follows.Length > 0)
             {
                 List<string> followerList = new List<string>();
-                foreach (TwitchLib.Api.Helix.Models.Users.Follow follower in followers.Follows)
+                foreach (Follow follower in followers.Follows)
                 {
                     followerList.Add(follower.FromUserId);
                 }
@@ -409,7 +412,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         subObject.Amount = eBits.BitsUsed;
                         subObject.Message = eBits.ChatMessage;
-                        subObject.ViewerName = (eBits.IsAnonymous ? General.ANONYMOUS_BITS_NAME : eBits.Username);
+                        subObject.ViewerName = (eBits.IsAnonymous ? General.ANONYMOUS_BITS_NAME : eBits.UserName);
 
                         if (eBits.IsAnonymous)
                         {
@@ -550,10 +553,10 @@ namespace TADA_Advanced_Desktop_Alerts
                     {
                         OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
 
-                        subObject.Amount = Int32.Parse(eRaid.RaidNotificaiton.MsgParamViewerCount);
-                        subObject.ViewerName = eRaid.RaidNotificaiton.DisplayName;
+                        subObject.Amount = Int32.Parse(eRaid.RaidNotification.MsgParamViewerCount);
+                        subObject.ViewerName = eRaid.RaidNotification.DisplayName;
 
-                        user = await GetUser(eRaid.RaidNotificaiton.UserId);
+                        user = await GetUser(eRaid.RaidNotification.UserId);
                     }
                     break;
                 case General.ALERTTYPES.SUBGIFT:
@@ -630,7 +633,10 @@ namespace TADA_Advanced_Desktop_Alerts
                         {
                             OnReSubscriberArgs reSubscriberArgs = eventDetails as OnReSubscriberArgs;
 
-                            subObject.Amount = reSubscriberArgs.ReSubscriber.ShareStreak ? reSubscriberArgs.ReSubscriber.StreakMonths : reSubscriberArgs.ReSubscriber.CumulativeMonths;
+                            string months = reSubscriberArgs.ReSubscriber.MsgParamShouldShareStreak ? reSubscriberArgs.ReSubscriber.MsgParamStreakMonths : reSubscriberArgs.ReSubscriber.MsgParamCumulativeMonths;
+                            int.TryParse(months, out int m);
+
+                            subObject.Amount = m;
                             subObject.Message = reSubscriberArgs.ReSubscriber.ResubMessage ?? "";
                             subObject.RecipientName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
                             subObject.SetPlan(reSubscriberArgs.ReSubscriber.SubscriptionPlan);
@@ -795,8 +801,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
                 else
                 {
-                    TwitchLib.Api.Helix.Models.Users.User twitchUser = (await twitchAPI.Helix.Users.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0];
-                    TwitchLib.Api.V5.Models.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
+                    TwitchLib.Api.Helix.Models.Users.GetUsers.User twitchUser = (await twitchAPI.Helix.Users.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0];
+                    Subscription twitchSubscription = await GetUserSubscription(userId);
 
                     // Not setting lastSpoke because this isn't a guarantee.
                     user = new User()
@@ -903,21 +909,10 @@ namespace TADA_Advanced_Desktop_Alerts
         }
 #endregion
 
-        private async Task<TwitchLib.Api.V5.Models.Subscriptions.Subscription> GetUserSubscription(string userId)
+        private async Task<Subscription> GetUserSubscription(string userId)
         {
-            TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription = null;
-
-            // Returns null if not subscribed.
-            try
-            {
-                subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
-            }
-            catch (TwitchLib.Api.Core.Exceptions.BadResourceException)
-            {
-                // This is the current way of figuring out that there's no subscription right now.  Thanks, Twitch.
-            }
-
-            return subscription;
+            CheckUserSubscriptionResponse subscription = await twitchAPI.Helix.Subscriptions.CheckUserSubscriptionAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            return subscription.Data[0];
         }
 
         private async Task<string> GetUserIdFromUsername(string username)
@@ -927,10 +922,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void AddSubscriptionDetailsToSubstitutionObject(User user, SubstitutionObject subObject)
         {
-            if (user.subscription?.SubPlan != null)
+            if (user.subscription?.Tier != null)
             {
-                subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan(user.subscription?.SubPlan));
-                subObject.TierName = user.subscription?.SubPlanName;
+                subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan(user.subscription?.PlanName));
+                subObject.TierName = user.subscription?.Tier;
             }
         }
 
@@ -1232,8 +1227,8 @@ namespace TADA_Advanced_Desktop_Alerts
         // Eg. Everyone say thanks to {user} for {poss} {amount} month{s} of support
         // => Everyone say thanks to Invariel for his 3 months of support
         // => Everyone say thanks to RedDempshun for her 1 month of support
-        public TwitchLib.Api.Helix.Models.Users.User user;
-        public TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription;
+        public TwitchLib.Api.Helix.Models.Users.GetUsers.User user;
+        public Subscription subscription;
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
         public DateTime lastSpoke;
         public DateTime lastTTS;
@@ -1247,12 +1242,12 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public TierAndPlanConverter.SUBSCRIPTION_TIERS SubscriptionTier
         {
-            get { return TierAndPlanConverter.SubscriptionTierFromPlan(TierAndPlanConverter.StringToSubscriptionPlan(subscription?.SubPlan)); }
+            get { return TierAndPlanConverter.StringToSubscriptionTier(subscription?.Tier); }
         }
 
         public string SubscriptionTierName
         {
-            get { return subscription?.SubPlanName ?? "None"; }
+            get { return TierAndPlanConverter.SubscriptionTierToString(SubscriptionTier); }
         }
 
         public void UpdateLastSpoke()
@@ -1260,7 +1255,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.lastSpoke = DateTime.Now;
         }
 
-        public void UpdateSubscription(TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription)
+        public void UpdateSubscription(Subscription subscription)
         {
             this.subscription = subscription;
             this.subscriptionLastUpdated = DateTime.Now;
@@ -1268,7 +1263,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override string ToString()
         {
-            return string.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.SubPlan);
+            return string.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.Tier);
         }
     }
 
