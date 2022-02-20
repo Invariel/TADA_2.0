@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -122,8 +123,8 @@ namespace TADA_Advanced_Desktop_Alerts
             General.ALERTTYPES alertType = General.alertStrings[subObject.AlertType];
             if (listeningWebSockets.ContainsKey(alertType) && listeningWebSockets[alertType].Count > 0)
             {
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                String serializedObject = serializer.Serialize(subObject);
+                string serializedObject = JsonConvert.SerializeObject(subObject);
+
                 foreach (WebSocket webSocket in listeningWebSockets[alertType])
                 {
                     if (webSocket.State == WebSocketState.CloseSent || webSocket.State == WebSocketState.Closed)
