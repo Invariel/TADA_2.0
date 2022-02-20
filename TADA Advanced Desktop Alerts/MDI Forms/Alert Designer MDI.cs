@@ -906,7 +906,7 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
                 ViewerName = txt_ViewerName.Text
             };
 
-            subObject.SetPlan(TierAndPlanConverter.GetSubscriptionPlanFromTier(dom_SubTier.Text));
+            subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan(dom_SubTier.Text));
 
             if (numud_TestImage.Value > 0)
             {

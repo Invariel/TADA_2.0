@@ -1714,18 +1714,29 @@ namespace TADA_Advanced_Desktop_Alerts
         public string ViewerName { get; set; } = "";
         public string TierName { get; set; } = "";
 
-        public string Tier { get; set; } = TierAndPlanConverter.GetTierName(TwitchLib.Client.Enums.SubscriptionPlan.NotSet);
-        public string Plan { get; set; } = TierAndPlanConverter.GetPlanName(TwitchLib.Client.Enums.SubscriptionPlan.NotSet);
+        public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }
+        public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;
 
         public void SetPlan(TwitchLib.Client.Enums.SubscriptionPlan plan)
         {
-            Plan = TierAndPlanConverter.GetPlanName(plan);
-            Tier = TierAndPlanConverter.GetTierName(plan);
+            Plan = TierAndPlanConverter.NormalizePlanName(plan);
+            Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public void SetPlan(TierAndPlanConverter.SUBSCRIPTION_PLANS plan)
+        {
+            Plan = plan;
+            Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public String PlanString
+        {
+            get { return TierAndPlanConverter.SubscriptionPlanToString(Plan); }
         }
 
         public String TierString
         {
-            get { return Tier; }
+            get { return TierAndPlanConverter.SubscriptionTierToString(Tier); }
         }
 
         public override string ToString()

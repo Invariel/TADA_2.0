@@ -3,45 +3,170 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TwitchLib.Client.Enums;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
     public sealed class TierAndPlanConverter
     {
-        public static Dictionary<SubscriptionPlan, Tuple<string, string>> TierAndPlan = new Dictionary<SubscriptionPlan, Tuple<string, string>>()
+        private const String NO_TIER = "No Tier";
+        private const String TWITCH_PRIME = "Twitch Prime";
+        private const String TIER_ONE = "Tier One";
+        private const String TIER_TWO = "Tier Two";
+        private const String TIER_THREE = "Tier Three";
+
+        public enum SUBSCRIPTION_PLANS
         {
-            //                                                  (Plan, Tier)
-            { SubscriptionPlan.NotSet, new Tuple<string, string>("", "No Tier") },
-            { SubscriptionPlan.Prime,  new Tuple<string, string>("Prime", "Twitch Prime") },
-            { SubscriptionPlan.Tier1,  new Tuple<string, string>("1000", "Tier One") },
-            { SubscriptionPlan.Tier2,  new Tuple<string, string>("2000", "Tier Two") },
-            { SubscriptionPlan.Tier3,  new Tuple<string, string>("3000", "Tier Three") },
+            NO_TIER,
+            TWITCH_PRIME,
+            TIER_ONE,
+            TIER_TWO,
+            TIER_THREE
         };
 
-        public static string GetPlanName(SubscriptionPlan plan)
+        public enum SUBSCRIPTION_TIERS
         {
-            return TierAndPlan[plan].Item1;
+            NO_TIER,
+            TIER_ONE,
+            TIER_TWO,
+            TIER_THREE
+        };
+
+        public static String SubscriptionPlanToString (SUBSCRIPTION_PLANS plan)
+        {
+            String planString = TierAndPlanConverter.NO_TIER;
+
+            switch (plan)
+            {
+                case SUBSCRIPTION_PLANS.TWITCH_PRIME: planString = TierAndPlanConverter.TWITCH_PRIME; break;
+                case SUBSCRIPTION_PLANS.TIER_ONE: planString = TierAndPlanConverter.TIER_ONE; break;
+                case SUBSCRIPTION_PLANS.TIER_TWO: planString = TierAndPlanConverter.TIER_TWO; break;
+                case SUBSCRIPTION_PLANS.TIER_THREE: planString = TierAndPlanConverter.TIER_THREE; break;
+            }
+
+            return planString;
         }
 
-        public static string GetPlanName (string tier)
+        public static SUBSCRIPTION_PLANS StringToSubscriptionPlan (String planString)
         {
-            return TierAndPlan.Where(x => x.Value.Item1 == tier).First().Value.Item2 ?? "";
+            SUBSCRIPTION_PLANS plan = SUBSCRIPTION_PLANS.NO_TIER;
+
+            switch (planString)
+            {
+                case null:
+                case NO_TIER:
+                    plan = SUBSCRIPTION_PLANS.NO_TIER;
+                    break;
+                case TWITCH_PRIME: plan = SUBSCRIPTION_PLANS.TWITCH_PRIME; break;
+                case TIER_ONE: plan = SUBSCRIPTION_PLANS.TIER_ONE; break;
+                case TIER_TWO: plan = SUBSCRIPTION_PLANS.TIER_TWO; break;
+                case TIER_THREE: plan = SUBSCRIPTION_PLANS.TIER_THREE; break;
+            }
+
+            return plan;
         }
 
-        public static string GetTierName (SubscriptionPlan plan)
+        public static String SubscriptionTierToString (SUBSCRIPTION_TIERS tier)
         {
-            return TierAndPlan[plan].Item2;
+            String tierString = NO_TIER;
+
+            switch (tier)
+            {
+                case SUBSCRIPTION_TIERS.TIER_ONE: tierString = TIER_ONE; break;
+                case SUBSCRIPTION_TIERS.TIER_TWO: tierString = TIER_TWO; break;
+                case SUBSCRIPTION_TIERS.TIER_THREE: tierString = TIER_THREE; break;
+            }
+
+            return tierString;
         }
 
-        public static SubscriptionPlan GetSubscriptionPlanFromPlan(string plan)
+        public static SUBSCRIPTION_TIERS StringToSubscriptionTier (String tierString)
         {
-            return TierAndPlan.Where(x => x.Value.Item1 == plan).First().Key;
+            SUBSCRIPTION_TIERS tier = SUBSCRIPTION_TIERS.NO_TIER;
+
+            switch (tierString)
+            {
+                case null:
+                case NO_TIER:
+                    tier = SUBSCRIPTION_TIERS.NO_TIER;
+                    break;
+                case TIER_ONE: tier = SUBSCRIPTION_TIERS.TIER_ONE; break;
+                case TIER_TWO: tier = SUBSCRIPTION_TIERS.TIER_TWO; break;
+                case TIER_THREE: tier = SUBSCRIPTION_TIERS.TIER_THREE; break;
+            }
+
+            return tier;
         }
 
-        public static SubscriptionPlan GetSubscriptionPlanFromTier(string tier)
+        public static SUBSCRIPTION_PLANS NormalizePlanName(TwitchLib.Client.Enums.SubscriptionPlan plan)
         {
-            return TierAndPlan.Where(x => x.Value.Item2 == tier).First().Key;
+            SUBSCRIPTION_PLANS outPlan = SUBSCRIPTION_PLANS.NO_TIER;
+            switch (plan)
+            {
+                case TwitchLib.Client.Enums.SubscriptionPlan.NotSet:
+                    outPlan = SUBSCRIPTION_PLANS.NO_TIER;
+                    break;
+                case TwitchLib.Client.Enums.SubscriptionPlan.Prime:
+                    outPlan = SUBSCRIPTION_PLANS.TWITCH_PRIME;
+                    break;
+                case TwitchLib.Client.Enums.SubscriptionPlan.Tier1:
+                    outPlan = SUBSCRIPTION_PLANS.TIER_ONE;
+                    break;
+                case TwitchLib.Client.Enums.SubscriptionPlan.Tier2:
+                    outPlan = SUBSCRIPTION_PLANS.TIER_TWO;
+                    break;
+                case TwitchLib.Client.Enums.SubscriptionPlan.Tier3:
+                    outPlan = SUBSCRIPTION_PLANS.TIER_THREE;
+                    break;
+            }
+            return outPlan;
+        }
+
+        public static SUBSCRIPTION_PLANS NormalizePlanName(TwitchLib.PubSub.Enums.SubscriptionPlan plan)
+        {
+            SUBSCRIPTION_PLANS outPlan = SUBSCRIPTION_PLANS.NO_TIER;
+            switch (plan)
+            {
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.NotSet:
+                    outPlan = SUBSCRIPTION_PLANS.NO_TIER;
+                    break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Prime:
+                    outPlan = SUBSCRIPTION_PLANS.TWITCH_PRIME;
+                    break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier1:
+                    outPlan = SUBSCRIPTION_PLANS.TIER_ONE;
+                    break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier2:
+                    outPlan = SUBSCRIPTION_PLANS.TIER_TWO;
+                    break;
+                case TwitchLib.PubSub.Enums.SubscriptionPlan.Tier3:
+                    outPlan = SUBSCRIPTION_PLANS.TIER_THREE;
+                    break;
+            }
+            return outPlan;
+        }
+
+        public static SUBSCRIPTION_TIERS SubscriptionTierFromPlan (SUBSCRIPTION_PLANS plan)
+        {
+            SUBSCRIPTION_TIERS tier = SUBSCRIPTION_TIERS.NO_TIER;
+
+            switch (plan)
+            {
+                case SUBSCRIPTION_PLANS.NO_TIER:
+                    tier = SUBSCRIPTION_TIERS.NO_TIER;
+                    break;
+                case SUBSCRIPTION_PLANS.TWITCH_PRIME:
+                case SUBSCRIPTION_PLANS.TIER_ONE:
+                    tier = SUBSCRIPTION_TIERS.TIER_ONE;
+                    break;
+                case SUBSCRIPTION_PLANS.TIER_TWO:
+                    tier = SUBSCRIPTION_TIERS.TIER_TWO;
+                    break;
+                case SUBSCRIPTION_PLANS.TIER_THREE:
+                    tier = SUBSCRIPTION_TIERS.TIER_THREE;
+                    break;
+            }
+
+            return tier;
         }
     }
 }

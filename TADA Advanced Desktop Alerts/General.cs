@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using TwitchLib.Client.Enums;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
@@ -549,11 +548,14 @@ namespace TADA_Advanced_Desktop_Alerts
 
             int tierNumber = 0;
 
-            if (substitutionObject.Plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.NotSet)) tierNumber = 1;
-            if (substitutionObject.Plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Prime)) tierNumber = 2;
-            if (substitutionObject.Plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Tier1)) tierNumber = 3;
-            if (substitutionObject.Plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Tier2)) tierNumber = 4;
-            if (substitutionObject.Plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Tier3)) tierNumber = 5;
+            switch (substitutionObject.Plan)
+            {
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.NO_TIER: tierNumber = 1; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TWITCH_PRIME: tierNumber = 2; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_ONE: tierNumber = 3; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_TWO: tierNumber = 4; break;
+                case TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_THREE: tierNumber = 5; break;
+            }
 
             // Now figure out <a|b|c|d|e>
             pattern = @"<([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)>";

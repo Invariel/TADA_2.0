@@ -11,27 +11,21 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Shell;
-using TwitchConnection;
-using TwitchConnection.Events;
-using TwitchConnection.Messages;
-using TwitchConnection.Messages.Helix;
-using TwitchConnection.Messages.PubSub;
+using TwitchLib.Api;
 using TwitchLib.Client;
-using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
+using TwitchLib.PubSub;
+using TwitchLib.PubSub.Events;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class Played_Alerts : Form
     {
-        private System.Drawing.Image redLight = Properties.Resources.circle_red;
-        private System.Drawing.Image greenLight = Properties.Resources.circle_green;
+        private Image redLight = Properties.Resources.circle_red;
+        private Image greenLight = Properties.Resources.circle_green;
 
-        private TwitchConnection.Helix twitchHelix;
-        private TwitchConnection.PubSub twitchPubSub;
-
-        //private TwitchAPI twitchAPI;
-        //private TwitchPubSub pubSub;
+        private TwitchAPI twitchAPI;
+        private TwitchPubSub pubSub;
         private TwitchClient twitchClient;
 
         private string accessToken;
@@ -76,24 +70,9 @@ namespace TADA_Advanced_Desktop_Alerts
             this.accessToken = accessToken;
             this.channelName = channelName;
 
-            TwitchConfiguration configuration = new TwitchConfiguration()
-            {
-                OauthToken = accessToken,
-                ChannelName = channelName,
-                ChannelId = null,
-                ClientId = General.CLIENT_ID
-            };
-
-            twitchHelix = new TwitchConnection.Helix(configuration);
-            var users = twitchHelix.GetUsersByUsername(channelName).GetAwaiter().Result;
-            users[0].
-
-
-
-
-            //twitchAPI = new TwitchAPI();
-            //twitchAPI.Settings.ClientId = General.CLIENT_ID;
-            //twitchAPI.Settings.AccessToken = accessToken;
+            twitchAPI = new TwitchAPI();
+            twitchAPI.Settings.ClientId = General.CLIENT_ID;
+            twitchAPI.Settings.AccessToken = accessToken;
 
             btn_Pause.Click += PauseAlerts;
             btn_Replay.Click += ReplayAlerts;
@@ -139,11 +118,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async void Connect()
         {
-            List<User> result = await twitchHelix.GetUsersByUsername(new string[] { channelName });
-
-            if (result.Count > 0)
+            var result = await twitchAPI.Helix.Users.GetUsersAsync(null, new List<string> { channelName }, twitchAPI.Settings.AccessToken);
+            if (result.Users.Length > 0)
             {
-                channelID = result.First().UserID;
+                channelID = result.Users[0].Id;
             }
             else
             {
@@ -158,68 +136,68 @@ namespace TADA_Advanced_Desktop_Alerts
              *  Though, PubSub is supposed to be near-instant (yay, websocket) instead of up to ten seconds (IRC).
              */
             
-            //pubSub = new TwitchPubSub();
-            //pubSub.OnBitsReceivedV2 += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
-            //pubSub.OnFollow += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
-            //pubSub.OnChannelSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
-            //pubSub.OnListenResponse += (sender, e) =>
-            //{
-            //    if (e.Successful)
-            //    {
-            //        this.Invoke((Action)(() =>
-            //        {
-            //            this.pb_PubSub.Image = this.greenLight;
-            //            General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are being tracked.");
-            //        }));
-            //    }
-            //    else
-            //    {
-            //        General.LogFile($"Failed to connect to Twitch.{Environment.NewLine}{e.Response.Error}");
-            //        System.Windows.Forms.MessageBox.Show("Failed to connect to Twitch to listen to bits, follows, game purchases, or subscriptions.");
-            //        this.Invoke((Action)(() => { General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting."); }));
+            pubSub = new TwitchPubSub();
+            pubSub.OnBitsReceivedV2 += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
+            pubSub.OnFollow += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
+            pubSub.OnChannelSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
+            pubSub.OnListenResponse += (sender, e) =>
+            {
+                if (e.Successful)
+                {
+                    this.Invoke((Action)(() =>
+                    {
+                        this.pb_PubSub.Image = this.greenLight;
+                        General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are being tracked.");
+                    }));
+                }
+                else
+                {
+                    General.LogFile($"Failed to connect to Twitch.{Environment.NewLine}{e.Response.Error}");
+                    System.Windows.Forms.MessageBox.Show("Failed to connect to Twitch to listen to bits, follows, game purchases, or subscriptions.");
+                    this.Invoke((Action)(() => { General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting."); }));
 
-            //        this.pubSub.Connect();
-            //    }
-            //};
+                    this.pubSub.Connect();
+                }
+            };
 
             // Handle these, usually with a reconnection attempt or seventy thousand.
-            //pubSub.OnPubSubServiceClosed += (sender, e) =>
-            //{
-            //    this.Invoke((Action)(() =>
-            //    {
-            //        General.LogFile($"PubSub service closed unexpectedly.");
+            pubSub.OnPubSubServiceClosed += (sender, e) =>
+            {
+                this.Invoke((Action)(() =>
+                {
+                    General.LogFile($"PubSub service closed unexpectedly.");
 
-            //        this.pb_PubSub.Image = this.redLight;
-            //        General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting.");
-            //        this.pubSub.Connect();
-            //    }));
-            //};
+                    this.pb_PubSub.Image = this.redLight;
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting.");
+                    this.pubSub.Connect();
+                }));
+            };
 
-            //pubSub.OnPubSubServiceError += (sender, e) =>
-            //{
-            //    this.Invoke((Action)(() =>
-            //    {
-            //        General.LogFile($"PubSub service error.");
+            pubSub.OnPubSubServiceError += (sender, e) =>
+            {
+                this.Invoke((Action)(() =>
+                {
+                    General.LogFile($"PubSub service error.");
 
-            //        this.pb_PubSub.Image = this.redLight;
-            //        General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting.");
-            //        this.pubSub.Connect();
-            //    }));
-            //};
+                    this.pb_PubSub.Image = this.redLight;
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are not being tracked.  Reconnecting.");
+                    this.pubSub.Connect();
+                }));
+            };
 
-            //pubSub.OnPubSubServiceConnected += delegate
-            //{
-            //    // Even if there are no events of the chosen type specified, listening to them is important in case one is added later.
-            //    pubSub.ListenToBitsEventsV2(channelID);
-            //    pubSub.ListenToFollows(channelID);
-            //    pubSub.SendTopics(twitchAPI.Settings.AccessToken);
+            pubSub.OnPubSubServiceConnected += delegate
+            {
+                // Even if there are no events of the chosen type specified, listening to them is important in case one is added later.
+                pubSub.ListenToBitsEventsV2(channelID);
+                pubSub.ListenToFollows(channelID);
+                pubSub.SendTopics(twitchAPI.Settings.AccessToken);
 
-            //    this.Invoke((Action)(() =>
-            //    {
-            //        this.pb_PubSub.Image = this.greenLight;
-            //        General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are being tracked.");
-            //    }));
-            //};
+                this.Invoke((Action)(() =>
+                {
+                    this.pb_PubSub.Image = this.greenLight;
+                    General.ConfigureToolTip(this.pb_PubSub, "Bits, Follows, Game Purchases, and Subscriptions are being tracked.");
+                }));
+            };
 
             // TwitchClient is required for hosts, raids, and reading messages because it reads IRC directly.
             twitchClient = new TwitchClient(null, TwitchLib.Client.Enums.ClientProtocol.WebSocket, null);
@@ -268,25 +246,25 @@ namespace TADA_Advanced_Desktop_Alerts
             twitchClient.OnMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
             twitchClient.OnRaidNotification += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.RAID, e);
 
-//            twitchClient.OnCommunitySubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.COMMUNITY, e);
-//            twitchClient.OnNewSubscriber += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
-//            twitchClient.OnReSubscriber += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
-//            twitchClient.OnGiftedSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBGIFT, e);
+            twitchClient.OnCommunitySubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.COMMUNITY, e);
+            twitchClient.OnNewSubscriber += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
+            twitchClient.OnReSubscriber += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
+            twitchClient.OnGiftedSubscription += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBGIFT, e);
 
             // [7:21 PM] Defender1031: But the point is that I noticed that anytime anyone hosts, EVEN if it's a smaller host not pushed by the API, I get a PM from "jtv" saying "YarlRagan31 is now hosting you."
             // twitchClient.OnWhisperReceived -> check whispers for messages from jtv, parse the message, there's no number of viewers though.
 
             GetAllFollowers();
 
-            //pubSub.Connect();
+            pubSub.Connect();
             twitchClient.Connect();
 
-            //TwitchLib.Api.V5.Models.Bits.Cheermotes requestedCheermotes = await twitchAPI.V5.Bits.GetCheermotesAsync(channelID);
+            TwitchLib.Api.V5.Models.Bits.Cheermotes requestedCheermotes = await twitchAPI.V5.Bits.GetCheermotesAsync(channelID);
 
-            //foreach (TwitchLib.Api.V5.Models.Bits.Action action in requestedCheermotes.Actions)
-            //{
-            //    this.cheermotes.Add(action.Prefix.ToLower());
-            //}
+            foreach (TwitchLib.Api.V5.Models.Bits.Action action in requestedCheermotes.Actions)
+            {
+                this.cheermotes.Add(action.Prefix.ToLower());
+            }
 
             if (MainTADAForm.mainTADAForm.webSocketServer != null)
             {
@@ -382,14 +360,13 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private async Task GetFollowers(string after)
         {
-            FollowerList followers = twitchHelix.GetUsersFollowsAsync(100, after);
-
-            if (followers.Data.Followers.Count > 0)
+            TwitchLib.Api.Helix.Models.Users.GetUsersFollowsResponse followers = await twitchAPI.Helix.Users.GetUsersFollowsAsync(after, null, 100, null, channelID);
+            if (followers.Follows.Length > 0)
             {
                 List<string> followerList = new List<string>();
-                foreach (Follower follower in followers.Data.Followers)
+                foreach (TwitchLib.Api.Helix.Models.Users.Follow follower in followers.Follows)
                 {
-                    followerList.Add(follower.FromId);
+                    followerList.Add(follower.FromUserId);
                 }
                 AddFollowers(followerList);
 
@@ -401,44 +378,6 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        public async void ReceivedBitsEvent (Bits bits)
-        {
-
-        }
-
-        public async void ReceivedHostEvent (OnBeingHostedArgs args)
-        {
-
-        }
-
-        public async void ReceivedChatMessage (OnMessageReceivedArgs args)
-        {
-            var badges = args.ChatMessage.Badges;
-
-            //{
-            //    // Originally, this cancelled out bits messages, but because bits are handled by PubSub, that event will also fire.
-            //    // This could match a message trigger, or could be someone's first message of the day, so this flow follows too.
-            //    OnMessageReceivedArgs eMessage = eventDetails as OnMessageReceivedArgs;
-
-            //    subObject.Message = eMessage.ChatMessage.Message;
-            //    subObject.ViewerName = eMessage.ChatMessage.Username;
-
-            //    var f = eMessage.ChatMessage.EmoteSet;
-
-            //    user = await GetUser(eMessage.ChatMessage.UserId);
-
-            //    // If the user hasn't said their first message today, add it to the alert types to search.
-            //    // Also, set first message even if they don't have a first message alert, because they've spoken now.
-            //    if (!user.firstMessage)
-            //    {
-            //        searchAlerts.Insert(0, General.ALERTTYPES.FIRSTMESSAGE);
-            //        user.firstMessage = true;
-            //    }
-            //}
-        }
-
-
-
         public async void ReceivedTwitchEvent(General.ALERTTYPES alertType, Object eventDetails)
         {
             SubstitutionObject subObject = new SubstitutionObject();
@@ -447,9 +386,9 @@ namespace TADA_Advanced_Desktop_Alerts
             List<General.ALERTTYPES> searchAlerts = new List<General.ALERTTYPES>();
 
             searchAlerts.Insert(0, alertType);
+
             switch (alertType)
             {
-/*
                 case General.ALERTTYPES.AUTOHOST:
                 case General.ALERTTYPES.HOST:
                     {
@@ -543,7 +482,6 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
 
                     return;
-*/
                 case General.ALERTTYPES.FIRSTMESSAGE:
                 case General.ALERTTYPES.MESSAGE:
                     {
@@ -553,8 +491,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         subObject.Message = eMessage.ChatMessage.Message;
                         subObject.ViewerName = eMessage.ChatMessage.Username;
-
-                        var badges = eMessage.ChatMessage.Badges;
 
                         var f = eMessage.ChatMessage.EmoteSet;
 
@@ -569,149 +505,145 @@ namespace TADA_Advanced_Desktop_Alerts
                         }
                     }
                     break;
-                /*
-                                case General.ALERTTYPES.FOLLOW:
-                                    {
-                                        OnFollowArgs eFollow = eventDetails as OnFollowArgs;
+                case General.ALERTTYPES.FOLLOW:
+                    {
+                        OnFollowArgs eFollow = eventDetails as OnFollowArgs;
 
-                                        subObject.ViewerName = eFollow.DisplayName;
-                                        user = await GetUser(eFollow.UserId);
+                        subObject.ViewerName = eFollow.DisplayName;
+                        user = await GetUser(eFollow.UserId);
 
-                                        if (FindFollower(eFollow.UserId))
-                                        {
-                                            alertType = General.ALERTTYPES.NONE;
-                                        }
-                                        else
-                                        {
-                                            AddFollowers(new List<string> { eFollow.UserId });
+                        if (FindFollower(eFollow.UserId))
+                        {
+                            alertType = General.ALERTTYPES.NONE;
+                        }
+                        else
+                        {
+                            AddFollowers(new List<string> { eFollow.UserId });
 
-                                            // And then add them to the followers file.
-                                            this.missingFollowers += eFollow.UserId + " ";
-                                            if (this.followerFileWritten)
-                                            {
-                                                using (System.IO.StreamWriter writer = new System.IO.StreamWriter("followers.txt", true))
-                                                {
-                                                    writer.Write(missingFollowers);
-                                                }
-                                                this.missingFollowers = "";
-                                            }
-                                        }
+                            // And then add them to the followers file.
+                            this.missingFollowers += eFollow.UserId + " ";
+                            if (this.followerFileWritten)
+                            {
+                                using (System.IO.StreamWriter writer = new System.IO.StreamWriter("followers.txt", true))
+                                {
+                                    writer.Write(missingFollowers);
+                                }
+                                this.missingFollowers = "";
+                            }
+                        }
 
-                                        // If we don't want to toast idle people, and the user hasn't spoken in the specified time, then don't toast.
-                                        if (MainTADAForm.mainTADAForm.configurationSettings.dontToastLurkingFollowers &&
-                                            DateTime.Now - MainTADAForm.mainTADAForm.configurationSettings.lurkingFollowerTime > user.lastSpoke)
-                                        {
-                                            alertType = General.ALERTTYPES.NONE;
-                                        }
-                                    }
-                                    break;
-                */
+                        // If we don't want to toast idle people, and the user hasn't spoken in the specified time, then don't toast.
+                        if (MainTADAForm.mainTADAForm.configurationSettings.dontToastLurkingFollowers &&
+                            DateTime.Now - MainTADAForm.mainTADAForm.configurationSettings.lurkingFollowerTime > user.lastSpoke)
+                        {
+                            alertType = General.ALERTTYPES.NONE;
+                        }
+                    }
+                    break;
                 /*
                                 case General.ALERTTYPES.MACRO:
                                     // This doesn't do any setup.  The trick below is to pick the appropriate
                                     // alert based on the keypress.  Or, better, it should be handled elsewhere.
                                     return;
                 */
-                /*                
-                                case General.ALERTTYPES.RAID:
-                                    {
-                                        OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
+                case General.ALERTTYPES.RAID:
+                    {
+                        OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
 
-                                        subObject.Amount = Int32.Parse(eRaid.RaidNotificaiton.MsgParamViewerCount);
-                                        subObject.ViewerName = eRaid.RaidNotificaiton.DisplayName;
+                        subObject.Amount = Int32.Parse(eRaid.RaidNotificaiton.MsgParamViewerCount);
+                        subObject.ViewerName = eRaid.RaidNotificaiton.DisplayName;
 
-                                        user = await GetUser(eRaid.RaidNotificaiton.UserId);
-                                    }
-                                    break;
-                                case General.ALERTTYPES.SUBGIFT:
-                                    {
-                                        OnGiftedSubscriptionArgs eGift = eventDetails as OnGiftedSubscriptionArgs;
+                        user = await GetUser(eRaid.RaidNotificaiton.UserId);
+                    }
+                    break;
+                case General.ALERTTYPES.SUBGIFT:
+                    {
+                        OnGiftedSubscriptionArgs eGift = eventDetails as OnGiftedSubscriptionArgs;
 
-                                        subObject.RecipientName = eGift.GiftedSubscription.MsgParamRecipientDisplayName;
-                                        subObject.SetPlan(eGift.GiftedSubscription.MsgParamSubPlan);
-                                        subObject.TierName = eGift.GiftedSubscription.MsgParamSubPlanName;
-                                        subObject.ViewerName = eGift.GiftedSubscription.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
+                        subObject.RecipientName = eGift.GiftedSubscription.MsgParamRecipientDisplayName;
+                        subObject.SetPlan(eGift.GiftedSubscription.MsgParamSubPlan);
+                        subObject.TierName = eGift.GiftedSubscription.MsgParamSubPlanName;
+                        subObject.ViewerName = eGift.GiftedSubscription.DisplayName ?? General.ANONYMOUS_SUB_GIFT_NAME;
 
-                                        bool isAnonymousGift = (subObject.ViewerName == General.ANONYMOUS_SUB_GIFT_NAME);
-                */
-                /*
-                 * So, here's the further problem.
-                 * There's no way to tell if a particular sub is part of a community gift sub or not without that event firing.
-                 * So, maybe we just delay this by a few seconds, with the hope that IRC gets to catch up?
-                 */
-                /*
-                                        Thread.Sleep(5000);
+                        bool isAnonymousGift = (subObject.ViewerName == General.ANONYMOUS_SUB_GIFT_NAME);
 
-                                        comGift = communityGiftSubs.DefaultIfEmpty(null).First(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
+                        /*
+                         * So, here's the further problem.
+                         * There's no way to tell if a particular sub is part of a community gift sub or not without that event firing.
+                         * So, maybe we just delay this by a few seconds, with the hope that IRC gets to catch up?
+                         */
 
-                                        user = isAnonymousGift ? AnonymousUser : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
-                                        UpdateUserSubscription(await GetUser(eGift.GiftedSubscription.MsgParamRecipientId));
+                        Thread.Sleep(5000);
 
-                                        if (comGift != null)
-                                        {
-                                            comGift.giftees.Add(subObject.RecipientName);
-                                            comGift.subObject.Tier = subObject.Tier;   // Overwriting from the Client version.
-                                            comGift.subObject.TierName = subObject.TierName;
+                        comGift = communityGiftSubs.DefaultIfEmpty(null).First(gift => gift.communityGifter.user.DisplayName == subObject.ViewerName);
 
-                                            if (comGift.Ready())
-                                            {
-                                                subObject = comGift.subObject;
+                        user = isAnonymousGift ? AnonymousUser : await GetUser(await GetUserIdFromUsername(eGift.GiftedSubscription.DisplayName));
+                        UpdateUserSubscription(await GetUser(eGift.GiftedSubscription.MsgParamRecipientId));
 
-                                                searchAlerts.Clear();
-                                                searchAlerts.Insert(0, comGift.use_anonymous_alert ? General.ALERTTYPES.ANONYMOUS_COMMUNITY : General.ALERTTYPES.COMMUNITY);
-                                            }
-                                            else
-                                            {
-                                                // The community gift sub hasn't been fully compiled yet, so exit out.
-                                                return;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (isAnonymousGift)
-                                            {
-                                                searchAlerts.Insert(0, General.ALERTTYPES.ANONYMOUS_GIFT);
-                                            }
-                                        }
+                        if (comGift != null)
+                        {
+                            comGift.giftees.Add(subObject.RecipientName);
+                            comGift.subObject.Tier = subObject.Tier;   // Overwriting from the Client version.
+                            comGift.subObject.TierName = subObject.TierName;
 
-                                    }
-                                    break;
-                                case General.ALERTTYPES.SUBSCRIPTION:
-                                    {
-                                        string userId = null;
+                            if (comGift.Ready())
+                            {
+                                subObject = comGift.subObject;
 
-                                        if (eventDetails is OnNewSubscriberArgs)
-                                        {
-                                            OnNewSubscriberArgs newSubscriberArgs = eventDetails as OnNewSubscriberArgs;
+                                searchAlerts.Clear();
+                                searchAlerts.Insert(0, comGift.use_anonymous_alert ? General.ALERTTYPES.ANONYMOUS_COMMUNITY : General.ALERTTYPES.COMMUNITY);
+                            }
+                            else
+                            {
+                                // The community gift sub hasn't been fully compiled yet, so exit out.
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (isAnonymousGift)
+                            {
+                                searchAlerts.Insert(0, General.ALERTTYPES.ANONYMOUS_GIFT);
+                            }
+                        }
 
-                                            subObject.Amount = 1;
-                                            subObject.Message = newSubscriberArgs.Subscriber.ResubMessage ?? "";
-                                            subObject.RecipientName = newSubscriberArgs.Subscriber.DisplayName ?? "";
-                                            subObject.SetPlan(newSubscriberArgs.Subscriber.SubscriptionPlan);
-                                            subObject.TierName = newSubscriberArgs.Subscriber.SubscriptionPlanName;
-                                            subObject.ViewerName = newSubscriberArgs.Subscriber.DisplayName ?? "";
+                    }
+                    break;
+                case General.ALERTTYPES.SUBSCRIPTION:
+                    {
+                        string userId = null;
 
-                                            userId = newSubscriberArgs.Subscriber.UserId;
-                                        }
-                                        else if (eventDetails is OnReSubscriberArgs)
-                                        {
-                                            OnReSubscriberArgs reSubscriberArgs = eventDetails as OnReSubscriberArgs;
+                        if (eventDetails is OnNewSubscriberArgs)
+                        {
+                            OnNewSubscriberArgs newSubscriberArgs = eventDetails as OnNewSubscriberArgs;
 
-                                            subObject.Amount = reSubscriberArgs.ReSubscriber.ShareStreak ? reSubscriberArgs.ReSubscriber.StreakMonths : reSubscriberArgs.ReSubscriber.CumulativeMonths;
-                                            subObject.Message = reSubscriberArgs.ReSubscriber.ResubMessage ?? "";
-                                            subObject.RecipientName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
-                                            subObject.SetPlan(reSubscriberArgs.ReSubscriber.SubscriptionPlan);
-                                            subObject.TierName = reSubscriberArgs.ReSubscriber.SubscriptionPlanName;
-                                            subObject.ViewerName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
+                            subObject.Amount = 1;
+                            subObject.Message = newSubscriberArgs.Subscriber.ResubMessage ?? "";
+                            subObject.RecipientName = newSubscriberArgs.Subscriber.DisplayName ?? "";
+                            subObject.SetPlan(newSubscriberArgs.Subscriber.SubscriptionPlan);
+                            subObject.TierName = newSubscriberArgs.Subscriber.SubscriptionPlanName;
+                            subObject.ViewerName = newSubscriberArgs.Subscriber.DisplayName ?? "";
 
-                                            userId = reSubscriberArgs.ReSubscriber.UserId;
-                                        }
+                            userId = newSubscriberArgs.Subscriber.UserId;
+                        }
+                        else if (eventDetails is OnReSubscriberArgs)
+                        {
+                            OnReSubscriberArgs reSubscriberArgs = eventDetails as OnReSubscriberArgs;
 
-                                        user = await GetUser(userId);
-                                        UpdateUserSubscription(user);
-                                    }
-                                    break;
-                */
+                            subObject.Amount = reSubscriberArgs.ReSubscriber.ShareStreak ? reSubscriberArgs.ReSubscriber.StreakMonths : reSubscriberArgs.ReSubscriber.CumulativeMonths;
+                            subObject.Message = reSubscriberArgs.ReSubscriber.ResubMessage ?? "";
+                            subObject.RecipientName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
+                            subObject.SetPlan(reSubscriberArgs.ReSubscriber.SubscriptionPlan);
+                            subObject.TierName = reSubscriberArgs.ReSubscriber.SubscriptionPlanName;
+                            subObject.ViewerName = reSubscriberArgs.ReSubscriber.DisplayName ?? "";
+
+                            userId = reSubscriberArgs.ReSubscriber.UserId;
+                        }
+
+                        user = await GetUser(userId);
+                        UpdateUserSubscription(user);
+                    }
+                    break;
                 default:
                     return;
             }
@@ -863,18 +795,14 @@ namespace TADA_Advanced_Desktop_Alerts
                 }
                 else
                 {
-                    TwitchConnection.Messages.Helix.User twitchUser = await twitchHelix.GetUserByUserIdAsync(userId);
-                    CheckSubscription subscription = await twitchHelix.GetUserSubscriptionAsync(userId);
-
-
-                    //TwitchLib.Api.Helix.Models.Users.User twitchUser = (await twitchAPI.Helix.Users.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0];
-                    //TwitchLib.Api.V5.Models.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
+                    TwitchLib.Api.Helix.Models.Users.User twitchUser = (await twitchAPI.Helix.Users.GetUsersAsync(new List<string> { userId }, null, accessToken)).Users[0];
+                    TwitchLib.Api.V5.Models.Subscriptions.Subscription twitchSubscription = await GetUserSubscription(userId);
 
                     // Not setting lastSpoke because this isn't a guarantee.
                     user = new User()
                     {
                         user = twitchUser,
-                        subscription = subscription,
+                        subscription = twitchSubscription,
                         subscriptionLastUpdated = DateTime.Now,
                         firstMessage = false,
                     };
@@ -915,7 +843,6 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void GetBadgesUndocumented (User user)
         {
-            /*
             if (user != null)
             {
                 System.Net.Http.HttpClient twitchAPIRequest = new System.Net.Http.HttpClient();
@@ -973,26 +900,37 @@ namespace TADA_Advanced_Desktop_Alerts
                     }
                 }
             }
-            */
         }
 #endregion
 
-        private async Task<CheckSubscription> GetUserSubscription(string userId)
+        private async Task<TwitchLib.Api.V5.Models.Subscriptions.Subscription> GetUserSubscription(string userId)
         {
+            TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription = null;
+
             // Returns null if not subscribed.
-            return (await twitchHelix.GetUserSubscriptions(new string[] { userId }))?.First();
+            try
+            {
+                subscription = await twitchAPI.V5.Channels.CheckChannelSubscriptionByUserAsync(channelID, userId, twitchAPI.Settings.AccessToken);
+            }
+            catch (TwitchLib.Api.Core.Exceptions.BadResourceException)
+            {
+                // This is the current way of figuring out that there's no subscription right now.  Thanks, Twitch.
+            }
+
+            return subscription;
         }
 
         private async Task<string> GetUserIdFromUsername(string username)
         {
-            return (await twitchHelix.GetUsersByUsername(new string[] { username })).First().UserId;
+            return (await twitchAPI.Helix.Users.GetUsersAsync(null, new List<string> { username }, accessToken)).Users[0].Id;
         }
 
         private void AddSubscriptionDetailsToSubstitutionObject(User user, SubstitutionObject subObject)
         {
-            if (user.subscription?.Tier != null)
+            if (user.subscription?.SubPlan != null)
             {
-                subObject.TierName = TierAndPlanConverter.GetPlanName(user.subscription.Tier);
+                subObject.SetPlan(TierAndPlanConverter.StringToSubscriptionPlan(user.subscription?.SubPlan));
+                subObject.TierName = user.subscription?.SubPlanName;
             }
         }
 
@@ -1007,7 +945,7 @@ namespace TADA_Advanced_Desktop_Alerts
             string viewerName = subObject.ViewerName;
             int amount = subObject.Amount;
             string message = subObject.Message;
-            string plan = subObject.Plan;
+            TierAndPlanConverter.SUBSCRIPTION_PLANS plan = subObject.Plan;
 
             if (currentAlerts.ContainsKey(alertTypeString))
             {
@@ -1063,7 +1001,7 @@ namespace TADA_Advanced_Desktop_Alerts
             }
         }
 
-        private int ScoreAlert (TADAAlert alert, User user, int amount, string message, string plan)
+        private int ScoreAlert (TADAAlert alert, User user, int amount, string message, TierAndPlanConverter.SUBSCRIPTION_PLANS plan)
         {
             int finalScore = (int)General.SCORES.SCORE_ABSOLUTE_MINIMUM;
 
@@ -1087,10 +1025,10 @@ namespace TADA_Advanced_Desktop_Alerts
                         // This has to be rewritten to consider viewer tier separately from subscription tier.
                         if (condition.HasViewerTier)
                         {
-                            if ((condition.ViewerTierNoTier && user.SubscriptionTier == TierAndPlanConverter.GetTierName(SubscriptionPlan.NotSet)) ||
-                                (condition.ViewerTierTierOne && user.SubscriptionTier == TierAndPlanConverter.GetTierName(SubscriptionPlan.Tier1)) ||
-                                (condition.ViewerTierTierTwo && user.SubscriptionTier == TierAndPlanConverter.GetTierName(SubscriptionPlan.Tier2)) ||
-                                (condition.ViewerTierTierThree && user.SubscriptionTier == TierAndPlanConverter.GetTierName(SubscriptionPlan.Tier3)))
+                            if ((condition.ViewerTierNoTier && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER) ||
+                                (condition.ViewerTierTierOne && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_ONE) ||
+                                (condition.ViewerTierTierTwo && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_TWO) ||
+                                (condition.ViewerTierTierThree && user.SubscriptionTier == TierAndPlanConverter.SUBSCRIPTION_TIERS.TIER_THREE))
                             {
                                 score += (int)General.SCORES.SCORE_VIEWER_TIER_MATCHED;
                             }
@@ -1103,10 +1041,10 @@ namespace TADA_Advanced_Desktop_Alerts
 
                         if (continueTesting && condition.HasSubscriptionTier)
                         {
-                            if ((condition.SubscriptionTierPrime && plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Prime)) ||
-                                (condition.SubscriptionTierTierOne && plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Tier1)) ||
-                                (condition.SubscriptionTierTierTwo && plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Tier2)) ||
-                                (condition.SubscriptionTierTierThree && plan == TierAndPlanConverter.GetPlanName(SubscriptionPlan.Tier3)))
+                            if ((condition.SubscriptionTierPrime && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TWITCH_PRIME) ||
+                                (condition.SubscriptionTierTierOne && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_ONE) ||
+                                (condition.SubscriptionTierTierTwo && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_TWO) ||
+                                (condition.SubscriptionTierTierThree && plan == TierAndPlanConverter.SUBSCRIPTION_PLANS.TIER_THREE))
                             {
                                 score += (int)General.SCORES.SCORE_SUB_TIER_MATCHED;
                             }
@@ -1294,8 +1232,8 @@ namespace TADA_Advanced_Desktop_Alerts
         // Eg. Everyone say thanks to {user} for {poss} {amount} month{s} of support
         // => Everyone say thanks to Invariel for his 3 months of support
         // => Everyone say thanks to RedDempshun for her 1 month of support
-        public TwitchConnection.Messages.Helix.User user;
-        public CheckSubscription subscription;
+        public TwitchLib.Api.Helix.Models.Users.User user;
+        public TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription;
         public DateTime subscriptionLastUpdated;    // Cache subscription information for a while.  One hour?  Two hours?
         public DateTime lastSpoke;
         public DateTime lastTTS;
@@ -1307,14 +1245,14 @@ namespace TADA_Advanced_Desktop_Alerts
             get { return user?.Id; }
         }
 
-        public string SubscriptionTier
+        public TierAndPlanConverter.SUBSCRIPTION_TIERS SubscriptionTier
         {
-            get { return subscription?.Tier; }
+            get { return TierAndPlanConverter.SubscriptionTierFromPlan(TierAndPlanConverter.StringToSubscriptionPlan(subscription?.SubPlan)); }
         }
 
         public string SubscriptionTierName
         {
-            get { return TierAndPlanConverter.GetPlanName(subscription?.Tier); }
+            get { return subscription?.SubPlanName ?? "None"; }
         }
 
         public void UpdateLastSpoke()
@@ -1322,7 +1260,7 @@ namespace TADA_Advanced_Desktop_Alerts
             this.lastSpoke = DateTime.Now;
         }
 
-        public void UpdateSubscription(CheckSubscription subscription)
+        public void UpdateSubscription(TwitchLib.Api.V5.Models.Subscriptions.Subscription subscription)
         {
             this.subscription = subscription;
             this.subscriptionLastUpdated = DateTime.Now;
@@ -1330,7 +1268,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
         public override string ToString()
         {
-            return string.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.Tier);
+            return string.Format("{0} - {1} {2}", user?.DisplayName, user?.Id, subscription?.SubPlan);
         }
     }
 
