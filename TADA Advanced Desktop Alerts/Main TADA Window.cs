@@ -12,7 +12,7 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
-        const String TADAVersion = "1.0.1.4";
+        const String TADAVersion = "1.0.2.0";
 
         bool blockUpdates = false;
 
@@ -31,7 +31,7 @@ namespace TADA_Advanced_Desktop_Alerts
             new Classes.IPADescription("tsukiakariusagi", "sukiʌkɑrrijuˈsɑgi"),
             new Classes.IPADescription("dinosaurceress", "ˈdaɪnəˌsɔrsɜrɛs"),
             new Classes.IPADescription("reddempshun", "rɛddɛmpʃən"),
-            new Classes.IPADescription("huginnplays", "hyugɪn"),
+            new Classes.IPADescription("huginnplays", "hugɪn"), // "hyugɪn"
         };
 
         public static MainTADAForm mainTADAForm
@@ -201,7 +201,7 @@ namespace TADA_Advanced_Desktop_Alerts
                          "&redirect_uri=" +
                          General.AUTH_URI +
                          "&response_type=token&" +
-                         "scope=channel_subscriptions channel_check_subscription user_read bits:read chat:read channel:moderate channel:read:redemptions";
+                         "scope=bits:read channel:moderate channel:read:redemptions channel:read:subscriptions chat:read";
             System.Diagnostics.Process.Start(uri);
         }
 
