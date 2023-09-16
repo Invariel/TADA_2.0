@@ -38,7 +38,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             using (StreamWriter w = new StreamWriter("error.log", true))
             {
-                w.WriteLine(e.Message);
+                w.WriteLine($"[{DateTime.UtcNow}] {e.Message}");
                 w.WriteLine(e.StackTrace);
                 while (e.InnerException != null && depth < 15)
                 {

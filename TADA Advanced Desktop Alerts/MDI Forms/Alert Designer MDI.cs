@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TADA_Advanced_Desktop_Alerts.MDI_Forms;
 
 namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
@@ -683,6 +684,14 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
 
             if (closeButton.Contains(e.Location))
             {
+                // -=-=-=-=-=-=-=-=-=-  This is the place where we're closing the form.  Save things first.
+                var w = (this.tab_ChildMDIForms.SelectedTab.Tag) as Waypoint_Designer_MDI;
+
+                if (w is not null)
+                {
+                    w.isClosing = true;
+                }
+
                 (this.tab_ChildMDIForms.SelectedTab.Tag as Form).Close();   // This raises the form's Closed event, which, in turn, deletes the tab.
             }
 

@@ -530,7 +530,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void btn_TextSubstitution_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("TokenSubstitutions.html");
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "TokenSubstitutions.html",
+                UseShellExecute = true
+            });
         }
     }
 }

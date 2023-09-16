@@ -22,6 +22,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         protected Bitmap previewBitmap;
 
+        public bool isClosing = false;
+
         public Bitmap PreviewBitmap
         {
             get { return this.previewBitmap; }
@@ -610,6 +612,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateAdvancedWaypoint(object sender, EventArgs e)
         {
+            if (isClosing)
+            {
+                return;
+            }
+
             disableUpdates = true;
 
             tab_AdvancedWaypointControls.Enabled = !((sender as DataGridView)?.CurrentCell?.OwningRow?.IsNewRow) ?? false;

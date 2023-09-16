@@ -12,7 +12,7 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
-        const string TADAVersion = "1.3.0.0";
+        const string TADAVersion = "1.3.0.5";
 
         bool blockUpdates = false;
 
@@ -184,7 +184,11 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void OpenDownloadPage(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://invariel.ca/tada/downloads.php");
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "https://invariel.ca/tada/downloads.php",
+                UseShellExecute = true
+            });
         }
 
         private void StopWebSocketServer(object sender, FormClosingEventArgs e)
@@ -201,7 +205,7 @@ namespace TADA_Advanced_Desktop_Alerts
                          "&redirect_uri=" +
                          General.AUTH_URI +
                          "&response_type=token" +
-                         "&scope=bits:read channel:read:redemptions channel:read:subscriptions chat:read user:read:email user:read:follows user:read:subscriptions" +
+                         "&scope=bits:read channel:read:redemptions channel:read:subscriptions chat:read user:read:email user:read:follows user:read:subscriptions moderator:read:followers" +
                          "&state=" +
                          General.GenerateStateString();
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo

@@ -359,7 +359,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                                                 alertType == General.ALERTTYPES.SUBSCRIPTION);
 
                 grp_RelevantQuantity.Visible = (alertType != General.ALERTTYPES.ANONYMOUS_GIFT &&
-                                                alertType != General.ALERTTYPES.AUTOHOST &&
                                                 alertType != General.ALERTTYPES.FIRSTMESSAGE &&
                                                 alertType != General.ALERTTYPES.FOLLOW &&
                                                 alertType != General.ALERTTYPES.JOIN &&
@@ -367,9 +366,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 grp_MessageKeywords.Visible = !(alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY ||
                                                 alertType == General.ALERTTYPES.ANONYMOUS_GIFT ||
-                                                alertType == General.ALERTTYPES.AUTOHOST ||
                                                 alertType == General.ALERTTYPES.FOLLOW ||
-                                                alertType == General.ALERTTYPES.HOST ||
                                                 alertType == General.ALERTTYPES.JOIN ||
                                                 alertType == General.ALERTTYPES.RAID);
 
@@ -386,10 +383,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 else if (alertType == General.ALERTTYPES.BITS || alertType == General.ALERTTYPES.ANONYMOUS_BITS)
                 {
                     lbl_QuantityThings.Text = "Bits dropped";
-                }
-                else if (alertType == General.ALERTTYPES.HOST)
-                {
-                    lbl_QuantityThings.Text = "Viewers hosted for";
                 }
                 else if (alertType == General.ALERTTYPES.RAID)
                 {
