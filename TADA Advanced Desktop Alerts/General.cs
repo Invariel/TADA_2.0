@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -64,12 +62,14 @@ namespace TADA_Advanced_Desktop_Alerts
             ANONYMOUS_COMMUNITY,
             ANONYMOUS_GIFT,
             BITS,
+            CHANNEL_POINTS,
             COMMUNITY,
             FIRSTMESSAGE,
             FOLLOW,
             JOIN,
             MACRO,
             MESSAGE,
+            POWER_UP,
             RAID,
             SUBGIFT,
             SUBSCRIPTION
@@ -82,12 +82,14 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.ANONYMOUS_GIFT, "Anonymous Gift Subs" },
             { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
             { ALERTTYPES.BITS, "Bits" },
+            { ALERTTYPES.CHANNEL_POINTS, "Channel Points" },
             { ALERTTYPES.COMMUNITY, "Community Gift Subs" },
             { ALERTTYPES.FIRSTMESSAGE, "First Message" },
             { ALERTTYPES.FOLLOW, "Follow" },
             { ALERTTYPES.JOIN, "Join" },
             { ALERTTYPES.MACRO, "Macro" },
             { ALERTTYPES.MESSAGE, "Message" },
+            { ALERTTYPES.POWER_UP, "Power Up" },
             { ALERTTYPES.RAID, "Raid" },
             { ALERTTYPES.SUBGIFT, "Sub Gift" },
             { ALERTTYPES.SUBSCRIPTION, "Subscription" },
@@ -100,12 +102,14 @@ namespace TADA_Advanced_Desktop_Alerts
             { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
             { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS_GIFT },
             { "Bits", ALERTTYPES.BITS },
+            { "Channel Points", ALERTTYPES.CHANNEL_POINTS },
             { "Community Gift Subs", ALERTTYPES.COMMUNITY },
             { "First Message", ALERTTYPES.FIRSTMESSAGE },
             { "Follow", ALERTTYPES.FOLLOW },
             { "Join", ALERTTYPES.JOIN },
             { "Macro", ALERTTYPES.MACRO },
             { "Message", ALERTTYPES.MESSAGE },
+            { "Power Up", ALERTTYPES.POWER_UP },
             { "Raid", ALERTTYPES.RAID  },
             { "Sub Gift", ALERTTYPES.SUBGIFT },
             { "Subscription", ALERTTYPES.SUBSCRIPTION },

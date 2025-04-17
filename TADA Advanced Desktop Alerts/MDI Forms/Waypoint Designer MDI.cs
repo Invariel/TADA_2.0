@@ -34,6 +34,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             get { return this.itemSize; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public WaypointContainer waypointContainer
         {
             get { return this._waypointContainer; }

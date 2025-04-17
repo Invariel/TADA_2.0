@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Shell;
 using System.Xml;
+using TADA_Advanced_Desktop_Alerts.EventSub;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
-        const string TADAVersion = "1.3.0.5";
+        const string TADAVersion = "1.5.0.0";
 
         bool blockUpdates = false;
 
         Creation_Forms.Alert_Designer_MDI _alertCreationForm;
         private TADAAnimationWindow animationWindow;
 
+        internal TADAEventSub eventSub;
         internal WebSocketServer webSocketServer;
 
         private static MainTADAForm _mainTADAForm;
@@ -127,6 +126,7 @@ namespace TADA_Advanced_Desktop_Alerts
             btn_Update.Click += OpenDownloadPage;
 
             this.FormClosing += StopWebSocketServer;
+            this.FormClosing += StopWebSocketClient;
 
             txt_BlockedWords.LostFocus += UpdateBannedWords;
             chk_DontReadGlobalCheermotes.CheckedChanged += UpdateConfiguration;
@@ -192,9 +192,10 @@ namespace TADA_Advanced_Desktop_Alerts
         }
 
         private void StopWebSocketServer(object sender, FormClosingEventArgs e)
-        {
-            webSocketServer?.StopListening();
-        }
+            => webSocketServer?.StopListening();
+
+        private void StopWebSocketClient(object sender, FormClosingEventArgs e)
+            => eventSub?.Disconnect();
 
         private void GetAccessToken(object sender, EventArgs e)
         {
@@ -205,7 +206,7 @@ namespace TADA_Advanced_Desktop_Alerts
                          "&redirect_uri=" +
                          General.AUTH_URI +
                          "&response_type=token" +
-                         "&scope=bits:read channel:read:redemptions channel:read:subscriptions chat:read user:read:email user:read:follows user:read:subscriptions moderator:read:followers" +
+                         "&scope=bits:read channel:read:redemptions channel:bot moderator:read:followers channel:read:subscriptions user:read:chat" +
                          "&state=" +
                          General.GenerateStateString();
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo

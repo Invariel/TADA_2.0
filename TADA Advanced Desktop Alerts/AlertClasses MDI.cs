@@ -1709,18 +1709,17 @@ namespace TADA_Advanced_Desktop_Alerts
         public string AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
         public int Amount { get; set; } = 0;
         public bool VIP { get; set; } = false;
-        public string Message { get; set; } = "";
-        public string RecipientName { get; set; } = "";
-        public string ViewerName { get; set; } = "";
-        public string TierName { get; set; } = "";
+        public string Message { get; set; } = string.Empty;
+        public string RecipientName { get; set; } = string.Empty;
+        public string ViewerName { get; set; } = string.Empty;
+        public string TierName { get; set; } = string.Empty;
+        public string ChannelPointsRewardName { get; set; } = string.Empty;
+
 
         /*
          * Subscription plan from PubSub *ONLY* is "Prime", "1000", "2000", "3000".
          * Subscription plan from Helix is the "plan name".
          */
-
-
-
 
         public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }     // Plans are actual subscription names?  So, rethink this.
         public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;        // 1000, 2000, 3000.
@@ -1735,6 +1734,12 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             Plan = plan;
             Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public void SetPlan (string plan)
+        {
+            Plan = TierAndPlanConverter.StringToSubscriptionPlan(plan);
+            Tier = TierAndPlanConverter.StringToSubscriptionTier(plan);
         }
 
         public String PlanString
