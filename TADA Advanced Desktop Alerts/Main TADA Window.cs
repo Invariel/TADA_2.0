@@ -10,7 +10,7 @@ namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
-        const string TADAVersion = "1.5.0.0";
+        const string TADAVersion = "1.5.0.2";
 
         bool blockUpdates = false;
 

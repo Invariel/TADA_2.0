@@ -135,7 +135,7 @@ namespace TADA_Advanced_Desktop_Alerts
             eventSub.OnBitsUseReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.BITS, e);
 //            eventSub.OnChannelPointsAutomaticRewardRedemptionAddV2Received += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.CHANNEL_POINTS, e);
 //            eventSub.OnChannelPointsCustomRewardRedemptionAddReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.CHANNEL_POINTS, e);
-            eventSub.OnChatMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FIRSTMESSAGE, e);
+            eventSub.OnChatMessageReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.MESSAGE, e);
             eventSub.OnFollowReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.FOLLOW, e);
             eventSub.OnSubscribeReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBSCRIPTION, e);
             eventSub.OnSubscriptionGiftReceived += (sender, e) => ReceivedTwitchEvent(General.ALERTTYPES.SUBGIFT, e);
@@ -407,6 +407,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 case General.ALERTTYPES.ANONYMOUS_BITS:         // Not a real thing that can be sent.  Just adding it here for future clarity.
                 case General.ALERTTYPES.BITS:
                     {
+                        General.LogFile("Received a bits alert.", "twitchClient.txt");
                         BitsUse chatMessage = eventDetails as BitsUse;
                         var bitsEvent = chatMessage.Payload.Event;
 
@@ -425,6 +426,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.CHANNEL_POINTS:
                     {
+                        General.LogFile("Received a channel points alert.", "twitchClient.txt");
                         ChannelPointsAutomaticRewardRedemptionAddV2 automaticDetails = eventDetails as ChannelPointsAutomaticRewardRedemptionAddV2;
                         ChannelPointsCustomRewardRedemptionAdd customDetails = eventDetails as ChannelPointsCustomRewardRedemptionAdd;
 
@@ -446,6 +448,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.COMMUNITY:
                     {
+                        General.LogFile("Received a community gift subs alert.", "twitchClient.txt");
                         // TODO.
 
                         // This also needs to check for anonymous community gift subs.  Hurrah.
@@ -484,6 +487,8 @@ namespace TADA_Advanced_Desktop_Alerts
                 case General.ALERTTYPES.FIRSTMESSAGE:
                 case General.ALERTTYPES.MESSAGE:
                     {
+                        General.LogFile("Received a message alert.", "twitchClient.txt");
+
                         // Originally, this cancelled out bits messages, but because bits are handled by PubSub, that event will also fire.
                         // This could match a message trigger, or could be someone's first message of the day, so this flow follows too.
                         ChatMessage chatMessage = eventDetails as ChatMessage;
@@ -495,10 +500,14 @@ namespace TADA_Advanced_Desktop_Alerts
                         user = await GetUser(chatEvent.ChatterUserId);
                         UpdateBadges(user, chatEvent.Badges);
 
+                        General.LogFile($"> From {subObject.ViewerName}", "twitchClient.txt");
+
                         // If the user hasn't said their first message today, add it to the alert types to search.
                         // Also, set first message even if they don't have a first message alert, because they've spoken now.
                         if (!user.firstMessage)
                         {
+                            General.LogFile("> It's their first message of the day!", "twitchClient.txt");
+
                             searchAlerts.Insert(0, General.ALERTTYPES.FIRSTMESSAGE);
                             user.firstMessage = true;
                         }
@@ -506,6 +515,8 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.FOLLOW:
                     {
+                        General.LogFile("Received a follow alert.", "twitchClient.txt");
+
                         Follow followMessage = eventDetails as Follow;
                         var followEvent = followMessage.Payload.Event;
 
@@ -537,6 +548,8 @@ namespace TADA_Advanced_Desktop_Alerts
                         if (MainTADAForm.mainTADAForm.configurationSettings.dontToastLurkingFollowers &&
                             DateTime.Now - MainTADAForm.mainTADAForm.configurationSettings.lurkingFollowerTime > user.lastSpoke)
                         {
+                            General.LogFile("> Silenced it.", "twitchClient.txt");
+
                             alertType = General.ALERTTYPES.NONE;
                         }
                     }
@@ -549,6 +562,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 */
                 case General.ALERTTYPES.RAID:
                     {
+                        General.LogFile("Received a raid alert.", "twitchClient.txt");
                         // TODO: Raid.
 
                         OnRaidNotificationArgs eRaid = eventDetails as OnRaidNotificationArgs;
@@ -564,6 +578,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.SUBGIFT:
                     {
+                        General.LogFile("Received a subgift alert.", "twitchClient.txt");
                         // TODO.  There is a Subgift notification, but it does not include the person who received the gift.
                         OnGiftedSubscriptionArgs eGift = eventDetails as OnGiftedSubscriptionArgs;
 
@@ -625,6 +640,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     break;
                 case General.ALERTTYPES.SUBSCRIPTION:
                     {
+                        General.LogFile("Received a subscription alert.", "twitchClient.txt");
                         string userId = null;
 
                         if (eventDetails is Subscribe)

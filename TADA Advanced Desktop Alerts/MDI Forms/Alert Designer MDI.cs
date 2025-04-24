@@ -136,6 +136,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.ts_NewStreamerText.Click += NewStreamerTextForm;
             this.ts_NewViewerText.Click += NewViewerTextForm;
             this.ts_NewCondition.Click += NewConditionForm;
+
+            this.ts_Save.Click += UpdateAlertContents;
         }
 
         private void FillAlertTypeComboBox()

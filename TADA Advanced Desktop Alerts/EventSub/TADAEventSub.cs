@@ -77,6 +77,8 @@ namespace TADA_Advanced_Desktop_Alerts.EventSub
             // Then receivedBytes should not be empty, and should contain a JSON blob of data.
             var welcomeResponse = JsonSerializer.Deserialize<Welcome>(receivedString);
             _sessionId = welcomeResponse.Payload.Session.Id;
+
+            General.LogFile("Connected via EventSub.", "twitchClient.txt");
         }
 
         public void Disconnect ()
@@ -91,13 +93,28 @@ namespace TADA_Advanced_Desktop_Alerts.EventSub
             _httpClient.BaseAddress = new Uri("https://api.twitch.tv/helix/eventsub/subscriptions");
 
             response = await Register(new Request.Channel.BitsUse(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Bits [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.ChannelPointsAutomaticRewardRedemptionAddV2(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Channel Points Automatic [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.ChannelPointsCustomRewardRedemptionAdd(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Channel Points Custom [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.ChatMessage(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Chat Messages [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.Follow(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Follows [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.Subscribe(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Subscriptions [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.SubscriptionGift(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Gift Subscriptions [{response}]", "twitchChannel.txt");
+
             response = await Register(new Request.Channel.SubscriptionMessage(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Resubscriptions [{response}]", "twitchChannel.txt");
         }
 
         public async Task<HttpStatusCode> Register(object message)
