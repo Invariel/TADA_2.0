@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TADA_Advanced_Desktop_Alerts.MDI_Forms;
 
 namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
 {
@@ -28,6 +29,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
         private List <Tuple <TADAAlertText, TabPage>> textTabPages = new List<Tuple<TADAAlertText, TabPage>>();
         private List<Tuple<TADAAlertCondition, TabPage>> conditionTabPages = new List<Tuple<TADAAlertCondition, TabPage>>();
 
+        private Dictionary<string, string> ipaDictionary = MainTADAForm.mainTADAForm.IpaDictionary();
+        
         internal Alert_Designer_MDI(TADAAlert originalAlert)
         {
             InitializeComponent();
@@ -133,6 +136,8 @@ namespace TADA_Advanced_Desktop_Alerts.Creation_Forms
             this.ts_NewStreamerText.Click += NewStreamerTextForm;
             this.ts_NewViewerText.Click += NewViewerTextForm;
             this.ts_NewCondition.Click += NewConditionForm;
+
+            this.ts_Save.Click += UpdateAlertContents;
         }
 
         private void FillAlertTypeComboBox()
@@ -681,6 +686,14 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
 
             if (closeButton.Contains(e.Location))
             {
+                // -=-=-=-=-=-=-=-=-=-  This is the place where we're closing the form.  Save things first.
+                var w = (this.tab_ChildMDIForms.SelectedTab.Tag) as Waypoint_Designer_MDI;
+
+                if (w is not null)
+                {
+                    w.isClosing = true;
+                }
+
                 (this.tab_ChildMDIForms.SelectedTab.Tag as Form).Close();   // This raises the form's Closed event, which, in turn, deletes the tab.
             }
 
@@ -919,6 +932,10 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
             if (numud_TestStreamerMessage.Value > 0)
             {
                 text = streamerAlertTextBindingSource[Convert.ToInt32(numud_TestStreamerMessage.Value - 1)] as TADAAlertText;
+
+                text.SetMessage(text.Message);
+                text.SetReadMessage(text.ReadMessage);
+                text.SetVoicedMessage(General.PerformTTSSubstitutions(text.ReadMessage, subObject, ipaDictionary));
             }
 
             if (numud_TestViewerMessage.Value > 0)
@@ -927,6 +944,7 @@ private void NewStreamerTextForm (object sender = null, EventArgs e = null)
 
                 response.SetMessage(txt_ViewerMessage.Text);
                 response.SetReadMessage(txt_ViewerMessage.Text);
+                response.SetVoicedMessage(General.PerformTTSSubstitutions(txt_ViewerMessage.Text, subObject, ipaDictionary));
             }
 
             PlayingAlert testAlert = new PlayingAlert(image, audio, text, response, subObject);

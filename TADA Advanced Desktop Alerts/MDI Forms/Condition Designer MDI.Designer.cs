@@ -64,6 +64,8 @@
             this.numud_AmountMinimum = new System.Windows.Forms.NumericUpDown();
             this.lbl_QuantityFrom = new System.Windows.Forms.Label();
             this.txt_Description = new System.Windows.Forms.TextBox();
+            this.grp_BannedNames = new System.Windows.Forms.GroupBox();
+            this.txt_BannedNames = new System.Windows.Forms.TextBox();
             this.grp_ViewerTier.SuspendLayout();
             this.grp_SubscriptionTier.SuspendLayout();
             this.grp_Badges.SuspendLayout();
@@ -74,6 +76,7 @@
             this.grp_RelevantQuantity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AmountMaximum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AmountMinimum)).BeginInit();
+            this.grp_BannedNames.SuspendLayout();
             this.SuspendLayout();
             // 
             // grp_ViewerTier
@@ -200,7 +203,7 @@
             this.grp_Badges.Controls.Add(this.chk_BadgeAdmin);
             this.grp_Badges.Location = new System.Drawing.Point(13, 69);
             this.grp_Badges.Name = "grp_Badges";
-            this.grp_Badges.Size = new System.Drawing.Size(736, 153);
+            this.grp_Badges.Size = new System.Drawing.Size(736, 96);
             this.grp_Badges.TabIndex = 20;
             this.grp_Badges.TabStop = false;
             this.grp_Badges.Text = "Viewer Properties";
@@ -406,7 +409,7 @@
             // grp_TriggerUsers
             // 
             this.grp_TriggerUsers.Controls.Add(this.txt_Users);
-            this.grp_TriggerUsers.Location = new System.Drawing.Point(13, 229);
+            this.grp_TriggerUsers.Location = new System.Drawing.Point(13, 169);
             this.grp_TriggerUsers.Name = "grp_TriggerUsers";
             this.grp_TriggerUsers.Size = new System.Drawing.Size(327, 47);
             this.grp_TriggerUsers.TabIndex = 40;
@@ -489,11 +492,28 @@
             // 
             this.txt_Description.Enabled = false;
             this.txt_Description.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_Description.Location = new System.Drawing.Point(347, 229);
+            this.txt_Description.Location = new System.Drawing.Point(347, 171);
             this.txt_Description.Multiline = true;
             this.txt_Description.Name = "txt_Description";
-            this.txt_Description.Size = new System.Drawing.Size(402, 164);
+            this.txt_Description.Size = new System.Drawing.Size(402, 222);
             this.txt_Description.TabIndex = 70;
+            // 
+            // grp_BannedNames
+            // 
+            this.grp_BannedNames.Controls.Add(this.txt_BannedNames);
+            this.grp_BannedNames.Location = new System.Drawing.Point(13, 226);
+            this.grp_BannedNames.Name = "grp_BannedNames";
+            this.grp_BannedNames.Size = new System.Drawing.Size(327, 47);
+            this.grp_BannedNames.TabIndex = 45;
+            this.grp_BannedNames.TabStop = false;
+            this.grp_BannedNames.Text = "Username Patters that won\'t Trigger this Alert (comma-separated)";
+            // 
+            // txt_BannedNames
+            // 
+            this.txt_BannedNames.Location = new System.Drawing.Point(7, 20);
+            this.txt_BannedNames.Name = "txt_BannedNames";
+            this.txt_BannedNames.Size = new System.Drawing.Size(311, 20);
+            this.txt_BannedNames.TabIndex = 46;
             // 
             // Condition_Designer_MDI
             // 
@@ -501,6 +521,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 405);
             this.ControlBox = false;
+            this.Controls.Add(this.grp_BannedNames);
             this.Controls.Add(this.txt_Description);
             this.Controls.Add(this.grp_RelevantQuantity);
             this.Controls.Add(this.grp_TriggerUsers);
@@ -531,6 +552,8 @@
             this.grp_RelevantQuantity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AmountMaximum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numud_AmountMinimum)).EndInit();
+            this.grp_BannedNames.ResumeLayout(false);
+            this.grp_BannedNames.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -574,5 +597,7 @@
         private System.Windows.Forms.Label lbl_QuantityThings;
         private System.Windows.Forms.CheckBox chk_BadgePrime;
         private System.Windows.Forms.TextBox txt_Description;
+        private System.Windows.Forms.GroupBox grp_BannedNames;
+        private System.Windows.Forms.TextBox txt_BannedNames;
     }
 }

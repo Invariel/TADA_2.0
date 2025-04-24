@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -237,7 +238,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             for (int image = 0; image < this.ImageCount; ++ image)
             {
-                if (!String.IsNullOrEmpty(this.images[image].Warnings))
+                if (!string.IsNullOrEmpty(this.images[image].Warnings))
                 {
                     imageWarning += $"Image {image}: {this.images[image].Warnings}" + System.Environment.NewLine;
                     ++imageCount;
@@ -246,7 +247,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             for (int audio = 0; audio < this.AudioCount; ++ audio)
             {
-                if (!String.IsNullOrEmpty(this.audios[audio].Warnings))
+                if (!string.IsNullOrEmpty(this.audios[audio].Warnings))
                 {
                     audioWarning += $"Audio {audio}: {this.audios[audio].Warnings}" + System.Environment.NewLine;
                     ++audioCount;
@@ -401,7 +402,7 @@ namespace TADA_Advanced_Desktop_Alerts
                     {
                         warningString += "Start position and end position are the same.  TADA will not play this file like this.";
                     }
-                    else if (!String.IsNullOrEmpty(warningString))
+                    else if (!string.IsNullOrEmpty(warningString))
                     {
                         warningString += "TADA will do its best to play this for you.";
                     }
@@ -615,7 +616,7 @@ namespace TADA_Advanced_Desktop_Alerts
                 {
                     warningString += "Start position and end position are the same.  TADA will not play this file like this.";
                 }
-                else if (!String.IsNullOrEmpty(warningString))
+                else if (!string.IsNullOrEmpty(warningString))
                 {
                     warningString += "TADA will do its best to play this for you.";
                 }
@@ -732,11 +733,13 @@ namespace TADA_Advanced_Desktop_Alerts
 
     internal class TADAAlertText : PropertyAndXML
     {
-        private String message = "";
-        private String readMessage = "";
+        private string message = "";
+        private string readMessage = "";
 
-        private String substitutedMessage = "";
-        private String substitutedReadMessage = "";
+        private string substitutedMessage = "";
+        private string substitutedReadMessage = "";
+
+        private PromptBuilder voicedMessage = null;
 
         #region Properties
         [DisplayName("Displayed Message")]
@@ -831,15 +834,15 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             String outputMessage = "";
 
-            if (!String.IsNullOrEmpty(this.substitutedReadMessage))
+            if (!string.IsNullOrEmpty(this.substitutedReadMessage))
             {
                 outputMessage = this.substitutedReadMessage;
             }
-            else if (!String.IsNullOrEmpty(this.readMessage))
+            else if (!string.IsNullOrEmpty(this.readMessage))
             {
                 outputMessage = this.readMessage;
             }
-            else if (!String.IsNullOrEmpty(this.substitutedMessage))
+            else if (!string.IsNullOrEmpty(this.substitutedMessage))
             {
                 outputMessage = this.substitutedMessage;
             }
@@ -865,10 +868,13 @@ namespace TADA_Advanced_Desktop_Alerts
             return outString;
         }
 
-        public void SetReadMessage (String message)
+        public void SetReadMessage (string message)
         {
             this.substitutedReadMessage = message;
         }
+
+        public void SetVoicedMessage(PromptBuilder prompt) => this.voicedMessage = prompt;
+        public PromptBuilder GetVoicedMessage() => this.voicedMessage;
 
         #region XML
         public override void ReadXml(XmlReader reader)
@@ -990,7 +996,7 @@ namespace TADA_Advanced_Desktop_Alerts
 
             writer.WriteElementString("Message", this.Message);
             writer.WriteElementString("Read", this.ReadMessage);
-            if (!String.IsNullOrEmpty(this.BackgroundImage))
+            if (!string.IsNullOrEmpty(this.BackgroundImage))
             {
                 writer.WriteElementString("Background", this.BackgroundImage);
             }
@@ -1338,8 +1344,9 @@ namespace TADA_Advanced_Desktop_Alerts
         public bool IsTurbo;
         public bool IsVIP;
 
-        public String Usernames;
-        public String Keywords;
+        public string Usernames;
+        public string BannedNames;
+        public string Keywords;
 
         public int MinBits;
         public int MaxBits;
@@ -1354,7 +1361,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !(HasViewerTier || HasSubscriptionTier || HasBadges || HasUsers || HasKeywords || HasAmounts);
+                return !(HasViewerTier || HasSubscriptionTier || HasBadges || HasUsers || HasBannedNames || HasKeywords || HasAmounts);
             }
         }
 
@@ -1386,7 +1393,15 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !String.IsNullOrWhiteSpace(this.Usernames);
+                return !string.IsNullOrWhiteSpace(this.Usernames);
+            }
+        }
+
+        public bool HasBannedNames
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(this.BannedNames);
             }
         }
 
@@ -1394,7 +1409,7 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get
             {
-                return !String.IsNullOrWhiteSpace(this.Keywords);
+                return !string.IsNullOrWhiteSpace(this.Keywords);
             }
         }
 
@@ -1503,6 +1518,13 @@ namespace TADA_Advanced_Desktop_Alerts
                     else if (reader.IsStartElement("Usernames"))
                     {
                         this.Usernames = reader.ReadElementContentAsString();
+
+                        // This filthy hack is required for using XmlReader instead of turning it into an XMLDocument that I have no schema for.
+                        readNext = false;
+                    }
+                    else if (reader.IsStartElement("BannedNames"))
+                    {
+                        this.BannedNames = reader.ReadElementContentAsString();
 
                         // This filthy hack is required for using XmlReader instead of turning it into an XMLDocument that I have no schema for.
                         readNext = false;
@@ -1647,14 +1669,21 @@ namespace TADA_Advanced_Desktop_Alerts
                     writer.WriteEndElement();
                 }
 
-                if (!String.IsNullOrEmpty(this.Usernames) && !String.IsNullOrWhiteSpace(this.Usernames))
+                if (!string.IsNullOrEmpty(this.Usernames) && !string.IsNullOrWhiteSpace(this.Usernames))
                 {
                     writer.WriteStartElement("Usernames");
                     writer.WriteString(this.Usernames);
                     writer.WriteEndElement();
                 }
 
-                if (!String.IsNullOrEmpty(this.Keywords) && !String.IsNullOrWhiteSpace(this.Keywords))
+                if (!string.IsNullOrEmpty(this.BannedNames) && !string.IsNullOrWhiteSpace(this.BannedNames))
+                {
+                    writer.WriteStartElement("BannedNames");
+                    writer.WriteString(this.BannedNames);
+                    writer.WriteEndElement();
+                }
+
+                if (!string.IsNullOrEmpty(this.Keywords) && !string.IsNullOrWhiteSpace(this.Keywords))
                 {
                     writer.WriteStartElement("Keywords");
                     writer.WriteString(this.Keywords);
@@ -1677,20 +1706,27 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public class SubstitutionObject
     {
-        public String AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
+        public string AlertType { get; set; } = General.alertTypes[General.ALERTTYPES.NONE];
         public int Amount { get; set; } = 0;
         public bool VIP { get; set; } = false;
-        public String Message { get; set; } = "";
-        public String RecipientName { get; set; } = "";
-        public String ViewerName { get; set; } = "";
-        public String TierName { get; set; } = "";
+        public string Message { get; set; } = string.Empty;
+        public string RecipientName { get; set; } = string.Empty;
+        public string ViewerName { get; set; } = string.Empty;
+        public string TierName { get; set; } = string.Empty;
+        public string ChannelPointsRewardName { get; set; } = string.Empty;
 
-        public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }
-        public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;
+
+        /*
+         * Subscription plan from PubSub *ONLY* is "Prime", "1000", "2000", "3000".
+         * Subscription plan from Helix is the "plan name".
+         */
+
+        public TierAndPlanConverter.SUBSCRIPTION_PLANS Plan { get; protected set; }     // Plans are actual subscription names?  So, rethink this.
+        public TierAndPlanConverter.SUBSCRIPTION_TIERS Tier { get; set; } = TierAndPlanConverter.SUBSCRIPTION_TIERS.NO_TIER;        // 1000, 2000, 3000.
 
         public void SetPlan(TwitchLib.Client.Enums.SubscriptionPlan plan)
         {
-            Plan = TierAndPlanConverter.NormalizePlanName(plan);
+            Plan = TierAndPlanConverter.NormalizeTwitchLibPlan(plan);
             Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
         }
 
@@ -1698,6 +1734,12 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             Plan = plan;
             Tier = TierAndPlanConverter.SubscriptionTierFromPlan(Plan);
+        }
+
+        public void SetPlan (string plan)
+        {
+            Plan = TierAndPlanConverter.StringToSubscriptionPlan(plan);
+            Tier = TierAndPlanConverter.StringToSubscriptionTier(plan);
         }
 
         public String PlanString

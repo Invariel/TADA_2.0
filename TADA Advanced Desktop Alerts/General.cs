@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -21,17 +19,17 @@ namespace TADA_Advanced_Desktop_Alerts
 
     public sealed class General
     {
-        public const String CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
-        public const String AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
+        public const string CLIENT_ID = "hw23lau0o8duwhk5h3wgpal4mbznyl";
+        public const string AUTH_URI = @"https://invariel.ca/webauth/tada_auth.html";
 
-        public const String PASSWORD_FIELD_DEFAULT_TEXT = "Paste Access Token Here";
+        public const string PASSWORD_FIELD_DEFAULT_TEXT = "Paste Access Token Here";
 
-        public const String SUBDIRECTORY = @"config/";
-        public const String DEFAULT_OAUTH = @"oauth.cfg";
-        public const String DEFAULT_ALERTS = @"default.tada";
+        public const string SUBDIRECTORY = @"config/";
+        public const string DEFAULT_OAUTH = @"oauth.cfg";
+        public const string DEFAULT_ALERTS = @"default.tada";
 
-        public const String MASKED_TEXTBOX_MASK = "{0,3:D3}:{1,2:D2}:{2,2:D2}.{3,3:D3}";
-        public const String COLOR_FORMAT = "#{0:X2}{1:X2}{2:X2}{3:X2}";
+        public const string MASKED_TEXTBOX_MASK = "{0,3:D3}:{1,2:D2}:{2,2:D2}.{3,3:D3}";
+        public const string COLOR_FORMAT = "#{0:X2}{1:X2}{2:X2}{3:X2}";
 
         public const double INITIAL_ANGLE = 0;
         public const double INITIAL_MAGNIFICATION = 1;
@@ -63,15 +61,15 @@ namespace TADA_Advanced_Desktop_Alerts
             ANONYMOUS_BITS,
             ANONYMOUS_COMMUNITY,
             ANONYMOUS_GIFT,
-            AUTOHOST,
             BITS,
+            CHANNEL_POINTS,
             COMMUNITY,
             FIRSTMESSAGE,
             FOLLOW,
-            HOST,
             JOIN,
             MACRO,
             MESSAGE,
+            POWER_UP,
             RAID,
             SUBGIFT,
             SUBSCRIPTION
@@ -83,15 +81,15 @@ namespace TADA_Advanced_Desktop_Alerts
             { ALERTTYPES.ANONYMOUS_BITS, "Anonymous Bits" },
             { ALERTTYPES.ANONYMOUS_GIFT, "Anonymous Gift Subs" },
             { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
-            { ALERTTYPES.AUTOHOST, "Auto-Host" },
             { ALERTTYPES.BITS, "Bits" },
+            { ALERTTYPES.CHANNEL_POINTS, "Channel Points" },
             { ALERTTYPES.COMMUNITY, "Community Gift Subs" },
             { ALERTTYPES.FIRSTMESSAGE, "First Message" },
             { ALERTTYPES.FOLLOW, "Follow" },
-            { ALERTTYPES.HOST, "Host" },
             { ALERTTYPES.JOIN, "Join" },
             { ALERTTYPES.MACRO, "Macro" },
             { ALERTTYPES.MESSAGE, "Message" },
+            { ALERTTYPES.POWER_UP, "Power Up" },
             { ALERTTYPES.RAID, "Raid" },
             { ALERTTYPES.SUBGIFT, "Sub Gift" },
             { ALERTTYPES.SUBSCRIPTION, "Subscription" },
@@ -100,18 +98,18 @@ namespace TADA_Advanced_Desktop_Alerts
         public static Dictionary<String, ALERTTYPES> alertStrings = new Dictionary<string, ALERTTYPES>()
         {
             { "No alert.", ALERTTYPES.NONE },
-            { "Auto-Host", ALERTTYPES.AUTOHOST },
             { "Anonymous Bits", ALERTTYPES.ANONYMOUS_BITS },
             { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
             { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS_GIFT },
             { "Bits", ALERTTYPES.BITS },
+            { "Channel Points", ALERTTYPES.CHANNEL_POINTS },
             { "Community Gift Subs", ALERTTYPES.COMMUNITY },
             { "First Message", ALERTTYPES.FIRSTMESSAGE },
             { "Follow", ALERTTYPES.FOLLOW },
-            { "Host", ALERTTYPES.HOST },
             { "Join", ALERTTYPES.JOIN },
             { "Macro", ALERTTYPES.MACRO },
             { "Message", ALERTTYPES.MESSAGE },
+            { "Power Up", ALERTTYPES.POWER_UP },
             { "Raid", ALERTTYPES.RAID  },
             { "Sub Gift", ALERTTYPES.SUBGIFT },
             { "Subscription", ALERTTYPES.SUBSCRIPTION },
@@ -135,6 +133,22 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 file.WriteLine(String.Format("[{0}] : {1}", DateTime.Now, message));
             }
+        }
+
+        public const string STATE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+
+        public static string GenerateStateString()
+        {
+            Random random = new Random();
+
+            string stateString = "TADA_";
+
+            for (int i = 0; i < 40; ++ i)
+            {
+                stateString += STATE_CHARACTERS[random.Next(STATE_CHARACTERS.Length)];
+            }
+
+            return stateString;
         }
 
         public static void ConfigureToolTip(List<Control> controls, String text)
@@ -538,7 +552,7 @@ namespace TADA_Advanced_Desktop_Alerts
             message = General.ReplaceCaseInsensitive(message, "{es}", substitutionObject.Amount == 1 ? "" : "es");
 
             // Now figure out [a|b]
-            String pattern = @"\[([^|]+)\|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.
+            string pattern = @"\[([^|]+)\|([^|]+)\]";  // Anything up to [, capture before |, capture after |, ]... is safe.
             Regex regex = new Regex(pattern);
             Match match;
             while ((match = regex.Match(message)) != Match.Empty)
@@ -564,6 +578,104 @@ namespace TADA_Advanced_Desktop_Alerts
             {
                 message = regex.Replace(message, match.Groups[tierNumber].ToString(), 1);
             }
+        }
+
+        internal static System.Speech.Synthesis.PromptBuilder PerformTTSSubstitutions (string message, SubstitutionObject substitutionObject, Dictionary<string, string> ipaDictionary)
+        {
+            System.Speech.Synthesis.PromptBuilder ttsPrompt = new System.Speech.Synthesis.PromptBuilder();
+
+            // Thank you, {name}, for the raid.
+            // {giftee} just gave {name} a subscription.
+
+            // Scenario 1: has name, does not have giftee.
+            // Scenario 2: has giftee, does not have name.
+            // Scenario 3: has both.
+            // Scenario 4: has neither.
+
+            // Okay...
+
+
+
+            bool hasName = message.Contains("{name}");
+            bool hasGiftee = message.Contains("{giftee}");
+
+            bool nameSubstitution = ipaDictionary.ContainsKey(substitutionObject.ViewerName.ToLower());
+            bool gifteeSubstitution = ipaDictionary.ContainsKey(substitutionObject.RecipientName.ToLower());
+
+            string name = nameSubstitution ? ipaDictionary[substitutionObject.ViewerName.ToLower()] : substitutionObject.ViewerName;
+            string giftee = gifteeSubstitution ? ipaDictionary[substitutionObject.RecipientName.ToLower()] : substitutionObject.RecipientName;
+
+            if (hasName && hasGiftee)
+            {
+                string[] withoutName = message.Split(new string[] { "{name}" }, StringSplitOptions.None);
+                for (int i = 0; i < withoutName.Length; ++ i)
+                {
+                    string[] withoutGiftee = withoutName[i].Split(new string[] { "{giftee}" }, StringSplitOptions.None);
+
+                    for (int j = 0; j < withoutGiftee.Length; ++ j)
+                    {
+                        PerformSubstitutions(ref withoutGiftee[j], substitutionObject);
+                        ttsPrompt.AppendText(withoutGiftee[j]);
+
+                        if (j != withoutGiftee.Length - 1)
+                        {
+                            if (gifteeSubstitution)
+                            {
+                                ttsPrompt.AppendTextWithPronunciation(substitutionObject.RecipientName, giftee);
+                            }
+                            else
+                            {
+                                ttsPrompt.AppendText(giftee);
+                            }
+                        }
+                    }
+
+                    if (i != withoutName.Length - 1)
+                    {
+                        if (nameSubstitution)
+                        {
+                            ttsPrompt.AppendTextWithPronunciation(substitutionObject.ViewerName, name);
+                        }
+                        else
+                        {
+                            ttsPrompt.AppendText(name);
+                        }
+                    }
+                }
+            }
+            else if (hasName || hasGiftee)
+            {
+                string[] withoutText = message.Split(new string[] { hasName ? "{name}" : "{giftee}" }, StringSplitOptions.None);
+
+                string replacementWord = hasName ? substitutionObject.ViewerName : substitutionObject.RecipientName;
+                string replacementText = ipaDictionary.ContainsKey(replacementWord.ToLower()) ? ipaDictionary[replacementWord.ToLower()] : replacementWord;
+
+                for (int i = 0; i < withoutText.Length; ++ i)
+                {
+                    PerformSubstitutions(ref withoutText[i], substitutionObject);
+
+                    ttsPrompt.AppendText(withoutText[i]);
+
+                    if (i != withoutText.Length - 1)
+                    {
+                        if (hasName && nameSubstitution || hasGiftee && gifteeSubstitution)
+                        {
+                            ttsPrompt.AppendTextWithPronunciation(replacementWord, replacementText);
+                        }
+                        else
+                        {
+                            ttsPrompt.AppendText(replacementText);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                PerformSubstitutions(ref message, substitutionObject);
+                ttsPrompt.AppendText(message);
+            }
+
+            return ttsPrompt;
         }
     }
 

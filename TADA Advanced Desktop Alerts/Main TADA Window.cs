@@ -1,29 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Shell;
 using System.Xml;
+using TADA_Advanced_Desktop_Alerts.EventSub;
 
 namespace TADA_Advanced_Desktop_Alerts
 {
     public partial class MainTADAForm : Form
     {
-        const String TADAVersion = "1.0.1.4";
+        const string TADAVersion = "1.5.0.2";
 
         bool blockUpdates = false;
 
         Creation_Forms.Alert_Designer_MDI _alertCreationForm;
         private TADAAnimationWindow animationWindow;
 
+        internal TADAEventSub eventSub;
         internal WebSocketServer webSocketServer;
 
         private static MainTADAForm _mainTADAForm;
         internal Played_Alerts playedAlerts = null;
         private TADAConfigurationSettings _configurationSettings;
+
+        private List<Classes.IPADescription> ipaWords = new List<Classes.IPADescription>()
+        {
+            new Classes.IPADescription("wrexadecimal", "rɛksʌˈdɛsəməl"),
+            new Classes.IPADescription("tsukiakariusagi", "sukiʌkɑrrijuˈsɑgi"),
+            new Classes.IPADescription("dinosaurceress", "ˈdaɪnəˌsɔrsɜrɛs"),
+            new Classes.IPADescription("reddempshun", "rɛddɛmpʃən"),
+            new Classes.IPADescription("huginnplays", "hyugɪn"),
+        };
 
         public static MainTADAForm mainTADAForm
         {
@@ -34,7 +42,29 @@ namespace TADA_Advanced_Desktop_Alerts
         {
             get { return _configurationSettings; }
         }
-        
+
+        public Dictionary<string, string> IpaDictionary()
+        {
+            Dictionary<string, string> ipaDictionary = new Dictionary<string, string>();
+
+            foreach (Classes.IPADescription ipaWord in ipaWords)
+            {
+                ipaDictionary.Add(ipaWord.Word, ipaWord.Pronunciation);
+            }
+
+            BindingSource ipaBindings = dg_ipaWords.DataSource as BindingSource;
+
+            foreach (Classes.IPADescription ipa in ipaBindings)
+            {
+                if (!ipaDictionary.ContainsKey(ipa.Word))
+                {
+                    ipaDictionary.Add(ipa.Word, ipa.Pronunciation);
+                }
+            }
+
+            return ipaDictionary;
+        }
+
         public TADAAnimationWindow AnimationWindow
         {
             get
@@ -96,6 +126,7 @@ namespace TADA_Advanced_Desktop_Alerts
             btn_Update.Click += OpenDownloadPage;
 
             this.FormClosing += StopWebSocketServer;
+            this.FormClosing += StopWebSocketClient;
 
             txt_BlockedWords.LostFocus += UpdateBannedWords;
             chk_DontReadGlobalCheermotes.CheckedChanged += UpdateConfiguration;
@@ -153,25 +184,36 @@ namespace TADA_Advanced_Desktop_Alerts
 
         private void OpenDownloadPage(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://invariel.ca/tada/downloads.php");
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "https://invariel.ca/tada/downloads.php",
+                UseShellExecute = true
+            });
         }
 
         private void StopWebSocketServer(object sender, FormClosingEventArgs e)
-        {
-            webSocketServer?.StopListening();
-        }
+            => webSocketServer?.StopListening();
+
+        private void StopWebSocketClient(object sender, FormClosingEventArgs e)
+            => eventSub?.Disconnect();
 
         private void GetAccessToken(object sender, EventArgs e)
         {
             // channel_subscription - for PubSub to be able to read when someone subscribes
             // channel_check_subscription - to check if a user is subscribed
-            String uri = "https://api.twitch.tv/kraken/oauth2/authorize?client_id=" +
+            string uri = "https://id.twitch.tv/oauth2/authorize?client_id=" +
                          General.CLIENT_ID +
                          "&redirect_uri=" +
                          General.AUTH_URI +
-                         "&response_type=token&" +
-                         "scope=channel_subscriptions channel_check_subscription user_read bits:read chat:read channel:read:redemptions";    // chat_login was deprecated.
-            System.Diagnostics.Process.Start(uri);
+                         "&response_type=token" +
+                         "&scope=bits:read channel:read:redemptions channel:bot moderator:read:followers channel:read:subscriptions user:read:chat" +
+                         "&state=" +
+                         General.GenerateStateString();
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = uri,
+                UseShellExecute = true
+            });
         }
 
         private void PasswordMask(object sender, EventArgs e)

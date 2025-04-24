@@ -368,12 +368,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 blocked = true;
 
                 txt_Duration.Text = "";
-                numud_ActualDimensionsX.Value = 0;
-                numud_ActualDimensionsY.Value = 0;
-                numud_DesiredDimensionsX.Value = 0;
-                numud_DesiredDimensionsY.Value = 0;
+                numud_ActualDimensionsX.Value = 1;
+                numud_ActualDimensionsY.Value = 1;
+                numud_DesiredDimensionsX.Value = 1;
+                numud_DesiredDimensionsY.Value = 1;
 
-                SetItemSize(0f, 0f);
+                SetItemSize(1f, 1f);
                 DisplayVideoControls(false, false);
 
                 this.isVideo = false;

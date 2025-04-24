@@ -53,10 +53,12 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             txt_MessageKeywords.LostFocus += UpdateKeywords;
             txt_Users.LostFocus += UpdateUsers;
+            txt_BannedNames.LostFocus += UpdateBannedNames;
             numud_AmountMinimum.LostFocus += UpdateAmounts;
             numud_AmountMaximum.LostFocus += UpdateAmounts;
 
             txt_Users.LostFocus += delegate { UpdateDescription(); };
+            txt_BannedNames.LostFocus += delegate { UpdateDescription(); };
             txt_MessageKeywords.LostFocus += delegate { UpdateDescription(); };
 
             loading = true;
@@ -88,6 +90,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
             txt_MessageKeywords.Text = condition.Keywords;
             txt_Users.Text = condition.Usernames;
+            txt_BannedNames.Text = condition.BannedNames;
 
             chk_ViewerTierNotSubscribed.Checked = condition.ViewerTierNoTier;
             chk_ViewerTierTierOne.Checked = condition.ViewerTierTierOne;
@@ -210,6 +213,14 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             }
         }
 
+        private void UpdateBannedNames (object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                this.condition.BannedNames = txt_BannedNames.Text;
+            }
+        }
+
         private void UpdateAmounts (object sender, EventArgs e)
         {
             // There was code here to make sure that Max >= Min and such, but 0 needs to be valid for either.  So... fun.
@@ -255,8 +266,23 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                     }
                     else
                     {
-                        users = users.Select(user => user.Trim()).ToArray<String>();
-                        txt_Description.Text += $"Specifically {(String.Join(", ", users, 0, users.Count() - 1))}{(users.Count() == 2 ? "" : ",")} and {users[users.Count() - 1]} can trigger this alert. ";
+                        users = users.Select(user => user.Trim()).ToArray<string>();
+                        txt_Description.Text += $"Specifically {(string.Join(", ", users, 0, users.Count() - 1))}{(users.Count() == 2 ? "" : ",")} and {users[users.Count() - 1]} can trigger this alert. ";
+                    }
+                }
+
+                if (condition.HasBannedNames)
+                {
+                    string[] bannedNames = condition.BannedNames.Split(',');
+
+                    if (bannedNames.Count() == 1)
+                    {
+                        txt_Description.Text += $"Names that contain {bannedNames[0]} cannot trigger this alert. ";
+                    }
+                    else
+                    {
+                        bannedNames = bannedNames.Select(name => name.Trim()).ToArray<string>();
+                        txt_Description.Text += $"Names that contain {string.Join(", ", bannedNames, 0, bannedNames.Count() - 1)}{(bannedNames.Count() == 2 ? "" : ",")} and {bannedNames[bannedNames.Count() - 1]} cannot trigger this alert. ";
                     }
                 }
 
@@ -333,7 +359,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                                                 alertType == General.ALERTTYPES.SUBSCRIPTION);
 
                 grp_RelevantQuantity.Visible = (alertType != General.ALERTTYPES.ANONYMOUS_GIFT &&
-                                                alertType != General.ALERTTYPES.AUTOHOST &&
                                                 alertType != General.ALERTTYPES.FIRSTMESSAGE &&
                                                 alertType != General.ALERTTYPES.FOLLOW &&
                                                 alertType != General.ALERTTYPES.JOIN &&
@@ -341,9 +366,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
                 grp_MessageKeywords.Visible = !(alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY ||
                                                 alertType == General.ALERTTYPES.ANONYMOUS_GIFT ||
-                                                alertType == General.ALERTTYPES.AUTOHOST ||
                                                 alertType == General.ALERTTYPES.FOLLOW ||
-                                                alertType == General.ALERTTYPES.HOST ||
                                                 alertType == General.ALERTTYPES.JOIN ||
                                                 alertType == General.ALERTTYPES.RAID);
 
@@ -360,10 +383,6 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 else if (alertType == General.ALERTTYPES.BITS || alertType == General.ALERTTYPES.ANONYMOUS_BITS)
                 {
                     lbl_QuantityThings.Text = "Bits dropped";
-                }
-                else if (alertType == General.ALERTTYPES.HOST)
-                {
-                    lbl_QuantityThings.Text = "Viewers hosted for";
                 }
                 else if (alertType == General.ALERTTYPES.RAID)
                 {

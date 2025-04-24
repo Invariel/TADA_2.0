@@ -938,6 +938,7 @@ namespace TADA_Advanced_Desktop_Alerts
             if (alertText.Waypoints.InitialVolume > 0 && !String.IsNullOrEmpty(alertText.TTSVoice) && alertText.TTSVoice != "None" && !String.IsNullOrEmpty(alertText.GetReadMessage()))
             {
                 talky = new System.Speech.Synthesis.SpeechSynthesizer();
+
                 try
                 {
                     Boolean success = false;
@@ -975,14 +976,18 @@ namespace TADA_Advanced_Desktop_Alerts
                     if (success)
                     {
                         // Gotta specify the culture so that numbers get translated and such.
-                        prompt = new System.Speech.Synthesis.PromptBuilder(talky.Voice.Culture);
-                        prompt.AppendText(alertText.GetReadMessage());
+                        prompt = alertText.GetVoicedMessage();
 
-                        talky.SpeakCompleted += (sender, e) =>
+                        if (prompt != null)
                         {
-                            this.talkingCompleted = true;
-                            this.Dispose();
-                        };
+                            prompt.Culture = talky.Voice.Culture;
+
+                            talky.SpeakCompleted += (sender, e) =>
+                            {
+                                this.talkingCompleted = true;
+                                this.Dispose();
+                            };
+                        }
                     }
                 }
                 catch (Exception)

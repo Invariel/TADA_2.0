@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 {
-    public partial class Waypoint_Designer_MDI : Form, IDisposable
+    public partial class Waypoint_Designer_MDI : Form
     {
         protected internal bool disableUpdates = false;
 
@@ -21,6 +21,8 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
         private WaypointContainer _waypointContainer;
 
         protected Bitmap previewBitmap;
+
+        public bool isClosing = false;
 
         public Bitmap PreviewBitmap
         {
@@ -32,6 +34,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             get { return this.itemSize; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public WaypointContainer waypointContainer
         {
             get { return this._waypointContainer; }
@@ -610,6 +613,11 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
 
         private void UpdateAdvancedWaypoint(object sender, EventArgs e)
         {
+            if (isClosing)
+            {
+                return;
+            }
+
             disableUpdates = true;
 
             tab_AdvancedWaypointControls.Enabled = !((sender as DataGridView)?.CurrentCell?.OwningRow?.IsNewRow) ?? false;
