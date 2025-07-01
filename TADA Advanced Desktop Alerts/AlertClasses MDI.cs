@@ -1714,6 +1714,7 @@ namespace TADA_Advanced_Desktop_Alerts
         public string ViewerName { get; set; } = string.Empty;
         public string TierName { get; set; } = string.Empty;
         public string ChannelPointsRewardName { get; set; } = string.Empty;
+        public string ChannelName { get; set; } = string.Empty;
 
 
         /*

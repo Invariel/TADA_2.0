@@ -58,7 +58,6 @@ namespace TADA_Advanced_Desktop_Alerts
         public enum ALERTTYPES
         {
             NONE,   // Used when, for whatever reason, an alert needs to not play.
-            ANONYMOUS_BITS,
             ANONYMOUS_COMMUNITY,
             ANONYMOUS_GIFT,
             BITS,
@@ -78,7 +77,6 @@ namespace TADA_Advanced_Desktop_Alerts
         public static Dictionary<ALERTTYPES, String> alertTypes = new Dictionary<ALERTTYPES, String>()
         {
             { ALERTTYPES.NONE, "No alert." },
-            { ALERTTYPES.ANONYMOUS_BITS, "Anonymous Bits" },
             { ALERTTYPES.ANONYMOUS_GIFT, "Anonymous Gift Subs" },
             { ALERTTYPES.ANONYMOUS_COMMUNITY, "Anonymous Community Gift Subs" },
             { ALERTTYPES.BITS, "Bits" },
@@ -98,7 +96,6 @@ namespace TADA_Advanced_Desktop_Alerts
         public static Dictionary<String, ALERTTYPES> alertStrings = new Dictionary<string, ALERTTYPES>()
         {
             { "No alert.", ALERTTYPES.NONE },
-            { "Anonymous Bits", ALERTTYPES.ANONYMOUS_BITS },
             { "Anonymous Community Gift Subs", ALERTTYPES.ANONYMOUS_COMMUNITY },
             { "Anonymous Gift Subs", ALERTTYPES.ANONYMOUS_GIFT },
             { "Bits", ALERTTYPES.BITS },

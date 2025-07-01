@@ -29,6 +29,7 @@ namespace TADA_Advanced_Desktop_Alerts.EventSub
         public event EventHandler<ChannelNotification.ChannelPointsCustomRewardRedemptionAdd> OnChannelPointsCustomRewardRedemptionAddReceived;
         public event EventHandler<ChannelNotification.ChatMessage> OnChatMessageReceived;
         public event EventHandler<ChannelNotification.Follow> OnFollowReceived;
+        public event EventHandler<ChannelNotification.Notification> OnChatNotificationReceived;
         public event EventHandler<ChannelNotification.Subscribe> OnSubscribeReceived;
         public event EventHandler<ChannelNotification.SubscriptionGift> OnSubscriptionGiftReceived;
         public event EventHandler<ChannelNotification.SubscriptionMessage> OnSubscriptionMessageReceived;
@@ -37,6 +38,7 @@ namespace TADA_Advanced_Desktop_Alerts.EventSub
         public virtual void ChannelPointsAutomaticRewardRedemptionAddV2Received(ChannelNotification.ChannelPointsAutomaticRewardRedemptionAddV2 channelPointsAutomaticRewardRedemptionAddV2) => OnChannelPointsAutomaticRewardRedemptionAddV2Received?.Invoke(this, channelPointsAutomaticRewardRedemptionAddV2);
         public virtual void ChannelPointsCustomRewardRedemptionAddReceived(ChannelNotification.ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd) => OnChannelPointsCustomRewardRedemptionAddReceived?.Invoke(this, channelPointsCustomRewardRedemptionAdd);
         public virtual void ChatMessageReceived(ChannelNotification.ChatMessage chatMessage) => OnChatMessageReceived?.Invoke(this, chatMessage);
+        public virtual void ChatNotificationReceived(ChannelNotification.Notification notificationMessage) => OnChatNotificationReceived?.Invoke(this, notificationMessage);
         public virtual void FollowReceived(ChannelNotification.Follow follow) => OnFollowReceived?.Invoke(this, follow);
         public virtual void SubscribeReceived(ChannelNotification.Subscribe subscribe) => OnSubscribeReceived?.Invoke(this, subscribe);
         public virtual void SubscriptionGiftReceived(ChannelNotification.SubscriptionGift subscriptionGift) => OnSubscriptionGiftReceived?.Invoke(this, subscriptionGift);
@@ -115,6 +117,9 @@ namespace TADA_Advanced_Desktop_Alerts.EventSub
 
             response = await Register(new Request.Channel.SubscriptionMessage(_broadcasterId, _sessionId));
             General.LogFile($"Registered for Resubscriptions [{response}]", "twitchChannel.txt");
+
+            response = await Register(new Request.Channel.Notification(_broadcasterId, _sessionId));
+            General.LogFile($"Registered for Subscriptions, resubscriptions, gift subscriptions, subscription upgrades, and raids. [{response}]", "twitchChannel.txt");
         }
 
         public async Task<HttpStatusCode> Register(object message)
@@ -169,6 +174,9 @@ namespace TADA_Advanced_Desktop_Alerts.EventSub
                         break;
                     case "channel.subscription.message":
                         SubscriptionMessageReceived(Deserialize<ChannelNotification.SubscriptionMessage>(receivedString));
+                        break;
+                    case "channel.chat.notification":
+                        ChatNotificationReceived(Deserialize<ChannelNotification.Notification>(receivedString));
                         break;
                 }
 

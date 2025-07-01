@@ -346,8 +346,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
             else
             {
                 // Viewer tier and viewer badges need to be invisible if it's an anonymous thing.
-                grp_ViewerTier.Visible = !(alertType == General.ALERTTYPES.ANONYMOUS_BITS ||
-                                       alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY ||
+                grp_ViewerTier.Visible = !(alertType == General.ALERTTYPES.ANONYMOUS_COMMUNITY ||
                                        alertType == General.ALERTTYPES.ANONYMOUS_GIFT);
 
                 grp_Badges.Visible = grp_ViewerTier.Visible;
@@ -380,7 +379,7 @@ namespace TADA_Advanced_Desktop_Alerts.MDI_Forms
                 {
                     lbl_QuantityThings.Text = "Community gifts";
                 }
-                else if (alertType == General.ALERTTYPES.BITS || alertType == General.ALERTTYPES.ANONYMOUS_BITS)
+                else if (alertType == General.ALERTTYPES.BITS)
                 {
                     lbl_QuantityThings.Text = "Bits dropped";
                 }
